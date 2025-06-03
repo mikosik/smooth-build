@@ -9,11 +9,14 @@ import static org.smoothbuild.cli.layout.Layout.STANDARD_LIBRARY_DIR_NAME;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Level.INFO;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.TypeLiteral;
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.function.Predicate;
 import org.smoothbuild.cli.CliWiring;
 import org.smoothbuild.cli.match.ReportMatchers;
@@ -29,7 +32,8 @@ import org.smoothbuild.virtualmachine.wire.VmWiring;
 
 public class CreateInjector {
   public static Injector createInjector(Path projectDir, PrintWriter out, Level logLevel) {
-    return createInjector(projectDir, out, logLevel, ReportMatchers.ALL, ReportMatchers.ALL);
+    return createInjector(
+        projectDir, out, logLevel, ReportMatchers.ALL, ReportMatchers.ALL, List.of());
   }
 
   public static Injector createInjector(
@@ -37,7 +41,8 @@ public class CreateInjector {
       PrintWriter out,
       Level logLevel,
       Predicate<Report> filterTasks,
-      Predicate<Report> filterTraces) {
+      Predicate<Report> filterTraces,
+      List<String> values) {
     var installationDir = installationDir();
     Map<Alias, Path> aliasToPath = map(
         PROJECT_ALIAS, projectDir,
@@ -50,7 +55,13 @@ public class CreateInjector {
         new VmWiring(),
         new SchedulerWiring(),
         new FileSystemWiring(aliasToPath),
-        new ReportWiring(out, logLevel, filterTasks, filterTraces));
+        new ReportWiring(out, logLevel, filterTasks, filterTraces),
+        new AbstractModule() {
+          @Override
+          protected void configure() {
+            bind(new TypeLiteral<List<String>>() {}).toInstance(values);
+          }
+        });
   }
 
   public static Injector createInjector(PrintWriter out) {

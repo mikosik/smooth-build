@@ -4,7 +4,6 @@ import static org.smoothbuild.cli.command.base.CreateInjector.createInjector;
 import static org.smoothbuild.common.log.base.Label.label;
 
 import java.nio.file.Path;
-import org.smoothbuild.cli.command.base.CommandRunner;
 import org.smoothbuild.cli.command.base.ProjectCommand;
 import org.smoothbuild.common.log.base.Label;
 import picocli.CommandLine.Command;
@@ -19,6 +18,6 @@ public class ListCommand extends ProjectCommand {
   @Override
   protected Integer executeCommand(Path projectDir) {
     var injector = createInjector(projectDir, out(), filterLogs);
-    return injector.getInstance(CommandRunner.class).run(s -> s.submit(ScheduleList.class));
+    return injector.getInstance(ListRunner.class).run();
   }
 }

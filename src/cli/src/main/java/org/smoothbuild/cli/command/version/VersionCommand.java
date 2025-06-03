@@ -3,7 +3,6 @@ package org.smoothbuild.cli.command.version;
 import static org.smoothbuild.common.log.base.Label.label;
 
 import java.util.concurrent.Callable;
-import org.smoothbuild.cli.command.base.CommandRunner;
 import org.smoothbuild.cli.command.base.CreateInjector;
 import org.smoothbuild.cli.command.base.LoggingCommand;
 import org.smoothbuild.common.log.base.Label;
@@ -17,6 +16,6 @@ public class VersionCommand extends LoggingCommand implements Callable<Integer> 
   @Override
   public Integer call() {
     var injector = CreateInjector.createInjector(out());
-    return injector.getInstance(CommandRunner.class).run(s -> s.submit(Version.class));
+    return injector.getInstance(VersionRunner.class).run();
   }
 }

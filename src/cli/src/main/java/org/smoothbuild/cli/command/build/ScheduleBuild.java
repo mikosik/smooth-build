@@ -6,6 +6,7 @@ import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.schedule.Output.schedulingOutput;
 import static org.smoothbuild.common.schedule.Tasks.argument;
 
+import jakarta.inject.Inject;
 import java.util.List;
 import org.smoothbuild.cli.layout.Layout;
 import org.smoothbuild.common.init.Initializer;
@@ -17,8 +18,9 @@ import org.smoothbuild.evaluator.ScheduleEvaluate;
 
 public class ScheduleBuild implements Task0<Tuple0> {
   private final Scheduler scheduler;
-  private final java.util.List<String> values;
+  private final List<String> values;
 
+  @Inject
   public ScheduleBuild(Scheduler scheduler, List<String> values) {
     this.scheduler = scheduler;
     this.values = values;

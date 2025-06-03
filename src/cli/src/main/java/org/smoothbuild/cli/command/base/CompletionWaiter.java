@@ -8,30 +8,21 @@ import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.report.Report.report;
 
 import jakarta.inject.Inject;
-import java.util.function.Function;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.report.Reporter;
-import org.smoothbuild.common.schedule.Scheduler;
 
-public class CommandRunner {
-  private final Scheduler scheduler;
+public class CompletionWaiter {
   private final StatusPrinter statusPrinter;
   private final Reporter reporter;
 
   @Inject
-  public CommandRunner(Scheduler scheduler, StatusPrinter statusPrinter, Reporter reporter) {
-    this.scheduler = scheduler;
+  public CompletionWaiter(StatusPrinter statusPrinter, Reporter reporter) {
     this.statusPrinter = statusPrinter;
     this.reporter = reporter;
   }
 
-  public <T extends Maybe<?>> int run(Function<Scheduler, Promise<T>> schedulingFunction) {
-    Promise<T> result = schedulingFunction.apply(scheduler);
-    return waitForCompletion(result);
-  }
-
-  private int waitForCompletion(Promise<? extends Maybe<?>> commandResult) {
+  public int waitForCompletion(Promise<? extends Maybe<?>> commandResult) {
     try {
       Maybe<?> result = commandResult.getBlocking();
       statusPrinter.printSummary();

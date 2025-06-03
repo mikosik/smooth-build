@@ -5,7 +5,6 @@ import static org.smoothbuild.common.log.base.Label.label;
 
 import java.nio.file.Path;
 import java.util.function.Predicate;
-import org.smoothbuild.cli.command.base.CommandRunner;
 import org.smoothbuild.cli.command.base.ProjectCommand;
 import org.smoothbuild.cli.match.MatcherCreator;
 import org.smoothbuild.common.log.base.Label;
@@ -89,9 +88,7 @@ public class BuildCommand extends ProjectCommand {
 
   @Override
   protected Integer executeCommand(Path projectDir) {
-    var injector = createInjector(projectDir, out(), filterLogs, filterTasks, filterTraces);
-    return injector
-        .getInstance(CommandRunner.class)
-        .run(s -> s.submit(new ScheduleBuild(s, values)));
+    var injector = createInjector(projectDir, out(), filterLogs, filterTasks, filterTraces, values);
+    return injector.getInstance(BuildRunner.class).run();
   }
 }

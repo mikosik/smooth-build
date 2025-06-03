@@ -12,17 +12,17 @@ import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.testing.CommonTestContext;
 import org.smoothbuild.common.testing.TestReporter;
 
-public class CommandRunnerTest extends CommonTestContext {
+public class CompletionWaiterTest extends CommonTestContext {
   @Test
   void interrupted_exception_is_logged_as_fatal() throws Exception {
     var reporter = new TestReporter();
-    var scheduler = scheduler();
-    var commandRunner = new CommandRunner(scheduler, null, reporter);
+    var statusPrinter = mock(StatusPrinter.class);
+    var completionWaiter = new CompletionWaiter(statusPrinter, reporter);
 
     @SuppressWarnings("unchecked")
     Promise<Maybe<Integer>> promise = mock(Promise.class);
     doThrow(InterruptedException.class).when(promise).getBlocking();
-    var exitCode = commandRunner.run(s -> promise);
+    var exitCode = completionWaiter.waitForCompletion(promise);
     assertThat(exitCode).isEqualTo(EXIT_CODE_ERROR);
     assertThat(reporter.logs()).containsExactly(fatal("main thread has been interrupted"));
   }
