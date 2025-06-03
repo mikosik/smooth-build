@@ -9,11 +9,8 @@ import static org.smoothbuild.common.schedule.Tasks.task2;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
 import static org.smoothbuild.evaluator.EvaluatorConstants.EVALUATOR_LABEL;
 
-import com.google.common.annotations.VisibleForTesting;
 import jakarta.inject.Inject;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Scheduler;
@@ -47,26 +44,37 @@ public class ScheduleEvaluate implements Task2<List<FullPath>, List<String>, Eva
     var sExprs = scheduler.submit(FindValues.class, sScope, argument(names));
     var evaluables = scheduler.submit(task1(mapLabel, SScope::evaluables), sScope);
 
-    var evaluatedExprs = scheduleEvaluateCore(scheduler, sExprs, evaluables);
+    var evaluatedExprs = scheduler.submit(EvaluateCore.class, sExprs, evaluables);
 
     var scheduleLabel = EVALUATOR_LABEL.append(":schedule");
     return schedulingOutput(evaluatedExprs, report(scheduleLabel, list()));
   }
 
-  @VisibleForTesting
-  public static Promise<Maybe<EvaluatedExprs>> scheduleEvaluateCore(
-      Scheduler scheduler,
-      Promise<Maybe<List<SExpr>>> sExprs,
-      Promise<Maybe<Bindings<SPolyEvaluable>>> evaluables) {
-    var compiledExprs = scheduler.submit(BackendCompile.class, sExprs, evaluables);
-    var getLabel = EVALUATOR_LABEL.append(":getCompiledExprs");
-    var bExprs = scheduler.submit(task1(getLabel, ScheduleEvaluate::toTuples), compiledExprs);
-    var evaluated = scheduler.submit(scheduler.newParallelTask(BEvaluate.class), bExprs);
-    var mergeLabel = EVALUATOR_LABEL.append(":merge");
-    return scheduler.submit(task2(mergeLabel, EvaluatedExprs::new), sExprs, evaluated);
-  }
+  public static class EvaluateCore
+      implements Task2<List<SExpr>, Bindings<SPolyEvaluable>, EvaluatedExprs> {
+    private final Scheduler scheduler;
 
-  private static List<Tuple2<BExpr, BExprAttributes>> toTuples(CompiledExprs compiledExprs) {
-    return compiledExprs.bExprs().map(e -> tuple(e, compiledExprs.bExprAttributes()));
+    @Inject
+    public EvaluateCore(Scheduler scheduler) {
+      this.scheduler = scheduler;
+    }
+
+    @Override
+    public Output<EvaluatedExprs> execute(List<SExpr> sExprs, Bindings<SPolyEvaluable> evaluables) {
+      var compiledExprs =
+          scheduler.submit(BackendCompile.class, argument(sExprs), argument(evaluables));
+      var getLabel = EVALUATOR_LABEL.append(":getCompiledExprs");
+      var bExprs = scheduler.submit(task1(getLabel, this::toTuples), compiledExprs);
+      var evaluated = scheduler.submit(scheduler.newParallelTask(BEvaluate.class), bExprs);
+      var mergeLabel = EVALUATOR_LABEL.append(":merge");
+      var evaluate =
+          scheduler.submit(task2(mergeLabel, EvaluatedExprs::new), argument(sExprs), evaluated);
+      var scheduleLabel = EVALUATOR_LABEL.append(":scheduleEvaluate");
+      return schedulingOutput(evaluate, report(scheduleLabel, list()));
+    }
+
+    private List<Tuple2<BExpr, BExprAttributes>> toTuples(CompiledExprs compiledExprs) {
+      return compiledExprs.bExprs().map(e -> tuple(e, compiledExprs.bExprAttributes()));
+    }
   }
 }

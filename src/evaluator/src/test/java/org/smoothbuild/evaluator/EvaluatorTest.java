@@ -9,7 +9,6 @@ import static org.smoothbuild.common.testing.TestingFileSystem.saveBytecodeInJar
 import static org.smoothbuild.common.testing.TestingInitializer.runInitializations;
 import static org.smoothbuild.compilerfrontend.lang.name.Bindings.bindings;
 import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
-import static org.smoothbuild.evaluator.ScheduleEvaluate.scheduleEvaluateCore;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
@@ -30,6 +29,7 @@ import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.name.Bindings;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
+import org.smoothbuild.evaluator.ScheduleEvaluate.EvaluateCore;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.testing.VmTestWiring;
@@ -301,7 +301,8 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
       Injector injector, Bindings<SPolyEvaluable> evaluables, List<SExpr> exprs) {
     runInitializations(injector);
     var scheduler = injector.getInstance(Scheduler.class);
-    var evaluatedExprs = scheduleEvaluateCore(scheduler, argument(exprs), argument(evaluables));
+    var evaluateCore = injector.getInstance(EvaluateCore.class);
+    var evaluatedExprs = scheduler.submit(evaluateCore, argument(exprs), argument(evaluables));
     await().until(() -> evaluatedExprs.toMaybe().isSome());
     return evaluatedExprs.get();
   }

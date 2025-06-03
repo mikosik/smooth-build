@@ -23,6 +23,7 @@
 :evaluator:getMembersAndImported 
 :evaluator:findValues 
 :evaluator:getMembersAndImported 
+:evaluator:scheduleEvaluate 
 :compiler:backend:generateBytecode 
 :evaluator:getCompiledExprs 
 :scheduler:scheduleParallel 
