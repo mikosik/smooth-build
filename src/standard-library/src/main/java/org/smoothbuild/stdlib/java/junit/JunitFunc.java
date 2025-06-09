@@ -59,7 +59,7 @@ public class JunitFunc {
                   .error("test failed: " + failureWrapper.toString() + "\n"
                       + failureWrapper.getTrace());
             }
-            return nativeApi.factory().string("FAILURE");
+            return null;
           }
         }
       }

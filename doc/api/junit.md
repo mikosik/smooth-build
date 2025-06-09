@@ -1,6 +1,6 @@
 ## String junit<>(File tests, [File] deps, String include)
 
-Executes junit tests and fails if any of the test fail.
+Executes junit tests and fails with error if any of the tests fail.
 
 | Name    | Type   | Default        | Description                                                                                                                              |
 |---------|--------|----------------|------------------------------------------------------------------------------------------------------------------------------------------|
