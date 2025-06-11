@@ -141,7 +141,7 @@ public class BArrayTest extends VmTestContext {
   }
 
   private static List<BKind> type_test_data() {
-    return TestingBKind.KINDS_TO_TEST;
+    return TestingBKind.TYPES_TO_TEST;
   }
 
   @Test

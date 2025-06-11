@@ -320,7 +320,7 @@ public class BKindTest extends VmTestContext {
     }
 
     public static List<BKind> types() {
-      return TestingBKind.KINDS_TO_TEST;
+      return TestingBKind.TYPES_TO_TEST;
     }
   }
 

@@ -15,7 +15,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 public class TestingBKind {
   public static final VmTestContext CONTEXT = new VmTestContext();
 
-  public static final List<BType> BASE_KINDS_TO_TEST = wrapException(() -> list(
+  public static final List<BType> BASE_TYPES_TO_TEST = wrapException(() -> list(
       CONTEXT.bBlobType(),
       CONTEXT.bBoolType(),
       lambda(CONTEXT.bBlobType(), CONTEXT.bBoolType()),
@@ -23,7 +23,7 @@ public class TestingBKind {
       CONTEXT.bStringType(),
       CONTEXT.bPersonType()));
 
-  public static final List<BKind> ARRAY_CATS_TO_TEST = wrapException(() -> list(
+  public static final List<BKind> ARRAY_TYPES_TO_TEST = wrapException(() -> list(
       array(CONTEXT.bBlobType()),
       array(lambda(CONTEXT.bBlobType(), CONTEXT.bBoolType())),
       array(CONTEXT.bBoolType()),
@@ -37,7 +37,7 @@ public class TestingBKind {
       array(array(CONTEXT.bStringType())),
       array(array(CONTEXT.bPersonType()))));
 
-  public static final List<BKind> KINDS_TO_TEST = ARRAY_CATS_TO_TEST.addAll(BASE_KINDS_TO_TEST);
+  public static final List<BKind> TYPES_TO_TEST = ARRAY_TYPES_TO_TEST.addAll(BASE_TYPES_TO_TEST);
 
   public static final List<BKind> ALL_KINDS_TO_TEST = wrapException(TestingBKind::createAllKinds);
 
