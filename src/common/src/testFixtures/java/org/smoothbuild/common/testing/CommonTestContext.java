@@ -8,11 +8,6 @@ import org.smoothbuild.common.schedule.Scheduler;
 public class CommonTestContext implements CommonTestApi {
   private final Supplier<Scheduler> scheduler = memoize(this::newScheduler);
   private final Supplier<TestReporter> testReporter = memoize(this::newTestReporter);
-  private int threadCount = 4;
-
-  public void setThreadCount(int count) {
-    this.threadCount = count;
-  }
 
   @Override
   public Scheduler scheduler() {

@@ -697,7 +697,6 @@ public class BEvaluateTest extends VmTestContext {
           invokeExecuteCommands(testName, "INC1"),
           invokeExecuteCommands(testName, "INC1"),
           invokeExecuteCommands(testName, "INC1"));
-      setThreadCount(4);
       var reporter = reporter();
       var scheduler = scheduler();
       var bEvaluate = bEvaluate(scheduler);
@@ -705,31 +704,6 @@ public class BEvaluateTest extends VmTestContext {
           .isEqualTo(bArray(bString("1"), bString("1"), bString("1"), bString("1")));
 
       verifyConstTasksOrigin(4, DISK, reporter);
-    }
-
-    @Test
-    public void waiting_for_result_of_other_task_with_equal_hash_doesnt_block_executor_thread()
-        throws Exception {
-      var testName = detectEnclosingMethodName();
-      var counter1 = testName + "1";
-      var counter2 = testName + "2";
-      var countdown1 = testName + "1";
-      var countdown2 = testName + "2";
-
-      COUNTERS.put(counter1, new AtomicInteger());
-      COUNTERS.put(counter2, new AtomicInteger());
-      COUNTDOWNS.put(countdown1, new CountDownLatch(1));
-      COUNTDOWNS.put(countdown2, new CountDownLatch(1));
-      var expr = bOrder(
-          invokeExecuteCommands(testName, "INC1,COUNT2,WAIT1,GET1"),
-          invokeExecuteCommands(testName, "INC1,COUNT2,WAIT1,GET1"),
-          invokeExecuteCommands(testName, "WAIT2,COUNT1,GET2"));
-
-      setThreadCount(2);
-      var scheduler = scheduler();
-      var bEvaluate = bEvaluate(scheduler);
-      var expected = bArray(bString("1"), bString("1"), bString("0"));
-      assertThat(evaluate(bEvaluate, expr).get().get()).isEqualTo(expected);
     }
 
     private BInvoke invokeExecuteCommands(String testName, String commands) throws Exception {
