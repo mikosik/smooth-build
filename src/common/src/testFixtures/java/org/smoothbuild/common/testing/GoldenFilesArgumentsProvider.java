@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
+import org.junit.jupiter.params.support.ParameterDeclarations;
 
 /**
  * Searches rootDir recursively and for each directory containing file with fileName creates
@@ -21,7 +22,8 @@ public class GoldenFilesArgumentsProvider implements ArgumentsProvider {
   }
 
   @Override
-  public Stream<Arguments> provideArguments(ExtensionContext context) throws Exception {
+  public Stream<Arguments> provideArguments(
+      ParameterDeclarations parameterDeclarations, ExtensionContext context) throws Exception {
     try (Stream<Path> filesStream = Files.walk(rootDir)) {
       var testCases = filesStream
           .filter(Files::isRegularFile)

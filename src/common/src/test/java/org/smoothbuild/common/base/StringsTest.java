@@ -21,6 +21,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.support.ParameterDeclarations;
 
 public class StringsTest {
   @Nested
@@ -166,7 +167,8 @@ public class StringsTest {
 
   static class EscapeArgumentsProvider implements ArgumentsProvider {
     @Override
-    public Stream<Arguments> provideArguments(ExtensionContext context) {
+    public Stream<Arguments> provideArguments(
+        ParameterDeclarations parameterDeclarations, ExtensionContext context) {
       return createTestData(escapeMapping()).entrySet().stream()
           .map(e -> Arguments.of(e.getKey(), e.getValue()));
     }

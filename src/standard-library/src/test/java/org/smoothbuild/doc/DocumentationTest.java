@@ -13,6 +13,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
+import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.smoothbuild.evaluator.testing.EvaluatorTestContext;
 
 public class DocumentationTest extends EvaluatorTestContext {
@@ -25,7 +26,8 @@ public class DocumentationTest extends EvaluatorTestContext {
 
   private static class CodeExampleProvider implements ArgumentsProvider {
     @Override
-    public Stream<? extends Arguments> provideArguments(ExtensionContext context) throws Exception {
+    public Stream<? extends Arguments> provideArguments(
+        ParameterDeclarations parameterDeclarations, ExtensionContext context) throws Exception {
       return codeExamples().stream()
           .map(e -> Arguments.arguments(Named.of(e.file.getFileName() + ":" + e.line, e.code)));
     }

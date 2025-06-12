@@ -22,6 +22,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Consumer1;
@@ -1886,7 +1887,8 @@ public class BExprCorruptedTest extends VmTestContext {
 
   private static class AllByteValuesExceptZeroAndOneProvider implements ArgumentsProvider {
     @Override
-    public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+    public Stream<? extends Arguments> provideArguments(
+        ParameterDeclarations parameterDeclarations, ExtensionContext context) {
       return IntStream.rangeClosed(-128, 127)
           .filter(v -> v != 0 && v != 1)
           .boxed()
