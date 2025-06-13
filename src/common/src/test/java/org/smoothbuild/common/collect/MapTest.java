@@ -75,6 +75,27 @@ public class MapTest {
   }
 
   @Nested
+  class _put {
+    @Test
+    void empty_map_put_returns_new_map() {
+      var map = map();
+      assertThat(map.put(1, "one")).isEqualTo(map(1, "one"));
+    }
+
+    @Test
+    void non_empty_map_put_returns_new_map_with_new_entry() {
+      var map = map(1, "one");
+      assertThat(map.put(2, "two")).isEqualTo(map(1, "one", 2, "two"));
+    }
+
+    @Test
+    void returns_map_with_new_mapping_when_key_already_exists() {
+      var map = map(1, "one");
+      assertThat(map.put(1, "two")).isEqualTo(map(1, "two"));
+    }
+  }
+
+  @Nested
   class _zipToMap {
     @Test
     void for_empty_iterables_returns_empty_map() {

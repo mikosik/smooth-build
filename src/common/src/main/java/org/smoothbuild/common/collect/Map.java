@@ -6,6 +6,7 @@ import static org.smoothbuild.common.collect.Set.setOfAll;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
+import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Objects;
 import org.smoothbuild.common.function.Function1;
@@ -67,6 +68,12 @@ public final class Map<K, V> {
 
   public Collection<V> values() {
     return listOfAll(map.values());
+  }
+
+  public Map<K, V> put(K key, V value) {
+    var newMap = new HashMap<>(this.map);
+    newMap.put(key, value);
+    return new Map<>(ImmutableMap.copyOf(newMap));
   }
 
   public <K2, T extends Throwable> Map<K2, V> mapKeys(Function1<? super K, K2, T> mapper) throws T {
