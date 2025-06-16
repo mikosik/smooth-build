@@ -39,6 +39,7 @@ public abstract class AbstractLockFileTestSuite extends SystemTestContext {
     });
 
     thread.start();
+    Thread.sleep(1000);
     runSmooth(commandWithArgs);
     thread.join();
 
