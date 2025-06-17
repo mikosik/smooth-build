@@ -20,8 +20,8 @@ dependencyResolutionManagement {
 
   versionCatalogs {
     libs {
-      library('antlr4', 'org.antlr:antlr4:4.13.0')
-      library('antlr4-runtime', 'org.antlr:antlr4-runtime:4.13.0')
+      library('antlr4', 'org.antlr:antlr4:4.13.2')
+      library('antlr4-runtime', 'org.antlr:antlr4-runtime:4.13.2')
       library('guava', 'com.google.guava:guava:33.4.8-jre')
       library('dagger', 'com.google.dagger:dagger:2.56.2')
       library('dagger-compiler', 'com.google.dagger:dagger-compiler:2.56.2')
