@@ -155,7 +155,7 @@ public final class List<E> implements Collection<E> {
 
   public List<E> addAll(Collection<? extends E> collection) {
     return switch (collection) {
-      case List<? extends E> l -> addAll(collection);
+      case List<? extends E> l -> addAll(l);
       case Set<? extends E> s -> addAll(s);
     };
   }

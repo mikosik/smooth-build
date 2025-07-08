@@ -515,6 +515,35 @@ public class ListTest {
     }
 
     @Nested
+    class _custom_collection {
+      @Test
+      void two_empty_lists() {
+        assertThat(list().addAll((Collection<Object>) list())).isEqualTo(list());
+      }
+
+      @Test
+      void empty_list() {
+        assertThat(list(1).addAll((Collection<Integer>) List.<Integer>list())).isEqualTo(list(1));
+      }
+
+      @Test
+      void to_empty_list() {
+        assertThat(list().addAll((Collection<Integer>) list(2))).isEqualTo(list(2));
+      }
+
+      @Test
+      void two_one_element_lists() {
+        assertThat(list(1).addAll((Collection<Integer>) list(2))).isEqualTo(list(1, 2));
+      }
+
+      @Test
+      void element_lists() {
+        assertThat(list(1, 2, 3).addAll((Collection<Integer>) list(4, 5, 6)))
+            .isEqualTo(list(1, 2, 3, 4, 5, 6));
+      }
+    }
+
+    @Nested
     class _custom_list {
       @Test
       void two_empty_lists() {
