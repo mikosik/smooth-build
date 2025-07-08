@@ -31,9 +31,9 @@ dependencyResolutionManagement {
       library('awaitility', 'org.awaitility:awaitility:4.3.0')
       library('guava-testlib', 'com.google.guava:guava-testlib:33.4.8-jre')
       library('jakarta-inject', 'jakarta.inject:jakarta.inject-api:2.0.1')
-      library('junit-jupiter-engine', 'org.junit.jupiter:junit-jupiter-engine:5.13.2')
-      library('junit-jupiter-api', 'org.junit.jupiter:junit-jupiter-api:5.13.2')
-      library('junit-jupiter-params', 'org.junit.jupiter:junit-jupiter-params:5.13.2')
+      library('junit-jupiter-engine', 'org.junit.jupiter:junit-jupiter-engine:5.13.3')
+      library('junit-jupiter-api', 'org.junit.jupiter:junit-jupiter-api:5.13.3')
+      library('junit-jupiter-params', 'org.junit.jupiter:junit-jupiter-params:5.13.3')
       library('mockito', 'org.mockito:mockito-core:5.18.0')
       library('truth', 'com.google.truth:truth:1.1.5')
     }
