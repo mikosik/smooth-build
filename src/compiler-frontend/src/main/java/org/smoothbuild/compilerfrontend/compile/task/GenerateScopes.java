@@ -85,7 +85,7 @@ public class GenerateScopes implements Task2<SScope, PModule, PModule> {
         case PModule pModule -> initializeScopeFor(pModule);
         case PStruct pStruct -> initializeScopeFor(pStruct);
         case PPolyEvaluable pPolyEvaluable -> initializeScopeFor(pPolyEvaluable);
-        case PNamedValue pNamedValue -> {}
+        case PNamedValue _ -> {}
         case PConstructor pConstructor -> initializeScopeFor(pConstructor);
         case PFunc pFunc -> initializeScopeFor(pFunc);
       }
@@ -121,7 +121,7 @@ public class GenerateScopes implements Task2<SScope, PModule, PModule> {
         // gluing function name and parameter name using '~' into a name.
         case PExplicitTypeParams explicit ->
           explicit.typeParams().foreach(type -> addType(type, type.name()));
-        case PImplicitTypeParams implicit -> {}
+        case PImplicitTypeParams _ -> {}
       }
     }
 

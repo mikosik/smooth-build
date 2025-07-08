@@ -8,12 +8,12 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 public class StepHashes {
   public static Hash stepHash(Step step) {
     return switch (step) {
-      case CombineStep combineStep -> combineHash();
-      case ChooseStep chooseStep -> chooseHash();
-      case InvokeStep invokeStep -> invokeHash();
+      case CombineStep _ -> combineHash();
+      case ChooseStep _ -> chooseHash();
+      case InvokeStep _ -> invokeHash();
       case OrderStep orderStep -> orderHash(orderStep.evaluationType());
-      case PickStep pickStep -> pickHash();
-      case SelectStep selectStep -> selectHash();
+      case PickStep _ -> pickHash();
+      case SelectStep _ -> selectHash();
     };
   }
 

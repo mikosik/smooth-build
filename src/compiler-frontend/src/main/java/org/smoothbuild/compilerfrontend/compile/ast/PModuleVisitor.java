@@ -57,7 +57,7 @@ public abstract class PModuleVisitor<T extends Throwable> {
   public void visitTypeParams(PTypeParams pExplicitTypeParams) {
     switch (pExplicitTypeParams) {
       case PExplicitTypeParams explicit -> explicit.typeParams().foreach(this::visitTypeParam);
-      case PImplicitTypeParams implicit -> {}
+      case PImplicitTypeParams _ -> {}
     }
   }
 

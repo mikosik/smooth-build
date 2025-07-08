@@ -138,7 +138,7 @@ public class MemoryFileSystem implements FileSystem<FullPath> {
         case MemoryDir dir -> {
           return creator.apply(dir);
         }
-        case MemoryFile f -> throw new IOException(error.get() + "Parent dir does not exist.");
+        case MemoryFile _ -> throw new IOException(error.get() + "Parent dir does not exist.");
       }
     }
   }

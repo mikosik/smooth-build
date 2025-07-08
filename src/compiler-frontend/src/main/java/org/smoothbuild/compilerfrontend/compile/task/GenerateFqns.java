@@ -57,8 +57,7 @@ public class GenerateFqns implements Task1<PModule, PModule> {
       var name =
           switch (pContainer) {
             case PLambda pLambda -> nameOf(pLambda);
-            case PModule pModule -> Result.<Name>err("");
-            case PPolyEvaluable pPolyEvaluable -> Result.<Name>err("");
+            case PModule _, PPolyEvaluable _ -> Result.<Name>err("");
             case PNamedEvaluable pNamedEvaluable -> nameOf(pNamedEvaluable);
             case PStruct pStruct -> nameOf(pStruct);
           };
@@ -85,7 +84,7 @@ public class GenerateFqns implements Task1<PModule, PModule> {
           parseReference(pTypeReference.nameText())
               .ifErr(e -> logIllegalTypeReference(pTypeReference, e))
               .ifOk(pTypeReference::setFqn);
-        case PImplicitType pImplicitType -> {}
+        case PImplicitType _ -> {}
       }
     }
 

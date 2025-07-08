@@ -36,12 +36,12 @@ class TypeSbTranslator {
   public BType translate(SType type) throws SbTranslatorException {
     return switch (type) {
       case SArrayType sArrayType -> translate(sArrayType);
-      case SBlobType sBlobType -> bytecodeF.blobType();
-      case SBoolType sBoolType -> bytecodeF.boolType();
+      case SBlobType _ -> bytecodeF.blobType();
+      case SBoolType _ -> bytecodeF.boolType();
       case SFuncType sFuncType -> translate(sFuncType);
-      case SIntType sIntType -> bytecodeF.intType();
+      case SIntType _ -> bytecodeF.intType();
       case STypeVar sTypeVar -> translate(sTypeVar);
-      case SStringType sStringType -> bytecodeF.stringType();
+      case SStringType _ -> bytecodeF.stringType();
       case SStructType sStructType -> translate(sStructType);
       case STupleType sTupleType -> translate(sTupleType);
       case SInterfaceType sInterfaceType -> throw unexpectedCaseException(sInterfaceType);

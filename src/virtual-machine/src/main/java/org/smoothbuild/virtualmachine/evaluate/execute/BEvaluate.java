@@ -115,7 +115,7 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
         case BFold fold -> scheduleFold(job, fold);
         case BIf if_ -> scheduleIf(job, if_);
         case BInvoke invoke -> scheduleOperation(job, invoke, InvokeStep::new);
-        case BLambda lambda -> scheduleInlineTask(job);
+        case BLambda _ -> scheduleInlineTask(job);
         case BMap map -> scheduleMap(job, map);
         case BOrder order -> scheduleOperation(job, order, OrderStep::new);
         case BPick pick -> scheduleOperation(job, pick, PickStep::new);

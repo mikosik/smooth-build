@@ -73,7 +73,7 @@ public class ResolveReferences implements Task1<PModule, PModule> {
         case PFuncType func -> visitFuncType(func);
         case PTupleType tuple -> visitTupleType(tuple);
         case PTypeReference pTypeReference -> visitExplicitType(pTypeReference);
-        case PImplicitType pImplicitType -> {}
+        case PImplicitType _ -> {}
       }
     }
 
