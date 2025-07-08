@@ -369,6 +369,35 @@ public class SetTest {
     }
 
     @Nested
+    class _custom_collection {
+      @Test
+      void two_empty_sets() {
+        assertThat(set().addAll((Collection<Object>) set())).isEqualTo(set());
+      }
+
+      @Test
+      void empty_set() {
+        assertThat(set(1).addAll((Collection<Integer>) Set.<Integer>set())).isEqualTo(set(1));
+      }
+
+      @Test
+      void to_empty_set() {
+        assertThat(set().addAll((Collection<Integer>) set(2))).isEqualTo(set(2));
+      }
+
+      @Test
+      void two_one_element_sets() {
+        assertThat(set(1).addAll((Collection<Integer>) set(2))).isEqualTo(set(1, 2));
+      }
+
+      @Test
+      void element_sets() {
+        assertThat(set(1, 2, 3).addAll((Collection<Integer>) set(4, 5, 6)))
+            .isEqualTo(set(1, 2, 3, 4, 5, 6));
+      }
+    }
+
+    @Nested
     class _custom_list {
       @Test
       void two_empty_sets() {

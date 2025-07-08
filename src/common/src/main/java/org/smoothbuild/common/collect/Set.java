@@ -120,7 +120,7 @@ public non-sealed class Set<E> implements Collection<E> {
 
   public Set<E> addAll(Collection<? extends E> collection) {
     return switch (collection) {
-      case List<? extends E> l -> addAll(collection);
+      case List<? extends E> l -> addAll(l);
       case Set<? extends E> s -> addAll(s);
     };
   }
