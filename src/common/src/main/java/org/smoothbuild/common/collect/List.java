@@ -143,14 +143,7 @@ public final class List<E> implements Collection<E> {
   }
 
   public List<E> addAll(java.util.Collection<? extends E> collection) {
-    int size = collection.size();
-    var resultArray = Arrays.copyOf(array, array.length + size);
-    int i = array.length;
-    for (var element : collection) {
-      resultArray[i] = element;
-      i++;
-    }
-    return new List<>(resultArray);
+    return addAll(collection, collection.size());
   }
 
   public List<E> addAll(Collection<? extends E> collection) {
@@ -161,10 +154,13 @@ public final class List<E> implements Collection<E> {
   }
 
   public List<E> addAll(Set<? extends E> set) {
-    int size = set.size();
+    return addAll(set, set.size());
+  }
+
+  private List<E> addAll(Iterable<? extends E> iterable, int size) {
     var resultArray = Arrays.copyOf(array, array.length + size);
     int i = array.length;
-    for (var element : set) {
+    for (var element : iterable) {
       resultArray[i] = element;
       i++;
     }
