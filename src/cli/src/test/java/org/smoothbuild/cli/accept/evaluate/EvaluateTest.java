@@ -29,6 +29,7 @@ public class EvaluateTest extends EvaluatorTestContext {
   }
 
   private String evaluate(String code, Maybe<String> importedModule) throws IOException {
+    importedModule.ifPresent(this::createLibraryModule);
     createUserModule(code, StringIdentity.class, ThrowException.class);
     evaluate("result");
     return artifact().toString();

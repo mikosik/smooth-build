@@ -1,2 +1,3 @@
+makesSureImportedValueIsPresent = importedValue;
 String myFunc(String importedValue) = importedValue;
 result = myFunc("abc");

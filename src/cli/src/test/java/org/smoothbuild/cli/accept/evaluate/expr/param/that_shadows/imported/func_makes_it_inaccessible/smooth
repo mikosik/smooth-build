@@ -1,2 +1,3 @@
+makesSureImportedFuncIsPresent = importedFunc;
 String myFunc(String importedFunc) = importedFunc;
 result = myFunc("abc");

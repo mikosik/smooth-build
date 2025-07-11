@@ -89,13 +89,21 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
   }
 
   protected void createUserModule(String code, Class<?>... classes) throws IOException {
+    createModule(code, classes, moduleFullPath());
+  }
+
+  protected void createLibraryModule(String code, Class<?>... classes) throws IOException {
+    createModule(code, classes, provide().projectPath().append("library.smooth"));
+  }
+
+  private void createModule(String code, Class<?>[] classes, FullPath fullPath) throws IOException {
     if (classes.length != 0) {
-      try (var sink = component.fileSystem().sink(moduleFullPath().withExtension("jar"))) {
+      try (var sink = component.fileSystem().sink(fullPath.withExtension("jar"))) {
         saveBytecodeInJar(sink, list(classes));
       }
     }
-    createFile(component.fileSystem(), moduleFullPath(), code);
-    modules = modules.add(moduleFullPath());
+    createFile(component.fileSystem(), fullPath, code);
+    modules = modules.add(fullPath);
   }
 
   protected void createProjectFile(String path, String content) throws IOException {
