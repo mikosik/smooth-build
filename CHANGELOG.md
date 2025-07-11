@@ -2,7 +2,7 @@
 Change Log
 ==========
 
-Version ?????? (??????????)
+Version 0.24.0 (2025.07.11)
 ---------------------------
 
  * added standard library function `mavenArtifact`
