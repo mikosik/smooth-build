@@ -27,11 +27,11 @@ public enum KindId {
     return (byte) ordinal();
   }
 
-  private static final KindId[] values = values();
+  private static final KindId[] VALUES = values();
 
   public static KindId fromOrdinal(int ordinal) {
-    if (0 <= ordinal && ordinal < values.length) {
-      return values[ordinal];
+    if (0 <= ordinal && ordinal < VALUES.length) {
+      return VALUES[ordinal];
     }
     return null;
   }
