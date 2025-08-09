@@ -43,7 +43,7 @@ public class JunitFunc {
       }
       assertJunitCoreIsPresent(filesFromDeps);
       var classLoader = classLoader(concatMaps(filesFromTests, filesFromDeps));
-      var jUnitCore = createJUnitCore(nativeApi, classLoader);
+      var jUnitCore = createJUnitCore(classLoader);
       var filter = createFilter(include);
       int testCount = 0;
       for (var file : filesFromTests.keySet()) {
@@ -93,9 +93,8 @@ public class JunitFunc {
     return ImmutableMap.copyOf(allFiles);
   }
 
-  private static JUnitCoreWrapper createJUnitCore(NativeApi nativeApi, ClassLoader classLoader)
-      throws JunitException {
-    return newInstance(nativeApi, loadClass(classLoader, "org.junit.runner.JUnitCore"));
+  private static JUnitCoreWrapper createJUnitCore(ClassLoader classLoader) throws JunitException {
+    return newInstance(loadClass(classLoader, "org.junit.runner.JUnitCore"));
   }
 
   private static void assertJunitCoreIsPresent(Map<String, BTuple> files) throws JunitException {
