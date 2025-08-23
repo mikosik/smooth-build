@@ -21,16 +21,15 @@ public class ImmutablePromiseTest {
     assertThat(promise.get()).isEqualTo(value);
   }
 
-  @ParameterizedTest
-  @MethodSource("constructorValues")
-  void toMaybe_returns_value(String value) {
-    var promise = new ImmutablePromise<>(value);
-    assertThat(promise.toMaybe()).isEqualTo(some(value));
+  @Test
+  void toMaybe_returns_value() {
+    var promise = new ImmutablePromise<>("abc");
+    assertThat(promise.toMaybe()).isEqualTo(some("abc"));
   }
 
   @ParameterizedTest
   @MethodSource("constructorValues")
-  void getBlocking_returns_value(String value) throws Exception {
+  void getBlocking_returns_value(String value) {
     var promise = new ImmutablePromise<>(value);
     assertThat(promise.getBlocking()).isEqualTo(value);
   }

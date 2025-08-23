@@ -1,8 +1,8 @@
 package org.smoothbuild.compilerfrontend.compile.task;
 
-import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
+import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 
@@ -26,7 +26,7 @@ public class GenerateDefaultValues implements Task1<PModule, PModule> {
     var label = COMPILER_FRONT_LABEL.append(":generateDefaultValues");
     var newModule = new PModule(
         pModule.fullPath(), pModule.structs(), pModule.evaluables().addAll(namedDefaultValues));
-    return output(newModule, label, list());
+    return output(newModule, report(label));
   }
 
   private static void generateDefaultValues(

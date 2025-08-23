@@ -1,5 +1,7 @@
 package org.smoothbuild.common.log.report;
 
+import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.log.base.Origin.EXECUTION;
 
@@ -11,8 +13,16 @@ import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Origin;
 
 public record Report(Label label, Maybe<Trace> trace, Origin origin, List<Log> logs) {
+  public static Report report(Label label) {
+    return report(label, list());
+  }
+
+  public static Report report(Label label, Log log) {
+    return report(label, list(log));
+  }
+
   public static Report report(Label label, List<Log> logs) {
-    return report(label, Maybe.none(), logs);
+    return report(label, none(), logs);
   }
 
   public static Report report(Label label, Trace trace, List<Log> logs) {
@@ -21,10 +31,6 @@ public record Report(Label label, Maybe<Trace> trace, Origin origin, List<Log> l
 
   public static Report report(Label label, Maybe<Trace> trace, List<Log> logs) {
     return report(label, trace, EXECUTION, logs);
-  }
-
-  public static Report report(Label label, Origin origin, List<Log> logs) {
-    return report(label, Maybe.none(), origin, logs);
   }
 
   public static Report report(Label label, Trace trace, Origin origin, List<Log> logs) {
@@ -45,6 +51,10 @@ public record Report(Label label, Maybe<Trace> trace, Origin origin, List<Log> l
 
   public Report withLogs(List<Log> logs) {
     return new Report(label, trace, origin, logs);
+  }
+
+  public boolean containsFailures() {
+    return Log.containsFailure(logs);
   }
 
   public <T extends Throwable> Report mapLabel(Function1<Label, Label, T> function1) throws T {

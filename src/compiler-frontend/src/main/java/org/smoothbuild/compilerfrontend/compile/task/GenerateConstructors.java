@@ -1,6 +1,7 @@
 package org.smoothbuild.compilerfrontend.compile.task;
 
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 
@@ -23,7 +24,7 @@ public class GenerateConstructors implements Task1<PModule, PModule> {
     var label = COMPILER_FRONT_LABEL.append(":generateConstructors");
     var newEvaluables = pModule.evaluables().addAll(constructorCreator.constructors);
     var newModule = new PModule(pModule.fullPath(), pModule.structs(), newEvaluables);
-    return output(newModule, label, list());
+    return output(newModule, report(label));
   }
 
   private static class ConstructorCreator extends PScopingModuleVisitor<RuntimeException> {

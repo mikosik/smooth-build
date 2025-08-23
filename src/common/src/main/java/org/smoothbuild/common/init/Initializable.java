@@ -1,8 +1,8 @@
 package org.smoothbuild.common.init;
 
-import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.fatal;
+import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
 
@@ -24,10 +24,10 @@ public abstract class Initializable implements Task0<Tuple0> {
     var label = INITIALIZE_LABEL.append(":initialize" + componentName);
     try {
       executeImpl();
-      return output(tuple(), label, list());
+      return output(tuple(), report(label));
     } catch (Exception e) {
       var fatal = fatal("Initializing " + componentName + " failed with exception:", e);
-      return output(label, list(fatal));
+      return output(report(label, fatal));
     }
   }
 

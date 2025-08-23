@@ -8,7 +8,6 @@ import static org.smoothbuild.compilerfrontend.lang.name.Bindings.bindings;
 import static org.smoothbuild.compilerfrontend.lang.type.STypes.baseTypes;
 
 import org.smoothbuild.common.collect.Map;
-import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.location.Locations;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task0;
@@ -23,11 +22,10 @@ public class LoadInternalModuleMembers implements Task0<SModule> {
   @Override
   public Output<SModule> execute() {
     var label = COMPILER_FRONT_LABEL.append(":loadInternalModule");
-    var logger = new Logger();
     Map<Name, STypeDefinition> typeMap = baseTypes().toMap(HasName::name, this::toTypeDefinition);
     var members = new SScope(bindings(typeMap), bindings());
     var sModule = new SModule(typeMap, map(), members);
-    return output(sModule, report(label, logger.toList()));
+    return output(sModule, report(label));
   }
 
   private STypeDefinition toTypeDefinition(SBaseType sBaseType) {

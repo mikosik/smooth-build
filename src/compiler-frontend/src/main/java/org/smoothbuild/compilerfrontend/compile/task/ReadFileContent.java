@@ -2,8 +2,8 @@ package org.smoothbuild.compilerfrontend.compile.task;
 
 import static okio.Okio.buffer;
 import static org.smoothbuild.common.Constants.CHARSET;
-import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Log.error;
+import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 
@@ -28,13 +28,13 @@ public class ReadFileContent implements Task1<FullPath, String> {
     var label = COMPILER_FRONT_LABEL.append(":readFileContent");
     try {
       var content = contentOf(fullPath);
-      return output(content, label, list());
+      return output(content, report(label));
     } catch (NoSuchFileException e) {
       var error = error(fullPath.q() + " doesn't exist.");
-      return output(label, list(error));
+      return output(report(label, error));
     } catch (IOException e) {
       var error = error("Cannot read build script file " + fullPath.q() + ".");
-      return output(label, list(error));
+      return output(report(label, error));
     }
   }
 

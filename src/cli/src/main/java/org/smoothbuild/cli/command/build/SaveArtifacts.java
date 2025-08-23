@@ -6,7 +6,10 @@ import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.log.base.Log.error;
+import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.schedule.Output.output;
+import static org.smoothbuild.common.schedule.Output.outputWithMaybeValue;
+import static org.smoothbuild.common.tuple.Tuples.tuple;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 import static org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb.dbPathTo;
 import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.fileContent;
@@ -62,7 +65,7 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
     try {
       fileSystem.createDir(artifactsPath);
     } catch (IOException e) {
-      return output(label, list(error(e.getMessage())));
+      return output(report(label, error(e.getMessage())));
     }
     var sReferences = evaluatedExprs.sExprs().map(this::toReferenceS);
     var artifacts = sReferences.zip(evaluatedExprs.bValues(), Tuples::tuple);
@@ -70,7 +73,7 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
     artifacts
         .sortUsing(comparing(a -> a.element1().referencedId().toString()))
         .forEach(t -> save(t.element1(), t.element2(), logger));
-    return output(label, logger.toList());
+    return outputWithMaybeValue(tuple(), report(label, logger.toList()));
   }
 
   private SPolyReference toReferenceS(SExpr expr) {

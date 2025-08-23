@@ -39,9 +39,8 @@ public class MaybeTest {
   @Nested
   class _some {
     @Test
-    void can_hold_null() {
-      var some = some(null);
-      assertThat(some.get()).isNull();
+    void cannot_hold_null() {
+      assertCall(() -> some(null)).throwsException(NullPointerException.class);
     }
 
     @Test
@@ -108,9 +107,9 @@ public class MaybeTest {
     }
 
     @Test
-    void map_can_convert_to_null() {
+    void map_cannot_convert_to_null() {
       var some = some(16);
-      assertThat(some.map(x -> (String) null)).isEqualTo(some(null));
+      assertCall(() -> some.map(x -> (String) null)).throwsException(NullPointerException.class);
     }
 
     @Test

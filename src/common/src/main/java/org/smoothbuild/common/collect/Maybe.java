@@ -15,9 +15,8 @@ import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.common.function.Function2;
 
 public abstract sealed class Maybe<E> permits Some, None {
-
   public static <E> Some<E> some(E element) {
-    return new Some<>(element);
+    return new Some<>(requireNonNull(element));
   }
 
   public static <E> None<E> none() {

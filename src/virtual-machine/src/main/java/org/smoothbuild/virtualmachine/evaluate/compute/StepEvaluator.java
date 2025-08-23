@@ -6,6 +6,7 @@ import static org.smoothbuild.common.log.base.Origin.DISK;
 import static org.smoothbuild.common.log.base.Origin.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.schedule.Output.output;
+import static org.smoothbuild.common.schedule.Output.outputWithMaybeValue;
 import static org.smoothbuild.common.schedule.Output.schedulingOutput;
 import static org.smoothbuild.virtualmachine.VmConstants.VM_EVALUATE;
 import static org.smoothbuild.virtualmachine.VmConstants.VM_LABEL;
@@ -152,13 +153,12 @@ public class StepEvaluator {
 
   private static Output<BValue> newOutput(Step step, BOutput bOutput, Origin source)
       throws BytecodeException {
-    return output(bOutput.value(), newReport(step, bOutput, source));
+    return outputWithMaybeValue(bOutput.value(), newReport(step, bOutput, source));
   }
 
   private static Output<BValue> outputForException(Step step, Exception e) {
     var fatal = fatal("Vm evaluation Task failed with exception:", e);
-    var report = report(VM_EVALUATE, step.trace(), list(fatal));
-    return output(null, report);
+    return output(report(VM_EVALUATE, step.trace(), list(fatal)));
   }
 
   private static Report newReport(Step step, BOutput bOutput, Origin origin)

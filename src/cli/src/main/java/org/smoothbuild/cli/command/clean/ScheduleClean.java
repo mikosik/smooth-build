@@ -1,6 +1,7 @@
 package org.smoothbuild.cli.command.clean;
 
-import static org.smoothbuild.common.schedule.Output.output;
+import static org.smoothbuild.common.log.report.Report.report;
+import static org.smoothbuild.common.schedule.Output.outputWithMaybeValue;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
 
 import jakarta.inject.Inject;
@@ -39,7 +40,7 @@ public class ScheduleClean implements Task0<Tuple0> {
     deleteDir("object cache", bytecodeDbPath, logger);
     deleteDir("computation cache", computationDbPath, logger);
     deleteDir("artifacts", artifactsPath, logger);
-    return output(tuple(), CleanCommand.LABEL, logger.toList());
+    return outputWithMaybeValue(tuple(), report(CleanCommand.LABEL, logger.toList()));
   }
 
   private void deleteDir(String name, FullPath path, Logger logger) {

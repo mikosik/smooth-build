@@ -6,7 +6,8 @@ import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Maybe.maybe;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
-import static org.smoothbuild.common.schedule.Output.output;
+import static org.smoothbuild.common.log.report.Report.report;
+import static org.smoothbuild.common.schedule.Output.outputWithMaybeValue;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
 import static org.smoothbuild.compilerfrontend.lang.name.NList.nlistWithShadowing;
@@ -93,7 +94,7 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
     apTranslatingVisitor.visit(moduleContext);
     var pModule = new PModule(fullPath, listOfAll(structs), listOfAll(evaluables));
     var label = COMPILER_FRONT_LABEL.append(":simplifyParseTree");
-    return output(pModule, label, logger.toList());
+    return outputWithMaybeValue(pModule, report(label, logger.toList()));
   }
 
   private static String unquote(String quotedString) {

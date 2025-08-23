@@ -1,8 +1,9 @@
 package org.smoothbuild.cli.command.build;
 
-import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Log.error;
+import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.schedule.Output.output;
+import static org.smoothbuild.common.tuple.Tuples.tuple;
 
 import jakarta.inject.Inject;
 import java.io.IOException;
@@ -28,9 +29,9 @@ public class DeleteArtifacts implements Task0<Tuple0> {
     var label = BuildCommand.LABEL.append(":deleteArtifacts");
     try {
       fileSystem.deleteRecursively(artifactsPath);
-      return output(label, list());
+      return output(tuple(), report(label));
     } catch (IOException e) {
-      return output(label, list(error(e.getMessage())));
+      return output(report(label, error(e.getMessage())));
     }
   }
 }

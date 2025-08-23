@@ -4,7 +4,8 @@ import static java.lang.String.join;
 import static org.smoothbuild.common.Antlr.errorLine;
 import static org.smoothbuild.common.Antlr.markingLine;
 import static org.smoothbuild.common.base.Strings.unlines;
-import static org.smoothbuild.common.schedule.Output.output;
+import static org.smoothbuild.common.log.report.Report.report;
+import static org.smoothbuild.common.schedule.Output.outputWithMaybeValue;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
 
@@ -40,9 +41,10 @@ public class Parse implements Task2<String, FullPath, ModuleContext> {
     var smoothAntlrParser = new SmoothAntlrParser(new CommonTokenStream(smoothAntlrLexer));
     smoothAntlrParser.removeErrorListeners();
     smoothAntlrParser.addErrorListener(errorListener);
+    var module = smoothAntlrParser.module();
 
     var label = COMPILER_FRONT_LABEL.append(":parse");
-    return output(smoothAntlrParser.module(), label, logger.toList());
+    return outputWithMaybeValue(module, report(label, logger.toList()));
   }
 
   public static class ErrorListener implements ANTLRErrorListener {

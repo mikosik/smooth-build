@@ -22,7 +22,7 @@ public class Try<V> {
   }
 
   public static <T> Try<T> of(T value, Collection<Log> logs) {
-    Maybe<T> maybe = containsFailure(logs) ? Maybe.none() : some(value);
+    Maybe<T> maybe = containsFailure(logs) ? none() : some(value);
     return new Try<>(maybe, logs);
   }
 

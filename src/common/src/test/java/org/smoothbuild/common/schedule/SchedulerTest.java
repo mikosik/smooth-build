@@ -59,12 +59,6 @@ public class SchedulerTest {
       }
 
       @Test
-      void successful_task_execution_can_return_null() {
-        Task0<Object> task = () -> output(null, newReport());
-        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task), null);
-      }
-
-      @Test
       void task_is_executed_after_its_predecessors() throws Exception {
         var atomicInteger = new AtomicInteger(0);
         MutablePromise<Maybe<String>> predecessor = promise();
@@ -138,13 +132,6 @@ public class SchedulerTest {
         Task1<Integer, String> task = (i) -> output(i.toString(), report);
         var arg1 = argument(7);
         assertExecutionSubmitsReport(scheduler -> scheduler.submit(task, arg1), report);
-      }
-
-      @Test
-      void successful_task_execution_can_return_null() {
-        Task1<Integer, String> task = (i) -> output(null, newReport());
-        var arg1 = argument(7);
-        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, arg1), null);
       }
 
       @Test
@@ -244,15 +231,6 @@ public class SchedulerTest {
       }
 
       @Test
-      void successful_task_execution_can_return_null() {
-        Task2<Integer, Integer, Object> task = (a1, a2) -> output(null, newReport());
-
-        var arg1 = argument(7);
-        var arg2 = argument(5);
-        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, arg1, arg2), null);
-      }
-
-      @Test
       void task_is_executed_after_its_predecessors() throws Exception {
         var atomicInteger = new AtomicInteger(0);
         MutablePromise<Maybe<String>> predecessor = promise();
@@ -349,13 +327,6 @@ public class SchedulerTest {
         TaskX<Integer, String> task = (i) -> output(i.toString(), report);
         var args = list(argument(7));
         assertExecutionSubmitsReport(scheduler -> scheduler.submit(task, args), report);
-      }
-
-      @Test
-      void successful_task_execution_can_return_null() {
-        TaskX<Integer, String> task = (i) -> output(null, newReport());
-        var args = list(argument(7));
-        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, args), null);
       }
 
       @Test
@@ -576,7 +547,7 @@ public class SchedulerTest {
   public static List<Arguments> executionReports() {
     return list(arguments(
         newReport(),
-        report(label(":myLabel"), MEMORY, list(info("message"))),
+        report(label(":myLabel"), none(), MEMORY, list(info("message"))),
         report(label(":myLabel"), list(info("message"))),
         newReportWithError()));
   }

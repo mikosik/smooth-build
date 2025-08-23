@@ -3,6 +3,7 @@ package org.smoothbuild.cli.command.version;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.Log.info;
+import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
 
@@ -28,10 +29,10 @@ public class ScheduleVersion implements Task0<Tuple0> {
   public Output<Tuple0> execute() {
     try {
       var info = info(createVersionText(installationHashes.installationNode()));
-      return output(tuple(), VersionCommand.LABEL, list(info));
+      return output(tuple(), report(VersionCommand.LABEL, info));
     } catch (IOException e) {
       var fatal = fatal("ERROR: IO error when calculating installation hash: " + e.getMessage());
-      return output(VersionCommand.LABEL, list(fatal));
+      return output(report(VersionCommand.LABEL, fatal));
     }
   }
 

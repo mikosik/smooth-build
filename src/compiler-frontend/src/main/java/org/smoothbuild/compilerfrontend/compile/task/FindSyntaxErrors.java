@@ -1,7 +1,8 @@
 package org.smoothbuild.compilerfrontend.compile.task;
 
 import static org.smoothbuild.common.base.Strings.q;
-import static org.smoothbuild.common.schedule.Output.output;
+import static org.smoothbuild.common.log.report.Report.report;
+import static org.smoothbuild.common.schedule.Output.outputWithMaybeValue;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
 
@@ -34,7 +35,7 @@ public class FindSyntaxErrors implements Task1<PModule, PModule> {
     detectStructFieldWithDefaultValue(pModule, logger);
     detectLambdaParamWithDefaultValue(pModule, logger);
     var label = COMPILER_FRONT_LABEL.append(":findSyntaxErrors");
-    return output(pModule, label, logger.toList());
+    return outputWithMaybeValue(pModule, report(label, logger.toList()));
   }
 
   private static void detectIllegalAnnotations(PModule pModule, Logger logger) {

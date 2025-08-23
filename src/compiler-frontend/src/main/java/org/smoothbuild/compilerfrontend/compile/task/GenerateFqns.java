@@ -1,6 +1,7 @@
 package org.smoothbuild.compilerfrontend.compile.task;
 
-import static org.smoothbuild.common.schedule.Output.output;
+import static org.smoothbuild.common.log.report.Report.report;
+import static org.smoothbuild.common.schedule.Output.outputWithMaybeValue;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
@@ -40,7 +41,7 @@ public class GenerateFqns implements Task1<PModule, PModule> {
     var logger = new Logger();
     new Visitor(logger).visit(pModule);
     var label = COMPILER_FRONT_LABEL.append(":generateIds");
-    return output(pModule, label, logger.toList());
+    return outputWithMaybeValue(pModule, report(label, logger.toList()));
   }
 
   private static class Visitor extends PModuleVisitor<RuntimeException> {

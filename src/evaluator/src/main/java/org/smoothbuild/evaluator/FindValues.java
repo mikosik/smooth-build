@@ -5,7 +5,9 @@ import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Result.err;
 import static org.smoothbuild.common.collect.Result.ok;
 import static org.smoothbuild.common.log.location.Locations.commandLineLocation;
+import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.schedule.Output.output;
+import static org.smoothbuild.common.schedule.Output.outputWithMaybeValue;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.parseReference;
 import static org.smoothbuild.evaluator.EvaluatorConstants.EVALUATOR_LABEL;
 
@@ -36,10 +38,10 @@ public class FindValues implements Task2<SScope, List<String>, List<SExpr>> {
     }
     var label = EVALUATOR_LABEL.append(":findValues");
     if (logger.containsFailure()) {
-      return output(label, logger.toList());
+      return output(report(label, logger.toList()));
     }
     List<SExpr> exprs = listOfAll(result).map(FindValues::instantiatePoly);
-    return output(exprs, label, logger.toList());
+    return outputWithMaybeValue(exprs, report(label, logger.toList()));
   }
 
   private static SInstantiate instantiatePoly(SPolyEvaluable v) {

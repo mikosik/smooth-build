@@ -392,8 +392,7 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
 
     private <T> Output<T> failedOutput(
         Label label, Maybe<Trace> trace, String message, Throwable e) {
-      List<Log> logs = list(fatal(message, e));
-      return output(null, report(label, trace, logs));
+      return output(report(label, trace, list(fatal(message, e))));
     }
 
     private Trace newTrace(BCall call, BExpr called, Trace next) {

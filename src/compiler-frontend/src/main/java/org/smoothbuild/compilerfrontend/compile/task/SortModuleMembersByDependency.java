@@ -1,10 +1,10 @@
 package org.smoothbuild.compilerfrontend.compile.task;
 
 import static java.lang.String.join;
-import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.graph.SortTopologically.sortTopologically;
 import static org.smoothbuild.common.log.base.Log.error;
+import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
@@ -44,19 +44,19 @@ public class SortModuleMembersByDependency implements Task1<PModule, PModule> {
     var sortedTs = sortStructsByDeps(pModule.structs());
     if (sortedTs.sorted() == null) {
       var error = createCycleError("Type hierarchy", sortedTs.cycle());
-      return output(label, list(error));
+      return output(report(label, error));
     }
     var sortedEvaluables = sortEvaluablesByDeps(pModule.evaluables());
     if (sortedEvaluables.sorted() == null) {
       var error = createCycleError("Reference graph", sortedEvaluables.cycle());
-      return output(label, list(error));
+      return output(report(label, error));
     }
     PModule result = new PModule(
         pModule.fullPath(),
         sortedTs.valuesReversed(),
         sortedEvaluables.valuesReversed(),
         pModule.scope());
-    return output(result, label, list());
+    return output(result, report(label));
   }
 
   private static TopologicalSortingRes<Id, PPolyEvaluable, Location> sortEvaluablesByDeps(

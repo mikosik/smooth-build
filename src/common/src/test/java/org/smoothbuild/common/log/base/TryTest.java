@@ -22,10 +22,9 @@ public class TryTest {
     @Nested
     class _with_null_value {
       @Test
-      void and_no_failure() {
-        var tryOf = Try.of(null, warning("warning message"));
-        assertThat(tryOf.get()).isNull();
-        assertThat(tryOf.logs()).isEqualTo(list(warning("warning message")));
+      void and_no_failure_fails() {
+        assertCall(() -> Try.of(null, warning("warning message")))
+            .throwsException(NullPointerException.class);
       }
 
       @Test
@@ -56,58 +55,33 @@ public class TryTest {
 
   @Nested
   class _success {
-    @Nested
-    class _with_null_value {
-      @Test
-      void has_value() {
-        var success = success(null);
-        assertThat(success.get()).isNull();
-      }
-
-      @Test
-      void toMaybe_returns_some_with_null() {
-        var success = success(null);
-        assertThat(success.toMaybe()).isEqualTo(some(null));
-      }
-
-      @Test
-      void creation_with_non_problem_log_is_allowed() {
-        var success = success(null, warning("warning message"));
-        assertThat(success.get()).isNull();
-      }
-
-      @Test
-      void creation_with_problem_fails() {
-        assertCall(() -> success(null, error("error message")))
-            .throwsException(IllegalArgumentException.class);
-      }
+    @Test
+    void creating_with_null_value_fails() {
+      assertCall(() -> success(null)).throwsException(NullPointerException.class);
     }
 
-    @Nested
-    class _with_non_null_value {
-      @Test
-      void has_value() {
-        var success = success("abc");
-        assertThat(success.get()).isEqualTo("abc");
-      }
+    @Test
+    void get_returns_value() {
+      var success = success("abc");
+      assertThat(success.get()).isEqualTo("abc");
+    }
 
-      @Test
-      void toMaybe_returns_some_with_value() {
-        var success = success("abc");
-        assertThat(success.toMaybe()).isEqualTo(some("abc"));
-      }
+    @Test
+    void toMaybe_returns_some_with_value() {
+      var success = success("abc");
+      assertThat(success.toMaybe()).isEqualTo(some("abc"));
+    }
 
-      @Test
-      void creation_with_non_problem_log_is_allowed() {
-        var success = success("abc", warning("warning message"));
-        assertThat(success.get()).isEqualTo("abc");
-      }
+    @Test
+    void creation_with_non_problem_log_is_allowed() {
+      var success = success("abc", warning("warning message"));
+      assertThat(success.get()).isEqualTo("abc");
+    }
 
-      @Test
-      void creation_with_problem_fails() {
-        assertCall(() -> success("abc", error("error message")))
-            .throwsException(IllegalArgumentException.class);
-      }
+    @Test
+    void creation_with_problem_fails() {
+      assertCall(() -> success("abc", error("error message")))
+          .throwsException(IllegalArgumentException.class);
     }
   }
 

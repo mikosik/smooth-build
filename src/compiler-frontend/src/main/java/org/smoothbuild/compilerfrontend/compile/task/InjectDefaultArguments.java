@@ -4,7 +4,8 @@ import static java.lang.Math.max;
 import static java.util.Collections.nCopies;
 import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.common.schedule.Output.output;
+import static org.smoothbuild.common.log.report.Report.report;
+import static org.smoothbuild.common.schedule.Output.outputWithMaybeValue;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
 import static org.smoothbuild.compilerfrontend.lang.name.Name.referenceableName;
@@ -35,7 +36,7 @@ public class InjectDefaultArguments implements Task1<PModule, PModule> {
     var visitor = new Visitor();
     visitor.visit(pModule);
     var label = COMPILER_FRONT_LABEL.append(":injectDefaultArguments");
-    return output(pModule, label, visitor.logger.toList());
+    return outputWithMaybeValue(pModule, report(label, visitor.logger.toList()));
   }
 
   private static class Visitor extends PScopingModuleVisitor<RuntimeException> {

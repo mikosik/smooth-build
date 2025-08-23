@@ -2,8 +2,8 @@ package org.smoothbuild.compilerfrontend.compile.task;
 
 import static java.math.BigInteger.ONE;
 import static org.smoothbuild.common.base.Throwables.unexpectedCaseException;
-import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.lang.name.Bindings.bindings;
@@ -72,7 +72,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
   public Output<SModule> execute(PModule pModule, SScope imported) {
     var label = COMPILER_FRONT_LABEL.append(":buildIr");
     var sModule = new Worker(imported).convertModule(pModule);
-    return output(sModule, label, list());
+    return output(sModule, report(label));
   }
 
   public static class Worker {

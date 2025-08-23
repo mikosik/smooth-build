@@ -52,7 +52,7 @@ public class ScheduleList implements Task0<Tuple0> {
           .sorted()
           .collect(joining("\n"));
       var info = info("Values that can be evaluated:\n" + oneValuePerLineString);
-      return output(tuple(), ListCommand.LABEL, list(info));
+      return output(tuple(), report(ListCommand.LABEL, info));
     }
   }
 

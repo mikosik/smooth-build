@@ -2,7 +2,7 @@ package org.smoothbuild.compilerfrontend.compile.infer;
 
 import static java.util.Comparator.comparing;
 import static org.smoothbuild.common.base.Strings.q;
-import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.infer.ConstraintCollector.collectConstraints;
@@ -14,7 +14,6 @@ import static org.smoothbuild.compilerfrontend.lang.type.STypeVar.typeParamsToSo
 import org.smoothbuild.common.collect.Collection;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Set;
-import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task1;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
@@ -40,16 +39,13 @@ import org.smoothbuild.compilerfrontend.lang.type.tool.UnifierException;
 public class InferTypes implements Task1<PModule, PModule> {
   @Override
   public Output<PModule> execute(PModule pModule) {
+    var label = COMPILER_FRONT_LABEL.append(":inferTypes");
     try {
       new Worker().visit(pModule);
+      return output(pModule, report(label));
     } catch (TypeException e) {
-      return newOutput(pModule, list(e.log()));
+      return output(report(label, e.log()));
     }
-    return newOutput(pModule, list());
-  }
-
-  private static Output<PModule> newOutput(PModule pModule, List<Log> logs) {
-    return output(pModule, COMPILER_FRONT_LABEL.append(":inferTypes"), logs);
   }
 
   public static class Worker extends PModuleVisitor<TypeException> {

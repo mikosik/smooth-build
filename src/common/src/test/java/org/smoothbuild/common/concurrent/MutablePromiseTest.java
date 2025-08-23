@@ -25,10 +25,9 @@ public class MutablePromiseTest {
   }
 
   @Test
-  void setting_value_to_null_is_allowed() {
+  void setting_value_to_null_fails() {
     var mutablePromise = new MutablePromise<>();
-    mutablePromise.accept(null);
-    assertThat(mutablePromise.get()).isNull();
+    assertCall(() -> mutablePromise.accept(null)).throwsException(NullPointerException.class);
   }
 
   @Test
