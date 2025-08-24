@@ -27,9 +27,10 @@ public class Unzip {
       while ((header = zipInputStream.getNextEntry()) != null) {
         var fileName = header.getFileName();
         if (!fileName.endsWith("/") && includePredicate.test(fileName)) {
-          String pathError = detectPathError(fileName);
-          if (pathError != null) {
-            return maybe("File in archive has illegal name = '" + fileName + "'. " + pathError);
+          var pathError = detectPathError(fileName)
+              .map(e -> "File in archive has illegal name = '" + fileName + "'. " + e);
+          if (pathError.isSome()) {
+            return pathError;
           }
           if (!fileNames.add(fileName)) {
             var message = "Archive contains more than one file with name '" + fileName + "'.";

@@ -3,8 +3,11 @@ package org.smoothbuild.common.filesystem.base;
 import static java.util.Arrays.asList;
 import static java.util.regex.Pattern.quote;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.collect.Maybe.some;
 
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Maybe;
 
 public class Path implements PathI<Path> {
   public static final String SEPARATOR = "/";
@@ -21,33 +24,32 @@ public class Path implements PathI<Path> {
   }
 
   public static void failIfNotLegalPath(String value) {
-    String error = detectPathError(value);
-    if (error != null) {
+    detectPathError(value).ifPresent(error -> {
       throw new IllegalPathException(error);
-    }
+    });
   }
 
-  public static String detectPathError(String value) {
+  public static Maybe<String> detectPathError(String value) {
     if (value.isEmpty()) {
-      return "Path cannot be empty string.";
+      return some("Path cannot be empty string.");
     }
     if (value.contains("//")) {
-      return "Path cannot contain two slashes '//' in a row.";
+      return some("Path cannot contain two slashes '//' in a row.");
     }
     if (value.startsWith("/")) {
-      return "Path cannot start with slash character '/'.";
+      return some("Path cannot start with slash character '/'.");
     }
     if (value.endsWith("/")) {
-      return "Path cannot end with slash character '/'.";
+      return some("Path cannot end with slash character '/'.");
     }
     var parts = asList(value.split(quote(SEPARATOR)));
     if (parts.contains(".")) {
-      return "Path cannot contain '.' part unless it is path denoting root dir ('.').";
+      return some("Path cannot contain '.' part unless it is path denoting root dir ('.').");
     }
     if (parts.contains("..")) {
-      return "Path cannot contain '..' part.";
+      return some("Path cannot contain '..' part.");
     }
-    return null;
+    return none();
   }
 
   public static Path root() {
