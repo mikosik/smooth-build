@@ -66,7 +66,7 @@ public abstract sealed class Maybe<E> permits Some, None {
     private final E element;
 
     private Some(E element) {
-      this.element = element;
+      this.element = requireNonNull(element);
     }
 
     @Override
