@@ -1,6 +1,6 @@
 package org.smoothbuild.cli.command.build;
 
-import static org.smoothbuild.cli.command.base.CreateInjector.createAliasPathMap;
+import static org.smoothbuild.cli.command.base.AliasToPathMaps.createAliasToPathMap;
 import static org.smoothbuild.common.log.base.Label.label;
 
 import java.nio.file.Path;
@@ -89,7 +89,7 @@ public class BuildCommand extends ProjectCommand {
   @Override
   protected Integer executeCommand(Path projectDir) {
     var commandRunnerFactory = DaggerBuildCommandRunnerFactory.builder()
-        .aliasPathMap(createAliasPathMap(projectDir))
+        .aliasPathMap(createAliasToPathMap(projectDir))
         .out(out())
         .logLevel(filterLogs)
         .filterTasks(filterTasks)

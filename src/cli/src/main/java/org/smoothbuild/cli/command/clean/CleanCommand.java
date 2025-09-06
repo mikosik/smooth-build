@@ -1,6 +1,6 @@
 package org.smoothbuild.cli.command.clean;
 
-import static org.smoothbuild.cli.command.base.CreateInjector.createAliasPathMap;
+import static org.smoothbuild.cli.command.base.AliasToPathMaps.createAliasToPathMap;
 import static org.smoothbuild.common.log.base.Label.label;
 
 import java.nio.file.Path;
@@ -18,7 +18,7 @@ public class CleanCommand extends ProjectCommand {
   @Override
   protected Integer executeCommand(Path projectDir) {
     var commandRunnerFactory = DaggerCleanCommandRunnerFactory.builder()
-        .aliasPathMap(createAliasPathMap(projectDir))
+        .aliasPathMap(createAliasToPathMap(projectDir))
         .out(out())
         .logLevel(filterLogs)
         .filterTasks(report -> true)

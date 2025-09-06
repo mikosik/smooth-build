@@ -13,12 +13,12 @@ import java.nio.file.Path;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.filesystem.base.Alias;
 
-public class CreateInjector {
-  public static Map<Alias, Path> createAliasPathMap(Path projectDir) {
-    return createAliasPathMap().put(PROJECT_ALIAS, projectDir);
+public class AliasToPathMaps {
+  public static Map<Alias, Path> createAliasToPathMap(Path projectDir) {
+    return createAliasToPathMap().put(PROJECT_ALIAS, projectDir);
   }
 
-  public static Map<Alias, Path> createAliasPathMap() {
+  public static Map<Alias, Path> createAliasToPathMap() {
     var installationDir = installationDir();
     return map(
         LIBRARY_ALIAS, installationDir.resolve(STANDARD_LIBRARY_DIR_NAME),
@@ -31,7 +31,7 @@ public class CreateInjector {
 
   private static Path smoothJarPath() {
     try {
-      var uri = CreateInjector.class
+      var uri = AliasToPathMaps.class
           .getProtectionDomain()
           .getCodeSource()
           .getLocation()

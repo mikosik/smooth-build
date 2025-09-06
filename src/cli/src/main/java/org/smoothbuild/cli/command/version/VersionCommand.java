@@ -1,6 +1,6 @@
 package org.smoothbuild.cli.command.version;
 
-import static org.smoothbuild.cli.command.base.CreateInjector.createAliasPathMap;
+import static org.smoothbuild.cli.command.base.AliasToPathMaps.createAliasToPathMap;
 import static org.smoothbuild.common.log.base.Label.label;
 
 import java.util.concurrent.Callable;
@@ -16,7 +16,7 @@ public class VersionCommand extends LoggingCommand implements Callable<Integer> 
   @Override
   public Integer call() {
     var commandRunnerFactory = DaggerVersionCommandRunnerFactory.builder()
-        .aliasPathMap(createAliasPathMap())
+        .aliasPathMap(createAliasToPathMap())
         .out(out())
         .logLevel(filterLogs)
         .filterTasks(report -> true)
