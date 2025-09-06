@@ -6,8 +6,6 @@ import java.util.Properties;
 import org.junit.jupiter.api.Test;
 
 public class InstallationHashesTest {
-  private Properties properties;
-
   @Test
   void java_platforms_with_same_properties_have_same_hash() {
     assertThat(InstallationHashes.calculateJavaPlatformHash(properties()))
@@ -16,7 +14,7 @@ public class InstallationHashesTest {
 
   @Test
   void java_platforms_with_different_java_vendor_have_different_hashes() {
-    properties = properties();
+    var properties = properties();
     properties.setProperty("java.vendor", "different");
 
     assertThat(InstallationHashes.calculateJavaPlatformHash(properties))
@@ -25,7 +23,7 @@ public class InstallationHashesTest {
 
   @Test
   void java_platforms_with_different_java_version_have_different_hashes() {
-    properties = properties();
+    var properties = properties();
     properties.setProperty("java.version", "different");
 
     assertThat(InstallationHashes.calculateJavaPlatformHash(properties))
@@ -34,7 +32,7 @@ public class InstallationHashesTest {
 
   @Test
   void java_platforms_with_different_java_runtime_name_have_different_hashes() {
-    properties = properties();
+    var properties = properties();
     properties.setProperty("java.runtime.name", "different");
 
     assertThat(InstallationHashes.calculateJavaPlatformHash(properties))
@@ -43,7 +41,7 @@ public class InstallationHashesTest {
 
   @Test
   void java_platforms_with_different_java_runtime_version_have_different_hashes() {
-    properties = properties();
+    var properties = properties();
     properties.setProperty("java.runtime.version", "different");
 
     assertThat(InstallationHashes.calculateJavaPlatformHash(properties))
@@ -52,7 +50,7 @@ public class InstallationHashesTest {
 
   @Test
   void java_platforms_with_different_java_vm_name_have_different_hashes() {
-    properties = properties();
+    var properties = properties();
     properties.setProperty("java.vm.name", "different");
 
     assertThat(InstallationHashes.calculateJavaPlatformHash(properties))
@@ -61,7 +59,7 @@ public class InstallationHashesTest {
 
   @Test
   void java_platforms_with_different_java_vm_version_have_different_hashes() {
-    properties = properties();
+    var properties = properties();
     properties.setProperty("java.vm.version", "different");
 
     assertThat(InstallationHashes.calculateJavaPlatformHash(properties))
@@ -70,10 +68,10 @@ public class InstallationHashesTest {
 
   @Test
   void regression_collisions_are_not_possible() {
-    properties = properties();
+    var properties = properties();
     properties.setProperty("java.vendor", "A");
     properties.setProperty("java.version", "");
-    Properties properties2 = properties();
+    var properties2 = properties();
     properties2.setProperty("java.vendor", "");
     properties2.setProperty("java.version", "A");
 
@@ -82,7 +80,7 @@ public class InstallationHashesTest {
   }
 
   private static Properties properties() {
-    Properties properties = new Properties();
+    var properties = new Properties();
     properties.setProperty("java.vendor", "1");
     properties.setProperty("java.version", "2");
     properties.setProperty("java.runtime.name", "3");
