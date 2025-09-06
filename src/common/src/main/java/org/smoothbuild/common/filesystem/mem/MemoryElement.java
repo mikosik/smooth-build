@@ -23,7 +23,7 @@ public sealed interface MemoryElement permits MemoryDir, MemoryFile, MemoryLink 
 
   public void addChild(MemoryElement elem) throws IOException;
 
-  public long size();
+  public long size() throws IOException;
 
   public Source source() throws IOException;
 

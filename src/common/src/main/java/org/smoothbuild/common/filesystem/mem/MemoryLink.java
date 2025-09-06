@@ -62,7 +62,7 @@ public final class MemoryLink implements MemoryElement {
   }
 
   @Override
-  public long size() {
+  public long size() throws IOException {
     return target.size();
   }
 

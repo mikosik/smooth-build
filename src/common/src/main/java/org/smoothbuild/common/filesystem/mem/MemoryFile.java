@@ -60,7 +60,11 @@ public final class MemoryFile implements MemoryElement {
   }
 
   @Override
-  public long size() {
+  public long size() throws IOException {
+    if (data == null) {
+      throw new IOException("File does not exist");
+    }
+
     return data.size();
   }
 
