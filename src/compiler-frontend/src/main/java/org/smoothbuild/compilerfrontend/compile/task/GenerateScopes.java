@@ -76,7 +76,7 @@ public class GenerateScopes implements Task2<SScope, PModule, PModule> {
     private final java.util.Map<Name, PReferenceable> referenceables = new HashMap<>();
     private final java.util.Map<Name, PTypeDefinition> types = new HashMap<>();
 
-    public ScopeCreator(PScope scope, Logger log) {
+    private ScopeCreator(PScope scope, Logger log) {
       this.scope = scope;
       this.log = log;
     }

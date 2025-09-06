@@ -26,6 +26,7 @@ public enum Level {
    */
   INFO;
 
+  @SuppressWarnings("EnumOrdinal")
   public boolean hasSeverityAtLeast(Level level) {
     return this.ordinal() <= level.ordinal();
   }

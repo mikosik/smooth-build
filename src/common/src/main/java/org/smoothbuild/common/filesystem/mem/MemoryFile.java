@@ -80,7 +80,7 @@ public final class MemoryFile implements MemoryElement {
   private class MySink extends ForwardingSink {
     private boolean closed = false;
 
-    public MySink() {
+    private MySink() {
       super(new Buffer());
     }
 

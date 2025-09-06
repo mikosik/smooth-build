@@ -48,7 +48,7 @@ public class GenerateFqns implements Task1<PModule, PModule> {
     private final Logger logger;
     private Fqn fqn;
 
-    public Visitor(Logger logger) {
+    private Visitor(Logger logger) {
       this.logger = logger;
       this.fqn = null;
     }

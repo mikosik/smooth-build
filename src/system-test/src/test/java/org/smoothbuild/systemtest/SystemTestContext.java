@@ -307,8 +307,8 @@ public abstract class SystemTestContext {
     return result;
   }
 
-  private static void addFilesToMap(Path rootDir, Path relativePath, HashMap<String, String> result)
-      throws IOException {
+  private static void addFilesToMap(
+      Path rootDir, Path relativePath, java.util.Map<String, String> result) throws IOException {
     try (Stream<Path> stream = Files.list(rootDir.resolve(relativePath))) {
       for (Path path : stream.toList()) {
         Path relative = relativePath.resolve(path.getFileName());

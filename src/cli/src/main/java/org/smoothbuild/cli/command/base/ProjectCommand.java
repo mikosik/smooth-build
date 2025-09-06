@@ -12,6 +12,7 @@ import org.smoothbuild.cli.layout.Layout;
 
 public abstract class ProjectCommand extends LoggingCommand implements Callable<Integer> {
   @Override
+  @SuppressWarnings("Finally")
   public Integer call() {
     Path projectDir = Path.of(".");
     if (!Files.exists(projectDir.resolve(Layout.DEFAULT_MODULE_PATH.toString()))) {

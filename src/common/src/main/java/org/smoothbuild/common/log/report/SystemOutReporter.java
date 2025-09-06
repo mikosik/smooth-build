@@ -1,12 +1,16 @@
 package org.smoothbuild.common.log.report;
 
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import org.smoothbuild.common.Constants;
 
 public class SystemOutReporter implements Reporter {
   private final ReportPrinter reportPrinter;
 
   public SystemOutReporter() {
-    this.reportPrinter = new ReportPrinter(new PrintWriter(System.out));
+    var outputStreamWriter = new OutputStreamWriter(System.out, Constants.CHARSET);
+    this.reportPrinter = new ReportPrinter(new PrintWriter(new BufferedWriter(outputStreamWriter)));
   }
 
   @Override

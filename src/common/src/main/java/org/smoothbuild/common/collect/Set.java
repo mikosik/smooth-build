@@ -1,11 +1,11 @@
 package org.smoothbuild.common.collect;
 
+import static com.google.common.collect.ImmutableSet.builderWithExpectedSize;
 import static com.google.common.collect.ImmutableSortedSet.toImmutableSortedSet;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Map.zipToMap;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSet.Builder;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -36,14 +36,14 @@ public non-sealed class Set<E> implements Collection<E> {
   }
 
   public Set<E> unionWith(Iterable<? extends E> elements) {
-    Builder<E> builder = ImmutableSet.builder();
+    ImmutableSet.Builder<E> builder = ImmutableSet.builder();
     builder.addAll(set);
     builder.addAll(elements);
     return new Set<>(builder.build());
   }
 
   public <F, T extends Throwable> Set<F> map(Function1<? super E, F, T> mapper) throws T {
-    Builder<F> builder = ImmutableSet.builderWithExpectedSize(set.size());
+    ImmutableSet.Builder<F> builder = builderWithExpectedSize(set.size());
     for (E element : set) {
       builder.add(mapper.apply(element));
     }
@@ -51,7 +51,7 @@ public non-sealed class Set<E> implements Collection<E> {
   }
 
   public <T extends Throwable> Set<E> filter(Function1<E, Boolean, T> predicate) throws T {
-    Builder<E> builder = ImmutableSet.builder();
+    ImmutableSet.Builder<E> builder = ImmutableSet.builder();
     for (E element : set) {
       if (predicate.apply(element)) {
         builder.add(element);
@@ -61,7 +61,7 @@ public non-sealed class Set<E> implements Collection<E> {
   }
 
   public Set<E> removeAll(Collection<?> toRemove) {
-    Builder<E> builder = ImmutableSet.builder();
+    ImmutableSet.Builder<E> builder = ImmutableSet.builder();
     for (E element : set) {
       if (!toRemove.contains(element)) {
         builder.add(element);
@@ -112,7 +112,7 @@ public non-sealed class Set<E> implements Collection<E> {
   }
 
   public Set<E> addAll(java.util.Collection<? extends E> collection) {
-    Builder<E> builder = ImmutableSet.builderWithExpectedSize(set.size() + collection.size());
+    ImmutableSet.Builder<E> builder = builderWithExpectedSize(set.size() + collection.size());
     builder.addAll(set);
     builder.addAll(collection);
     return new Set<>(builder.build());

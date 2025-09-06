@@ -122,6 +122,7 @@ public abstract sealed class SType
   }
 
   @Override
+  @SuppressWarnings("EqualsGetClass")
   public boolean equals(Object object) {
     if (this == object) {
       return true;

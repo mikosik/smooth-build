@@ -589,10 +589,6 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
       assertTranslationIsCached(bindings(poly), sInstantiate(poly));
     }
 
-    private void assertTranslationIsCached(SPolyEvaluable sNamedEvaluable) throws Exception {
-      assertTranslationIsCached(bindings(sNamedEvaluable), sInstantiate(sNamedEvaluable));
-    }
-
     private void assertTranslationIsCached(Bindings<SPolyEvaluable> evaluables, SExpr sExpr)
         throws Exception {
       assertTranslationIsCached(sExpr, newTranslator(evaluables));

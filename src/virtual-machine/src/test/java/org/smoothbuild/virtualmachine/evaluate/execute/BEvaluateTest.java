@@ -25,6 +25,7 @@ import static org.smoothbuild.common.testing.AwaitHelper.await;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
 import static org.smoothbuild.virtualmachine.VmConstants.VM_EVALUATE;
 
+import com.google.common.base.Splitter;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
@@ -541,6 +542,7 @@ public class BEvaluateTest extends VmTestContext {
       }
 
       public static class ThrowException {
+        @SuppressWarnings("DoNotCallSuggester")
         public static BValue func(NativeApi nativeApi, BTuple args) {
           throw new ArithmeticException();
         }
@@ -727,7 +729,7 @@ public class BEvaluateTest extends VmTestContext {
         String name = ((BString) args.get(0)).toJavaString();
         String commands = ((BString) args.get(1)).toJavaString();
         int result = 0;
-        for (String command : commands.split(",")) {
+        for (String command : Splitter.on(",").split(commands)) {
           char index = command.charAt(command.length() - 1);
           final String nameAndIndex = name + index;
           var opcode = command.substring(0, command.length() - 1);
@@ -799,7 +801,7 @@ public class BEvaluateTest extends VmTestContext {
     assertThat(sources).containsExactlyElementsIn(resSourceList(size, expectedSource));
   }
 
-  private static ArrayList<Origin> resSourceList(int size, Origin expectedSource) {
+  private static java.util.List<Origin> resSourceList(int size, Origin expectedSource) {
     var expected = new ArrayList<>(nCopies(size, expectedSource));
     expected.set(0, EXECUTION);
     return expected;
@@ -816,7 +818,7 @@ public class BEvaluateTest extends VmTestContext {
   private static class CountingBEvaluate extends BEvaluate {
     private final ConcurrentHashMap<BExpr, AtomicInteger> counters = new ConcurrentHashMap<>();
 
-    public CountingBEvaluate(
+    private CountingBEvaluate(
         Scheduler scheduler,
         StepEvaluator stepEvaluator,
         BytecodeFactory bytecodeFactory,
@@ -830,7 +832,7 @@ public class BEvaluateTest extends VmTestContext {
       return super.newJob(expr, environment, trace);
     }
 
-    public ConcurrentHashMap<BExpr, AtomicInteger> counters() {
+    private ConcurrentHashMap<BExpr, AtomicInteger> counters() {
       return counters;
     }
   }

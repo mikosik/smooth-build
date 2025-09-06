@@ -38,7 +38,7 @@ public class Functions {
   private static class SneakyJavaFunction<A, R, T extends Throwable> implements Function<A, R> {
     private final Function1<A, R, T> wrapped;
 
-    public SneakyJavaFunction(Function1<A, R, T> wrapped) {
+    private SneakyJavaFunction(Function1<A, R, T> wrapped) {
       this.wrapped = wrapped;
     }
 

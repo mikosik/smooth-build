@@ -312,7 +312,7 @@ public class BExprDb {
       String memberName, BExpr member, Class<T> clazz) {
     var evaluationType = member.evaluationType();
     var evaluationTypeClass = evaluationType.getClass();
-    if (!(evaluationTypeClass.equals(clazz))) {
+    if (!evaluationTypeClass.equals(clazz)) {
       throw illegalEvaluationType(
           memberName, clazz.getSimpleName(), evaluationTypeClass.getSimpleName());
     }

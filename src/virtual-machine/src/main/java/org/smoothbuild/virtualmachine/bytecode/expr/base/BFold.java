@@ -48,7 +48,7 @@ public final class BFold extends BOperation {
     var folderEvaluationType = folder.evaluationType();
     var expectedFolderEvaluationType =
         kindDb().lambda(list(initialEvaluationType, arrayType.element()), initialEvaluationType);
-    if (!(folderEvaluationType.equals(expectedFolderEvaluationType))) {
+    if (!folderEvaluationType.equals(expectedFolderEvaluationType)) {
       throw new MemberHasWrongEvaluationTypeException(
           hash(), kind(), "folder", expectedFolderEvaluationType, folderEvaluationType);
     }

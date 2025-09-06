@@ -64,7 +64,7 @@ public class NativeMethodLoader {
     Class<?>[] types = method.getParameterTypes();
     boolean valid = types.length == 2
         && (types[0].equals(NativeApi.class) || types[0].equals(Container.class))
-        && (types[1].equals(BTuple.class));
+        && types[1].equals(BTuple.class);
     if (valid) {
       return ok(method);
     } else {

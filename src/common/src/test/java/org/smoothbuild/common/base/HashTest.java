@@ -87,7 +87,7 @@ public class HashTest {
 
   @Test
   void hashes_of_different_bytes_are_different() {
-    assertThat(Hash.of(someByteString())).isNotEqualTo(someByteString().substring(1));
+    assertThat(Hash.of(someByteString())).isNotEqualTo(Hash.of(someByteString().substring(1)));
   }
 
   @Test

@@ -40,7 +40,7 @@ public final class BSwitch extends BOperation {
         .map(a -> kindDb().lambda(list(a), evaluationType()))
         .construct(l -> kindDb().tuple(l));
     var handlers = readAndCastMemberFromHashChain(hashes, 1, "handlers", BCombine.class);
-    if (!(handlers.evaluationType().equals(expectedHandlersType))) {
+    if (!handlers.evaluationType().equals(expectedHandlersType)) {
       throw new MemberHasWrongEvaluationTypeException(
           hash(), kind(), "handlers", expectedHandlersType, handlers.evaluationType());
     }

@@ -11,6 +11,7 @@ import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Nested;
@@ -174,7 +175,7 @@ public class StringsTest {
     }
   }
 
-  private static HashMap<String, String> createTestData(ImmutableMap<String, String> mappings) {
+  private static Map<String, String> createTestData(ImmutableMap<String, String> mappings) {
     HashMap<String, String> conversionMap = new HashMap<>();
     for (Entry<String, String> entry1 : mappings.entrySet()) {
       for (Entry<String, String> entry2 : mappings.entrySet()) {

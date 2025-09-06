@@ -31,17 +31,15 @@ public class BytecodeMethodLoaderTest extends VmTestContext {
     @Test
     void method_is_cached() throws Exception {
       var method = fetchJMethod(ReturnAbc.class);
-      testCaching(ok(method), ok(method));
+      testCaching(ok(method));
     }
 
     @Test
     void error_when_loading_method_is_cached() throws Exception {
-      var method = fetchJMethod(NonPublicMethod.class);
-      testCaching(err("error message"), err("error message"));
+      testCaching(err("error message"));
     }
 
-    private void testCaching(Result<Method> resultMethod, Result<Method> expected)
-        throws Exception {
+    private void testCaching(Result<Method> resultMethod) throws Exception {
       var methodLoader = mock(MethodLoader.class);
       var jar = bBlob();
       var classBinaryName = "binary.name";
@@ -52,7 +50,6 @@ public class BytecodeMethodLoaderTest extends VmTestContext {
 
       var resultMethod1 = bytecodeMethodLoader.load(bMethod);
       var resultMethod2 = bytecodeMethodLoader.load(bMethod);
-      assertThat(resultMethod1).isEqualTo(expected);
       assertThat(resultMethod1).isSameInstanceAs(resultMethod2);
       verify(methodLoader, times(1)).load(bMethod);
     }

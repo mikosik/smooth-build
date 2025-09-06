@@ -66,7 +66,7 @@ public class Path implements PathI<Path> {
 
   @Override
   public boolean isRoot() {
-    return this == ROOT;
+    return this.equals(ROOT);
   }
 
   @Override

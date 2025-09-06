@@ -67,7 +67,7 @@ public class SortModuleMembersByDependency implements Task1<PModule, PModule> {
   }
 
   private static GraphNode<Id, PPolyEvaluable, Location> evaluable(
-      PPolyEvaluable evaluable, HashSet<Id> localModuleIds) {
+      PPolyEvaluable evaluable, java.util.Set<Id> localModuleIds) {
     HashSet<GraphEdge<Location, Id>> deps = new HashSet<>();
     new PModuleVisitor<RuntimeException>() {
       @Override

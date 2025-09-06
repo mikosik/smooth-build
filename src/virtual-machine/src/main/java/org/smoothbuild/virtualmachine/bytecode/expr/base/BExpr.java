@@ -155,7 +155,7 @@ public abstract sealed class BExpr permits BOperation, BValue {
   protected void validateEvaluationType(
       String nodeName, BType expectedEvaluationType, BType evaluationType)
       throws MemberHasWrongEvaluationTypeException {
-    if (!(evaluationType.equals(expectedEvaluationType))) {
+    if (!evaluationType.equals(expectedEvaluationType)) {
       throw new MemberHasWrongEvaluationTypeException(
           hash(), kind(), nodeName, expectedEvaluationType, evaluationType);
     }

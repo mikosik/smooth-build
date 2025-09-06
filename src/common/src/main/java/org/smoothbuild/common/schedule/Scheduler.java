@@ -171,7 +171,7 @@ public class Scheduler {
       }
     }
 
-    public Promise<Maybe<R>> resultPromise() {
+    private Promise<Maybe<R>> resultPromise() {
       return result;
     }
   }

@@ -1837,11 +1837,6 @@ public class BExprCorruptedTest extends VmTestContext {
     assertCall(() -> dbGet(hash)).throwsException(wrongSizeOfRootChainException(hash, kind, 1));
   }
 
-  private void obj_root_with_data_hash(BKind kind) throws HashedDbException {
-    var hash = hash(hash(kind), hash(kind));
-    assertCall(() -> dbGet(hash)).throwsException(wrongSizeOfRootChainException(hash, kind, 2));
-  }
-
   private void obj_root_with_two_data_hashes(
       BKind type, Hash dataHash, Function1<Hash, ?, BytecodeException> factory)
       throws HashedDbException {

@@ -22,7 +22,7 @@ public record STupleSelect(SExpr selectable, BigInteger index, Location location
 
   @Override
   public String toSourceCode() {
-    return selectable.toSourceCode() + "." + (index.add(ONE));
+    return selectable.toSourceCode() + "." + index.add(ONE);
   }
 
   @Override

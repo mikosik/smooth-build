@@ -5,6 +5,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class ThrowRandomException {
+  @SuppressWarnings("DoNotCallSuggester")
   public static BValue func(NativeApi nativeApi, BTuple args) {
     throw new UnsupportedOperationException(Long.toString(System.nanoTime()));
   }

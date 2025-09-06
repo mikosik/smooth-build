@@ -122,9 +122,4 @@ public class MutablePromiseTest {
   private static Consumer<String> stringConsumer() {
     return mock(Consumer.class);
   }
-
-  @SuppressWarnings("unchecked")
-  private static Consumer<Integer> intConsumer() {
-    return mock(Consumer.class);
-  }
 }

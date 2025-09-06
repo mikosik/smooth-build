@@ -7,6 +7,7 @@ import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 
 import java.util.ArrayList;
+import java.util.List;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task1;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
@@ -30,7 +31,7 @@ public class GenerateDefaultValues implements Task1<PModule, PModule> {
   }
 
   private static void generateDefaultValues(
-      PModule pModule, ArrayList<PPolyEvaluable> namedDefaultValues) {
+      PModule pModule, List<PPolyEvaluable> namedDefaultValues) {
     new PModuleVisitor<RuntimeException>() {
       @Override
       public void visitItem(PItem pItem) throws RuntimeException {

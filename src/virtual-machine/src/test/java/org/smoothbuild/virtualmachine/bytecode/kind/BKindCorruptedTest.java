@@ -765,11 +765,11 @@ public class BKindCorruptedTest extends VmTestContext {
       private final KindId kindId;
       private final Class<? extends BKind> type;
 
-      protected AbstractOperationKindTestSuite(KindId kindId) {
+      private AbstractOperationKindTestSuite(KindId kindId) {
         this(kindId, BType.class);
       }
 
-      protected AbstractOperationKindTestSuite(KindId kindId, Class<? extends BKind> type) {
+      private AbstractOperationKindTestSuite(KindId kindId, Class<? extends BKind> type) {
         this.kindId = kindId;
         this.type = type;
       }

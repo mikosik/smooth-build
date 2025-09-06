@@ -43,7 +43,7 @@ public class FileContentReader {
       this.fullPath = fullPath;
     }
 
-    public synchronized BBlob read() throws IOException, BytecodeException {
+    private synchronized BBlob read() throws IOException, BytecodeException {
       if (blob == null) {
         blob = readImpl();
       }

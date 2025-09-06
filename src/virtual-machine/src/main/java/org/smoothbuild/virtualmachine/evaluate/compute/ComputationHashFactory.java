@@ -11,10 +11,9 @@ import org.smoothbuild.virtualmachine.dagger.Sandbox;
 import org.smoothbuild.virtualmachine.evaluate.step.Step;
 
 public class ComputationHashFactory {
-  /*
+  /**
    * SandboxHash is injected as Lazy, so it is not read until
-   * {@link org.smoothbuild.cli.layout.SandboxHashProviderInitializer}
-   * is invoked.
+   * org.smoothbuild.cli.layout.SandboxHashProviderInitializer is invoked.
    */
   private final Lazy<Hash> sandboxHash;
 

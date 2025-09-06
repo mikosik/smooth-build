@@ -179,7 +179,7 @@ public class MaybeTest {
     @Test
     void get_fails() {
       var none = none();
-      assertCall(() -> assertThat(none.get())).throwsException(NoSuchElementException.class);
+      assertCall(() -> none.get()).throwsException(NoSuchElementException.class);
     }
 
     @Test
@@ -374,7 +374,8 @@ public class MaybeTest {
     new EqualsTester()
         .addEqualityGroup(some("a"), some("a"))
         .addEqualityGroup(some("b"), some("b"))
-        .addEqualityGroup(none(), none());
+        .addEqualityGroup(none(), none())
+        .testEquals();
   }
 
   private static final Function2<Boolean, Integer, String, RuntimeException> concatBoolAndInt =

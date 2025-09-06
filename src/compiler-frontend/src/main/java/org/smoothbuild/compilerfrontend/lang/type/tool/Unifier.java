@@ -5,9 +5,9 @@ import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.compilerfrontend.lang.type.STypeVar.flexibleTypeVar;
 import static org.smoothbuild.compilerfrontend.lang.type.tool.ConstraintInferrer.unifyAndInferConstraints;
 
+import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
@@ -54,12 +54,12 @@ public class Unifier {
   }
 
   public void add(Constraint constraint) throws UnifierException {
-    var queue = new LinkedList<Constraint>();
+    var queue = new ArrayDeque<Constraint>();
     queue.add(constraint);
     drainQueue(queue);
   }
 
-  private void drainQueue(LinkedList<Constraint> queue) throws UnifierException {
+  private void drainQueue(ArrayDeque<Constraint> queue) throws UnifierException {
     while (!queue.isEmpty()) {
       unify(queue.remove(), queue);
     }
@@ -157,7 +157,7 @@ public class Unifier {
     failIfCycleExists(new HashSet<>(), unified);
   }
 
-  private void failIfCycleExists(HashSet<Unified> visited, Unified unified)
+  private void failIfCycleExists(java.util.Set<Unified> visited, Unified unified)
       throws UnifierException {
     if (visited.add(unified)) {
       for (Unified u : unified.usedIn) {
@@ -192,7 +192,7 @@ public class Unifier {
     private final Set<Unified> usedIn;
     private SType type;
 
-    public Unified(STypeVar var) {
+    private Unified(STypeVar var) {
       this.mainTypeVar = var;
       this.typeVars = new HashSet<>();
       this.usedIn = new HashSet<>();

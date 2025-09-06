@@ -90,8 +90,7 @@ public class GenerateScopesTest extends FrontendCompilerTestContext {
 
       initializeScopes(emptyImportedScope(), pModule, new Logger());
 
-      assertThat((pLambda).scope().referenceables().find(fqn("myValue")))
-          .isEqualTo(ok(pNamedValue));
+      assertThat(pLambda.scope().referenceables().find(fqn("myValue"))).isEqualTo(ok(pNamedValue));
     }
 
     @Test

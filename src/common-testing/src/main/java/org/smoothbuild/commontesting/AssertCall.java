@@ -8,7 +8,6 @@ import static java.util.Arrays.asList;
 import com.google.common.truth.Fact;
 import com.google.common.truth.FailureMetadata;
 import com.google.common.truth.Subject;
-import com.google.common.truth.Subject.Factory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -27,7 +26,7 @@ public class AssertCall {
     return null;
   }
 
-  private static Factory<ThrownExceptionSubject, Throwable> thrownExceptions() {
+  private static Subject.Factory<ThrownExceptionSubject, Throwable> thrownExceptions() {
     return ThrownExceptionSubject::new;
   }
 

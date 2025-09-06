@@ -6,6 +6,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 
 public class ThrowException {
+  @SuppressWarnings("DoNotCallSuggester")
   public static BValue bytecode(BytecodeFactory bytecodeFactory, Map<String, BType> varMap) {
     throw new UnsupportedOperationException("detailed message");
   }

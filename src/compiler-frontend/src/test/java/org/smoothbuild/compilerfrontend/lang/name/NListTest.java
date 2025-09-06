@@ -1,6 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.name;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.util.Comparator.comparing;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
@@ -69,10 +70,11 @@ public class NListTest {
     }
 
     @Test
+    @SuppressWarnings("ReturnValueIgnored")
     void list_related_methods_dont_call_map_and_indexMap_suppliers() {
       var nlist = new NList<>(() -> list(n0, n1, n2), this::throwException, this::throwException);
       nlist.map(e -> e);
-      nlist.equals(nlist);
+      nlist.equals(nlist(n0));
       nlist.hashCode();
       nlist.toString();
       nlist.get(0);
@@ -97,6 +99,7 @@ public class NListTest {
       nlist.indexOf(name("name"));
     }
 
+    @SuppressWarnings("TypeParameterUnusedInFormals")
     private <T> T throwException() {
       throw new RuntimeException();
     }
@@ -124,7 +127,7 @@ public class NListTest {
     @SuppressWarnings("deprecation")
     void sort() {
       var nlist = nlist(n0, n1, n2);
-      assertCall(() -> nlist.sort((a, b) -> 0))
+      assertCall(() -> nlist.sort(comparing(HasName::name)))
           .throwsException(UnsupportedOperationException.class);
     }
   }
@@ -221,7 +224,8 @@ public class NListTest {
         .addEqualityGroup(nlist(), nlist())
         .addEqualityGroup(nlist(hasName("a")), nlist(hasName("a")))
         .addEqualityGroup(nlist(hasName("b")), nlist(hasName("b")))
-        .addEqualityGroup(nlist(hasName("a"), hasName("b")), nlist(hasName("a"), hasName("b")));
+        .addEqualityGroup(nlist(hasName("a"), hasName("b")), nlist(hasName("a"), hasName("b")))
+        .testEquals();
   }
 
   private static HasName hasName(String name) {
@@ -233,7 +237,7 @@ public class NListTest {
   }
 
   private static record MyHasName(Name name) implements HasName {
-    public MyHasName(String name) {
+    private MyHasName(String name) {
       this(referenceableName(name));
     }
 

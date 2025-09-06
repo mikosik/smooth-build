@@ -139,7 +139,7 @@ public class MapTest {
     @Test
     void mapping_two_keys_to_be_equal_fails() {
       var map = map(1, "one", 2, "two");
-      assertCall(() -> assertThat(map.mapKeys(i -> 1)))
+      assertCall(() -> map.mapKeys(i -> 1))
           .throwsException(
               new IllegalArgumentException("Multiple entries with same key: 1=two and 1=one"));
     }
@@ -198,7 +198,7 @@ public class MapTest {
     @Test
     void mapping_two_keys_to_be_equal_fails() {
       var map = map(1, "one", 2, "two");
-      assertCall(() -> assertThat(map.mapEntries(i -> 1, String::toUpperCase)))
+      assertCall(() -> map.mapEntries(i -> 1, String::toUpperCase))
           .throwsException(
               new IllegalArgumentException("Multiple entries with same key: 1=TWO and 1=ONE"));
     }

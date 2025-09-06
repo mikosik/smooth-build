@@ -31,8 +31,9 @@ public class CleanCommandTest {
 
       runSmoothClean();
       assertFinishedWithSuccess();
-      assertThat(Files.list(smoothDirAbsolutePath()).toList())
-          .containsExactly(absolutePath(SMOOTH_LOCK_PATH.toString()));
+      try (var list = Files.list(smoothDirAbsolutePath())) {
+        assertThat(list.toList()).containsExactly(absolutePath(SMOOTH_LOCK_PATH.toString()));
+      }
     }
 
     private void createDirInProject(Path path) throws IOException {

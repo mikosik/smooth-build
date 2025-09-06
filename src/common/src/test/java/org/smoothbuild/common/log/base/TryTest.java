@@ -121,7 +121,8 @@ public class TryTest {
         .addEqualityGroup(
             success("abc", info("abc")),
             success("abc", info("abc")),
-            success("abc", list(info("abc"))));
+            success("abc", list(info("abc"))))
+        .testEquals();
   }
 
   @Test

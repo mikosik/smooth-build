@@ -19,6 +19,7 @@ public class KindIdTest {
     @Test
     void returns_enum_value_for_valid_ordinal() {
       for (KindId value : KindId.values()) {
+        @SuppressWarnings("EnumOrdinal")
         var ordinal = value.ordinal();
         assertThat(KindId.fromOrdinal(ordinal)).isEqualTo(value);
       }

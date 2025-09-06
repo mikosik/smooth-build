@@ -82,9 +82,9 @@ public class SbTranslator {
   private final BytecodeLoader bytecodeLoader;
   private final Bindings<SPolyEvaluable> evaluables;
   private final NList<SItem> lexicalEnvironment;
-  private final HashMap<CacheKey, BExpr> cache;
-  private final HashMap<Hash, String> names;
-  private final HashMap<Hash, Location> locations;
+  private final java.util.Map<CacheKey, BExpr> cache;
+  private final java.util.Map<Hash, String> names;
+  private final java.util.Map<Hash, Location> locations;
 
   @AssistedInject
   public SbTranslator(
@@ -111,9 +111,9 @@ public class SbTranslator {
       BytecodeLoader bytecodeLoader,
       Bindings<SPolyEvaluable> evaluables,
       NList<SItem> lexicalEnvironment,
-      HashMap<CacheKey, BExpr> cache,
-      HashMap<Hash, String> names,
-      HashMap<Hash, Location> locations) {
+      java.util.Map<CacheKey, BExpr> cache,
+      java.util.Map<Hash, String> names,
+      java.util.Map<Hash, Location> locations) {
     this.bytecodeF = bytecodeF;
     this.typeTranslator = typeTranslator;
     this.fileContentReader = fileContentReader;

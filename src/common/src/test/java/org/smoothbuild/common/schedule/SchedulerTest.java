@@ -64,7 +64,7 @@ public class SchedulerTest {
         MutablePromise<Maybe<String>> predecessor = promise();
 
         var scheduler = newScheduler();
-        var result = scheduler.submit(list(predecessor), new GetAtomicInteger(atomicInteger));
+        var result = scheduler.submit(list(predecessor), new Task0GetAtomicInteger(atomicInteger));
         Thread.sleep(1000);
         atomicInteger.set(1);
         predecessor.accept(some(""));
@@ -85,11 +85,11 @@ public class SchedulerTest {
       }
     }
 
-    private static class GetAtomicInteger implements Task0<Integer> {
+    private static class Task0GetAtomicInteger implements Task0<Integer> {
       private final AtomicInteger atomicInteger;
 
       @Inject
-      public GetAtomicInteger(AtomicInteger atomicInteger) {
+      public Task0GetAtomicInteger(AtomicInteger atomicInteger) {
         this.atomicInteger = atomicInteger;
       }
 
@@ -141,7 +141,7 @@ public class SchedulerTest {
         var arg1 = argument(7);
 
         var scheduler = newScheduler();
-        var task = new GetAtomicInteger(atomicInteger);
+        var task = new Task1GetAtomicInteger(atomicInteger);
         var result = scheduler.submit(list(predecessor), task, arg1);
         Thread.sleep(1000);
         atomicInteger.set(1);
@@ -170,7 +170,7 @@ public class SchedulerTest {
         var predecessor = argument(7);
 
         var scheduler = newScheduler();
-        var result = scheduler.submit(list(predecessor), new SetAtomicBoolean(executed), arg1);
+        var result = scheduler.submit(list(predecessor), new Task1SetAtomicBoolean(executed), arg1);
         await().until(() -> result.toMaybe().isSome());
 
         assertThat(executed.get()).isFalse();
@@ -178,11 +178,11 @@ public class SchedulerTest {
       }
     }
 
-    private static class SetAtomicBoolean implements Task1<Integer, Integer> {
+    private static class Task1SetAtomicBoolean implements Task1<Integer, Integer> {
       private final AtomicBoolean atomicBoolean;
 
       @Inject
-      public SetAtomicBoolean(AtomicBoolean atomicBoolean) {
+      public Task1SetAtomicBoolean(AtomicBoolean atomicBoolean) {
         this.atomicBoolean = atomicBoolean;
       }
 
@@ -193,11 +193,11 @@ public class SchedulerTest {
       }
     }
 
-    private static class GetAtomicInteger implements Task1<Integer, Integer> {
+    private static class Task1GetAtomicInteger implements Task1<Integer, Integer> {
       private final AtomicInteger atomicInteger;
 
       @Inject
-      public GetAtomicInteger(AtomicInteger atomicInteger) {
+      public Task1GetAtomicInteger(AtomicInteger atomicInteger) {
         this.atomicInteger = atomicInteger;
       }
 
@@ -238,7 +238,7 @@ public class SchedulerTest {
         var arg2 = argument(8);
 
         var scheduler = newScheduler();
-        var task = new GetAtomicInteger(atomicInteger);
+        var task = new Task2GetAtomicInteger(atomicInteger);
         var result = scheduler.submit(list(predecessor), task, arg1, arg2);
         Thread.sleep(1000);
         atomicInteger.set(1);
@@ -269,7 +269,7 @@ public class SchedulerTest {
         var arg2 = argument(7);
 
         var scheduler = newScheduler();
-        var task = new SetAtomicBoolean(executed);
+        var task = new Task2SetAtomicBoolean(executed);
         var result = scheduler.submit(list(predecessor), task, arg1, arg2);
         ConditionFactory result1;
         result1 = await();
@@ -280,11 +280,11 @@ public class SchedulerTest {
       }
     }
 
-    private static class SetAtomicBoolean implements Task2<Integer, Integer, Integer> {
+    private static class Task2SetAtomicBoolean implements Task2<Integer, Integer, Integer> {
       private final AtomicBoolean atomicBoolean;
 
       @Inject
-      public SetAtomicBoolean(AtomicBoolean atomicBoolean) {
+      public Task2SetAtomicBoolean(AtomicBoolean atomicBoolean) {
         this.atomicBoolean = atomicBoolean;
       }
 
@@ -295,11 +295,11 @@ public class SchedulerTest {
       }
     }
 
-    private static class GetAtomicInteger implements Task2<Integer, Integer, Integer> {
+    private static class Task2GetAtomicInteger implements Task2<Integer, Integer, Integer> {
       private final AtomicInteger atomicInteger;
 
       @Inject
-      public GetAtomicInteger(AtomicInteger atomicInteger) {
+      public Task2GetAtomicInteger(AtomicInteger atomicInteger) {
         this.atomicInteger = atomicInteger;
       }
 
@@ -336,7 +336,7 @@ public class SchedulerTest {
         var args = list(argument(7));
 
         var scheduler = newScheduler();
-        var task = new GetAtomicInteger(atomicInteger);
+        var task = new TaskXGetAtomicInteger(atomicInteger);
         var result = scheduler.submit(list(predecessor), task, args);
         Thread.sleep(1000);
         atomicInteger.set(1);
@@ -365,7 +365,7 @@ public class SchedulerTest {
         List<Promise<? extends Maybe<? extends Integer>>> args = list(argument(7), promise(none()));
 
         var scheduler = newScheduler();
-        var result = scheduler.submit(list(predecessor), new SetAtomicBoolean(executed), args);
+        var result = scheduler.submit(list(predecessor), new TaskXSetAtomicBoolean(executed), args);
         await().until(() -> result.toMaybe().isSome());
 
         assertThat(executed.get()).isFalse();
@@ -373,11 +373,11 @@ public class SchedulerTest {
       }
     }
 
-    private static class SetAtomicBoolean implements TaskX<Integer, Integer> {
+    private static class TaskXSetAtomicBoolean implements TaskX<Integer, Integer> {
       private final AtomicBoolean atomicBoolean;
 
       @Inject
-      public SetAtomicBoolean(AtomicBoolean atomicBoolean) {
+      public TaskXSetAtomicBoolean(AtomicBoolean atomicBoolean) {
         this.atomicBoolean = atomicBoolean;
       }
 
@@ -388,11 +388,11 @@ public class SchedulerTest {
       }
     }
 
-    private static class GetAtomicInteger implements TaskX<Integer, Integer> {
+    private static class TaskXGetAtomicInteger implements TaskX<Integer, Integer> {
       private final AtomicInteger atomicInteger;
 
       @Inject
-      public GetAtomicInteger(AtomicInteger atomicInteger) {
+      public TaskXGetAtomicInteger(AtomicInteger atomicInteger) {
         this.atomicInteger = atomicInteger;
       }
 
@@ -501,7 +501,7 @@ public class SchedulerTest {
         return output(7, newReport());
       });
       var arg2 = scheduler.submit(() -> {
-        arg1Thread.set(currentThread());
+        arg2Thread.set(currentThread());
         return output(3, newReport());
       });
       var result = scheduler.submit(

@@ -6,7 +6,6 @@ import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.reflect.ClassLoaders.mapClassLoader;
 import static org.smoothbuild.stdlib.file.FileHelper.fileArrayArrayToMap;
 import static org.smoothbuild.stdlib.file.FileHelper.fileArrayToMap;
-import static org.smoothbuild.stdlib.java.junit.JUnitCoreWrapper.newInstance;
 import static org.smoothbuild.stdlib.java.util.JavaNaming.toBinaryName;
 import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.fileContent;
 import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.filePath;
@@ -94,7 +93,7 @@ public class JunitFunc {
   }
 
   private static JUnitCoreWrapper createJUnitCore(ClassLoader classLoader) throws JunitException {
-    return newInstance(loadClass(classLoader, "org.junit.runner.JUnitCore"));
+    return JUnitCoreWrapper.newInstance(loadClass(classLoader, "org.junit.runner.JUnitCore"));
   }
 
   private static void assertJunitCoreIsPresent(Map<String, BTuple> files) throws JunitException {

@@ -230,20 +230,20 @@ public class BReferenceInliner {
     private final int paramCount;
     private final List<BExpr> environment;
 
-    public Resolver(List<BExpr> environment) {
+    private Resolver(List<BExpr> environment) {
       this(0, environment);
     }
 
-    public Resolver(int paramCount, List<BExpr> environment) {
+    private Resolver(int paramCount, List<BExpr> environment) {
       this.paramCount = paramCount;
       this.environment = environment;
     }
 
-    public Resolver withIncreasedParamCount(int delta) {
+    private Resolver withIncreasedParamCount(int delta) {
       return new Resolver(paramCount + delta, environment);
     }
 
-    public BExpr resolve(BReference reference) throws BytecodeException {
+    private BExpr resolve(BReference reference) throws BytecodeException {
       int index = reference.index().toJavaBigInteger().intValue();
       if (index < 0) {
         throw new ReferenceIndexOutOfBoundsException(index, paramCount + environment.size());

@@ -16,7 +16,8 @@ public class LabelMatcher implements Predicate<Label> {
   private static Predicate<String> parsePatternToPredicate(String pattern) {
     var regexBuilder = new StringBuilder("^");
     int asteriskCount = 0;
-    for (var character : pattern.toCharArray()) {
+    for (int i = 0; i < pattern.length(); i++) {
+      char character = pattern.charAt(i);
       if (!ALLOWED_CHARS_MATCHER.matches(character)) {
         throw new IllegalArgumentException(
             "Pattern contains illegal character '" + character + "'.");

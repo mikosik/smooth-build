@@ -33,7 +33,7 @@ public class JavacFunc {
     private final BArray fileArrayArray;
     private final BArray options;
 
-    public Worker(NativeApi nativeApi, BArray srcs, BArray fileArrayArray, BArray options) {
+    private Worker(NativeApi nativeApi, BArray srcs, BArray fileArrayArray, BArray options) {
       this.compiler = ToolProvider.getSystemJavaCompiler();
       this.nativeApi = nativeApi;
       this.srcs = srcs;
@@ -41,7 +41,7 @@ public class JavacFunc {
       this.options = options;
     }
 
-    public BArray execute() throws BytecodeException {
+    private BArray execute() throws BytecodeException {
       if (compiler == null) {
         nativeApi
             .log()
@@ -53,7 +53,7 @@ public class JavacFunc {
       return compile(srcs);
     }
 
-    public BArray compile(BArray files) throws BytecodeException {
+    private BArray compile(BArray files) throws BytecodeException {
       // prepare args for compilation
 
       var additionalCompilerOutput = new StringWriter();

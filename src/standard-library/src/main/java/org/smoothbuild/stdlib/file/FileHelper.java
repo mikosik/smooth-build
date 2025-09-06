@@ -9,7 +9,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class FileHelper {
-  public static HashMap<String, BTuple> fileArrayArrayToMap(
+  public static java.util.Map<String, BTuple> fileArrayArrayToMap(
       NativeApi nativeApi, BArray fileArrayArray) throws BytecodeException {
     var result = new HashMap<String, BTuple>();
     for (BArray fileArray : fileArrayArray.elements(BArray.class)) {
@@ -20,7 +20,7 @@ public class FileHelper {
     return result;
   }
 
-  public static HashMap<String, BTuple> fileArrayToMap(NativeApi nativeApi, BArray fileArray)
+  public static java.util.Map<String, BTuple> fileArrayToMap(NativeApi nativeApi, BArray fileArray)
       throws BytecodeException {
     var result = new HashMap<String, BTuple>();
     if (fileArrayToMap(nativeApi, fileArray, result)) {
@@ -30,7 +30,7 @@ public class FileHelper {
   }
 
   private static boolean fileArrayToMap(
-      NativeApi nativeApi, BArray fileArray, HashMap<String, BTuple> result)
+      NativeApi nativeApi, BArray fileArray, java.util.Map<String, BTuple> result)
       throws BytecodeException {
     for (var entry : fileArray.elements(BTuple.class)) {
       var path = filePath(entry).toJavaString();

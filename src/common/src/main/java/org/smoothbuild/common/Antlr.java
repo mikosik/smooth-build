@@ -1,6 +1,5 @@
 package org.smoothbuild.common;
 
-import static com.google.common.base.Strings.repeat;
 import static java.lang.Math.max;
 
 import org.antlr.v4.runtime.CharStream;
@@ -11,13 +10,13 @@ import org.antlr.v4.runtime.Token;
 
 public class Antlr {
   public static String markingLine(Token offendingSymbol, int charNumber) {
-    String spaces = repeat(" ", charNumber);
+    String spaces = " ".repeat(charNumber);
     if (offendingSymbol == null) {
       return spaces + "^";
     } else {
       int start = offendingSymbol.getStartIndex();
       int stop = offendingSymbol.getStopIndex();
-      return spaces + repeat("^", max(1, stop - start + 1));
+      return spaces + "^".repeat(max(1, stop - start + 1));
     }
   }
 

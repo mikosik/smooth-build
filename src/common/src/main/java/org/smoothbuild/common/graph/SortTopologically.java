@@ -8,7 +8,6 @@ import static org.smoothbuild.common.graph.SortTopologically.Node.State.NOT_VISI
 import static org.smoothbuild.common.graph.SortTopologically.Node.State.PROCESSED;
 
 import java.util.ArrayDeque;
-import java.util.LinkedList;
 import org.smoothbuild.common.collect.Collection;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Set;
@@ -71,7 +70,7 @@ public class SortTopologically {
     }
 
     var keyToNode = nodes.toMap(Node::key, n -> n);
-    var currentPath = new LinkedList<PathElem<K, N, E>>();
+    var currentPath = new ArrayDeque<PathElem<K, N, E>>();
     var resultSeq = new ArrayDeque<Node<K, N, E>>(nodes.size());
 
     for (K rootKey : rootKeys) {
@@ -84,13 +83,11 @@ public class SortTopologically {
           var targetNode = keyToNode.get(targetKey);
           if (targetNode != null) {
             switch (targetNode.state()) {
-              case NOT_VISITED:
-                addToPath(currentPath, targetNode);
-                break;
-              case BEING_PROCESSED:
+              case NOT_VISITED -> addToPath(currentPath, targetNode);
+              case BEING_PROCESSED -> {
                 return createCycleRes(currentPath, targetKey);
-              case PROCESSED:
-                break;
+              }
+              case PROCESSED -> {}
             }
           }
         } else {
@@ -117,7 +114,7 @@ public class SortTopologically {
   }
 
   private static <K, N, E> void addToPath(
-      LinkedList<PathElem<K, N, E>> currentPath, Node<K, N, E> node) {
+      ArrayDeque<PathElem<K, N, E>> currentPath, Node<K, N, E> node) {
     node.setState(BEING_PROCESSED);
     currentPath.addLast(new PathElem<>(node));
   }
@@ -129,7 +126,7 @@ public class SortTopologically {
   }
 
   private static <K, N, E> TopologicalSortingRes<K, N, E> createCycleRes(
-      LinkedList<PathElem<K, N, E>> currentPath, K key) {
+      ArrayDeque<PathElem<K, N, E>> currentPath, K key) {
     var cycle = listOfAll(currentPath)
         .dropWhile(e -> !e.node().key().equals(key))
         .map(elem -> elem.node().edges().get(elem.edgeIndex()));
@@ -146,25 +143,25 @@ public class SortTopologically {
     private final Node<K, N, E> node;
     private int edgeIndex;
 
-    public PathElem(Node<K, N, E> node) {
+    private PathElem(Node<K, N, E> node) {
       this.node = node;
       this.edgeIndex = -1;
     }
 
-    public Node<K, N, E> node() {
+    private Node<K, N, E> node() {
       return node;
     }
 
-    public int edgeIndex() {
+    private int edgeIndex() {
       return edgeIndex;
     }
 
-    public int incrementAndGetEdgeIndex() {
+    private int incrementAndGetEdgeIndex() {
       return ++edgeIndex;
     }
   }
 
-  public static class Node<K, N, E> {
+  static class Node<K, N, E> {
     public enum State {
       NOT_VISITED,
       BEING_PROCESSED,

@@ -76,7 +76,7 @@ public class Container implements NativeApi {
     private final BytecodeFactory bytecodeFactory;
     private boolean containsErrorOrAbove = false;
 
-    public MessageLoggerImpl(BytecodeFactory bytecodeFactory) {
+    private MessageLoggerImpl(BytecodeFactory bytecodeFactory) {
       this.bytecodeFactory = bytecodeFactory;
     }
 

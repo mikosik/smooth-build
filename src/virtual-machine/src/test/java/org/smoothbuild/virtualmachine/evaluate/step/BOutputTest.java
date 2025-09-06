@@ -22,56 +22,56 @@ public class BOutputTest extends VmTestContext {
 
   @Test
   void messages_returns_messages() throws Exception {
-    var BOutput = new BOutput(aString(), messages());
-    assertThat(BOutput.storedLogs()).isEqualTo(messages());
+    var bOutput = new BOutput(aString(), messages());
+    assertThat(bOutput.storedLogs()).isEqualTo(messages());
   }
 
   @Test
   void output_created_without_messages_has_no_messages() throws Exception {
-    var BOutput = new BOutput(aString(), bLogArrayEmpty());
-    assertThat(BOutput.storedLogs()).isEqualTo(bLogArrayEmpty());
+    var bOutput = new BOutput(aString(), bLogArrayEmpty());
+    assertThat(bOutput.storedLogs()).isEqualTo(bLogArrayEmpty());
   }
 
   @Test
   void outputs_with_same_value_and_messages_are_equal() throws Exception {
-    var BOutput = new BOutput(aString(), messages());
-    assertThat(BOutput).isEqualTo(new BOutput(aString(), messages()));
+    var bOutput = new BOutput(aString(), messages());
+    assertThat(bOutput).isEqualTo(new BOutput(aString(), messages()));
   }
 
   @Test
   void outputs_with_same_value_and_no_messages_are_equal() throws Exception {
-    var BOutput = new BOutput(aString(), bLogArrayEmpty());
-    assertThat(BOutput).isEqualTo(new BOutput(aString(), bLogArrayEmpty()));
+    var bOutput = new BOutput(aString(), bLogArrayEmpty());
+    assertThat(bOutput).isEqualTo(new BOutput(aString(), bLogArrayEmpty()));
   }
 
   @Test
   void outputs_with_same_message_and_no_value_are_equal() throws Exception {
-    var BOutput = new BOutput(null, messages());
-    assertThat(BOutput).isEqualTo(new BOutput(null, messages()));
+    var bOutput = new BOutput(null, messages());
+    assertThat(bOutput).isEqualTo(new BOutput(null, messages()));
   }
 
   @Test
   void outputs_with_same_value_but_different_messages_are_not_equal() throws Exception {
-    var BOutput = new BOutput(aString(), messages());
-    assertThat(BOutput).isNotEqualTo(new BOutput(aString(), bLogArrayEmpty()));
+    var bOutput = new BOutput(aString(), messages());
+    assertThat(bOutput).isNotEqualTo(new BOutput(aString(), bLogArrayEmpty()));
   }
 
   @Test
   void outputs_with_different_value_and_same_messages_are_not_equal() throws Exception {
-    var BOutput = new BOutput(aString(), messages());
-    assertThat(BOutput).isNotEqualTo(new BOutput(bString("def"), messages()));
+    var bOutput = new BOutput(aString(), messages());
+    assertThat(bOutput).isNotEqualTo(new BOutput(bString("def"), messages()));
   }
 
   @Test
   void output_without_value_is_not_equal_to_output_with_value() throws Exception {
-    var BOutput = new BOutput(aString(), messages());
-    assertThat(BOutput).isNotEqualTo(new BOutput(null, messages()));
+    var bOutput = new BOutput(aString(), messages());
+    assertThat(bOutput).isNotEqualTo(new BOutput(null, messages()));
   }
 
   @Test
   void identical_outputs_have_same_hash_code() throws Exception {
-    var BOutput = new BOutput(aString(), messages());
-    assertThat(BOutput).isEqualTo(new BOutput(aString(), messages()));
+    var bOutput = new BOutput(aString(), messages());
+    assertThat(bOutput).isEqualTo(new BOutput(aString(), messages()));
   }
 
   private BArray messages() throws BytecodeException {

@@ -99,7 +99,7 @@ public class BKindTest extends VmTestContext {
     @MethodSource("result_cases")
     public void result(
         Function1<BKindDb, BLambdaType, BytecodeException> factoryCall,
-        Function1<BKindDb, java.util.List<BType>, BytecodeException> expected)
+        Function1<BKindDb, BType, BytecodeException> expected)
         throws Exception {
       assertThat(execute(factoryCall).result()).isEqualTo(execute(expected));
     }
@@ -115,7 +115,7 @@ public class BKindTest extends VmTestContext {
     @MethodSource("params_cases")
     public void params(
         Function1<BKindDb, BLambdaType, BytecodeException> factoryCall,
-        Function1<BKindDb, java.util.List<BType>, BytecodeException> expected)
+        Function1<BKindDb, BTupleType, BytecodeException> expected)
         throws Exception {
       assertThat(execute(factoryCall).params()).isEqualTo(execute(expected));
     }

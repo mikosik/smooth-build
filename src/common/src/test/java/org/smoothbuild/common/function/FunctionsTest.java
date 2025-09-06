@@ -6,6 +6,7 @@ import static org.smoothbuild.common.function.Functions.sneakyFunction;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import java.io.IOException;
+import java.util.function.Function;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -13,8 +14,9 @@ public class FunctionsTest {
   @Nested
   class _sneakyFunction {
     @Test
+    @SuppressWarnings("ReturnValueIgnored")
     void propagates_checked_exception_that_is_not_present_in_its_throws_clause() {
-      var sneakyFunction = sneakyFunction((String string) -> {
+      Function<String, Object> sneakyFunction = sneakyFunction((String string) -> {
         throw new IOException();
       });
       assertCall(() -> sneakyFunction.apply("abc")).throwsException(IOException.class);

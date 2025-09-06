@@ -5,7 +5,6 @@ import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Set.setOfAll;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -39,7 +38,7 @@ public final class Map<K, V> {
   }
 
   public static <K, V> Map<K, V> zipToMap(Iterable<K> keys, Iterable<V> values) {
-    Builder<K, V> builder = ImmutableMap.builder();
+    ImmutableMap.Builder<K, V> builder = ImmutableMap.builder();
     var keysIterator = keys.iterator();
     var valuesIterator = values.iterator();
     while (keysIterator.hasNext() && valuesIterator.hasNext()) {
@@ -88,7 +87,7 @@ public final class Map<K, V> {
   public <K2, V2, T1 extends Throwable, T2 extends Throwable> Map<K2, V2> mapEntries(
       Function1<? super K, K2, T1> keyFunction, Function1<? super V, V2, T2> valueFunction)
       throws T1, T2 {
-    Builder<K2, V2> builder = ImmutableMap.builder();
+    ImmutableMap.Builder<K2, V2> builder = ImmutableMap.builder();
     for (Entry<K, V> entry : map.entrySet()) {
       builder.put(keyFunction.apply(entry.getKey()), valueFunction.apply(entry.getValue()));
     }

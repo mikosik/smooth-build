@@ -45,7 +45,7 @@ public final class BMap extends BOperation {
     var mapperEvaluationType = mapper.evaluationType();
     var expectedMapperEvaluationType =
         kindDb().lambda(list(arrayType.element()), evaluationType().element());
-    if (!(mapperEvaluationType.equals(expectedMapperEvaluationType))) {
+    if (!mapperEvaluationType.equals(expectedMapperEvaluationType)) {
       throw new MemberHasWrongEvaluationTypeException(
           hash(), kind(), "mapper", expectedMapperEvaluationType, mapperEvaluationType);
     }

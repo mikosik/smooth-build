@@ -115,15 +115,15 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
 
   private static class ApTranslatingVisitor extends SmoothAntlrBaseVisitor<Void> {
     private final FullPath fullPath;
-    private final ArrayList<PStruct> structs;
-    private final ArrayList<PPolyEvaluable> evaluables;
+    private final java.util.List<PStruct> structs;
+    private final java.util.List<PPolyEvaluable> evaluables;
     private final Logger logger;
     private int lambdaCount;
 
-    public ApTranslatingVisitor(
+    private ApTranslatingVisitor(
         FullPath fullPath,
-        ArrayList<PStruct> structs,
-        ArrayList<PPolyEvaluable> evaluables,
+        java.util.List<PStruct> structs,
+        java.util.List<PPolyEvaluable> evaluables,
         Logger logger) {
       this.fullPath = fullPath;
       this.structs = structs;
@@ -163,7 +163,7 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
       return null;
     }
 
-    public PTypeParams createTypeParams(TypeParamsContext typeParams) {
+    private PTypeParams createTypeParams(TypeParamsContext typeParams) {
       if (typeParams == null) {
         return new PImplicitTypeParams();
       } else {
@@ -321,7 +321,8 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
     }
 
     private PLambda createLambda(LambdaContext lambdaFunc) {
-      var name = "lambda~" + (++lambdaCount);
+      lambdaCount++;
+      var name = "lambda~" + lambdaCount;
       var visitor = new ApTranslatingVisitor(fullPath, structs, evaluables, logger);
       var params = createLambdaParams(lambdaFunc, visitor);
       var body = visitor.createExpr(lambdaFunc.expr());

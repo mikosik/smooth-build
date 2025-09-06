@@ -32,7 +32,7 @@ public abstract class AbstractCollectionTestSuite {
   @Test
   void foreach_empty_collection() throws Exception {
     Consumer1<Object, Exception> consumer1 = mock();
-    newCollection().foreach(consumer1::accept);
+    newCollection().foreach(consumer1);
     verifyNoInteractions(consumer1);
   }
 

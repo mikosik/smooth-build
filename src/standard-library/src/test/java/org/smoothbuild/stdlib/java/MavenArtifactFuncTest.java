@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.smoothbuild.common.Constants.CHARSET;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -26,7 +27,7 @@ public class MavenArtifactFuncTest extends VmTestContext {
     when(httpClient.send(any(HttpRequest.class), eq(BodyHandlers.ofInputStream())))
         .thenReturn(response);
     when(response.statusCode()).thenReturn(200);
-    when(response.body()).thenReturn(new ByteArrayInputStream(jarContent.getBytes()));
+    when(response.body()).thenReturn(new ByteArrayInputStream(jarContent.getBytes(CHARSET)));
 
     var result = MavenArtifactFunc.funcImpl(
         provide().container(),

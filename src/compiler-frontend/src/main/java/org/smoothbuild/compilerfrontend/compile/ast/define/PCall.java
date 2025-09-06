@@ -29,7 +29,7 @@ public final class PCall extends PExpr {
   }
 
   /**
-   * @return List of args where position of argument in the list
+   * Returns List of args where position of argument in the list
    * matches position of parameter to which that arg is assigned.
    * Size of list is equal to callee parameter list size.
    * While {@link #args()} holds arguments expressions as they

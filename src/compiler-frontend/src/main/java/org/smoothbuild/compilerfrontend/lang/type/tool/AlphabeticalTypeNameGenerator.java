@@ -25,7 +25,7 @@ public class AlphabeticalTypeNameGenerator {
           name[i] = 'A';
           i--;
         } else {
-          current += 1;
+          current = (char) (current + 1);
           name[i] = current;
           increment = false;
         }

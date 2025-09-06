@@ -10,6 +10,6 @@ public class SingleThreadRunnableScheduler implements RunnableScheduler {
 
   @Override
   public void submit(Runnable runnable) {
-    executorService.submit(runnable);
+    var unused = executorService.submit(runnable);
   }
 }

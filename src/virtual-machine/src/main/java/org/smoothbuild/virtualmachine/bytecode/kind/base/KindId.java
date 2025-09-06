@@ -23,6 +23,7 @@ public enum KindId {
   FOLD,
   ;
 
+  @SuppressWarnings("EnumOrdinal")
   public byte byteMarker() {
     return (byte) ordinal();
   }
