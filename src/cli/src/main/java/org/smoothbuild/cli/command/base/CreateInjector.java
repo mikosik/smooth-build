@@ -1,5 +1,6 @@
 package org.smoothbuild.cli.command.base;
 
+import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.cli.layout.Aliases.INSTALL_ALIAS;
 import static org.smoothbuild.cli.layout.Aliases.LIBRARY_ALIAS;
 import static org.smoothbuild.cli.layout.Aliases.PROJECT_ALIAS;
@@ -25,7 +26,7 @@ public class CreateInjector {
   }
 
   private static Path installationDir() {
-    return smoothJarPath().getParent();
+    return requireNonNull(smoothJarPath().getParent());
   }
 
   private static Path smoothJarPath() {
@@ -35,7 +36,7 @@ public class CreateInjector {
           .getCodeSource()
           .getLocation()
           .toURI();
-      return Path.of(uri).getParent();
+      return requireNonNull(Path.of(uri).getParent());
     } catch (URISyntaxException e) {
       throw new RuntimeException(e);
     }
