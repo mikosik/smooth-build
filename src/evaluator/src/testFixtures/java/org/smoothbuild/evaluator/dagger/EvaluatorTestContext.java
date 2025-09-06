@@ -22,6 +22,7 @@ import static org.smoothbuild.virtualmachine.dagger.VmTestModule.PROJECT;
 
 import java.io.IOException;
 import okio.Source;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.filesystem.base.FileSystem;
@@ -44,6 +45,8 @@ import org.smoothbuild.virtualmachine.evaluate.compute.StepEvaluator;
 public class EvaluatorTestContext implements FrontendCompilerTestApi {
   private EvaluatorTestComponent component;
   private List<FullPath> modules;
+
+  @Nullable
   private Maybe<EvaluatedExprs> evaluatedExprs;
 
   public EvaluatorTestContext() {
@@ -120,7 +123,7 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
     var evaluated =
         scheduler.submit(scheduleEvaluate, argument(modules), argument(listOfAll(asList(names))));
     await().until(() -> evaluated.toMaybe().isSome());
-    this.evaluatedExprs = evaluated.get();
+    evaluatedExprs = evaluated.get();
   }
 
   protected void restartSmoothWithSameFileSystem() {
