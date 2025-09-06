@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 
@@ -190,6 +191,8 @@ public class Unifier {
     private final STypeVar mainTypeVar;
     private final Set<STypeVar> typeVars;
     private final Set<Unified> usedIn;
+
+    @Nullable
     private SType type;
 
     private Unified(STypeVar var) {

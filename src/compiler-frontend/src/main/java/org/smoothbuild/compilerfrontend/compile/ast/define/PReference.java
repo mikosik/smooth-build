@@ -1,6 +1,9 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
+import static org.smoothbuild.common.base.Check.checkInitializedToNotNull;
+
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
@@ -10,8 +13,8 @@ import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 public final class PReference implements HasLocation {
   private final String nameText;
   private final Location location;
-  private Fqn fqn;
-  private Referenceable referenced;
+  private @Nullable Fqn fqn;
+  private @Nullable Referenceable referenced;
 
   public PReference(String nameText, Location location) {
     this.nameText = nameText;
@@ -27,11 +30,11 @@ public final class PReference implements HasLocation {
   }
 
   public Fqn fqn() {
-    return fqn;
+    return checkInitializedToNotNull(fqn, "fqn");
   }
 
   public Referenceable referenced() {
-    return Objects.requireNonNull(referenced);
+    return checkInitializedToNotNull(referenced, "referenced");
   }
 
   public void setReferenced(Referenceable referenced) {
@@ -49,14 +52,14 @@ public final class PReference implements HasLocation {
       return true;
     }
     return object instanceof PReference that
-        && Objects.equals(this.fqn(), that.fqn())
-        && Objects.equals(this.referenced(), that.referenced())
-        && Objects.equals(this.location(), that.location());
+        && Objects.equals(this.fqn, that.fqn)
+        && Objects.equals(this.referenced, that.referenced)
+        && Objects.equals(this.location, that.location);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(fqn(), referenced(), location());
+    return Objects.hash(fqn, referenced, location);
   }
 
   @Override

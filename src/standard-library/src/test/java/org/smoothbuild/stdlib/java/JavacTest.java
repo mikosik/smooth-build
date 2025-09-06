@@ -1,6 +1,7 @@
 package org.smoothbuild.stdlib.java;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.util.Objects.requireNonNull;
 import static okio.Okio.buffer;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.warning;
@@ -52,7 +53,8 @@ public class JavacTest extends StandardLibraryTestContext {
     evaluate("result");
 
     var map = arrayToFileMap(artifact());
-    assertThat(invoke(map.get("MyClass.class"), "myMethod")).isEqualTo("test-string");
+    assertThat(invoke(requireNonNull(map.get("MyClass.class")), "myMethod"))
+        .isEqualTo("test-string");
   }
 
   @Test
@@ -87,8 +89,9 @@ public class JavacTest extends StandardLibraryTestContext {
 
     var map = arrayToFileMap(artifact());
     var classLoader = new MyClassLoader();
-    loadClass(classLoader, map.get("library/LibraryClass.class"));
-    assertThat(invoke(classLoader, map.get("MyClass.class"), "myMethod")).isEqualTo("5");
+    loadClass(classLoader, requireNonNull(map.get("library/LibraryClass.class")));
+    assertThat(invoke(classLoader, requireNonNull(map.get("MyClass.class")), "myMethod"))
+        .isEqualTo("5");
   }
 
   @Test
@@ -130,12 +133,12 @@ public class JavacTest extends StandardLibraryTestContext {
   }
 
   private Class<?> loadClass(MyClassLoader classLoader, ByteString bytes) {
-    return classLoader.defineClass(null, bytes.toByteArray());
+    return classLoader.defineClass(bytes.toByteArray());
   }
 
   private static class MyClassLoader extends ClassLoader {
-    private Class<?> defineClass(String name, byte[] bytes) {
-      return super.defineClass(name, bytes, 0, bytes.length);
+    private Class<?> defineClass(byte[] bytes) {
+      return super.defineClass(null, bytes, 0, bytes.length);
     }
   }
 }

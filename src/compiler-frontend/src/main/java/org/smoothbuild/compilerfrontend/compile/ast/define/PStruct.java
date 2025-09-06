@@ -1,6 +1,9 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
+import static org.smoothbuild.common.base.Check.checkInitializedToNotNull;
+
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
@@ -13,9 +16,9 @@ public final class PStruct implements PTypeDefinition, PContainer, IdentifiableC
   private final String nameText;
   private final NList<PItem> fields;
   private final Location location;
-  private Fqn fqn;
-  private PScope scope;
-  private SStructType sStructType;
+  private @Nullable Fqn fqn;
+  private @Nullable PScope scope;
+  private @Nullable SStructType sStructType;
 
   public PStruct(String nameText, NList<PItem> fields, Location location) {
     this.nameText = nameText;
@@ -34,7 +37,7 @@ public final class PStruct implements PTypeDefinition, PContainer, IdentifiableC
 
   @Override
   public Fqn fqn() {
-    return fqn;
+    return checkInitializedToNotNull(fqn, "fqn");
   }
 
   public NList<PItem> fields() {
@@ -43,7 +46,7 @@ public final class PStruct implements PTypeDefinition, PContainer, IdentifiableC
 
   @Override
   public PScope scope() {
-    return scope;
+    return checkInitializedToNotNull(scope, "scope");
   }
 
   @Override
@@ -53,7 +56,7 @@ public final class PStruct implements PTypeDefinition, PContainer, IdentifiableC
 
   @Override
   public SStructType type() {
-    return sStructType;
+    return checkInitializedToNotNull(sStructType, "type");
   }
 
   public void setSType(SStructType sStructType) {

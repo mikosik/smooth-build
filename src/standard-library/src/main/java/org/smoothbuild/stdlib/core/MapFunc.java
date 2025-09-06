@@ -1,5 +1,7 @@
 package org.smoothbuild.stdlib.core;
 
+import static java.util.Objects.requireNonNull;
+
 import java.math.BigInteger;
 import java.util.Map;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
@@ -13,8 +15,8 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 public class MapFunc {
   public static BValue bytecode(BytecodeFactory f, Map<String, BType> varMap)
       throws BytecodeException {
-    var r = varMap.get("R");
-    var s = varMap.get("S");
+    var r = requireNonNull(varMap.get("R"));
+    var s = requireNonNull(varMap.get("S"));
 
     var resultType = f.arrayType(r);
     var arrayParamType = f.arrayType(s);

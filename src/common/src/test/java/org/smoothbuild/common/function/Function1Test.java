@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 import static org.smoothbuild.common.collect.List.generateList;
 import static org.smoothbuild.common.collect.List.nCopiesList;
 import static org.smoothbuild.common.function.Function1.memoizer;
@@ -37,6 +38,7 @@ class Function1Test {
     @Test
     void second_call_to_apply_does_not_call_wrapped_function() throws Throwable {
       Function1<Integer, String, IOException> function1 = mock();
+      when(function1.apply(7)).thenReturn("string");
       var memoized = memoizer(function1);
       memoized.apply(7);
       memoized.apply(7);

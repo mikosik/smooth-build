@@ -3,6 +3,7 @@ package org.smoothbuild.common.base;
 import static org.smoothbuild.common.base.Strings.indent;
 
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.collect.List;
 
 public class ToStringBuilder {
@@ -12,7 +13,7 @@ public class ToStringBuilder {
     this.stringBuilder = new StringBuilder(name + "(\n");
   }
 
-  public ToStringBuilder addField(String name, Object value) {
+  public ToStringBuilder addField(String name, @Nullable Object value) {
     appendLine(indent("  ", name + " = " + value));
     return this;
   }

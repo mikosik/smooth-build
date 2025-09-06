@@ -1,6 +1,9 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
+import static org.smoothbuild.common.base.Check.checkInitializedToNotNull;
+
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.location.Location;
@@ -8,7 +11,7 @@ import org.smoothbuild.common.log.location.Location;
 public final class PCall extends PExpr {
   private final PExpr callee;
   private final List<PExpr> args;
-  private List<PExpr> positionedArgs;
+  private @Nullable List<PExpr> positionedArgs;
 
   public PCall(PExpr callee, List<PExpr> args, Location location) {
     super(location);
@@ -42,7 +45,7 @@ public final class PCall extends PExpr {
    * to that parameter default value.
    */
   public List<PExpr> positionedArgs() {
-    return positionedArgs;
+    return checkInitializedToNotNull(positionedArgs, "positionedArgs");
   }
 
   @Override

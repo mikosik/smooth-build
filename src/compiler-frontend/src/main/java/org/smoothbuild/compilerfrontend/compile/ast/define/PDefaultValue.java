@@ -1,6 +1,9 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
+import static org.smoothbuild.common.base.Check.checkInitializedToNotNull;
+
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
@@ -11,8 +14,8 @@ import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 public class PDefaultValue implements DefaultValue, HasLocation {
   private final PExpr expr;
   private final Location location;
-  private Fqn fqn;
-  private PolyEvaluable referenced;
+  private @Nullable Fqn fqn;
+  private @Nullable PolyEvaluable referenced;
 
   public PDefaultValue(PExpr expr, Location location) {
     this.expr = expr;
@@ -30,7 +33,7 @@ public class PDefaultValue implements DefaultValue, HasLocation {
 
   @Override
   public Fqn fqn() {
-    return fqn;
+    return checkInitializedToNotNull(fqn, "fqn");
   }
 
   public void setFqn(Fqn fqn) {
@@ -42,7 +45,7 @@ public class PDefaultValue implements DefaultValue, HasLocation {
   }
 
   public PolyEvaluable referenced() {
-    return referenced;
+    return checkInitializedToNotNull(referenced, "referenced");
   }
 
   @Override
@@ -61,7 +64,7 @@ public class PDefaultValue implements DefaultValue, HasLocation {
   public String toString() {
     return new ToStringBuilder("PDefaultValue")
         .addField("expr", expr)
-        .addField("fqn", fqn())
+        .addField("fqn", fqn)
         .toString();
   }
 }

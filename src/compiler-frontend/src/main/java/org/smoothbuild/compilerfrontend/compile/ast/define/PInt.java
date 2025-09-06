@@ -1,12 +1,14 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
 import static java.lang.Character.isDigit;
+import static org.smoothbuild.common.base.Check.checkInitializedToNotNull;
 
 import java.math.BigInteger;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.log.location.Location;
 
 public final class PInt extends PLiteral {
-  private BigInteger bigInteger;
+  private @Nullable BigInteger bigInteger;
 
   public PInt(String literal, Location location) {
     super(literal, location);
@@ -48,6 +50,6 @@ public final class PInt extends PLiteral {
   }
 
   public BigInteger bigInteger() {
-    return bigInteger;
+    return checkInitializedToNotNull(bigInteger, "bigInteger");
   }
 }

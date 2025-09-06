@@ -4,6 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static java.lang.Byte.MAX_VALUE;
 import static java.lang.Byte.MIN_VALUE;
 import static java.lang.String.format;
+import static java.util.Objects.requireNonNull;
 import static okio.ByteString.encodeUtf8;
 import static okio.Okio.buffer;
 import static org.smoothbuild.common.collect.List.list;
@@ -249,7 +250,7 @@ public class HashedDbTest {
         sink.write(illegalString());
       }
       assertCall(() -> hashedDb().readString(hash))
-          .throwsException(new DecodeStringException(hash, null));
+          .throwsException(new DecodeStringException(hash));
     }
   }
 
@@ -324,7 +325,7 @@ public class HashedDbTest {
   }
 
   private FileSystem<Path> fileSystem() {
-    return fileSystem.get();
+    return requireNonNull(fileSystem.get());
   }
 
   private static FileSystemPart newFileSystem() {

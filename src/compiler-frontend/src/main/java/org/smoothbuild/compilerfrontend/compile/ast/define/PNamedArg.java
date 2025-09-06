@@ -1,6 +1,9 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
+import static org.smoothbuild.common.base.Check.checkInitializedToNotNull;
+
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
@@ -9,7 +12,7 @@ import org.smoothbuild.compilerfrontend.lang.name.Name;
 public final class PNamedArg extends PExpr {
   private final String nameText;
   private final PExpr expr;
-  private Name name;
+  private @Nullable Name name;
 
   public PNamedArg(String nameText, PExpr expr, Location location) {
     super(location);
@@ -22,7 +25,7 @@ public final class PNamedArg extends PExpr {
   }
 
   public Name name() {
-    return name;
+    return checkInitializedToNotNull(name, "name");
   }
 
   public void setName(Name name) {

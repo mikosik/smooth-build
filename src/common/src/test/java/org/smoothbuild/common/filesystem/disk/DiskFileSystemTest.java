@@ -11,6 +11,7 @@ import org.smoothbuild.common.filesystem.base.FullPath;
 
 public class DiskFileSystemTest extends AbstractFileSystemTest {
   @TempDir
+  @SuppressWarnings("NullAway.Init")
   java.nio.file.Path path;
 
   @Override

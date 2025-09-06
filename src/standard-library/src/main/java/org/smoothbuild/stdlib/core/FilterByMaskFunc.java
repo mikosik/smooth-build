@@ -1,5 +1,6 @@
 package org.smoothbuild.stdlib.core;
 
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
@@ -8,9 +9,10 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 /**
- * [A] filter_([A] array, [Bool] filter);
+ * [A] filterByMask([A] array, [Bool] masks);
  */
 public class FilterByMaskFunc {
+  @Nullable
   public static BValue func(NativeApi nativeApi, BTuple args) throws BytecodeException {
     BArray array = (BArray) args.get(0);
     BArray masks = (BArray) args.get(1);

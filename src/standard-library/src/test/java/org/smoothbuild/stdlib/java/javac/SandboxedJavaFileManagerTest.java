@@ -17,7 +17,7 @@ public class SandboxedJavaFileManagerTest extends VmTestContext {
     StandardJavaFileManager sfm = mock(StandardJavaFileManager.class);
     SandboxedJavaFileManager manager =
         new SandboxedJavaFileManager(sfm, provide().container(), objects);
-    manager.getJavaFileForOutput(CLASS_OUTPUT, "className", Kind.CLASS, null);
+    manager.getJavaFileForOutput(CLASS_OUTPUT, "className", Kind.CLASS, mock());
     verifyNoInteractions(sfm);
   }
 }

@@ -1,10 +1,10 @@
 package org.smoothbuild.compilerfrontend.lang.name;
 
 import static com.google.common.base.Suppliers.memoize;
+import static java.util.Objects.requireNonNull;
 
 import com.google.common.base.Supplier;
 import java.util.Objects;
-import org.jetbrains.annotations.NotNull;
 import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.collect.List;
 
@@ -20,7 +20,7 @@ public abstract class Id implements Comparable<Id> {
   }
 
   public List<Name> parts() {
-    return parts.get();
+    return requireNonNull(parts.get());
   }
 
   protected abstract List<Name> splitToParts();
@@ -38,7 +38,7 @@ public abstract class Id implements Comparable<Id> {
   }
 
   @Override
-  public int compareTo(@NotNull Id id) {
+  public int compareTo(Id id) {
     return this.string.compareTo(id.string);
   }
 

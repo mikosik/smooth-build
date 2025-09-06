@@ -1,7 +1,6 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.compilerfrontend.lang.name.Name.referenceableName;
 
 import com.google.common.testing.EqualsTester;
@@ -11,16 +10,6 @@ import org.smoothbuild.compilerfrontend.lang.name.Name;
 
 public class SItemSigTest extends FrontendCompilerTestContext {
   private final Name name = referenceableName("name");
-
-  @Test
-  void null_type_is_forbidden() {
-    assertCall(() -> new SItemSig(null, name)).throwsException(NullPointerException.class);
-  }
-
-  @Test
-  void null_name_is_forbidden() {
-    assertCall(() -> new SItemSig(sStringType(), null)).throwsException(NullPointerException.class);
-  }
 
   @Test
   void type_getter() {

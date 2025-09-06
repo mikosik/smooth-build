@@ -1,5 +1,8 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
+import static org.smoothbuild.common.base.Check.checkInitializedToNotNull;
+
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.name.Name;
 import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
@@ -7,7 +10,7 @@ import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 public final class PTypeParam implements PTypeDefinition {
   private final String nameText;
   private final Location location;
-  private Name name;
+  private @Nullable Name name;
 
   public PTypeParam(String nameText, Location location) {
     this.nameText = nameText;
@@ -24,12 +27,12 @@ public final class PTypeParam implements PTypeDefinition {
 
   @Override
   public Name name() {
-    return name;
+    return checkInitializedToNotNull(name, "name");
   }
 
   @Override
   public STypeVar type() {
-    return new STypeVar(name);
+    return new STypeVar(name());
   }
 
   @Override

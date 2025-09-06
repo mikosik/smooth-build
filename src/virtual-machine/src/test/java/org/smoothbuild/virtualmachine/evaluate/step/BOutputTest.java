@@ -26,16 +26,19 @@ public class BOutputTest extends VmTestContext {
             "Cannot create BOutput with a value and with logs with a problem."));
   }
 
+  @SuppressWarnings("NullAway")
   @Test
   void null_messages_are_forbidden() {
     assertCall(() -> bOutput(aString(), null)).throwsException(NullPointerException.class);
   }
 
+  @SuppressWarnings("NullAway")
   @Test
   void null_messages2_are_forbidden() {
     assertCall(() -> bOutput(null)).throwsException(NullPointerException.class);
   }
 
+  @SuppressWarnings("NullAway")
   @Test
   void null_values_are_forbidden() {
     assertCall(() -> bOutput(null, messages())).throwsException(NullPointerException.class);

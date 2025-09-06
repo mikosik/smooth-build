@@ -2,20 +2,22 @@ package org.smoothbuild.common.filesystem.mem;
 
 import static org.smoothbuild.common.collect.List.listOfAll;
 
+import com.google.common.base.Preconditions;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import okio.Sink;
 import okio.Source;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.filesystem.base.Path;
 
 public final class MemoryDir implements MemoryElement {
-  private final MemoryDir parent;
+  private final @Nullable MemoryDir parent;
   private final Path name;
   private final Map<Path, MemoryElement> map = new HashMap<>();
 
-  public MemoryDir(MemoryDir parent, Path name) {
+  public MemoryDir(@Nullable MemoryDir parent, Path name) {
     this.parent = parent;
     this.name = name;
   }
@@ -27,7 +29,7 @@ public final class MemoryDir implements MemoryElement {
 
   @Override
   public MemoryDir parent() {
-    return parent;
+    return Preconditions.checkNotNull(parent, "Dir " + name.q() + " does not have parent.");
   }
 
   @Override

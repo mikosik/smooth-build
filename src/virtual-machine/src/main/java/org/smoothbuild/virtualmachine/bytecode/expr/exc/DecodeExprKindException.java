@@ -4,10 +4,14 @@ import org.smoothbuild.common.base.Hash;
 
 public class DecodeExprKindException extends DecodeExprException {
   public DecodeExprKindException(Hash hash) {
-    this(hash, null);
+    super(message(hash));
   }
 
   public DecodeExprKindException(Hash hash, Throwable e) {
-    super("Cannot decode expression at " + hash + ". Cannot decode its kind.", e);
+    super(message(hash), e);
+  }
+
+  private static String message(Hash hash) {
+    return "Cannot decode expression at " + hash + ". Cannot decode its kind.";
   }
 }

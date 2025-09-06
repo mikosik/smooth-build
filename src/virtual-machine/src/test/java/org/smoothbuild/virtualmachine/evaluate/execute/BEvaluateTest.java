@@ -4,6 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static java.util.Collections.nCopies;
 import static java.util.Collections.synchronizedList;
+import static java.util.Objects.requireNonNull;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
@@ -174,7 +175,8 @@ public class BEvaluateTest extends VmTestContext {
         var countingBEvaluate = countingBEvaluate();
         assertThat(evaluate(countingBEvaluate, call).get().get()).isEqualTo(bArray(bInt));
 
-        assertThat(countingBEvaluate.counters().get(bInt).intValue()).isEqualTo(1);
+        assertThat(requireNonNull(countingBEvaluate.counters().get(bInt)).intValue())
+            .isEqualTo(1);
       }
 
       @Test
@@ -203,7 +205,7 @@ public class BEvaluateTest extends VmTestContext {
         var expected = bArray(bArray(bool), bArray(bool));
         assertThat(evaluate(countingBEvaluate, call).get().get()).isEqualTo(expected);
 
-        assertThat(countingBEvaluate.counters().get(bool).get()).isEqualTo(1);
+        assertThat(requireNonNull(countingBEvaluate.counters().get(bool)).get()).isEqualTo(1);
       }
     }
   }
@@ -554,7 +556,7 @@ public class BEvaluateTest extends VmTestContext {
         var runtimeException = new RuntimeException();
         var scheduler = provide().scheduler();
         var stepEvaluator =
-            new StepEvaluator(null, null, null, scheduler, provide().bytecodeFactory()) {
+            new StepEvaluator(mock(), mock(), mock(), scheduler, provide().bytecodeFactory()) {
               @Override
               public Output<BValue> evaluateStep(Step task, BTuple input) {
                 throw runtimeException;
@@ -734,12 +736,12 @@ public class BEvaluateTest extends VmTestContext {
           final String nameAndIndex = name + index;
           var opcode = command.substring(0, command.length() - 1);
           switch (opcode) {
-            case "GET" -> result = COUNTERS.get(nameAndIndex).get();
-            case "INC" -> result = COUNTERS.get(nameAndIndex).incrementAndGet();
-            case "COUNT" -> COUNTDOWNS.get(nameAndIndex).countDown();
+            case "GET" -> result = getCounter(nameAndIndex).get();
+            case "INC" -> result = getCounter(nameAndIndex).incrementAndGet();
+            case "COUNT" -> getCountDownLatch(nameAndIndex).countDown();
             case "WAIT" -> {
               try {
-                if (!COUNTDOWNS.get(nameAndIndex).await(20, SECONDS)) {
+                if (!getCountDownLatch(nameAndIndex).await(20, SECONDS)) {
                   throw new RuntimeException();
                 }
               } catch (InterruptedException e) {
@@ -755,6 +757,14 @@ public class BEvaluateTest extends VmTestContext {
         return nativeApi.factory().string(Integer.toString(result));
       }
     }
+  }
+
+  private static AtomicInteger getCounter(String nameAndIndex) {
+    return requireNonNull(COUNTERS.get(nameAndIndex));
+  }
+
+  private static CountDownLatch getCountDownLatch(String nameAndIndex) {
+    return requireNonNull(COUNTDOWNS.get(nameAndIndex));
   }
 
   private BValue evaluate(BExpr expr) {

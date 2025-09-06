@@ -10,6 +10,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.function.Function1;
 
 public class ClassLoaders {
@@ -18,8 +19,13 @@ public class ClassLoaders {
     return mapClassLoader(ClassLoaders.class.getClassLoader(), inputStreams);
   }
 
+  /**
+   * Creates mapping class loader.
+   * @param parentClassLoader if null is passed then bootstrap classloader should be used as parent
+   */
   public static ClassLoader mapClassLoader(
-      ClassLoader parentClassLoader, Function1<String, InputStream, IOException> inputStreams) {
+      @Nullable ClassLoader parentClassLoader,
+      Function1<String, InputStream, IOException> inputStreams) {
     try {
       var uri = new URI("x-buffer", "ssp", "/", "");
       var url = URL.of(uri, urlStreamHandler(inputStreams));

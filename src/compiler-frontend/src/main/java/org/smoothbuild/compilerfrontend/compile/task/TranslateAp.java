@@ -1,5 +1,6 @@
 package org.smoothbuild.compilerfrontend.compile.task;
 
+import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.common.base.Throwables.unexpectedCaseException;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
@@ -226,7 +227,7 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
     private PExpr createPipe(AtomicReference<PExpr> outerPiped, PipeContext pipe) {
       var exprs = pipe.expr();
       var firstExpr = createExpr(outerPiped, exprs.get(0));
-      var innerPiped = new AtomicReference<>(firstExpr);
+      AtomicReference<PExpr> innerPiped = new AtomicReference<>(firstExpr);
       for (int i = 1; i < exprs.size(); i++) {
         var exprContext = exprs.get(i);
         var expr = createExpr(innerPiped, exprContext);
@@ -235,7 +236,7 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
         }
         innerPiped.set(expr);
       }
-      return innerPiped.get();
+      return requireNonNull(innerPiped.get());
     }
 
     private void logPipedValueNotConsumedError(ExprContext parserRuleContext) {

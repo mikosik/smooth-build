@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BChooseTest extends VmTestContext {
@@ -31,25 +30,6 @@ public class BChooseTest extends VmTestContext {
           bChoose(type, index, bBlob());
         })
         .throwsException(new IndexOutOfBoundsException("index (2) must be less than size (2)"));
-  }
-
-  @Test
-  void setting_chosen_to_null_throws_exception() {
-    assertCall(() -> {
-          BChoiceType choiceType = bChoiceType(bStringType(), bBlobType());
-          BInt index = bInt(0);
-          bChoose(choiceType, index, null);
-        })
-        .throwsException(NullPointerException.class);
-  }
-
-  @Test
-  void setting_index_to_null_throws_exception() {
-    assertCall(() -> {
-          BChoiceType choiceType = bChoiceType(bStringType(), bBlobType());
-          bChoose(choiceType, null, bString());
-        })
-        .throwsException(NullPointerException.class);
   }
 
   @Test

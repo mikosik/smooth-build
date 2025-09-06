@@ -22,12 +22,14 @@ public class TryTest {
     @Nested
     class _with_null_value {
       @Test
+      @SuppressWarnings("NullAway")
       void and_no_failure_fails() {
         assertCall(() -> Try.of(null, warning("warning message")))
             .throwsException(NullPointerException.class);
       }
 
       @Test
+      @SuppressWarnings("NullAway")
       void and_failure() {
         var tryOf = Try.of(null, error("error message"));
         assertThat(tryOf.toMaybe()).isEqualTo(none());
@@ -56,6 +58,7 @@ public class TryTest {
   @Nested
   class _success {
     @Test
+    @SuppressWarnings("NullAway")
     void creating_with_null_value_fails() {
       assertCall(() -> success(null)).throwsException(NullPointerException.class);
     }

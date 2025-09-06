@@ -1,6 +1,9 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
+import static org.smoothbuild.common.base.Check.checkInitializedToNotNull;
+
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.name.Name;
@@ -8,7 +11,7 @@ import org.smoothbuild.compilerfrontend.lang.name.Name;
 public final class PStructSelect extends PExpr {
   private final PExpr selectable;
   private final String fieldNameText;
-  private Name fieldName;
+  private @Nullable Name fieldName;
 
   public PStructSelect(PExpr selectable, String fieldNameText, Location location) {
     super(location);
@@ -25,7 +28,7 @@ public final class PStructSelect extends PExpr {
   }
 
   public Name fieldName() {
-    return fieldName;
+    return checkInitializedToNotNull(fieldName, "fieldName");
   }
 
   public void setFieldName(Name fieldName) {

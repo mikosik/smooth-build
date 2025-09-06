@@ -6,20 +6,23 @@ import static org.smoothbuild.common.base.Strings.q;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Maybe.maybe;
+import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.collect.Result.err;
 
 import java.util.Objects;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.Result;
 import org.smoothbuild.compilerfrontend.lang.base.HasName;
 
 public final class Bindings<E> {
-  private final Bindings<? extends E> outer;
+  private final Maybe<Bindings<? extends E>> outer;
   private final Map<Name, ? extends E> inner;
 
   public static <E> Bindings<E> bindings() {
-    return new Bindings<>(null, Map.map());
+    return new Bindings<>(none(), Map.map());
   }
 
   @SuppressWarnings("unchecked")
@@ -28,23 +31,23 @@ public final class Bindings<E> {
   }
 
   public static <E extends HasName> Bindings<E> bindings(Map<Name, E> elements) {
-    return bindings(null, elements);
+    return new Bindings<>(none(), elements);
   }
 
   public static <E> Bindings<E> bindings(
       Bindings<? extends E> outer, Map<Name, ? extends E> inner) {
-    return new Bindings<>(outer, inner);
+    return new Bindings<>(some(outer), inner);
   }
 
-  private Bindings(Bindings<? extends E> outer, Map<Name, ? extends E> inner) {
-    this.outer = outer;
+  private Bindings(Maybe<Bindings<? extends E>> outer, Map<Name, ? extends E> inner) {
+    this.outer = requireNonNull(outer);
     this.inner = requireNonNull(inner);
   }
 
-  public Result<E> find(Id id) {
+  public Result<? extends E> find(Id id) {
     var parts = id.parts();
     if (parts.size() == 1) {
-      return maybe(get(parts.get(0))).toResult(() -> cannotResolveErrorMessage(parts, 1));
+      return get(parts.get(0)).toResult(() -> cannotResolveErrorMessage(parts, 1));
     }
     return err(cannotResolveErrorMessage(parts, 2));
   }
@@ -53,14 +56,15 @@ public final class Bindings<E> {
     return "Cannot resolve " + q(parts.subList(0, toIndex).toString(":")) + ".";
   }
 
-  private E get(Name name) {
-    E element = inner.get(name);
-    if (element != null) {
+  private Maybe<? extends E> get(Name name) {
+    var element = maybe(inner.get(name));
+    if (element.isSome()) {
       return element;
-    } else if (outer == null) {
-      return null;
     } else {
-      return outer.get(name);
+      return switch (outer) {
+        case Maybe.Some<Bindings<? extends E>> some -> some.get().get(name);
+        case Maybe.None<?> none -> none();
+      };
     }
   }
 
@@ -86,7 +90,7 @@ public final class Bindings<E> {
 
   private String toString(String innersAppendix) {
     var string = mapToString(inner) + innersAppendix;
-    return outer == null ? string : outer.toString("\n" + indent(string));
+    return outer.map(o -> o.toString("\n" + indent(string))).getOr(string);
   }
 
   private static String mapToString(Map<Name, ?> map) {

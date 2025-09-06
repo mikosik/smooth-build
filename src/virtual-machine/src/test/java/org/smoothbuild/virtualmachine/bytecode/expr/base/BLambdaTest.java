@@ -20,12 +20,6 @@ public class BLambdaTest extends VmTestContext {
   }
 
   @Test
-  void setting_body_to_null_throws_exception() throws Exception {
-    var lambdaType = bLambdaType(bBoolType(), bIntType());
-    assertCall(() -> bLambda(lambdaType, null)).throwsException(NullPointerException.class);
-  }
-
-  @Test
   void type_of_lambda_is_lambda_type() throws Exception {
     var lambdaType = bLambdaType(bStringType(), bIntType());
     assertThat(bLambda(lambdaType, bInt()).evaluationType()).isEqualTo(lambdaType);

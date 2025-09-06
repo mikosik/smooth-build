@@ -253,11 +253,8 @@ public class BKindDb {
   private KindId decodeKindId(Hash hash, Hash markerHash) throws DecodeKindException {
     byte byteMarker = invokeAndChainHashedDbException(
         () -> hashedDb.readByte(markerHash), e -> new DecodeKindException(hash, e));
-    var id = fromOrdinal(byteMarker);
-    if (id == null) {
-      throw new DecodeKindIllegalIdException(hash, byteMarker);
-    }
-    return id;
+    return fromOrdinal(byteMarker)
+        .getOrThrow(() -> new DecodeKindIllegalIdException(hash, byteMarker));
   }
 
   private BArrayType readArrayType(Hash hash, List<Hash> rootChildren, KindId id)

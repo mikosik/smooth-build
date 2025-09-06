@@ -1,6 +1,7 @@
 package org.smoothbuild.virtualmachine.testing.func.bytecode;
 
 import static java.math.BigInteger.ZERO;
+import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.common.collect.List.list;
 
 import java.util.Map;
@@ -12,7 +13,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 public class ReturnIdFunc {
   public static BValue bytecode(BytecodeFactory f, Map<String, BType> varMap)
       throws BytecodeException {
-    var a = varMap.get("A");
+    var a = requireNonNull(varMap.get("A"));
     var lambdaType = f.lambdaType(list(a), a);
     return f.lambda(lambdaType, f.reference(a, f.int_(ZERO)));
   }

@@ -2,6 +2,7 @@ package org.smoothbuild.stdlib.file;
 
 import static org.smoothbuild.common.filesystem.base.Path.path;
 
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.filesystem.base.IllegalPathException;
 import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
@@ -9,6 +10,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class PathArgValidator {
+  @Nullable
   public static Path validatedProjectPath(NativeApi nativeApi, String name, BString path)
       throws BytecodeException {
     String value = path.toJavaString();

@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
 import org.smoothbuild.cli.layout.Layout;
+import org.smoothbuild.common.collect.Result;
 
 public abstract class ProjectCommand extends LoggingCommand implements Callable<Integer> {
   @Override
@@ -21,15 +22,17 @@ public abstract class ProjectCommand extends LoggingCommand implements Callable<
       return EXIT_CODE_ERROR;
     }
     Path normalizedProjectDir = projectDir.normalize();
-    FileLock fileLock = lockFile(out(), projectDir.resolve(Layout.SMOOTH_LOCK_PATH.toString()));
-    if (fileLock == null) {
+    Result<FileLock> lockFile =
+        lockFile(out(), projectDir.resolve(Layout.SMOOTH_LOCK_PATH.toString()));
+    if (lockFile.isErr()) {
+      printError(lockFile.err());
       return EXIT_CODE_ERROR;
     }
     try {
       return executeCommand(normalizedProjectDir);
     } finally {
       try {
-        fileLock.release();
+        lockFile.ok().release();
       } catch (IOException e) {
         printError("Error closing file lock.");
         return EXIT_CODE_ERROR;

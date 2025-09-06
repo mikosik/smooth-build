@@ -14,7 +14,7 @@ public class JavacFuncTest extends VmTestContext {
     var file1 = bFile(path("my/package/MyKlass.class"));
     var file2 = bFile(path("my/package/MyKlass2.class"));
     var fileArrayArray = bArray(bArray(file1, file2));
-    assertThat(filesToInputClassFiles(provide().container(), fileArrayArray))
+    assertThat(filesToInputClassFiles(provide().container(), fileArrayArray).get())
         .containsExactly(new InputClassFile(file1), new InputClassFile(file2));
   }
 
@@ -24,7 +24,7 @@ public class JavacFuncTest extends VmTestContext {
     var file1 = bFile(path(name));
     var fileArrayArray = bArray(bArray(file1), bArray(file1));
     var nativeApi = (NativeApi) provide().container();
-    assertThat(filesToInputClassFiles(nativeApi, fileArrayArray)).isNull();
+    assertThat(filesToInputClassFiles(nativeApi, fileArrayArray)).isEmpty();
     assertThat(nativeApi.messages())
         .isEqualTo(bArray(
             bErrorLog("File " + name + " is contained by two different library jar files.")));

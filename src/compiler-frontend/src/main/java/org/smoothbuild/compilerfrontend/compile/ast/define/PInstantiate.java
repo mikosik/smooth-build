@@ -1,6 +1,9 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
+import static org.smoothbuild.common.base.Check.checkInitializedToNotNull;
+
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.location.Location;
@@ -11,7 +14,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SType;
  */
 public final class PInstantiate extends PExpr {
   private final PReference reference;
-  private List<SType> typeArgs;
+  private @Nullable List<SType> typeArgs;
 
   public PInstantiate(PReference reference, Location location) {
     super(location);
@@ -27,7 +30,7 @@ public final class PInstantiate extends PExpr {
   }
 
   public List<SType> typeArgs() {
-    return typeArgs;
+    return checkInitializedToNotNull(typeArgs, "typeArgs");
   }
 
   @Override

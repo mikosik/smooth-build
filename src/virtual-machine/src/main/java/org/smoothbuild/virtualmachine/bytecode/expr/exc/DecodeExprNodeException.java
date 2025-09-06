@@ -9,15 +9,15 @@ public class DecodeExprNodeException extends DecodeExprException {
   }
 
   public DecodeExprNodeException(Hash hash, BKind kind, String path) {
-    super(buildMessage(hash, kind, path, null));
+    super(buildMessage(hash, kind, path, ""));
   }
 
   public DecodeExprNodeException(Hash hash, BKind kind, String path, Throwable e) {
-    super(buildMessage(hash, kind, path, null), e);
+    super(buildMessage(hash, kind, path, ""), e);
   }
 
   private static String buildMessage(Hash hash, BKind kind, String path, String message) {
     return "Cannot decode " + kind.q() + " expression at " + hash + ". Cannot decode its node at `"
-        + path + "` path in Merkle tree. " + (message != null ? message : "");
+        + path + "` path in Merkle tree." + (message.isEmpty() ? "" : " " + message);
   }
 }

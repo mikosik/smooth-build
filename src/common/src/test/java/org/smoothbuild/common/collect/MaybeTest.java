@@ -26,6 +26,7 @@ public class MaybeTest {
   @Nested
   class _maybe {
     @Test
+    @SuppressWarnings("NullAway")
     void with_null_argument_creates_none() {
       assertThat(maybe(null)).isEqualTo(none());
     }
@@ -39,6 +40,7 @@ public class MaybeTest {
   @Nested
   class _some {
     @Test
+    @SuppressWarnings("NullAway")
     void cannot_hold_null() {
       assertCall(() -> some(null)).throwsException(NullPointerException.class);
     }
@@ -107,6 +109,7 @@ public class MaybeTest {
     }
 
     @Test
+    @SuppressWarnings("NullAway")
     void map_cannot_convert_to_null() {
       var some = some(16);
       assertCall(() -> some.map(x -> (String) null)).throwsException(NullPointerException.class);
@@ -134,6 +137,7 @@ public class MaybeTest {
       assertThat(some.flatMap(i -> none())).isEqualTo(none());
     }
 
+    @SuppressWarnings("NullAway")
     @Test
     void flatMap_converting_to_null_fails() {
       var some = some("a");

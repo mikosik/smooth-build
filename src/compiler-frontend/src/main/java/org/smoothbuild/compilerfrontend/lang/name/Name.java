@@ -7,6 +7,7 @@ import static org.smoothbuild.compilerfrontend.lang.name.CharUtils.isLowerCase;
 import static org.smoothbuild.compilerfrontend.lang.name.CharUtils.isUpperCase;
 import static org.smoothbuild.compilerfrontend.lang.name.CharUtils.isValidNameCharacter;
 
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Result;
@@ -43,7 +44,7 @@ public final class Name extends Id {
     return ok(new Name(name));
   }
 
-  private static String findReferenceableNameErrors(String name) {
+  private static @Nullable String findReferenceableNameErrors(String name) {
     var errorMessage = findNameErrors(name);
     if (errorMessage != null) {
       return errorMessage;
@@ -63,7 +64,7 @@ public final class Name extends Id {
     return ok(new Name(name));
   }
 
-  public static String findTypeNameErrors(String name) {
+  public static @Nullable String findTypeNameErrors(String name) {
     var errorMessage = findNameErrors(name);
     if (errorMessage != null) {
       return errorMessage;
@@ -74,7 +75,7 @@ public final class Name extends Id {
     return null;
   }
 
-  private static String findNameErrors(String name) {
+  private static @Nullable String findNameErrors(String name) {
     if (name.isEmpty()) {
       return "It must not be empty string.";
     }

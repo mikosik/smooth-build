@@ -123,7 +123,7 @@ public class ResultTest {
     @Test
     void mapErr_returns_same_instance() {
       var ok = ok("a");
-      assertThat(ok.mapErr(x -> null)).isSameInstanceAs(ok);
+      assertThat(ok.mapErr(x -> "b")).isSameInstanceAs(ok);
     }
 
     @Test
@@ -138,6 +138,7 @@ public class ResultTest {
       assertThat(ok("a").flatMapOk(s -> ok(s.toUpperCase(ROOT)))).isEqualTo(ok("A"));
     }
 
+    @SuppressWarnings("NullAway")
     @Test
     void flatMapOk_fails_when_mapper_returns_null() {
       var ok = ok("a");
@@ -156,7 +157,7 @@ public class ResultTest {
     @Test
     void flatMapErr_returns_same_instance() {
       var ok = ok("a");
-      assertThat(ok.flatMapErr(x -> null)).isSameInstanceAs(ok);
+      assertThat(ok.flatMapErr(x -> ok("b"))).isSameInstanceAs(ok);
     }
 
     @Test
@@ -260,7 +261,7 @@ public class ResultTest {
     @Test
     void mapOk_returns_same_err() {
       var ok = err("a");
-      assertThat(ok.mapOk(x -> null)).isEqualTo(err("a"));
+      assertThat(ok.mapOk(x -> "b")).isEqualTo(err("a"));
     }
 
     @Test
@@ -287,7 +288,7 @@ public class ResultTest {
     @Test
     void flatMapOk_returns_same_instance() {
       var ok = err("a");
-      assertThat(ok.flatMapOk(x -> null)).isEqualTo(err("a"));
+      assertThat(ok.flatMapOk(x -> ok("b"))).isEqualTo(err("a"));
     }
 
     @Test
@@ -303,6 +304,7 @@ public class ResultTest {
     }
 
     @Test
+    @SuppressWarnings("NullAway")
     void flatMapErr_fails_when_mapper_returns_null() {
       var err = err("a");
       assertCall(() -> err.flatMapErr(s -> null)).throwsException(NullPointerException.class);

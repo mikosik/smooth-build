@@ -2,6 +2,7 @@ package org.smoothbuild.common.log.report;
 
 import static com.google.common.collect.Maps.toImmutableEnumMap;
 import static java.util.Arrays.stream;
+import static java.util.Objects.requireNonNull;
 
 import jakarta.inject.Inject;
 import java.util.EnumMap;
@@ -21,11 +22,11 @@ public class LogCounters {
   public LogCounters() {}
 
   public void increment(Level level) {
-    counters.get(level).getAndIncrement();
+    requireNonNull(counters.get(level)).getAndIncrement();
   }
 
   public int get(Level level) {
-    return counters.get(level).get();
+    return requireNonNull(counters.get(level)).get();
   }
 
   private static EnumMap<Level, AtomicInteger> createCountersMap() {

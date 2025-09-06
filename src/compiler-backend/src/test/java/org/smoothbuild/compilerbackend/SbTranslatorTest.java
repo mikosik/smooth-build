@@ -11,6 +11,7 @@ import static org.smoothbuild.compilerfrontend.lang.name.Bindings.bindings;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.filesystem.base.FullPath;
@@ -639,27 +640,33 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
   private void assertNalMapping(
       Bindings<SPolyEvaluable> evaluables,
       SExpr sExpr,
-      String expectedName,
+      @Nullable String expectedName,
       Location expectedLocation)
       throws Exception {
     var sbTranslator = newTranslator(evaluables);
     assertNalMapping(sbTranslator, sExpr, expectedName, expectedLocation);
   }
 
-  private void assertNalMapping(SExpr sExpr, String expectedName, Location expectedLocation)
-      throws Exception {
+  private void assertNalMapping(
+      SExpr sExpr, @Nullable String expectedName, Location expectedLocation) throws Exception {
     assertNalMapping(newTranslator(), sExpr, expectedName, expectedLocation);
   }
 
   private static void assertNalMapping(
-      SbTranslator sbTranslator, SExpr sExpr, String expectedName, Location expectedLocation)
+      SbTranslator sbTranslator,
+      SExpr sExpr,
+      @Nullable String expectedName,
+      Location expectedLocation)
       throws SbTranslatorException {
     var exprB = sbTranslator.translateExpr(sExpr);
     assertNalMapping(sbTranslator, exprB, expectedName, expectedLocation);
   }
 
   private static void assertNalMapping(
-      SbTranslator sbTranslator, BExpr expr, String expectedName, Location expectedLocation) {
+      SbTranslator sbTranslator,
+      BExpr expr,
+      @Nullable String expectedName,
+      Location expectedLocation) {
     var bExprAttributes = sbTranslator.bExprAttributes();
     assertThat(bExprAttributes.names().get(expr.hash())).isEqualTo(expectedName);
     assertThat(bExprAttributes.locations().get(expr.hash())).isEqualTo(expectedLocation);

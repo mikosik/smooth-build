@@ -1,6 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static java.util.Objects.requireNonNull;
 
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
@@ -16,7 +17,7 @@ public record SStructSelect(SExpr selectable, Name field, Location location) imp
   @Override
   public SType evaluationType() {
     var sStructType = (SStructType) selectable.evaluationType();
-    return sStructType.fields().get(field).type();
+    return requireNonNull(sStructType.fields().get(field)).type();
   }
 
   @Override

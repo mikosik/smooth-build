@@ -4,10 +4,14 @@ import org.smoothbuild.common.base.Hash;
 
 public class DecodeBooleanException extends HashedDbException {
   public DecodeBooleanException(Hash hash) {
-    this(hash, null);
+    super(message(hash));
   }
 
   public DecodeBooleanException(Hash hash, DecodeByteException e) {
-    super("Value at " + hash + " cannot be decoded as boolean.", e);
+    super(message(hash), e);
+  }
+
+  private static String message(Hash hash) {
+    return "Value at " + hash + " cannot be decoded as boolean.";
   }
 }

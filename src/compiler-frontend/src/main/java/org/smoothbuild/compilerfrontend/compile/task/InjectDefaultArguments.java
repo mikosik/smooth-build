@@ -12,6 +12,7 @@ import static org.smoothbuild.compilerfrontend.lang.name.Name.referenceableName;
 
 import java.util.ArrayList;
 import java.util.Set;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Logger;
@@ -45,10 +46,13 @@ public class InjectDefaultArguments implements Task1<PModule, PModule> {
     @Override
     public void visitCall(PCall pCall) {
       super.visitCall(pCall);
-      pCall.setPositionedArgs(inferPositionedArgs(pCall));
+      var positionedArgs = inferPositionedArgs(pCall);
+      if (positionedArgs != null) {
+        pCall.setPositionedArgs(positionedArgs);
+      }
     }
 
-    private List<PExpr> inferPositionedArgs(PCall pCall) {
+    private @Nullable List<PExpr> inferPositionedArgs(PCall pCall) {
       if (pCall.callee() instanceof PInstantiate pInstantiate
           && pInstantiate.reference().referenced() instanceof PolyEvaluable pPolyEvaluable
           && pPolyEvaluable.evaluable() instanceof NamedFunc namedFunc) {
@@ -70,7 +74,7 @@ public class InjectDefaultArguments implements Task1<PModule, PModule> {
       return args;
     }
 
-    private List<PExpr> inferPositionedArgs(
+    private @Nullable List<PExpr> inferPositionedArgs(
         PCall pCall, NList<? extends Item> params, Logger mainLogger) {
       var logger = new Logger();
       var positionalArgs = leadingPositionalArgs(pCall);
@@ -88,7 +92,7 @@ public class InjectDefaultArguments implements Task1<PModule, PModule> {
       return pCall.args().takeWhile(a -> !(a instanceof PNamedArg));
     }
 
-    private List<PExpr> positionedArgs(
+    private @Nullable List<PExpr> positionedArgs(
         PCall pCall, NList<? extends Item> params, int positionalArgsCount, Logger logBuffer) {
       var names = params.list().map(Item::name);
       var args = pCall.args();

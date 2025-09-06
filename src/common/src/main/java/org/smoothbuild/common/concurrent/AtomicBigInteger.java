@@ -1,5 +1,7 @@
 package org.smoothbuild.common.concurrent;
 
+import static java.util.Objects.requireNonNull;
+
 import java.math.BigInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -10,7 +12,8 @@ public class AtomicBigInteger {
     BigInteger oldValue;
     BigInteger newValue;
     do {
-      oldValue = value.get();
+      // requireNonNull check to make nullAway happy
+      oldValue = requireNonNull(value.get());
       newValue = oldValue.add(BigInteger.ONE);
     } while (!value.compareAndSet(oldValue, newValue));
     return newValue;

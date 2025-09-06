@@ -5,6 +5,7 @@ import static okio.Okio.buffer;
 import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.dagger.PerCommand;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
@@ -37,7 +38,7 @@ public class FileContentReader {
 
   private class CachingReader {
     private final FullPath fullPath;
-    private BBlob blob;
+    private @Nullable BBlob blob;
 
     private CachingReader(FullPath fullPath) {
       this.fullPath = fullPath;

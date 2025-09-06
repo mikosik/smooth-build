@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.smoothbuild.common.collect.Result;
 
 public class LockFileTest {
   private final PrintWriter writer = new PrintWriter(nullWriter());
@@ -21,17 +22,18 @@ public class LockFileTest {
     void when_it_exists(@TempDir Path tempDir) throws IOException {
       Path lockFile = tempDir.resolve("lockFile");
       createFile(lockFile);
-      assertThat(lockFile(writer, lockFile)).isNotNull();
+      assertThat(lockFile(writer, lockFile)).isInstanceOf(Result.Ok.class);
     }
 
     @Test
     void when_it_doesnt_exist(@TempDir Path tempDir) {
-      assertThat(lockFile(writer, tempDir.resolve("lockFile"))).isNotNull();
+      assertThat(lockFile(writer, tempDir.resolve("lockFile"))).isInstanceOf(Result.Ok.class);
     }
 
     @Test
     void when_parent_directory_doesnt_exist(@TempDir Path tempDir) {
-      assertThat(lockFile(writer, tempDir.resolve("subdir/lockFile"))).isNotNull();
+      assertThat(lockFile(writer, tempDir.resolve("subdir/lockFile")))
+          .isInstanceOf(Result.Ok.class);
     }
   }
 
@@ -40,8 +42,14 @@ public class LockFileTest {
     @Test
     void when_it_is_already_acquired_by_our_jvm(@TempDir Path tempDir) {
       Path lockFile = tempDir.resolve("lockFile");
-      assertThat(lockFile(writer, lockFile)).isNotNull();
-      assertThat(lockFile(writer, lockFile)).isNull();
+      assertThat(lockFile(writer, lockFile)).isInstanceOf(Result.Ok.class);
+      assertThat(lockFile(writer, lockFile))
+          .isEqualTo(
+              Result.err(
+                  """
+          Another instance of smooth is running for this project.
+          And it is running in the same JVM.
+          OverlappingFileLockException: null"""));
     }
   }
 }

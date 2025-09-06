@@ -1,16 +1,11 @@
 package org.smoothbuild.common.log.report;
 
-import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.log.location.Location;
 
-public record TraceLine(String called, Location location, TraceLine next) {
-  public TraceLine {
-    Objects.requireNonNull(called);
-    Objects.requireNonNull(location);
-  }
-
+public record TraceLine(String called, Location location, @Nullable TraceLine next) {
   @Override
   public String toString() {
-    return "@ " + location.toString() + " " + Objects.toString(called, "");
+    return "@ " + location + " " + called;
   }
 }

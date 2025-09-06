@@ -1,8 +1,10 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
+import static org.smoothbuild.common.base.Check.checkInitializedToNotNull;
 import static org.smoothbuild.common.collect.Maybe.some;
 
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
@@ -15,8 +17,8 @@ public final class PLambda extends PExpr implements PFunc {
   private final PImplicitType resultType;
   private final NList<PItem> params;
   private final PExpr body;
-  private Fqn fqn;
-  private PScope scope;
+  private @Nullable Fqn fqn;
+  private @Nullable PScope scope;
 
   public PLambda(String nameText, NList<PItem> params, PExpr body, Location location) {
     super(location);
@@ -38,7 +40,7 @@ public final class PLambda extends PExpr implements PFunc {
 
   @Override
   public Fqn fqn() {
-    return fqn;
+    return checkInitializedToNotNull(fqn, "fqn");
   }
 
   @Override
@@ -67,7 +69,7 @@ public final class PLambda extends PExpr implements PFunc {
 
   @Override
   public PScope scope() {
-    return scope;
+    return checkInitializedToNotNull(scope, "scope");
   }
 
   @Override

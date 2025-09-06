@@ -6,13 +6,14 @@ import okio.ByteString;
 import okio.ForwardingSink;
 import okio.Sink;
 import okio.Source;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.filesystem.base.Path;
 
 public final class MemoryFile implements MemoryElement {
   private final MemoryDir parent;
   private final Path name;
-  private ByteString data;
+  private @Nullable ByteString data;
 
   public MemoryFile(MemoryDir parent, Path name) {
     this.parent = parent;

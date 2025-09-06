@@ -56,6 +56,7 @@ public class JarClassLoaderFactory {
     return newClassLoader(filesMap);
   }
 
+  @SuppressWarnings("NullAway")
   private ClassLoader newClassLoader(Map<String, BTuple> filesMap) {
     return mapClassLoader(parentClassLoader, path -> {
       BTuple file = filesMap.get(path);

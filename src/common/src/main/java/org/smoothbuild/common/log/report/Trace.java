@@ -1,10 +1,11 @@
 package org.smoothbuild.common.log.report;
 
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.log.location.Location;
 
 public class Trace {
-  private final TraceLine topLine;
+  private final @Nullable TraceLine topLine;
 
   public Trace(String called, Location location) {
     this.topLine = new TraceLine(called, location, null);
@@ -14,11 +15,11 @@ public class Trace {
     this(null);
   }
 
-  public Trace(TraceLine topLine) {
+  public Trace(@Nullable TraceLine topLine) {
     this.topLine = topLine;
   }
 
-  public TraceLine topLine() {
+  public @Nullable TraceLine topLine() {
     return topLine;
   }
 

@@ -22,6 +22,7 @@ dependencies {
     testRuntimeOnly libs.junit.jupiter.engine
     testImplementation libs.junit.jupiter.api
     testImplementation libs.junit.jupiter.params
+    testImplementation libs.jspecify
     testImplementation libs.mockito
     testImplementation libs.truth
     testImplementation libs.guava.testlib

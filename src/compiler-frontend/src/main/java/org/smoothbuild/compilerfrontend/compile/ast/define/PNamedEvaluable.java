@@ -1,5 +1,8 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
+import static org.smoothbuild.common.base.Check.checkInitializedToNotNull;
+
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
@@ -14,8 +17,8 @@ public abstract sealed class PNamedEvaluable implements PEvaluable, PMonoReferen
   private final Maybe<PExpr> body;
   private final Maybe<PAnnotation> annotation;
   private final Location location;
-  private PScope scope;
-  private Fqn fqn;
+  private @Nullable PScope scope;
+  private @Nullable Fqn fqn;
 
   protected PNamedEvaluable(
       String nameText, Maybe<PExpr> body, Maybe<PAnnotation> annotation, Location location) {
@@ -27,7 +30,7 @@ public abstract sealed class PNamedEvaluable implements PEvaluable, PMonoReferen
 
   @Override
   public PScope scope() {
-    return scope;
+    return checkInitializedToNotNull(scope, "scope");
   }
 
   @Override
@@ -56,7 +59,7 @@ public abstract sealed class PNamedEvaluable implements PEvaluable, PMonoReferen
 
   @Override
   public Fqn fqn() {
-    return fqn;
+    return checkInitializedToNotNull(fqn, "fqn");
   }
 
   @Override

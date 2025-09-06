@@ -1,6 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.name;
 
 import static com.google.common.base.Suppliers.memoize;
+import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Map.mapOfAll;
 
@@ -16,6 +17,7 @@ import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.collect.Collection;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
@@ -122,9 +124,10 @@ public class NList<E extends HasName> extends AbstractList<E> {
   }
 
   public int indexOf(Name name) {
-    return indexMap.get().get(name);
+    return requireNonNull(requireNonNull(indexMap.get()).get(name));
   }
 
+  @Nullable
   public E get(Name name) {
     return map().get(name);
   }
@@ -209,10 +212,10 @@ public class NList<E extends HasName> extends AbstractList<E> {
   // helper methods
 
   public List<E> list() {
-    return list.get();
+    return requireNonNull(list.get());
   }
 
   public Map<Name, E> map() {
-    return map.get();
+    return requireNonNull(map.get());
   }
 }

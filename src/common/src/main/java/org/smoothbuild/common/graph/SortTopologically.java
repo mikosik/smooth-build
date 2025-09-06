@@ -1,5 +1,6 @@
 package org.smoothbuild.common.graph;
 
+import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Set.set;
@@ -8,6 +9,7 @@ import static org.smoothbuild.common.graph.SortTopologically.Node.State.NOT_VISI
 import static org.smoothbuild.common.graph.SortTopologically.Node.State.PROCESSED;
 
 import java.util.ArrayDeque;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.collect.Collection;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Set;
@@ -35,7 +37,7 @@ public class SortTopologically {
     }
   }
 
-  public static <K, N, E> TopologicalSortingRes<K, N, E> sortTopologicallyImpl(
+  private static <K, N, E> TopologicalSortingRes<K, N, E> sortTopologicallyImpl(
       List<Node<K, N, E>> nodes) {
 
     // For each root node (node without incoming edges) algorithm processes it with the following
@@ -74,7 +76,7 @@ public class SortTopologically {
     var resultSeq = new ArrayDeque<Node<K, N, E>>(nodes.size());
 
     for (K rootKey : rootKeys) {
-      addToPath(currentPath, keyToNode.get(rootKey));
+      addToPath(currentPath, requireNonNull(keyToNode.get(rootKey)));
       while (!currentPath.isEmpty()) {
         var last = currentPath.peekLast();
         int edgeIndex = last.incrementAndGetEdgeIndex();
@@ -211,9 +213,9 @@ public class SortTopologically {
   }
 
   public static record TopologicalSortingRes<K, N, E>(
-      List<GraphNode<K, N, E>> sorted, List<GraphEdge<E, K>> cycle) {
+      @Nullable List<GraphNode<K, N, E>> sorted, @Nullable List<GraphEdge<E, K>> cycle) {
     public List<N> valuesReversed() {
-      return sorted().map(GraphNode::value).reverse();
+      return requireNonNull(sorted).map(GraphNode::value).reverse();
     }
   }
 }

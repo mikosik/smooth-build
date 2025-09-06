@@ -2,6 +2,7 @@ package org.smoothbuild.common.log.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
+import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Maybe.none;
@@ -9,6 +10,7 @@ import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
 
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.collect.Collection;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
@@ -17,12 +19,12 @@ public class Try<V> {
   private final Maybe<V> value;
   private final List<Log> logs;
 
-  public static <T> Try<T> of(T value, Log... logs) {
+  public static <T> Try<T> of(@Nullable T value, Log... logs) {
     return of(value, list(logs));
   }
 
-  public static <T> Try<T> of(T value, Collection<Log> logs) {
-    Maybe<T> maybe = containsFailure(logs) ? none() : some(value);
+  public static <T> Try<T> of(@Nullable T value, Collection<Log> logs) {
+    Maybe<T> maybe = containsFailure(logs) ? none() : some(requireNonNull(value));
     return new Try<>(maybe, logs);
   }
 

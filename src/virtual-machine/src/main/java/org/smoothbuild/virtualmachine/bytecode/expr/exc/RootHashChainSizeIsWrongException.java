@@ -4,9 +4,15 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 
 public class RootHashChainSizeIsWrongException extends DecodeExprException {
+  private static final String CANNOT_DECODE_ROOT = "Cannot decode root.";
+
+  public static RootHashChainSizeIsWrongException cannotReadRootException(Hash hash) {
+    return new RootHashChainSizeIsWrongException(hash, CANNOT_DECODE_ROOT);
+  }
+
   public static RootHashChainSizeIsWrongException cannotReadRootException(
       Hash hash, Throwable cause) {
-    return new RootHashChainSizeIsWrongException(hash, "Cannot decode root.", cause);
+    return new RootHashChainSizeIsWrongException(hash, CANNOT_DECODE_ROOT, cause);
   }
 
   public static RootHashChainSizeIsWrongException wrongSizeOfRootChainException(
@@ -27,10 +33,14 @@ public class RootHashChainSizeIsWrongException extends DecodeExprException {
   }
 
   private RootHashChainSizeIsWrongException(Hash hash, String message) {
-    this(hash, message, null);
+    super(message(hash, message));
   }
 
   private RootHashChainSizeIsWrongException(Hash hash, String message, Throwable cause) {
-    super("Cannot decode expression at " + hash + ". " + message, cause);
+    super(message(hash, message), cause);
+  }
+
+  private static String message(Hash hash, String message) {
+    return "Cannot decode expression at " + hash + ". " + message;
   }
 }

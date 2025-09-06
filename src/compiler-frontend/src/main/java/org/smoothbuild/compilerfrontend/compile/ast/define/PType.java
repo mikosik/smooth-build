@@ -1,5 +1,8 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
+import static org.smoothbuild.common.base.Check.checkInitializedToNotNull;
+
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.HasLocation;
@@ -9,7 +12,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SType;
 public abstract sealed class PType implements HasLocation permits PExplicitType, PImplicitType {
   private final String nameText;
   private final Location location;
-  private SType sType;
+  private @Nullable SType sType;
 
   protected PType(String nameText, Location location) {
     this.nameText = nameText;
@@ -25,7 +28,7 @@ public abstract sealed class PType implements HasLocation permits PExplicitType,
   }
 
   public SType sType() {
-    return sType;
+    return checkInitializedToNotNull(sType, "sType");
   }
 
   public void setSType(SType sType) {

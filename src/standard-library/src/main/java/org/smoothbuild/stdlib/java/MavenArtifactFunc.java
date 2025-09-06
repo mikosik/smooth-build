@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
@@ -16,12 +17,14 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class MavenArtifactFunc {
+  @Nullable
   public static BValue func(NativeApi nativeApi, BTuple args) throws BytecodeException {
     try (var httpClient = HttpClient.newHttpClient()) {
       return funcImpl(nativeApi, args, httpClient);
     }
   }
 
+  @Nullable
   static BValue funcImpl(NativeApi nativeApi, BTuple args, HttpClient httpClient)
       throws BytecodeException {
     var coordinate = mavenCoordinate(args);

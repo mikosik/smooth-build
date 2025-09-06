@@ -1,6 +1,8 @@
 package org.smoothbuild.virtualmachine.bytecode.kind.base;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.collect.Maybe.some;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -21,18 +23,18 @@ public class KindIdTest {
       for (KindId value : KindId.values()) {
         @SuppressWarnings("EnumOrdinal")
         var ordinal = value.ordinal();
-        assertThat(KindId.fromOrdinal(ordinal)).isEqualTo(value);
+        assertThat(KindId.fromOrdinal(ordinal)).isEqualTo(some(value));
       }
     }
 
     @Test
-    void returns_null_for_negative_ordinal() {
-      assertThat(KindId.fromOrdinal(-1)).isNull();
+    void returns_none_for_negative_ordinal() {
+      assertThat(KindId.fromOrdinal(-1)).isEqualTo(none());
     }
 
     @Test
     void returns_null_for_ordinal_greater_than_max_ordinal() {
-      assertThat(KindId.fromOrdinal(KindId.values().length)).isNull();
+      assertThat(KindId.fromOrdinal(KindId.values().length)).isEqualTo(none());
     }
   }
 }

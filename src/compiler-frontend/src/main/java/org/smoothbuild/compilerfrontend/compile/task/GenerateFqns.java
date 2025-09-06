@@ -9,6 +9,7 @@ import static org.smoothbuild.compilerfrontend.lang.name.Fqn.parseReference;
 import static org.smoothbuild.compilerfrontend.lang.name.Name.parseReferenceableName;
 import static org.smoothbuild.compilerfrontend.lang.name.Name.parseTypeName;
 
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.collect.Result;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.location.Location;
@@ -46,6 +47,8 @@ public class GenerateFqns implements Task1<PModule, PModule> {
 
   private static class Visitor extends PModuleVisitor<RuntimeException> {
     private final Logger logger;
+
+    @Nullable
     private Fqn fqn;
 
     private Visitor(Logger logger) {
@@ -65,7 +68,9 @@ public class GenerateFqns implements Task1<PModule, PModule> {
 
       var oldFqn = fqn;
       try {
-        fqn = name.mapOk(this::toFqn).ifOk(pContainer::setFqn).okOr(null);
+        @SuppressWarnings("NullAway")
+        var newFqn = name.mapOk(this::toFqn).ifOk(pContainer::setFqn).okOr(null);
+        fqn = newFqn;
         super.visit(pContainer);
       } finally {
         fqn = oldFqn;

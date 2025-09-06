@@ -16,7 +16,10 @@ public class PathMatcher implements Predicate<Path> {
     try {
       this.pathMatcher = fileSystem.getPathMatcher("glob:" + pattern);
     } catch (PatternSyntaxException e) {
-      throw new IllegalPathPatternException(e.getMessage(), e);
+      var message = e.getMessage();
+      var exceptionMessage =
+          message == null ? "Internal error converting glob pattern to path matcher" : message;
+      throw new IllegalPathPatternException(exceptionMessage, e);
     }
   }
 

@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class SbTranslatorException extends Exception {
   public SbTranslatorException(IOException ioException) {
-    this(ioException.getMessage());
+    super(ioException.getMessage());
   }
 
   public SbTranslatorException(String message, Throwable e) {

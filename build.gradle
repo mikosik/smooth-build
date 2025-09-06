@@ -34,7 +34,7 @@ subprojects { subproject ->
             'cli',
             'standard-library',
             'system-test']) {
-        apply plugin: 'java'
+        apply plugin: 'java-library'
         java {
             toolchain {
                 languageVersion = JavaLanguageVersion.of(25)
@@ -51,10 +51,18 @@ subprojects { subproject ->
         apply plugin: 'net.ltgt.errorprone'
         dependencies {
             errorprone "com.google.errorprone:error_prone_core:2.42.0"
+            api libs.jspecify
+            errorprone 'com.uber.nullaway:nullaway:0.12.9'
         }
         tasks.withType(JavaCompile).configureEach {
             options.errorprone {
                 disableWarningsInGeneratedCode.set(true)
+                option('NullAway:AnnotatedPackages', 'org.smoothbuild')
+                // Avoid errors when field is injected by picocli.
+                // In some cases, when picocli does not always inject some field
+                // (for example user is not required to provide some option in commandline),
+                // such field is annotated in code with @Nullable.
+                option('NullAway:ExternalInitAnnotations', 'picocli.CommandLine.Command')
             }
         }
 

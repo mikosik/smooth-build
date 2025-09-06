@@ -10,6 +10,7 @@ import java.nio.file.attribute.FileTime;
 import java.util.HashSet;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
@@ -19,6 +20,7 @@ import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 public class JarFunc {
   private static final String MANIFEST_FILE_PATH = "META-INF/MANIFEST.MF";
 
+  @Nullable
   public static BValue func(NativeApi nativeApi, BTuple args) throws IOException {
     BArray files = (BArray) args.get(0);
     BBlob manifest = (BBlob) args.get(1);

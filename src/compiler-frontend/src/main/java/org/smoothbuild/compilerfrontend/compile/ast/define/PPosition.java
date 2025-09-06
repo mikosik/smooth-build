@@ -1,13 +1,16 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
+import static org.smoothbuild.common.base.Check.checkInitializedToNotNull;
+
 import java.math.BigInteger;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
 
 public final class PPosition implements HasLocation {
   private final String literal;
   private final Location location;
-  private BigInteger bigInteger;
+  private @Nullable BigInteger bigInteger;
 
   public PPosition(String literal, Location location) {
     this.literal = literal;
@@ -31,6 +34,6 @@ public final class PPosition implements HasLocation {
   }
 
   public BigInteger bigInteger() {
-    return bigInteger;
+    return checkInitializedToNotNull(bigInteger, "bigInteger");
   }
 }

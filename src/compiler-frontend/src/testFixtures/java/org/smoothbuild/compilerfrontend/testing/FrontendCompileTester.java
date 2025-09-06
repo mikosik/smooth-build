@@ -26,11 +26,12 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
     writeModuleFile(fileSystem, standardLibraryModulePath(), standardLibraryCode.getOr(""));
     writeModuleFile(fileSystem, moduleFullPath(), sourceCode);
     var paths = list(standardLibraryModulePath(), moduleFullPath());
-    var module = provide().scheduler().submit(provide().frontendCompile(), argument(paths));
-    await().until(() -> module.toMaybe().isSome());
+    var modulePromise = provide().scheduler().submit(provide().frontendCompile(), argument(paths));
+    await().until(() -> modulePromise.toMaybe().isSome());
     var logs = provide().reporter().logs();
-    var maybeModule = module.get().getOr(null);
-    return new ModuleCompilationOutput(Try.of(maybeModule, logs), sourceCode, standardLibraryCode);
+    @SuppressWarnings("NullAway")
+    var module = modulePromise.get().getOr(null);
+    return new ModuleCompilationOutput(Try.of(module, logs), sourceCode, standardLibraryCode);
   }
 
   private static void writeModuleFile(

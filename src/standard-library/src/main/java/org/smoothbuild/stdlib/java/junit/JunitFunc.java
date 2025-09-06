@@ -1,6 +1,7 @@
 package org.smoothbuild.stdlib.java.junit;
 
 import static java.lang.ClassLoader.getPlatformClassLoader;
+import static java.util.Objects.requireNonNullElse;
 import static okio.Okio.buffer;
 import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.reflect.ClassLoaders.mapClassLoader;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.stdlib.file.match.IllegalPathPatternException;
 import org.smoothbuild.stdlib.file.match.PathMatcher;
@@ -26,20 +28,23 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class JunitFunc {
+  @Nullable
   public static BValue func(NativeApi nativeApi, BTuple args) throws IOException {
     BArray testFileArray = (BArray) args.get(0);
     BArray deps = (BArray) args.get(1);
     BString include = (BString) args.get(2);
 
     try {
-      var filesFromTests = fileArrayToMap(nativeApi, testFileArray);
-      if (filesFromTests == null) {
+      var filesFromTestsOptional = fileArrayToMap(nativeApi, testFileArray);
+      if (filesFromTestsOptional.isEmpty()) {
         return null;
       }
-      var filesFromDeps = fileArrayArrayToMap(nativeApi, deps);
-      if (filesFromDeps == null) {
+      var filesFromTests = filesFromTestsOptional.get();
+      var filesFromDepsOptional = fileArrayArrayToMap(nativeApi, deps);
+      if (filesFromDepsOptional.isEmpty()) {
         return null;
       }
+      var filesFromDeps = filesFromDepsOptional.get();
       assertJunitCoreIsPresent(filesFromDeps);
       var classLoader = classLoader(concatMaps(filesFromTests, filesFromDeps));
       var jUnitCore = createJUnitCore(classLoader);
@@ -67,11 +72,14 @@ public class JunitFunc {
       }
       return nativeApi.factory().string("SUCCESS");
     } catch (JunitException e) {
-      nativeApi.log().error(e.getMessage());
+      nativeApi
+          .log()
+          .error(requireNonNullElse(e.getMessage(), "failed with JunitException without message"));
       return null;
     }
   }
 
+  @SuppressWarnings("NullAway")
   private static ClassLoader classLoader(ImmutableMap<String, BTuple> filesMap) {
     return mapClassLoader(getPlatformClassLoader(), path -> {
       BTuple file = filesMap.get(path);

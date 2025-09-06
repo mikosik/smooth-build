@@ -15,7 +15,7 @@ public class StepTest extends VmTestContext {
     @Test
     void combine_task_is_pure() throws BytecodeException {
       var combineTask = new CombineStep(bCombine(bInt()), trace());
-      assertThat(combineTask.purity(null)).isEqualTo(PURE);
+      assertThat(combineTask.purity(bTuple())).isEqualTo(PURE);
     }
 
     @Test
@@ -36,19 +36,19 @@ public class StepTest extends VmTestContext {
     @Test
     void order_task_is_pure() throws BytecodeException {
       var orderTask = new OrderStep(bOrder(bInt()), trace());
-      assertThat(orderTask.purity(null)).isEqualTo(PURE);
+      assertThat(orderTask.purity(bTuple())).isEqualTo(PURE);
     }
 
     @Test
     void pick_task_is_pure() throws BytecodeException {
       var pickTask = new PickStep(bPick(bArray(bInt()), 0), trace());
-      assertThat(pickTask.purity(null)).isEqualTo(PURE);
+      assertThat(pickTask.purity(bTuple())).isEqualTo(PURE);
     }
 
     @Test
     void select_task_is_pure() throws BytecodeException {
       var selectTask = new SelectStep(bSelect(bTuple(bInt()), 0), trace());
-      assertThat(selectTask.purity(null)).isEqualTo(PURE);
+      assertThat(selectTask.purity(bTuple())).isEqualTo(PURE);
     }
   }
 }

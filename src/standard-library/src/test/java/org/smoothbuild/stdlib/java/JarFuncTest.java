@@ -1,6 +1,7 @@
 package org.smoothbuild.stdlib.java;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.common.testing.TestingThread.sleepMillis;
 
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,6 @@ public class JarFuncTest extends VmTestContext {
     var zip1 = JarFunc.func(provide().container(), args);
     sleepMillis(2000);
     var zip2 = JarFunc.func(provide().container(), args);
-    assertThat(zip1.hash()).isEqualTo(zip2.hash());
+    assertThat(requireNonNull(zip1).hash()).isEqualTo(requireNonNull(zip2).hash());
   }
 }

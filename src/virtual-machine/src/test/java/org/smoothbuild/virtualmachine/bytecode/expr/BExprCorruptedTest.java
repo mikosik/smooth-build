@@ -95,7 +95,7 @@ public class BExprCorruptedTest extends VmTestContext {
         throws IOException, HashedDbException {
       var hash = hash(ByteString.of(new byte[byteCount]));
       assertCall(() -> dbGet(hash))
-          .throwsException(cannotReadRootException(hash, null))
+          .throwsException(cannotReadRootException(hash))
           .withCause(new DecodeHashChainException(hash, byteCount % Hash.lengthInBytes()));
     }
 
@@ -1739,7 +1739,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var hash = hash(hash(bStringType()), notStringHash);
       assertCall(() -> ((BString) dbGet(hash)).toJavaString())
           .throwsException(new DecodeExprNodeException(hash, bStringType(), DATA_PATH))
-          .withCause(new DecodeStringException(notStringHash, null));
+          .withCause(new DecodeStringException(notStringHash));
     }
   }
 

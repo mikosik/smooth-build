@@ -6,6 +6,7 @@ plugins {
 dependencies {
     implementation project(':src:antlr-smooth')
     implementation project(':src:common')
+    api libs.jspecify
     implementation libs.guava
     implementation libs.jakarta.inject
     implementation libs.okio

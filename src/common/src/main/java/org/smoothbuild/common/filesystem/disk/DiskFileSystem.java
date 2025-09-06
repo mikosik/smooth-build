@@ -20,6 +20,7 @@ import java.util.function.Supplier;
 import okio.Okio;
 import okio.Sink;
 import okio.Source;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.filesystem.base.Alias;
 import org.smoothbuild.common.filesystem.base.FileSystem;
@@ -163,7 +164,7 @@ public class DiskFileSystem implements FileSystem<FullPath> {
     assertPathExists(target, targetJdk, error);
     assertPathIsUnused(link, linkJdk, error);
 
-    var targetRelativeJdk = linkJdk.getParent().relativize(targetJdk);
+    var targetRelativeJdk = relativize(linkJdk.getParent(), targetJdk);
     try {
       Files.createSymbolicLink(linkJdk, targetRelativeJdk);
     } catch (NoSuchFileException e) {
@@ -172,6 +173,11 @@ public class DiskFileSystem implements FileSystem<FullPath> {
       // On Filesystems that do not support symbolic link just copy target file.
       Files.copy(linkJdk, targetJdk, REPLACE_EXISTING);
     }
+  }
+
+  private static java.nio.file.Path relativize(
+      java.nio.file.@Nullable Path path, java.nio.file.Path other) {
+    return path == null ? other : path.relativize(other);
   }
 
   @Override
@@ -240,6 +246,11 @@ public class DiskFileSystem implements FileSystem<FullPath> {
 
   private static IOException wrapNotADirectoryExceptionAsIOException(
       Supplier<String> error, FileSystemException e) {
-    return e.getMessage().endsWith("Not a directory") ? noParentDirIOException(error, e) : e;
+    var message = e.getMessage();
+    if (message != null && message.endsWith("Not a directory")) {
+      return noParentDirIOException(error, e);
+    } else {
+      return e;
+    }
   }
 }

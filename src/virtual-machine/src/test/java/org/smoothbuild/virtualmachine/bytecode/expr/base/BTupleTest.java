@@ -12,12 +12,6 @@ import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BTupleTest extends VmTestContext {
   @Test
-  void setting_element_to_null_throws_exception() {
-    assertCall(() -> bTuple(list(bString("John"), null)))
-        .throwsException(NullPointerException.class);
-  }
-
-  @Test
   void type_of_person_tuple_is_person_type() throws Exception {
     var person = johnDoePerson();
     assertThat(person.kind()).isEqualTo(bPersonType());

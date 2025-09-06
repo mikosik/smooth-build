@@ -1,6 +1,7 @@
 package org.smoothbuild.virtualmachine.bytecode.expr;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
+import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.common.base.Strings.q;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.virtualmachine.bytecode.expr.Helpers.invokeAndChainHashedDbException;
@@ -294,7 +295,7 @@ public class BExprDb {
             + "with element at index " + i + " not equal to lambda type");
       }
     }
-    return evaluationType;
+    return requireNonNull(evaluationType);
   }
 
   // validators

@@ -2,6 +2,7 @@ package org.smoothbuild.common.filesystem.mem;
 
 import static com.google.common.truth.Truth.assertThat;
 import static okio.Okio.buffer;
+import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import com.google.common.truth.Truth;
@@ -13,8 +14,8 @@ import org.smoothbuild.common.filesystem.base.Path;
 
 public class MemoryFileTest {
   private final MemoryDir parent = Mockito.mock(MemoryDir.class);
-  private final Path name = Path.path("some/path");
-  private final Path otherName = Path.path("other/path");
+  private final Path name = path("some/path");
+  private final Path otherName = path("other/path");
   private final ByteString bytes = ByteString.encodeUtf8("aaa");
 
   @Test
@@ -60,9 +61,10 @@ public class MemoryFileTest {
   }
 
   @Test
+  @SuppressWarnings("NullAway")
   void add_child_throws_exception() {
     var file = new MemoryFile(parent, name);
-    assertCall(() -> file.addChild(new MemoryDir(null, null)))
+    assertCall(() -> file.addChild(new MemoryDir(null, path("name"))))
         .throwsException(UnsupportedOperationException.class);
   }
 

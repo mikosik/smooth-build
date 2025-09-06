@@ -10,12 +10,14 @@ import java.nio.file.attribute.FileTime;
 import java.util.HashSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class ZipFunc {
+  @Nullable
   public static BValue func(NativeApi nativeApi, BTuple args) throws IOException {
     BArray files = (BArray) args.get(0);
     var duplicatesDetector = new HashSet<String>();

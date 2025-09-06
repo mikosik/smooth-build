@@ -10,6 +10,7 @@ import static org.smoothbuild.virtualmachine.evaluate.step.Purity.PURE;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
@@ -48,7 +49,8 @@ public final class InvokeStep extends Step {
     } catch (IllegalAccessException e) {
       reportExceptionAsFatal(container, "Cannot invoke native method", e);
     } catch (InvocationTargetException e) {
-      reportExceptionAsFatal(container, "Native code thrown exception", e.getCause());
+      var cause = e.getCause();
+      reportExceptionAsFatal(container, "Native code thrown exception", cause == null ? e : cause);
     } catch (Throwable t) {
       reportExceptionAsFatal(container, "Exception when invoking native method", t);
     }
@@ -60,7 +62,8 @@ public final class InvokeStep extends Step {
     container.log().fatal(message + ":\n" + getStackTraceAsString(throwable));
   }
 
-  private BOutput buildOutput(Container container, BValue result) throws BytecodeException {
+  private BOutput buildOutput(Container container, @Nullable BValue result)
+      throws BytecodeException {
     var hasErrors = container.containsErrorOrAbove();
     if (result == null) {
       if (!hasErrors) {

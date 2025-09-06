@@ -5,7 +5,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.KindId;
 
 public class DecodeKindNodeException extends DecodeKindException {
   public DecodeKindNodeException(Hash hash, KindId kindId, String path) {
-    this(hash, kindId, path, (String) null);
+    this(hash, kindId, path, "");
   }
 
   public DecodeKindNodeException(Hash hash, KindId kindId, String path, String message) {
@@ -17,11 +17,11 @@ public class DecodeKindNodeException extends DecodeKindException {
   }
 
   public DecodeKindNodeException(Hash hash, KindId kindId, String path, Throwable e) {
-    super(buildMessage(hash, kindId, path, null), e);
+    super(buildMessage(hash, kindId, path, ""), e);
   }
 
   private static String buildMessage(Hash hash, KindId id, String path, String message) {
     return "Cannot decode kind " + id + " at " + hash + ". Cannot decode its node at " + "`" + path
-        + "` path in Merkle tree. " + (message != null ? message : "");
+        + "` path in Merkle tree." + (message.isEmpty() ? "" : " " + message);
   }
 }

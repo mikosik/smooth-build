@@ -1,6 +1,7 @@
 package org.smoothbuild.common.graph;
 
 import static com.google.common.truth.Truth.assertWithMessage;
+import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.common.collect.List.list;
@@ -191,7 +192,7 @@ public class SortTopologicallyTest {
         List<GraphNode<Integer, String, String>> expectedCycle) {
       var permutations = permutations(nodes);
       for (List<GraphNode<Integer, String, String>> permutation : permutations) {
-        var actual = sortTopologically(permutation).cycle().asJdkList();
+        var actual = requireNonNull(sortTopologically(permutation).cycle()).asJdkList();
 
         List<GraphEdge<String, Integer>> cycle = buildCycle(expectedCycle);
         var rotated = new ArrayList<>(cycle.asJdkList());

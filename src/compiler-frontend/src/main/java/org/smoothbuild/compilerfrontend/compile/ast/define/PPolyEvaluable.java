@@ -1,6 +1,9 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
+import static org.smoothbuild.common.base.Check.checkInitializedToNotNull;
+
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.location.Location;
@@ -12,7 +15,7 @@ import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 public final class PPolyEvaluable implements PReferenceable, PolyEvaluable, PContainer {
   private final PTypeParams typeParams;
   private final PNamedEvaluable evaluable;
-  private PScope scope;
+  private @Nullable PScope scope;
 
   public PPolyEvaluable(PTypeParams typeParams, PNamedEvaluable evaluable) {
     this.typeParams = typeParams;
@@ -45,7 +48,7 @@ public final class PPolyEvaluable implements PReferenceable, PolyEvaluable, PCon
 
   @Override
   public PScope scope() {
-    return scope;
+    return checkInitializedToNotNull(scope, "scope");
   }
 
   @Override

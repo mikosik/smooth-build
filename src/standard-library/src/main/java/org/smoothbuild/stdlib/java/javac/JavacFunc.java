@@ -6,9 +6,11 @@ import static org.smoothbuild.stdlib.file.FileHelper.fileArrayArrayToMap;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Optional;
 import java.util.zip.ZipException;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
@@ -18,6 +20,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class JavacFunc {
+  @Nullable
   public static BValue func(NativeApi nativeApi, BTuple args) throws BytecodeException {
     BArray srcs = (BArray) args.get(0);
     BArray fileArrayArray = (BArray) args.get(1);
@@ -41,6 +44,7 @@ public class JavacFunc {
       this.options = options;
     }
 
+    @Nullable
     private BArray execute() throws BytecodeException {
       if (compiler == null) {
         nativeApi
@@ -53,7 +57,7 @@ public class JavacFunc {
       return compile(srcs);
     }
 
-    private BArray compile(BArray files) throws BytecodeException {
+    private @Nullable BArray compile(BArray files) throws BytecodeException {
       // prepare args for compilation
 
       var additionalCompilerOutput = new StringWriter();
@@ -61,10 +65,11 @@ public class JavacFunc {
       var options = options();
       var standardJFM = compiler.getStandardFileManager(diagnostic, null, defaultCharset());
       var libsClasses = filesToInputClassFiles(nativeApi, fileArrayArray);
-      if (libsClasses == null) {
+      if (libsClasses.isEmpty()) {
         return null;
       }
-      try (var sandboxedJFM = new SandboxedJavaFileManager(standardJFM, nativeApi, libsClasses)) {
+      try (var sandboxedJFM =
+          new SandboxedJavaFileManager(standardJFM, nativeApi, libsClasses.get())) {
         Iterable<InputSourceFile> inputSourceFiles =
             files.elements(BTuple.class).map(InputSourceFile::new);
 
@@ -115,12 +120,9 @@ public class JavacFunc {
     }
   }
 
-  public static Iterable<InputClassFile> filesToInputClassFiles(
+  public static Optional<Iterable<InputClassFile>> filesToInputClassFiles(
       NativeApi nativeApi, BArray fileArrayArray) throws BytecodeException {
-    var result = fileArrayArrayToMap(nativeApi, fileArrayArray);
-    if (result == null) {
-      return null;
-    }
-    return listOfAll(result.entrySet()).map(e -> new InputClassFile(e.getValue(), e.getKey()));
+    return fileArrayArrayToMap(nativeApi, fileArrayArray)
+        .map(m -> listOfAll(m.entrySet()).map(e -> new InputClassFile(e.getValue(), e.getKey())));
   }
 }

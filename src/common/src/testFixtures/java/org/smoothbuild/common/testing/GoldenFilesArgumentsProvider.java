@@ -1,5 +1,7 @@
 package org.smoothbuild.common.testing;
 
+import static java.util.Objects.requireNonNull;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Stream;
@@ -38,7 +40,7 @@ public class GoldenFilesArgumentsProvider implements ArgumentsProvider {
   }
 
   private Arguments createTestArguments(Path inputFilePath) {
-    var testRootDir = inputFilePath.getParent();
+    var testRootDir = requireNonNull(inputFilePath.getParent());
     var testName = testRootDir.toString().replace(rootDir.toString(), "");
     return Arguments.arguments(new GoldenFilesTestCase(testRootDir, testName));
   }

@@ -7,6 +7,7 @@ import static org.smoothbuild.common.collect.Result.ok;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.collect.Maybe.None;
 import org.smoothbuild.common.collect.Maybe.Some;
 import org.smoothbuild.common.function.Consumer1;
@@ -23,7 +24,7 @@ public abstract sealed class Maybe<E> permits Some, None {
     return new None<>();
   }
 
-  public static <E> Maybe<E> maybe(E element) {
+  public static <E> Maybe<E> maybe(@Nullable E element) {
     return element == null ? none() : some(element);
   }
 

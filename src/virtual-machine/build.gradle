@@ -8,6 +8,7 @@ dependencies {
     implementation libs.guava
     implementation libs.jakarta.inject
     implementation libs.okio
+    api libs.jspecify
 
     testFixturesApi project(':src:common')
     testFixturesApi project(':src:virtual-machine')

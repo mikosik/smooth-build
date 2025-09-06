@@ -1,5 +1,7 @@
 package org.smoothbuild.stdlib.array;
 
+import static java.util.Objects.requireNonNull;
+
 import java.math.BigInteger;
 import java.util.Map;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
@@ -13,7 +15,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 public class ElemFunc {
   public static BValue bytecode(BytecodeFactory f, Map<String, BType> varMap)
       throws BytecodeException {
-    var varA = varMap.get("A");
+    var varA = requireNonNull(varMap.get("A"));
     var arrayParamType = f.arrayType(varA);
     var indexParamType = f.intType();
     var paramTypes = f.tupleType(arrayParamType, indexParamType);

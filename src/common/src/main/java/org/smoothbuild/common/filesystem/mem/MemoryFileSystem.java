@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.function.Supplier;
 import okio.Sink;
 import okio.Source;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Set;
 import org.smoothbuild.common.filesystem.base.Alias;
@@ -171,8 +172,9 @@ public class MemoryFileSystem implements FileSystem<FullPath> {
         link.parent(),
         (dir) -> {
           Path name = link.path().lastPart();
-          dir.addChild(new MemoryLink(dir, name, targetElement));
-          return (Void) null;
+          var elem = new MemoryLink(dir, name, targetElement);
+          dir.addChild(elem);
+          return elem;
         },
         error);
   }
@@ -226,12 +228,13 @@ public class MemoryFileSystem implements FileSystem<FullPath> {
     }
   }
 
-  private MemoryElement findElement(FullPath path, Supplier<String> error) throws IOException {
+  private @Nullable MemoryElement findElement(FullPath path, Supplier<String> error)
+      throws IOException {
     var memoryDir = rootDirFor(path, error);
     return findElement(memoryDir, path.path());
   }
 
-  private MemoryElement findElement(MemoryDir rootDir, Path path) {
+  private @Nullable MemoryElement findElement(MemoryDir rootDir, Path path) {
     Iterator<Path> it = path.parts().iterator();
     MemoryElement current = rootDir;
     while (it.hasNext()) {

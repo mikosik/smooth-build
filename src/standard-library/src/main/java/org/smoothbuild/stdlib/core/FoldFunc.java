@@ -1,5 +1,7 @@
 package org.smoothbuild.stdlib.core;
 
+import static java.util.Objects.requireNonNull;
+
 import java.math.BigInteger;
 import java.util.Map;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
@@ -13,8 +15,8 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 public class FoldFunc {
   public static BValue bytecode(BytecodeFactory f, Map<String, BType> varMap)
       throws BytecodeException {
-    var a = varMap.get("A");
-    var e = varMap.get("E");
+    var a = requireNonNull(varMap.get("A"));
+    var e = requireNonNull(varMap.get("E"));
 
     var resultType = a;
     var arrayParamType = f.arrayType(e);

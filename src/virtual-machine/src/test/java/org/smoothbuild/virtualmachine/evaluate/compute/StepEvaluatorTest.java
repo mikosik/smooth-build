@@ -1,6 +1,7 @@
 package org.smoothbuild.virtualmachine.evaluate.compute;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.Origin.DISK;
@@ -11,6 +12,7 @@ import static org.smoothbuild.common.testing.AwaitHelper.await;
 import static org.smoothbuild.virtualmachine.evaluate.step.BOutput.bOutput;
 
 import java.util.concurrent.ConcurrentHashMap;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
@@ -295,8 +297,8 @@ public class StepEvaluatorTest extends VmTestContext {
   private void assertComputationResult(
       Step step,
       BTuple input,
-      BValue memoryValue,
-      BValue diskValue,
+      @Nullable BValue memoryValue,
+      @Nullable BValue diskValue,
       BOutput expectedOutput,
       Origin expectedOrigin)
       throws Exception {
@@ -305,7 +307,8 @@ public class StepEvaluatorTest extends VmTestContext {
   }
 
   private StepEvaluator stepEvaluatorWithCaches(
-      Step step, BTuple input, BValue memoryValue, BValue diskValue) throws Exception {
+      Step step, BTuple input, @Nullable BValue memoryValue, @Nullable BValue diskValue)
+      throws Exception {
     var computationCache = provide().computationCache();
     var computationHashFactory = provide().computationHashFactory();
     var computationHash = computationHashFactory.create(step, input);
@@ -341,7 +344,8 @@ public class StepEvaluatorTest extends VmTestContext {
     assertThat(provide().reporter().reports()).contains(report);
   }
 
-  private void assertCachesState(Step step, BTuple input, BOutput memoryValue, BValue diskValue)
+  private void assertCachesState(
+      Step step, BTuple input, @Nullable BOutput memoryValue, @Nullable BValue diskValue)
       throws Exception {
     var computationCache = provide().computationCache();
     var memoryCache = new ConcurrentHashMap<Hash, Promise<BOutput>>();
@@ -362,7 +366,7 @@ public class StepEvaluatorTest extends VmTestContext {
     if (memoryValue == null) {
       assertThat(memoryCache.containsKey(stepHash)).isFalse();
     } else {
-      assertThat(memoryCache.get(stepHash).get()).isEqualTo(memoryValue);
+      assertThat(requireNonNull(memoryCache.get(stepHash)).get()).isEqualTo(memoryValue);
     }
     if (diskValue == null) {
       assertThat(computationCache.contains(stepHash)).isFalse();

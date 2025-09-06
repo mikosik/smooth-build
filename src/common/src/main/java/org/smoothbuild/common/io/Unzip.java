@@ -1,7 +1,7 @@
 package org.smoothbuild.common.io;
 
-import static org.smoothbuild.common.collect.Maybe.maybe;
 import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.filesystem.base.Path.detectPathError;
 
 import java.io.IOException;
@@ -33,14 +33,13 @@ public class Unzip {
             return pathError;
           }
           if (!fileNames.add(fileName)) {
-            var message = "Archive contains more than one file with name '" + fileName + "'.";
-            return maybe(message);
+            return some("Archive contains more than one file with name '" + fileName + "'.");
           }
           entryConsumer.accept(fileName, zipInputStream);
         }
       }
     } catch (ZipException e) {
-      return maybe("Cannot read archive. Corrupted data? Internal message: " + e.getMessage());
+      return some("Cannot read archive. Corrupted data? Internal message: " + e.getMessage());
     }
     return none();
   }

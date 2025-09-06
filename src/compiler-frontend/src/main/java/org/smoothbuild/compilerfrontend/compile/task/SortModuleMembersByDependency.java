@@ -1,6 +1,7 @@
 package org.smoothbuild.compilerfrontend.compile.task;
 
 import static java.lang.String.join;
+import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.graph.SortTopologically.sortTopologically;
 import static org.smoothbuild.common.log.base.Log.error;
@@ -43,12 +44,12 @@ public class SortModuleMembersByDependency implements Task1<PModule, PModule> {
     var label = COMPILER_FRONT_LABEL.append(":sortMembers");
     var sortedTs = sortStructsByDeps(pModule.structs());
     if (sortedTs.sorted() == null) {
-      var error = createCycleError("Type hierarchy", sortedTs.cycle());
+      var error = createCycleError("Type hierarchy", requireNonNull(sortedTs.cycle()));
       return output(report(label, error));
     }
     var sortedEvaluables = sortEvaluablesByDeps(pModule.evaluables());
     if (sortedEvaluables.sorted() == null) {
-      var error = createCycleError("Reference graph", sortedEvaluables.cycle());
+      var error = createCycleError("Reference graph", requireNonNull(sortedEvaluables.cycle()));
       return output(report(label, error));
     }
     PModule result = new PModule(

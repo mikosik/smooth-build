@@ -4,6 +4,7 @@ plugins {
 }
 
 dependencies {
+    api libs.jspecify
     implementation libs.guava
     implementation libs.dagger
     annotationProcessor libs.dagger.compiler

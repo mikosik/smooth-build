@@ -3,6 +3,7 @@ package org.smoothbuild.common.log.report;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.testing.EqualsTester;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.dagger.CommonTestContext;
@@ -46,11 +47,11 @@ public class TraceTest extends CommonTestContext {
     }
   }
 
-  public static Trace trace(TraceLine topLine) {
+  public static Trace trace(@Nullable TraceLine topLine) {
     return new Trace(topLine);
   }
 
-  private TraceLine line(String name, TraceLine next) {
+  private TraceLine line(String name, @Nullable TraceLine next) {
     return new TraceLine(name, location(alias()), next);
   }
 }

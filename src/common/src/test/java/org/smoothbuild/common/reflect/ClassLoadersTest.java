@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 public class ClassLoadersTest {
   @Test
+  @SuppressWarnings("NullAway")
   void load_class() throws Exception {
     Class<MyClass> clazz = MyClass.class;
     String binaryName = clazz.getName();
@@ -36,6 +37,7 @@ public class ClassLoadersTest {
   }
 
   @Test
+  @SuppressWarnings("NullAway")
   void fails_for_missing_class() {
     var mapClassLoader = mapClassLoader(Map.<String, InputStream>of()::get);
     assertCall(() -> mapClassLoader.loadClass("SomeClass"))

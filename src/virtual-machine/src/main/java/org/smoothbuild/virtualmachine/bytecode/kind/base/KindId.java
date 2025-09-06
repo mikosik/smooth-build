@@ -1,5 +1,10 @@
 package org.smoothbuild.virtualmachine.bytecode.kind.base;
 
+import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.collect.Maybe.some;
+
+import org.smoothbuild.common.collect.Maybe;
+
 public enum KindId {
   BLOB,
   BOOL,
@@ -30,10 +35,10 @@ public enum KindId {
 
   private static final KindId[] VALUES = values();
 
-  public static KindId fromOrdinal(int ordinal) {
+  public static Maybe<KindId> fromOrdinal(int ordinal) {
     if (0 <= ordinal && ordinal < VALUES.length) {
-      return VALUES[ordinal];
+      return some(VALUES[ordinal]);
     }
-    return null;
+    return none();
   }
 }

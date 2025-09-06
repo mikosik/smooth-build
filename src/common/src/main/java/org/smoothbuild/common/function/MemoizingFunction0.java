@@ -2,10 +2,12 @@ package org.smoothbuild.common.function;
 
 import static java.util.Objects.requireNonNull;
 
+import org.jspecify.annotations.Nullable;
+
 class MemoizingFunction0<R, T extends Throwable> implements Function0<R, T> {
   private final Function0<R, T> function0;
   private volatile boolean computed = false;
-  private R result;
+  private @Nullable R result;
 
   MemoizingFunction0(Function0<R, T> function0) {
     this.function0 = requireNonNull(function0);
@@ -26,6 +28,7 @@ class MemoizingFunction0<R, T extends Throwable> implements Function0<R, T> {
         }
       }
     }
-    return result;
+    // requireNonNull to make NullAway happy
+    return requireNonNull(result);
   }
 }

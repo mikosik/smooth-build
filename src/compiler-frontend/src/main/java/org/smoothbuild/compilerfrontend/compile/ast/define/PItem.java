@@ -1,6 +1,9 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
+import static org.smoothbuild.common.base.Check.checkInitializedToNotNull;
+
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.Maybe;
@@ -14,7 +17,7 @@ public final class PItem implements Item, PMonoReferenceable {
   private final String nameText;
   private final Maybe<PDefaultValue> defaultValue;
   private final Location location;
-  private Fqn fqn;
+  private @Nullable Fqn fqn;
 
   public PItem(PType type, String nameText, Maybe<PDefaultValue> defaultValue, Location location) {
     this.type = type;
@@ -46,7 +49,7 @@ public final class PItem implements Item, PMonoReferenceable {
 
   @Override
   public Fqn fqn() {
-    return fqn;
+    return checkInitializedToNotNull(fqn, "fqn");
   }
 
   @Override

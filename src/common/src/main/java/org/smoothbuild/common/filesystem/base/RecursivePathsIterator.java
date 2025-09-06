@@ -2,17 +2,19 @@ package org.smoothbuild.common.filesystem.base;
 
 import static com.google.common.base.Preconditions.checkState;
 import static java.lang.String.format;
+import static java.util.Objects.requireNonNull;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import org.jspecify.annotations.Nullable;
 
 public class RecursivePathsIterator implements PathIterator {
   private final FileSystem<FullPath> fileSystem;
   private final FullPath baseDir;
   private final Deque<Path> dirStack;
   private final Deque<Path> pathStack;
-  private Path nextFile;
+  private @Nullable Path nextFile;
   private boolean initialized;
 
   public RecursivePathsIterator(FileSystem<FullPath> fileSystem, FullPath baseDir) {
@@ -42,10 +44,10 @@ public class RecursivePathsIterator implements PathIterator {
     checkState(hasNext());
     Path result = nextFile;
     nextFile = fetchNextFile();
-    return result;
+    return requireNonNull(result);
   }
 
-  private Path fetchNextFile() throws IOException {
+  private @Nullable Path fetchNextFile() throws IOException {
     while (!pathStack.isEmpty() || !dirStack.isEmpty()) {
       if (pathStack.isEmpty()) {
         var path = dirStack.remove();

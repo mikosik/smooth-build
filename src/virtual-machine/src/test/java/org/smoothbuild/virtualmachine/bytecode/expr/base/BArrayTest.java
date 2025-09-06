@@ -38,12 +38,6 @@ public class BArrayTest extends VmTestContext {
   }
 
   @Test
-  void adding_null_is_forbidden() throws Exception {
-    var arrayBuilder = newBArrayBuilder(bArrayType());
-    assertCall(() -> arrayBuilder.add(null)).throwsException(NullPointerException.class);
-  }
-
-  @Test
   void adding_elem_with_wrong_type_is_forbidden() throws Exception {
     var arrayBuilder = newBArrayBuilder(bArrayType());
     assertCall(() -> arrayBuilder.add(bBlob(ByteString.of())))

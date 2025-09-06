@@ -8,10 +8,12 @@ import com.google.common.collect.ImmutableMap;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Objects;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.function.Function1;
 
 public final class Map<K, V> {
-  private final ImmutableMap<K, V> map;
+  private final ImmutableMap<K, @NonNull V> map;
 
   public static <K, V> Map<K, V> map() {
     return new Map<>(ImmutableMap.of());
@@ -117,6 +119,7 @@ public final class Map<K, V> {
     return map.containsValue(value);
   }
 
+  @Nullable
   public V get(K key) {
     return map.get(key);
   }

@@ -2,7 +2,9 @@ package org.smoothbuild.cli.command.build;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static java.util.Comparator.comparing;
+import static java.util.Objects.requireNonNullElse;
 import static java.util.stream.Collectors.joining;
+import static org.smoothbuild.common.base.Throwables.messageFrom;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.log.base.Log.error;
@@ -65,7 +67,7 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
     try {
       fileSystem.createDir(artifactsPath);
     } catch (IOException e) {
-      return output(report(label, error(e.getMessage())));
+      return output(report(label, error(messageFrom(e))));
     }
     var sReferences = evaluatedExprs.sExprs().map(this::toReferenceS);
     var artifacts = sReferences.zip(evaluatedExprs.bValues(), Tuples::tuple);
@@ -77,7 +79,7 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
   }
 
   private SPolyReference toReferenceS(SExpr expr) {
-    return (SPolyReference) ((SInstantiate) expr).sPolyReference();
+    return ((SInstantiate) expr).sPolyReference();
   }
 
   private void save(SPolyReference valueS, BValue value, Logger logger) {
@@ -89,7 +91,7 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
       logger.fatal("Couldn't store artifact at " + artifactPath(name) + ". Caught exception:\n"
           + getStackTraceAsString(e));
     } catch (DuplicatedPathsException e) {
-      logger.error(e.getMessage());
+      logger.error(requireNonNullElse(e.getMessage(), "DuplicatePathsException"));
     }
   }
 

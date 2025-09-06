@@ -1,6 +1,9 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
+import static org.smoothbuild.common.base.Check.checkInitializedToNotNull;
+
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.filesystem.base.FullPath;
@@ -12,15 +15,18 @@ public final class PModule implements PContainer {
   private final FullPath fullPath;
   private final List<PStruct> structs;
   private final List<PPolyEvaluable> evaluables;
-  private PScope scope;
-  private Fqn fqn = null;
+  private @Nullable PScope scope;
+  private @Nullable Fqn fqn = null;
 
   public PModule(FullPath fullPath, List<PStruct> structs, List<PPolyEvaluable> evaluables) {
     this(fullPath, structs, evaluables, null);
   }
 
   public PModule(
-      FullPath fullPath, List<PStruct> structs, List<PPolyEvaluable> evaluables, PScope scope) {
+      FullPath fullPath,
+      List<PStruct> structs,
+      List<PPolyEvaluable> evaluables,
+      @Nullable PScope scope) {
     this.fullPath = fullPath;
     this.structs = structs;
     this.evaluables = evaluables;
@@ -38,7 +44,7 @@ public final class PModule implements PContainer {
 
   @Override
   public Fqn fqn() {
-    return fqn;
+    return checkInitializedToNotNull(fqn, "fqn");
   }
 
   @Override
@@ -56,7 +62,7 @@ public final class PModule implements PContainer {
 
   @Override
   public PScope scope() {
-    return scope;
+    return checkInitializedToNotNull(scope, "scope");
   }
 
   @Override

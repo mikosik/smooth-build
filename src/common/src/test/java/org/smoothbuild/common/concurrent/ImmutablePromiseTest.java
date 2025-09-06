@@ -1,17 +1,17 @@
 package org.smoothbuild.common.concurrent;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.util.Arrays.asList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
+import java.util.List;
 import java.util.function.Consumer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.common.collect.List;
 
 public class ImmutablePromiseTest {
   @ParameterizedTest
@@ -35,7 +35,7 @@ public class ImmutablePromiseTest {
   }
 
   static List<String> constructorValues() {
-    return list("abc", null);
+    return asList("abc", null);
   }
 
   @Test
@@ -47,6 +47,7 @@ public class ImmutablePromiseTest {
   }
 
   @Test
+  @SuppressWarnings("NullAway")
   void adding_null_consumer_fails() {
     var promise = new ImmutablePromise<>("abc");
     assertCall(() -> promise.addConsumer(null)).throwsException(NullPointerException.class);

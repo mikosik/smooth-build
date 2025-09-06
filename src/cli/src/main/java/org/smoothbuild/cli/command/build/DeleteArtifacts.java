@@ -1,5 +1,6 @@
 package org.smoothbuild.cli.command.build;
 
+import static org.smoothbuild.common.base.Throwables.messageFrom;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.schedule.Output.output;
@@ -31,7 +32,7 @@ public class DeleteArtifacts implements Task0<Tuple0> {
       fileSystem.deleteRecursively(artifactsPath);
       return output(tuple(), report(label));
     } catch (IOException e) {
-      return output(report(label, error(e.getMessage())));
+      return output(report(label, error(messageFrom(e))));
     }
   }
 }

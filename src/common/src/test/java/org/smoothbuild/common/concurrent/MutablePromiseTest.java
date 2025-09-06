@@ -25,12 +25,14 @@ public class MutablePromiseTest {
   }
 
   @Test
+  @SuppressWarnings("NullAway")
   void setting_value_to_null_fails() {
     var mutablePromise = new MutablePromise<>();
     assertCall(() -> mutablePromise.accept(null)).throwsException(NullPointerException.class);
   }
 
   @Test
+  @SuppressWarnings("NullAway")
   void adding_null_consumer_fails() {
     var mutablePromise = new MutablePromise<>();
     assertCall(() -> mutablePromise.addConsumer(null)).throwsException(NullPointerException.class);

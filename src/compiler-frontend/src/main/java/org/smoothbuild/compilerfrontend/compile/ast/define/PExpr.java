@@ -1,5 +1,8 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
+import static org.smoothbuild.common.base.Check.checkInitializedToNotNull;
+
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
@@ -18,14 +21,14 @@ public abstract sealed class PExpr implements HasLocation
         PStructSelect,
         PTupleSelect {
   private final Location location;
-  private SType type;
+  private @Nullable SType type;
 
   public PExpr(Location location) {
     this.location = location;
   }
 
   public SType sType() {
-    return type;
+    return checkInitializedToNotNull(type, "type");
   }
 
   public void setSType(SType type) {

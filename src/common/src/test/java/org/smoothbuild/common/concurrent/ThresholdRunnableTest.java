@@ -17,6 +17,7 @@ public class ThresholdRunnableTest {
   }
 
   @Test
+  @SuppressWarnings("NullAway")
   void null_runnable_causes_exception() {
     assertCall(() -> new ThresholdRunnable(1, null)).throwsException(NullPointerException.class);
   }
