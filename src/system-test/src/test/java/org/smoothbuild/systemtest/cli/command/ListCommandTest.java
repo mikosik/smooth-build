@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.systemtest.CommandWithArgs;
 import org.smoothbuild.systemtest.SystemTestContext;
+import org.smoothbuild.systemtest.SystemTestOutput;
 import org.smoothbuild.systemtest.cli.command.common.AbstractDefaultModuleTestSuite;
 import org.smoothbuild.systemtest.cli.command.common.AbstractLockFileTestSuite;
 import org.smoothbuild.systemtest.cli.command.common.AbstractLogLevelOptionTestSuite;
@@ -22,9 +23,9 @@ public class ListCommandTest {
           dValue = "abc";
           cValue = "abc";
           """);
-      runSmoothList();
-      assertFinishedWithSuccess();
-      assertSystemOutContains(
+      var output = runSmoothList();
+      output.assertFinishedWithSuccess();
+      output.assertSystemOutContains(
           """
           [INFO] Values that can be evaluated:
             aValue
@@ -53,8 +54,8 @@ public class ListCommandTest {
   @Nested
   class LogLevelOption extends AbstractLogLevelOptionTestSuite {
     @Override
-    protected void whenSmoothCommandWithOption(String option) {
-      runSmooth(listCommand(option, "result"));
+    protected SystemTestOutput whenSmoothCommandWithOption(String option) {
+      return runSmooth(listCommand(option, "result"));
     }
   }
 }

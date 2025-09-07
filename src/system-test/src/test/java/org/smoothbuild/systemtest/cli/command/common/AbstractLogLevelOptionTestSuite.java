@@ -3,6 +3,7 @@ package org.smoothbuild.systemtest.cli.command.common;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.systemtest.SystemTestContext;
+import org.smoothbuild.systemtest.SystemTestOutput;
 
 public abstract class AbstractLogLevelOptionTestSuite extends SystemTestContext {
   @Test
@@ -10,14 +11,14 @@ public abstract class AbstractLogLevelOptionTestSuite extends SystemTestContext 
     createUserModule("""
             result = "abc";
             """);
-    whenSmoothCommandWithOption("--filter-logs=wrong_value");
-    assertFinishedWithError();
-    assertSystemErrContains(
+    var output = whenSmoothCommandWithOption("--filter-logs=wrong_value");
+    output.assertFinishedWithError();
+    output.assertSystemErrContains(
         """
         Invalid value for option '--filter-logs': expected one of {f,fatal,e,error,w,warning,i,info} (case-sensitive) but was 'wrong_value'
 
         Usage:""");
   }
 
-  protected abstract void whenSmoothCommandWithOption(String option);
+  protected abstract SystemTestOutput whenSmoothCommandWithOption(String option);
 }

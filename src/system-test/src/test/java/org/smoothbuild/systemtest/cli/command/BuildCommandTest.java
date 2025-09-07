@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.cli.command.build.BuildCommand;
 import org.smoothbuild.systemtest.CommandWithArgs;
 import org.smoothbuild.systemtest.SystemTestContext;
+import org.smoothbuild.systemtest.SystemTestOutput;
 import org.smoothbuild.systemtest.cli.command.common.AbstractDefaultModuleTestSuite;
 import org.smoothbuild.systemtest.cli.command.common.AbstractLockFileTestSuite;
 import org.smoothbuild.systemtest.cli.command.common.AbstractLogLevelOptionTestSuite;
@@ -30,8 +31,8 @@ public class BuildCommandTest {
       createUserModule("""
               syntactically incorrect script
               """);
-      runSmoothBuild("result");
-      assertFinishedWithError();
+      var output = runSmoothBuild("result");
+      output.assertFinishedWithError();
       assertThat(exists(absolutePath(path))).isFalse();
     }
   }
@@ -63,8 +64,8 @@ public class BuildCommandTest {
   @Nested
   class _filter_logs_option extends AbstractLogLevelOptionTestSuite {
     @Override
-    protected void whenSmoothCommandWithOption(String option) {
-      runSmooth(buildCommand(option, "result"));
+    protected SystemTestOutput whenSmoothCommandWithOption(String option) {
+      return runSmooth(buildCommand(option, "result"));
     }
   }
 
@@ -75,9 +76,9 @@ public class BuildCommandTest {
       createUserModule("""
                 result = "abc";
                 """);
-      runSmooth(buildCommand("--filter-tasks=ILLEGAL", "result"));
-      assertFinishedWithError();
-      assertSystemErrContains(
+      var output = runSmooth(buildCommand("--filter-tasks=ILLEGAL", "result"));
+      output.assertFinishedWithError();
+      output.assertSystemErrContains(
           """
           Invalid value for option '--filter-tasks': Unknown matcher 'ILLEGAL'.
 
@@ -96,17 +97,17 @@ public class BuildCommandTest {
     @Test
     void shows_call_to_native_func_when_enabled() throws IOException {
       createUserModule(NATIVE_FUNCTION_CALL);
-      runSmooth(buildCommand("--filter-tasks=:vm:evaluate:invoke", "result"));
-      assertFinishedWithSuccess();
-      assertSystemOutContains(NATIVE_CALL_TASK_HEADER);
+      var output = runSmooth(buildCommand("--filter-tasks=:vm:evaluate:invoke", "result"));
+      output.assertFinishedWithSuccess();
+      output.assertSystemOutContains(NATIVE_CALL_TASK_HEADER);
     }
 
     @Test
     void hides_call_to_native_func_when_not_enabled() throws IOException {
       createUserModule(NATIVE_FUNCTION_CALL);
-      runSmooth(buildCommand("--filter-tasks=none", "result"));
-      assertFinishedWithSuccess();
-      assertSystemOutDoesNotContain(NATIVE_CALL_TASK_HEADER);
+      var output = runSmooth(buildCommand("--filter-tasks=none", "result"));
+      output.assertFinishedWithSuccess();
+      output.assertSystemOutDoesNotContain(NATIVE_CALL_TASK_HEADER);
     }
 
     private static final String ORDER =
@@ -123,17 +124,17 @@ public class BuildCommandTest {
     @Test
     void shows_order_task_when_enabled() throws IOException {
       createUserModule(ORDER);
-      runSmooth(buildCommand("--filter-tasks=:vm:evaluate:order", "result"));
-      assertFinishedWithSuccess();
-      assertSystemOutContains(ORDER_TASK_HEADER);
+      var output = runSmooth(buildCommand("--filter-tasks=:vm:evaluate:order", "result"));
+      output.assertFinishedWithSuccess();
+      output.assertSystemOutContains(ORDER_TASK_HEADER);
     }
 
     @Test
     void hides_order_task_when_not_enabled() throws IOException {
       createUserModule(ORDER);
-      runSmooth(buildCommand("--filter-tasks=none", "result"));
-      assertFinishedWithSuccess();
-      assertSystemOutDoesNotContain(ORDER_TASK_HEADER);
+      var output = runSmooth(buildCommand("--filter-tasks=none", "result"));
+      output.assertFinishedWithSuccess();
+      output.assertSystemOutDoesNotContain(ORDER_TASK_HEADER);
     }
   }
 
@@ -149,9 +150,9 @@ public class BuildCommandTest {
               Int result = reportError("my-error-message");
               """,
           ReportError.class.getCanonicalName()));
-      runSmooth(buildCommand("--filter-stack-traces=all", "result"));
-      assertFinishedWithError();
-      assertSystemOutContains("@ {project}/build.smooth:3 reportError");
+      var output = runSmooth(buildCommand("--filter-stack-traces=all", "result"));
+      output.assertFinishedWithError();
+      output.assertSystemOutContains("@ {project}/build.smooth:3 reportError");
     }
 
     @Test
@@ -164,9 +165,9 @@ public class BuildCommandTest {
               Int result = reportError("my-error-message");
               """,
           ReportError.class.getCanonicalName()));
-      runSmooth(buildCommand("--filter-stack-traces=none", "result"));
-      assertFinishedWithError();
-      assertSystemOutDoesNotContain("@ {project}/build.smooth:3 reportError");
+      var output = runSmooth(buildCommand("--filter-stack-traces=none", "result"));
+      output.assertFinishedWithError();
+      output.assertSystemOutDoesNotContain("@ {project}/build.smooth:3 reportError");
     }
   }
 
@@ -184,9 +185,9 @@ public class BuildCommandTest {
                 Int result = reportError("my-error-message");
                 """,
             ReportError.class.getCanonicalName()));
-        runSmooth(buildCommand("--filter-logs=fatal", "result"));
-        assertFinishedWithError();
-        assertSystemOutDoesNotContain("my-error-message");
+        var output = runSmooth(buildCommand("--filter-logs=fatal", "result"));
+        output.assertFinishedWithError();
+        output.assertSystemOutDoesNotContain("my-error-message");
       }
 
       @Test
@@ -199,9 +200,9 @@ public class BuildCommandTest {
             result = reportWarning("my-warning-message");
             """,
             ReportWarning.class.getCanonicalName()));
-        runSmooth(buildCommand("--filter-logs=fatal", "result"));
-        assertFinishedWithSuccess();
-        assertSystemOutDoesNotContain("[WARNING] my-warning-message");
+        var output = runSmooth(buildCommand("--filter-logs=fatal", "result"));
+        output.assertFinishedWithSuccess();
+        output.assertSystemOutDoesNotContain("[WARNING] my-warning-message");
       }
 
       @Test
@@ -214,9 +215,9 @@ public class BuildCommandTest {
             result = reportInfo("my-info-message");
             """,
             ReportInfo.class.getCanonicalName()));
-        runSmooth(buildCommand("--filter-logs=fatal", "result"));
-        assertFinishedWithSuccess();
-        assertSystemOutDoesNotContain("[INFO] my-info-message");
+        var output = runSmooth(buildCommand("--filter-logs=fatal", "result"));
+        output.assertFinishedWithSuccess();
+        output.assertSystemOutDoesNotContain("[INFO] my-info-message");
       }
     }
 
@@ -232,9 +233,9 @@ public class BuildCommandTest {
             Int result = reportError("my-error-message");
             """,
             ReportError.class.getCanonicalName()));
-        runSmooth(buildCommand("--filter-logs=error", "result"));
-        assertFinishedWithError();
-        assertSystemOutContains("[ERROR] my-error-message");
+        var output = runSmooth(buildCommand("--filter-logs=error", "result"));
+        output.assertFinishedWithError();
+        output.assertSystemOutContains("[ERROR] my-error-message");
       }
 
       @Test
@@ -247,9 +248,9 @@ public class BuildCommandTest {
             result = reportWarning("my-warning-message");
             """,
             ReportWarning.class.getCanonicalName()));
-        runSmooth(buildCommand("--filter-logs=error", "result"));
-        assertFinishedWithSuccess();
-        assertSystemOutDoesNotContain("my-warning-message");
+        var output = runSmooth(buildCommand("--filter-logs=error", "result"));
+        output.assertFinishedWithSuccess();
+        output.assertSystemOutDoesNotContain("my-warning-message");
       }
 
       @Test
@@ -262,9 +263,9 @@ public class BuildCommandTest {
             result = reportInfo("my-info-message");
             """,
             ReportInfo.class.getCanonicalName()));
-        runSmooth(buildCommand("--filter-logs=error", "result"));
-        assertFinishedWithSuccess();
-        assertSystemOutDoesNotContain("my-info-message");
+        var output = runSmooth(buildCommand("--filter-logs=error", "result"));
+        output.assertFinishedWithSuccess();
+        output.assertSystemOutDoesNotContain("my-info-message");
       }
     }
 
@@ -280,9 +281,9 @@ public class BuildCommandTest {
             Int result = reportError("my-error-message");
             """,
             ReportError.class.getCanonicalName()));
-        runSmooth(buildCommand("--filter-logs=warning", "result"));
-        assertFinishedWithError();
-        assertSystemOutContains("[ERROR] my-error-message");
+        var output = runSmooth(buildCommand("--filter-logs=warning", "result"));
+        output.assertFinishedWithError();
+        output.assertSystemOutContains("[ERROR] my-error-message");
       }
 
       @Test
@@ -295,9 +296,9 @@ public class BuildCommandTest {
             result = reportWarning("my-warning-message");
             """,
             ReportWarning.class.getCanonicalName()));
-        runSmooth(buildCommand("--filter-logs=warning", "result"));
-        assertFinishedWithSuccess();
-        assertSystemOutContains("[WARNING] my-warning-message");
+        var output = runSmooth(buildCommand("--filter-logs=warning", "result"));
+        output.assertFinishedWithSuccess();
+        output.assertSystemOutContains("[WARNING] my-warning-message");
       }
 
       @Test
@@ -310,9 +311,9 @@ public class BuildCommandTest {
             result = reportInfo("my-info-message");
             """,
             ReportInfo.class.getCanonicalName()));
-        runSmooth(buildCommand("--filter-logs=warning", "result"));
-        assertFinishedWithSuccess();
-        assertSystemOutDoesNotContain("my-info-message");
+        var output = runSmooth(buildCommand("--filter-logs=warning", "result"));
+        output.assertFinishedWithSuccess();
+        output.assertSystemOutDoesNotContain("my-info-message");
       }
     }
 
@@ -328,9 +329,9 @@ public class BuildCommandTest {
             Int result = reportError("my-error-message");
             """,
             ReportError.class.getCanonicalName()));
-        runSmooth(buildCommand("--filter-logs=info", "result"));
-        assertFinishedWithError();
-        assertSystemOutContains("[ERROR] my-error-message");
+        var output = runSmooth(buildCommand("--filter-logs=info", "result"));
+        output.assertFinishedWithError();
+        output.assertSystemOutContains("[ERROR] my-error-message");
       }
 
       @Test
@@ -343,9 +344,9 @@ public class BuildCommandTest {
             result = reportWarning("my-warning-message");
             """,
             ReportWarning.class.getCanonicalName()));
-        runSmooth(buildCommand("--filter-logs=info", "result"));
-        assertFinishedWithSuccess();
-        assertSystemOutContains("[WARNING] my-warning-message");
+        var output = runSmooth(buildCommand("--filter-logs=info", "result"));
+        output.assertFinishedWithSuccess();
+        output.assertSystemOutContains("[WARNING] my-warning-message");
       }
 
       @Test
@@ -358,9 +359,9 @@ public class BuildCommandTest {
             result = reportInfo("my-info-message");
             """,
             ReportInfo.class.getCanonicalName()));
-        runSmooth(buildCommand("--filter-logs=info", "result"));
-        assertFinishedWithSuccess();
-        assertSystemOutContains("[INFO] my-info-message");
+        var output = runSmooth(buildCommand("--filter-logs=info", "result"));
+        output.assertFinishedWithSuccess();
+        output.assertSystemOutContains("[INFO] my-info-message");
       }
     }
   }
@@ -377,9 +378,9 @@ public class BuildCommandTest {
           result = myFunc();
           """,
           ReturnAbc.class.getCanonicalName()));
-      runSmooth(buildCommand("--filter-tasks=all", "result"));
-      assertFinishedWithSuccess();
-      assertSystemOutContains("""
+      var output = runSmooth(buildCommand("--filter-tasks=all", "result"));
+      output.assertFinishedWithSuccess();
+      output.assertSystemOutContains("""
           :evaluate:invoke
           """);
     }
@@ -390,9 +391,9 @@ public class BuildCommandTest {
           myFunc() = 7;
           result = myFunc();
           """);
-      runSmooth(buildCommand("--filter-tasks=all", "result"));
-      assertFinishedWithSuccess();
-      assertSystemOutContains("""
+      var output = runSmooth(buildCommand("--filter-tasks=all", "result"));
+      output.assertFinishedWithSuccess();
+      output.assertSystemOutContains("""
           :vm:inline""");
     }
 
@@ -405,9 +406,9 @@ public class BuildCommandTest {
           }
           result = MyStruct("abc").myField;
           """);
-      runSmooth(buildCommand("--filter-tasks=all", "result"));
-      assertFinishedWithSuccess();
-      assertSystemOutContains("""
+      var output = runSmooth(buildCommand("--filter-tasks=all", "result"));
+      output.assertFinishedWithSuccess();
+      output.assertSystemOutContains("""
           :evaluate:select
           """);
     }

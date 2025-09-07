@@ -22,11 +22,11 @@ public class HelpCommandTest extends SystemTestContext {
   void test_help(GoldenFilesTestCase testCase) throws IOException {
     var command =
         Splitter.on(' ').splitToList(testCase.readFile("command")).toArray(new String[] {});
-    runSmoothWithoutProjectAndInstallationDir(new CommandWithArgs(command));
-    assertFinishedWithSuccess();
-    var output = convertOsLineSeparatorsToNewLine(systemOut());
+    var output = runSmoothWithoutProjectAndInstallationDir(new CommandWithArgs(command));
+    output.assertFinishedWithSuccess();
+    var sysOut = convertOsLineSeparatorsToNewLine(output.systemOut());
 
-    testCase.assertWithGoldenFiles(Map.of("output", output));
+    testCase.assertWithGoldenFiles(Map.of("output", sysOut));
   }
 
   static class ArgumentsProvider extends GoldenFilesArgumentsProvider {

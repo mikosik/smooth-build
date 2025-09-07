@@ -10,9 +10,9 @@ import org.smoothbuild.systemtest.SystemTestContext;
 public abstract class AbstractDefaultModuleTestSuite extends SystemTestContext {
   @Test
   void missing_default_module_causes_error_without_creating_smooth_dir() {
-    runSmooth(commandNameWithArg());
-    assertFinishedWithError();
-    assertSystemOutContains("smooth: error: Current directory doesn't have 'build.smooth'. "
+    var output = runSmooth(commandNameWithArg());
+    output.assertFinishedWithError();
+    output.assertSystemOutContains("smooth: error: Current directory doesn't have 'build.smooth'. "
         + "Is it really smooth enabled project?");
     assertThat(Files.exists(smoothDirAbsolutePath())).isFalse();
   }

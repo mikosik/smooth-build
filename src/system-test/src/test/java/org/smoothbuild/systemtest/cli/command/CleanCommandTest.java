@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.systemtest.CommandWithArgs;
 import org.smoothbuild.systemtest.SystemTestContext;
+import org.smoothbuild.systemtest.SystemTestOutput;
 import org.smoothbuild.systemtest.cli.command.common.AbstractDefaultModuleTestSuite;
 import org.smoothbuild.systemtest.cli.command.common.AbstractLockFileTestSuite;
 import org.smoothbuild.systemtest.cli.command.common.AbstractLogLevelOptionTestSuite;
@@ -29,8 +30,8 @@ public class CleanCommandTest {
       createDirInProject(COMPUTATION_DB_PATH);
       createDirInProject(ARTIFACTS_PATH);
 
-      runSmoothClean();
-      assertFinishedWithSuccess();
+      var output = runSmoothClean();
+      output.assertFinishedWithSuccess();
       try (var list = Files.list(smoothDirAbsolutePath())) {
         assertThat(list.toList()).containsExactly(absolutePath(SMOOTH_LOCK_PATH.toString()));
       }
@@ -43,9 +44,9 @@ public class CleanCommandTest {
     @Test
     void reports_error_when_user_module_is_missing_and_smooth_dir_exists() throws IOException {
       createDirectories(smoothDirAbsolutePath());
-      runSmoothClean();
-      assertFinishedWithError();
-      assertSystemOutContains("smooth: error: Current directory doesn't have "
+      var output = runSmoothClean();
+      output.assertFinishedWithError();
+      output.assertSystemOutContains("smooth: error: Current directory doesn't have "
           + DEFAULT_MODULE_PATH.q() + ". Is it really smooth enabled project?");
     }
 
@@ -54,10 +55,10 @@ public class CleanCommandTest {
       createUserModule("""
               result = "abc";
               """);
-      runSmoothClean("some", "arguments");
-      assertFinishedWithError();
-      assertSystemErrContains("Unmatched arguments from index");
-      assertSystemErrContains(
+      var output = runSmoothClean("some", "arguments");
+      output.assertFinishedWithError();
+      output.assertSystemErrContains("Unmatched arguments from index");
+      output.assertSystemErrContains(
           """
           Usage:
           smooth clean [-l=<level>]
@@ -85,8 +86,8 @@ public class CleanCommandTest {
   @Nested
   class LogLevelOption extends AbstractLogLevelOptionTestSuite {
     @Override
-    protected void whenSmoothCommandWithOption(String option) {
-      runSmooth(cleanCommand(option));
+    protected SystemTestOutput whenSmoothCommandWithOption(String option) {
+      return runSmooth(cleanCommand(option));
     }
   }
 }

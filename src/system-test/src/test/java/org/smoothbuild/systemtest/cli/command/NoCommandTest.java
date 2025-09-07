@@ -9,10 +9,10 @@ import org.smoothbuild.systemtest.SystemTestContext;
 public class NoCommandTest extends SystemTestContext {
   @Test
   void calling_smooth_without_command_defaults_to_help_command() {
-    runSmoothHelp();
-    String helpOutput = systemOut();
-    runSmoothWithoutProjectAndInstallationDir(new CommandWithArgs());
-    assertFinishedWithSuccess();
-    assertThat(systemOut()).isEqualTo(helpOutput);
+    var helpOutput = runSmoothHelp();
+    String helpSysOut = helpOutput.systemOut();
+    var smoothOutput = runSmoothWithoutProjectAndInstallationDir(new CommandWithArgs());
+    smoothOutput.assertFinishedWithSuccess();
+    assertThat(smoothOutput.systemOut()).isEqualTo(helpSysOut);
   }
 }

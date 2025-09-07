@@ -10,9 +10,9 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestContext {
     createUserModule("""
             result = "abc";
             """);
-    runSmooth(new CommandWithArgs(commandName()));
-    assertFinishedWithError();
-    assertSystemErrContains("Missing required parameter: '<value>'");
+    var output = runSmooth(new CommandWithArgs(commandName()));
+    output.assertFinishedWithError();
+    output.assertSystemErrContains("Missing required parameter: '<value>'");
   }
 
   @Test
@@ -20,9 +20,9 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestContext {
     createUserModule("""
             result = "abc";
             """);
-    runSmooth(new CommandWithArgs(commandName(), "unknownValue"));
-    assertFinishedWithError();
-    assertSystemOutContains(
+    var output = runSmooth(new CommandWithArgs(commandName(), "unknownValue"));
+    output.assertFinishedWithError();
+    output.assertSystemOutContains(
         """
             :evaluator:findValues
               [ERROR] Unknown value `unknownValue`.
@@ -35,8 +35,8 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestContext {
     createUserModule("""
             result = "abc";
             """);
-    runSmooth(new CommandWithArgs(commandName(), "result", "result"));
-    assertFinishedWithSuccess();
+    var output = runSmooth(new CommandWithArgs(commandName(), "result", "result"));
+    output.assertFinishedWithSuccess();
   }
 
   @Test
@@ -44,9 +44,9 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestContext {
     createUserModule("""
             result = "abc";
             """);
-    runSmooth(new CommandWithArgs(commandName(), "illegal-name"));
-    assertFinishedWithError();
-    assertSystemOutContains(
+    var output = runSmooth(new CommandWithArgs(commandName(), "illegal-name"));
+    output.assertFinishedWithError();
+    output.assertSystemOutContains(
         "[ERROR] Illegal reference `illegal-name`. It must not contain '-' character.\n");
   }
 
@@ -55,11 +55,11 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestContext {
     createUserModule("""
             result = "abc";
             """);
-    runSmooth(new CommandWithArgs(commandName(), "illegal-name", "other-name"));
-    assertFinishedWithError();
-    assertSystemOutContains(
+    var output = runSmooth(new CommandWithArgs(commandName(), "illegal-name", "other-name"));
+    output.assertFinishedWithError();
+    output.assertSystemOutContains(
         "[ERROR] Illegal reference `illegal-name`. It must not contain '-' character.\n");
-    assertSystemOutContains(
+    output.assertSystemOutContains(
         "[ERROR] Illegal reference `other-name`. It must not contain '-' character.\n");
   }
 
@@ -69,9 +69,9 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestContext {
         """
             String testStringIdentity(String value) = value;
             """);
-    runSmooth(new CommandWithArgs(commandName(), "testStringIdentity"));
-    assertFinishedWithError();
-    assertSystemOutContains(
+    var output = runSmooth(new CommandWithArgs(commandName(), "testStringIdentity"));
+    output.assertFinishedWithError();
+    output.assertSystemOutContains(
         """
         :evaluator:findValues
           [ERROR] `testStringIdentity` cannot be calculated as it is not a value but a function.
@@ -84,9 +84,9 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestContext {
         """
             String testStringIdentity(String value = "default") = value;
             """);
-    runSmooth(new CommandWithArgs(commandName(), "testStringIdentity"));
-    assertFinishedWithError();
-    assertSystemOutContains(
+    var output = runSmooth(new CommandWithArgs(commandName(), "testStringIdentity"));
+    output.assertFinishedWithError();
+    output.assertSystemOutContains(
         """
         :evaluator:findValues
           [ERROR] `testStringIdentity` cannot be calculated as it is not a value but a function.
