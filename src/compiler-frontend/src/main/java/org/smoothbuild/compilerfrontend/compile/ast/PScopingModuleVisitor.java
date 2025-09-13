@@ -1,5 +1,7 @@
 package org.smoothbuild.compilerfrontend.compile.ast;
 
+import static org.smoothbuild.compilerfrontend.compile.ast.define.PScope.emptyScope;
+
 import org.smoothbuild.compilerfrontend.compile.ast.define.PContainer;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 
@@ -7,7 +9,7 @@ public class PScopingModuleVisitor<T extends Throwable> extends PModuleVisitor<T
   private PScope scope;
 
   public PScopingModuleVisitor() {
-    this.scope = null;
+    this.scope = emptyScope();
   }
 
   public PScope scope() {
