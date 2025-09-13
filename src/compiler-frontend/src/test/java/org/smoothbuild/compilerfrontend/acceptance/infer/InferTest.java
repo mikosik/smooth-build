@@ -25,7 +25,8 @@ public class InferTest extends FrontendCompileTester {
   }
 
   private Map<String, String> generateFiles(GoldenFilesTestCase testCase) throws IOException {
-    var module = module(testCase.readFile("smooth")).loadModule();
+    var output = compileModule(testCase.readFile("smooth"));
+    var module = output.result();
     var moduleText = module.toMaybe().map(SModule::toSourceCode).getOr("");
     var logsText = module.logs().toString("\n");
     return Map.of("expected", moduleText, "logs", logsText);

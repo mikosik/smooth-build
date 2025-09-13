@@ -23,7 +23,10 @@ public class LoadTest extends FrontendCompileTester {
   }
 
   private Map<String, String> generateFiles(GoldenFilesTestCase testCase) throws IOException {
-    var module = module(testCase.readFile("smooth")).loadsWithSuccess().getLoadedModule();
+    var module = compileModule(testCase.readFile("smooth"))
+        .assertLoadedWithSuccess()
+        .result()
+        .get();
     return Map.of("expected", module.toString());
   }
 

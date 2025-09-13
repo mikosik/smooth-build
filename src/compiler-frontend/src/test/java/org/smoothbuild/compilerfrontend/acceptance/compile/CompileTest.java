@@ -5,7 +5,6 @@ import java.nio.file.Path;
 import java.util.Map;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
-import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.testing.GoldenFilesArgumentsProvider;
 import org.smoothbuild.common.testing.GoldenFilesTestCase;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompileTester;
@@ -26,14 +25,8 @@ public class CompileTest extends FrontendCompileTester {
   private Map<String, String> generateFiles(GoldenFilesTestCase testCase) throws IOException {
     var code = testCase.readFile("smooth");
     var importedCode = testCase.readFileMaybe("imported");
-    var actualLogs = compile(code, importedCode);
+    var actualLogs = compileModules(code, importedCode).result().logs().toString("\n");
     return Map.of("logs", actualLogs);
-  }
-
-  private String compile(String code, Maybe<String> importedModule) {
-    var testApi = module(code);
-    importedModule.ifPresent(testApi::withImported);
-    return testApi.loadModule().logs().toString("\n");
   }
 
   static class ArgumentsProvider extends GoldenFilesArgumentsProvider {
