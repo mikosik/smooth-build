@@ -18,13 +18,13 @@ public final class SFuncType extends SType {
   }
 
   public SFuncType(STupleType params, SType result) {
-    super(calculateFuncTypeVars(params, result));
     this.result = requireNonNull(result);
     this.params = requireNonNull(params);
   }
 
-  public static Set<STypeVar> calculateFuncTypeVars(STupleType paramTs, SType resultT) {
-    return paramTs.elements().flatMap(SType::typeVars).toSet().addAll(resultT.typeVars());
+  @Override
+  protected Set<STypeVar> calculateTypeVars() {
+    return params.elements().flatMap(SType::typeVars).toSet().addAll(result.typeVars());
   }
 
   public STupleType params() {

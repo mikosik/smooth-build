@@ -1,8 +1,10 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
+import com.google.common.base.Suppliers;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Set;
@@ -14,15 +16,17 @@ import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
  */
 public abstract sealed class SType
     permits SBaseType, SArrayType, SFuncType, SInterfaceType, STupleType, STypeVar {
-  private final Set<STypeVar> typeVars;
+  private final Supplier<Set<STypeVar>> typeVarsSupplier;
 
-  protected SType(Set<STypeVar> typeVars) {
-    this.typeVars = typeVars;
+  protected SType() {
+    this.typeVarsSupplier = Suppliers.memoize(this::calculateTypeVars);
   }
 
   public Set<STypeVar> typeVars() {
-    return typeVars;
+    return typeVarsSupplier.get();
   }
+
+  protected abstract Set<STypeVar> calculateTypeVars();
 
   public boolean isFlexibleTypeVar() {
     return false;

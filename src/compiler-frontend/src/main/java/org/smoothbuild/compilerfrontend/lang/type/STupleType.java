@@ -11,13 +11,13 @@ public final class STupleType extends SType {
   private final List<SType> elements;
 
   public STupleType(List<? extends SType> elements) {
-    super(calculateTypeVars(elements));
     @SuppressWarnings("unchecked")
     var cast = (List<SType>) elements;
     this.elements = cast;
   }
 
-  private static Set<STypeVar> calculateTypeVars(List<? extends SType> elements) {
+  @Override
+  protected Set<STypeVar> calculateTypeVars() {
     return elements.flatMap(SType::typeVars).toSet();
   }
 

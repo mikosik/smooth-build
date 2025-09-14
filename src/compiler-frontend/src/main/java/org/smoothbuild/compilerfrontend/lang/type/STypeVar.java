@@ -13,7 +13,6 @@ import org.smoothbuild.compilerfrontend.lang.name.Name;
  */
 public final class STypeVar extends SType {
   private static final String FLEXIBLE_VAR_PREFIX = "T~";
-  private final Set<STypeVar> typeVars;
   private final Name name;
   private final boolean isFlexible;
 
@@ -22,9 +21,7 @@ public final class STypeVar extends SType {
   }
 
   private STypeVar(Name name, boolean isFlexible) {
-    super(null);
     this.name = name;
-    this.typeVars = set(this);
     this.isFlexible = isFlexible;
   }
 
@@ -41,8 +38,8 @@ public final class STypeVar extends SType {
   }
 
   @Override
-  public Set<STypeVar> typeVars() {
-    return typeVars;
+  protected Set<STypeVar> calculateTypeVars() {
+    return set(this);
   }
 
   @Override
