@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task1;
-import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
+import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitTypeParams;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
@@ -27,7 +27,7 @@ public class GenerateConstructors implements Task1<PModule, PModule> {
     return output(newModule, report(label));
   }
 
-  private static class ConstructorCreator extends PScopingModuleVisitor<RuntimeException> {
+  private static class ConstructorCreator extends PModuleVisitor<RuntimeException> {
     private final List<PPolyEvaluable> constructors = new ArrayList<>();
 
     @Override

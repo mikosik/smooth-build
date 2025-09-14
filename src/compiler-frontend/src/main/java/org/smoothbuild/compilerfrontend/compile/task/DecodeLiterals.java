@@ -10,7 +10,7 @@ import org.smoothbuild.common.base.UnescapeFailedException;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task1;
-import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
+import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInt;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
@@ -26,7 +26,7 @@ public class DecodeLiterals implements Task1<PModule, PModule> {
     return outputWithMaybeValue(pModule, report(label, decodeLiteralModuleVisitor.logger.toList()));
   }
 
-  private static class DecodeLiteralModuleVisitor extends PScopingModuleVisitor<RuntimeException> {
+  private static class DecodeLiteralModuleVisitor extends PModuleVisitor<RuntimeException> {
     private final Logger logger = new Logger();
 
     @Override

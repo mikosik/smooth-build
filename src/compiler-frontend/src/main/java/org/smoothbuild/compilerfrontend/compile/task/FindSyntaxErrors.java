@@ -10,7 +10,7 @@ import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task1;
-import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
+import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
@@ -39,7 +39,7 @@ public class FindSyntaxErrors implements Task1<PModule, PModule> {
   }
 
   private static void detectIllegalAnnotations(PModule pModule, Logger logger) {
-    new PScopingModuleVisitor<RuntimeException>() {
+    new PModuleVisitor<RuntimeException>() {
       @Override
       public void visitNamedFuncSignature(PNamedFunc pNamedFunc) {
         super.visitNamedFuncSignature(pNamedFunc);
@@ -103,7 +103,7 @@ public class FindSyntaxErrors implements Task1<PModule, PModule> {
   }
 
   private static void detectStructFieldWithDefaultValue(PModule pModule, Logger logger) {
-    new PScopingModuleVisitor<RuntimeException>() {
+    new PModuleVisitor<RuntimeException>() {
       @Override
       public void visitStructSignature(PStruct pStruct) {
         super.visitStructSignature(pStruct);
@@ -122,7 +122,7 @@ public class FindSyntaxErrors implements Task1<PModule, PModule> {
   }
 
   private static void detectLambdaParamWithDefaultValue(PModule pModule, Logger logger) {
-    new PScopingModuleVisitor<RuntimeException>() {
+    new PModuleVisitor<RuntimeException>() {
       @Override
       public void visitLambdaSignature(PLambda pLambda) {
         super.visitLambdaSignature(pLambda);
