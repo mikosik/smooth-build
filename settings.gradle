@@ -34,7 +34,7 @@ dependencyResolutionManagement {
       library('junit-jupiter-engine', 'org.junit.jupiter:junit-jupiter-engine:5.13.4')
       library('junit-jupiter-api', 'org.junit.jupiter:junit-jupiter-api:5.13.4')
       library('junit-jupiter-params', 'org.junit.jupiter:junit-jupiter-params:5.13.4')
-      library('mockito', 'org.mockito:mockito-core:5.18.0')
+      library('mockito', 'org.mockito:mockito-core:5.19.0')
       library('truth', 'com.google.truth:truth:1.4.5')
     }
   }
