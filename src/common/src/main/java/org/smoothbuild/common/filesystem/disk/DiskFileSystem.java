@@ -54,11 +54,7 @@ public class DiskFileSystem implements FileSystem<FullPath> {
     } catch (NoSuchFileException e) {
       return NOTHING;
     } catch (FileSystemException e) {
-      if (e.getMessage().endsWith("Not a directory")) {
-        throw noParentDirIOException(error, e);
-      } else {
-        throw e;
-      }
+      throw wrapNotADirectoryExceptionAsIOException(error, e);
     }
   }
 
@@ -139,16 +135,15 @@ public class DiskFileSystem implements FileSystem<FullPath> {
         throw new IOException(error.get() + "Cannot use " + path + ". It is already taken by dir.");
       }
     } catch (FileSystemException e) {
-      if (e.getMessage().endsWith("Not a directory")) {
-        throw noParentDirIOException(error, e);
-      } else {
-        throw e;
-      }
+      throw wrapNotADirectoryExceptionAsIOException(error, e);
     }
     try {
       return Okio.sink(pathJdk);
     } catch (NoSuchFileException e) {
+      // parent does not exist
       throw noParentDirIOException(error, e);
+    } catch (FileSystemException e) {
+      throw wrapNotADirectoryExceptionAsIOException(error, e);
     }
   }
 
@@ -241,5 +236,10 @@ public class DiskFileSystem implements FileSystem<FullPath> {
             error.get() + "Cannot use " + path.q() + " path. It is already taken.");
       case NOTHING -> {}
     }
+  }
+
+  private static IOException wrapNotADirectoryExceptionAsIOException(
+      Supplier<String> error, FileSystemException e) {
+    return e.getMessage().endsWith("Not a directory") ? noParentDirIOException(error, e) : e;
   }
 }
