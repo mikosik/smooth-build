@@ -10,6 +10,8 @@ updates:
     directory: "/" # Directory where your `build.gradle` or `build.gradle.kts` file is located
     schedule:
       interval: "weekly"
+      day: "saturday"
+      time: "01:00"
     commit-message:
       prefix: "dependabot: " # Optional prefix for commit messages
     open-pull-requests-limit: 10 # Limit on the number of open PRs
