@@ -1,6 +1,13 @@
 package org.smoothbuild.common.base;
 
+import static java.util.Objects.requireNonNullElse;
+
 public class Throwables {
+  public static String messageFrom(Throwable throwable) {
+    return requireNonNullElse(
+        throwable.getMessage(), throwable.getClass().getTypeName() + " without a message");
+  }
+
   public static RuntimeException unexpectedCaseException(Object object) {
     return new RuntimeException(messageFor(object));
   }
