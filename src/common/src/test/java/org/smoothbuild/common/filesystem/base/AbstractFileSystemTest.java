@@ -634,6 +634,17 @@ public abstract class AbstractFileSystemTest {
               new IOException("Cannot create link '{unknown}/source' -> '{unknown}/target'."
                   + " Unknown alias 'unknown'. Known aliases = ['alias-1']"));
     }
+
+    @Test
+    void fails_when_target_not_exists() {
+      var fileSystem = fileSystem();
+      var link = fullPath(alias(), "source");
+      var target = fullPath(alias(), "target");
+      assertCall(() -> fileSystem.createLink(link, target))
+          .throwsException(
+              new IOException("Cannot create link '{alias-1}/source' -> '{alias-1}/target'."
+                  + " Path '{alias-1}/target' doesn't exist."));
+    }
   }
 
   @Nested
@@ -691,7 +702,7 @@ public abstract class AbstractFileSystemTest {
     return new Alias("alias-2");
   }
 
-  protected static Alias unknown() {
+  protected Alias unknown() {
     return new Alias("unknown");
   }
 }

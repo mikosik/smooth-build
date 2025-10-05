@@ -158,14 +158,15 @@ public class MemoryFileSystem implements FileSystem<FullPath> {
     Supplier<String> error = () -> "Cannot create link " + link.q() + " -> " + target.q() + ". ";
 
     assertAliasesAreEqual(link, target);
-    switch (pathStateImpl(link, error)) {
-      case FILE, DIR ->
-        throw new IOException(
-            error.get() + "Cannot use " + link.q() + " path. It is already taken.");
-      case NOTHING -> {}
+    var pathState = pathStateImpl(link, error);
+    if (pathState != PathState.NOTHING) {
+      throw new IOException(error.get() + "Cannot use " + link.q() + " path. It is already taken.");
     }
 
-    MemoryElement targetElement = findElement(target, error);
+    var targetElement = findElement(target, error);
+    if (targetElement == null) {
+      throw new IOException(error.get() + "Path " + target.q() + " doesn't exist.");
+    }
     createObject(
         link.parent(),
         (dir) -> {
