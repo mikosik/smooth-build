@@ -25,7 +25,7 @@ subprojects {
 
 subprojects { subproject ->
     if (subproject.name in [
-            'common-testing',
+            'testing',
             'common',
             'compiler-frontend',
             'virtual-machine',

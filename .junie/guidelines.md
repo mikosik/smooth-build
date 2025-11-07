@@ -23,7 +23,7 @@ smooth build project is Multi-module Gradle project with modules organized under
   - `standard-library` - Standard library for smooth language
   - `system-test` - System-level tests
   - `distribution` - Distribution packaging
-  - `common-testing` - Shared testing utilities
+  - `testing` - Shared testing utilities
     
 ### `common` module
 Contains shared utilities and core components.
@@ -68,7 +68,7 @@ System-level tests.
 ### `distribution`  
 Distribution packaging.
 
-### `common-testing`  
+### `testing`  
 Shared testing utilities.
 
 ## Tech Stack

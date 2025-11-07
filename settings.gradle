@@ -1,6 +1,6 @@
 rootProject.name = 'smooth-build'
 
-include 'src:common-testing'
+include 'src:testing'
 include 'src:common'
 include 'src:antlr-smooth'
 include 'src:compiler-frontend'

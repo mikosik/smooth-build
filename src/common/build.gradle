@@ -26,7 +26,7 @@ dependencies {
     testFixturesImplementation libs.junit.jupiter.params
     testFixturesImplementation libs.truth
 
-    testImplementation project(':src:common-testing')
+    testImplementation project(':src:testing')
     testRuntimeOnly libs.junit.jupiter.engine
     testImplementation libs.junit.jupiter.api
     testImplementation libs.junit.jupiter.params

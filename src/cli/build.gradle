@@ -36,7 +36,7 @@ dependencies {
     testFixturesApi libs.okio
     testFixturesApi libs.truth
 
-    testImplementation project(':src:common-testing')
+    testImplementation project(':src:testing')
     testImplementation project(':src:virtual-machine')
     testImplementation testFixtures(project(':src:common'))
     testImplementation testFixtures(project(':src:virtual-machine'))

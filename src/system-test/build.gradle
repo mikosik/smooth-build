@@ -18,7 +18,7 @@ dependencies {
     implementation libs.zip4j
 
     testImplementation project(':src:common')
-    testImplementation project(':src:common-testing')
+    testImplementation project(':src:testing')
     testImplementation testFixtures(project(':src:common'))
     testImplementation testFixtures(project(':src:virtual-machine'))
     testRuntimeOnly libs.junit.jupiter.engine
