@@ -30,7 +30,7 @@ public class BFileCreator {
     this.factory = factory;
   }
 
-  public BArray createFiles(Path dir) throws IOException, BytecodeException {
+  public BArray createFiles(Path dir) throws IOException {
     var fileArrayBuilder = factory.arrayBuilderWithElements(factory.fileType());
     for (PathIterator it = fileSystem.filesRecursively(projectPath.append(dir)); it.hasNext(); ) {
       Path path = it.next();
@@ -39,7 +39,7 @@ public class BFileCreator {
     return fileArrayBuilder.build();
   }
 
-  public BTuple createFile(Path path, Path projectPath) throws IOException, BytecodeException {
+  public BTuple createFile(Path path, Path projectPath) throws IOException {
     return factory.file(createContent(projectPath), createPath(path));
   }
 
@@ -47,7 +47,7 @@ public class BFileCreator {
     return factory.string(path.toString());
   }
 
-  private BBlob createContent(Path path) throws IOException, BytecodeException {
+  private BBlob createContent(Path path) throws IOException {
     return fileContentReader.read(projectPath.append(path));
   }
 }

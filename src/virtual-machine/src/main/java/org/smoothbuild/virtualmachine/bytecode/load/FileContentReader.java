@@ -9,7 +9,6 @@ import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.dagger.PerCommand;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlobBuilder;
@@ -31,7 +30,7 @@ public class FileContentReader {
     this.cache = new ConcurrentHashMap<>();
   }
 
-  public BBlob read(FullPath fullPath) throws BytecodeException, IOException {
+  public BBlob read(FullPath fullPath) throws IOException {
     var cachingLoader = cache.computeIfAbsent(fullPath, CachingReader::new);
     return cachingLoader.read();
   }
@@ -44,14 +43,14 @@ public class FileContentReader {
       this.fullPath = fullPath;
     }
 
-    private synchronized BBlob read() throws IOException, BytecodeException {
+    private synchronized BBlob read() throws IOException {
       if (blob == null) {
         blob = readImpl();
       }
       return blob;
     }
 
-    private BBlob readImpl() throws BytecodeException, IOException {
+    private BBlob readImpl() throws IOException {
       try (BBlobBuilder blobBuilder = exprDb.newBlobBuilder()) {
         try (var source = buffer(fileSystem.source(fullPath))) {
           source.readAll(blobBuilder);
