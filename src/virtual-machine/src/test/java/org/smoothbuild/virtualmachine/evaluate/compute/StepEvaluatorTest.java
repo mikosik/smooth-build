@@ -44,7 +44,7 @@ public class StepEvaluatorTest extends VmTestContext {
       var memory = bTuple(bInt(1));
       var disk = bTuple(bInt(2));
 
-      assertComputationResult(step, input, memory, disk, output(memory), DISK);
+      assertComputationResult(step, input, memory, disk, bOutput(memory), DISK);
     }
 
     @Test
@@ -54,7 +54,7 @@ public class StepEvaluatorTest extends VmTestContext {
       var input = bTuple(value);
       var disk = bTuple(bInt(2));
 
-      assertComputationResult(step, input, null, disk, output(disk), DISK);
+      assertComputationResult(step, input, null, disk, bOutput(disk), DISK);
     }
 
     @Test
@@ -63,7 +63,7 @@ public class StepEvaluatorTest extends VmTestContext {
       var step = new CombineStep(bCombine(bInt()), trace());
       var input = bTuple(value);
 
-      assertComputationResult(step, input, null, null, output(bTuple(value)), EXECUTION);
+      assertComputationResult(step, input, null, null, bOutput(bTuple(value)), EXECUTION);
     }
 
     @Test
@@ -88,7 +88,7 @@ public class StepEvaluatorTest extends VmTestContext {
         var memory = bString("def");
         var disk = bString("ghi");
 
-        assertComputationResult(step, input, memory, disk, output(memory), DISK);
+        assertComputationResult(step, input, memory, disk, bOutput(memory), DISK);
       }
 
       @Test
@@ -98,7 +98,7 @@ public class StepEvaluatorTest extends VmTestContext {
         var input = argumentsForInvokeStep(invoke);
         var disk = bString("ghi");
 
-        assertComputationResult(step, input, null, disk, output(disk), DISK);
+        assertComputationResult(step, input, null, disk, bOutput(disk), DISK);
       }
 
       @Test
@@ -107,7 +107,7 @@ public class StepEvaluatorTest extends VmTestContext {
         var step = new InvokeStep(invoke, trace());
         var input = argumentsForInvokeStep(invoke);
 
-        assertComputationResult(step, input, null, null, output(bString("abc")), EXECUTION);
+        assertComputationResult(step, input, null, null, bOutput(bString("abc")), EXECUTION);
       }
 
       @Test
@@ -130,7 +130,7 @@ public class StepEvaluatorTest extends VmTestContext {
         var memory = bString("def");
         var disk = bString("ghi");
 
-        assertComputationResult(step, input, memory, disk, output(memory), MEMORY);
+        assertComputationResult(step, input, memory, disk, bOutput(memory), MEMORY);
       }
 
       @Test
@@ -140,7 +140,7 @@ public class StepEvaluatorTest extends VmTestContext {
         var input = argumentsForInvokeStep(invoke);
         var disk = bString("ghi");
 
-        assertComputationResult(step, input, null, disk, output(bString("abc")), EXECUTION);
+        assertComputationResult(step, input, null, disk, bOutput(bString("abc")), EXECUTION);
       }
 
       @Test
@@ -149,7 +149,7 @@ public class StepEvaluatorTest extends VmTestContext {
         var step = new InvokeStep(invoke, trace());
         var input = argumentsForInvokeStep(invoke);
 
-        assertComputationResult(step, input, null, null, output(bString("abc")), EXECUTION);
+        assertComputationResult(step, input, null, null, bOutput(bString("abc")), EXECUTION);
       }
 
       @Test
@@ -179,7 +179,7 @@ public class StepEvaluatorTest extends VmTestContext {
       var memory = bArray(bInt(1));
       var disk = bArray(bInt(2));
 
-      assertComputationResult(step, input, memory, disk, output(memory), DISK);
+      assertComputationResult(step, input, memory, disk, bOutput(memory), DISK);
     }
 
     @Test
@@ -189,7 +189,7 @@ public class StepEvaluatorTest extends VmTestContext {
       var input = bTuple(value);
       var disk = bArray(bInt(2));
 
-      assertComputationResult(step, input, null, disk, output(disk), DISK);
+      assertComputationResult(step, input, null, disk, bOutput(disk), DISK);
     }
 
     @Test
@@ -198,7 +198,7 @@ public class StepEvaluatorTest extends VmTestContext {
       var step = new OrderStep(bOrder(bIntType()), trace());
       var input = bTuple(value);
 
-      assertComputationResult(step, input, null, null, output(bArray(value)), EXECUTION);
+      assertComputationResult(step, input, null, null, bOutput(bArray(value)), EXECUTION);
     }
 
     @Test
@@ -221,7 +221,7 @@ public class StepEvaluatorTest extends VmTestContext {
       var memory = bInt(1);
       var disk = bInt(2);
 
-      assertComputationResult(step, input, memory, disk, output(memory), DISK);
+      assertComputationResult(step, input, memory, disk, bOutput(memory), DISK);
     }
 
     @Test
@@ -231,7 +231,7 @@ public class StepEvaluatorTest extends VmTestContext {
       var input = bTuple(bArray(value), bInt(0));
       var disk = bInt(2);
 
-      assertComputationResult(step, input, null, disk, output(disk), DISK);
+      assertComputationResult(step, input, null, disk, bOutput(disk), DISK);
     }
 
     @Test
@@ -240,7 +240,7 @@ public class StepEvaluatorTest extends VmTestContext {
       var step = new PickStep(bPick(), trace());
       var input = bTuple(bArray(value), bInt(0));
 
-      assertComputationResult(step, input, null, null, output(value), EXECUTION);
+      assertComputationResult(step, input, null, null, bOutput(value), EXECUTION);
     }
 
     @Test
@@ -263,7 +263,7 @@ public class StepEvaluatorTest extends VmTestContext {
       var memory = bInt(1);
       var disk = bInt(2);
 
-      assertComputationResult(task, input, memory, disk, output(memory), DISK);
+      assertComputationResult(task, input, memory, disk, bOutput(memory), DISK);
     }
 
     @Test
@@ -273,7 +273,7 @@ public class StepEvaluatorTest extends VmTestContext {
       var input = bTuple(bTuple(value), bInt(0));
       var disk = bInt(2);
 
-      assertComputationResult(task, input, null, disk, output(disk), DISK);
+      assertComputationResult(task, input, null, disk, bOutput(disk), DISK);
     }
 
     @Test
@@ -282,7 +282,7 @@ public class StepEvaluatorTest extends VmTestContext {
       var task = new SelectStep(bSelect(), trace());
       var input = bTuple(bTuple(value), bInt(0));
 
-      assertComputationResult(task, input, null, null, output(value), EXECUTION);
+      assertComputationResult(task, input, null, null, bOutput(value), EXECUTION);
     }
 
     @Test
@@ -314,7 +314,7 @@ public class StepEvaluatorTest extends VmTestContext {
     var computationHashFactory = provide().computationHashFactory();
     var computationHash = computationHashFactory.create(step, input);
     if (diskValue != null) {
-      computationCache.write(computationHash, output(diskValue));
+      computationCache.write(computationHash, bOutput(diskValue));
     }
     var memoryCache = new ConcurrentHashMap<Hash, Promise<BOutput>>();
     if (memoryValue != null) {
@@ -373,7 +373,7 @@ public class StepEvaluatorTest extends VmTestContext {
     if (diskValue == null) {
       assertThat(computationCache.contains(stepHash)).isFalse();
     } else {
-      assertThat(computationCache.read(stepHash, diskValue.type())).isEqualTo(output(diskValue));
+      assertThat(computationCache.read(stepHash, diskValue.type())).isEqualTo(bOutput(diskValue));
     }
   }
 }

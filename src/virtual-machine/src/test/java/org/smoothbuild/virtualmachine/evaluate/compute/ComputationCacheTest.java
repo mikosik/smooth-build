@@ -32,7 +32,7 @@ public class ComputationCacheTest extends VmTestContext {
   @Test
   void cache_contains_written_result() throws Exception {
     var computationCache = provide().computationCache();
-    computationCache.write(hash, output(bString("result"), bLogArrayEmpty()));
+    computationCache.write(hash, bOutput(bString("result"), bLogArrayEmpty()));
     assertThat(computationCache.contains(hash)).isTrue();
   }
 
@@ -57,7 +57,7 @@ public class ComputationCacheTest extends VmTestContext {
     var message = bInfoLog("info message");
     var messages = bArray(message);
     var computationCache = provide().computationCache();
-    computationCache.write(hash, output(bString, messages));
+    computationCache.write(hash, bOutput(bString, messages));
 
     assertThat(computationCache.read(hash, bStringType()).storedLogs()).isEqualTo(messages);
   }
@@ -66,7 +66,7 @@ public class ComputationCacheTest extends VmTestContext {
   void written_file_array_can_be_read_back() throws Exception {
     var file = bFile(path("file/path"), bytes);
     var computationCache = provide().computationCache();
-    computationCache.write(hash, output(bArray(file), bLogArrayEmpty()));
+    computationCache.write(hash, bOutput(bArray(file), bLogArrayEmpty()));
     var arrayType = bFileArrayType();
 
     assertThat(
@@ -78,7 +78,7 @@ public class ComputationCacheTest extends VmTestContext {
   void written_blob_array_can_be_read_back() throws Exception {
     var blob = bBlob(bytes);
     var computationCache = provide().computationCache();
-    computationCache.write(hash, output(bArray(blob), bLogArrayEmpty()));
+    computationCache.write(hash, bOutput(bArray(blob), bLogArrayEmpty()));
     var arrayType = bBlobArrayType();
 
     assertThat(read(computationCache, arrayType, BArray.class).elements(BBlob.class))
@@ -89,7 +89,7 @@ public class ComputationCacheTest extends VmTestContext {
   void written_bool_array_can_be_read_back() throws Exception {
     var bool = bBool(true);
     var computationCache = provide().computationCache();
-    computationCache.write(hash, output(bArray(bool), bLogArrayEmpty()));
+    computationCache.write(hash, bOutput(bArray(bool), bLogArrayEmpty()));
     var arrayType = bBoolArrayType();
 
     assertThat(read(computationCache, arrayType, BArray.class).elements(BBool.class))
@@ -100,7 +100,7 @@ public class ComputationCacheTest extends VmTestContext {
   void written_int_array_can_be_read_back() throws Exception {
     var int_ = bInt(123);
     var computationCache = provide().computationCache();
-    computationCache.write(hash, output(bArray(int_), bLogArrayEmpty()));
+    computationCache.write(hash, bOutput(bArray(int_), bLogArrayEmpty()));
     var arrayType = bIntArrayType();
 
     assertThat(read(computationCache, arrayType, BArray.class).elements(BInt.class))
@@ -112,7 +112,7 @@ public class ComputationCacheTest extends VmTestContext {
     var string = bString("some string");
     var array = bArray(string);
     var computationCache = provide().computationCache();
-    computationCache.write(hash, output(array, bLogArrayEmpty()));
+    computationCache.write(hash, bOutput(array, bLogArrayEmpty()));
     var arrayType = bStringArrayType();
 
     assertThat(read(computationCache, arrayType, BArray.class).elements(BString.class))
@@ -123,7 +123,7 @@ public class ComputationCacheTest extends VmTestContext {
   void written_file_can_be_read_back() throws Exception {
     var file = bFile(path("file/path"), bytes);
     var computationCache = provide().computationCache();
-    computationCache.write(hash, output(file, bLogArrayEmpty()));
+    computationCache.write(hash, bOutput(file, bLogArrayEmpty()));
 
     assertThat(
             computationCache.read(hash, provide().bytecodeFactory().fileType()).value())
@@ -134,7 +134,7 @@ public class ComputationCacheTest extends VmTestContext {
   void written_blob_can_be_read_back() throws Exception {
     var blob = bBlob(bytes);
     var computationCache = provide().computationCache();
-    computationCache.write(hash, output(blob, bLogArrayEmpty()));
+    computationCache.write(hash, bOutput(blob, bLogArrayEmpty()));
 
     assertThat(computationCache.read(hash, bBlobType()).value()).isEqualTo(some(blob));
   }
@@ -143,7 +143,7 @@ public class ComputationCacheTest extends VmTestContext {
   void written_bool_can_be_read_back() throws Exception {
     var bool = bBool(true);
     var computationCache = provide().computationCache();
-    computationCache.write(hash, output(bool, bLogArrayEmpty()));
+    computationCache.write(hash, bOutput(bool, bLogArrayEmpty()));
 
     assertThat(read(computationCache, bBoolType(), BBool.class).toJavaBoolean()).isTrue();
   }
@@ -152,7 +152,7 @@ public class ComputationCacheTest extends VmTestContext {
   void written_int_can_be_read_back() throws Exception {
     var int_ = bInt(123);
     var computationCache = provide().computationCache();
-    computationCache.write(hash, output(int_, bLogArrayEmpty()));
+    computationCache.write(hash, bOutput(int_, bLogArrayEmpty()));
 
     assertThat(read(computationCache, bIntType(), BInt.class).toJavaBigInteger())
         .isEqualTo(BigInteger.valueOf(123));
@@ -163,7 +163,7 @@ public class ComputationCacheTest extends VmTestContext {
     var string = "some string";
     var bString = bString(string);
     var computationCache = provide().computationCache();
-    computationCache.write(hash, output(bString, bLogArrayEmpty()));
+    computationCache.write(hash, bOutput(bString, bLogArrayEmpty()));
 
     assertThat(read(computationCache, bStringType(), BString.class).toJavaString())
         .isEqualTo(string);

@@ -90,12 +90,12 @@ public interface VmTestApi extends CommonTestApi {
     return provide().projectPath().append("module.smooth");
   }
 
-  public default BOutput output(BValue value) throws BytecodeException {
-    return output(value, bLogArrayEmpty());
+  public default BOutput bOutput(BValue value) throws BytecodeException {
+    return bOutput(value, bLogArrayEmpty());
   }
 
-  public default BOutput output(BValue value, BArray messages) throws BytecodeException {
-    return bOutput(value, messages);
+  public default BOutput bOutput(BValue value, BArray messages) throws BytecodeException {
+    return BOutput.bOutput(value, messages);
   }
 
   public default BytecodeLoader bytecodeLoader(ClassLoader systemClassLoader) {
