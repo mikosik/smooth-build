@@ -13,42 +13,42 @@ public class StepTest extends VmTestContext {
   @Nested
   class _purity {
     @Test
-    void combine_task_is_pure() throws BytecodeException {
-      var combineTask = new CombineStep(bCombine(bInt()), trace());
-      assertThat(combineTask.purity(bTuple())).isEqualTo(PURE);
+    void combine_step_is_pure() throws BytecodeException {
+      var combineStep = new CombineStep(bCombine(bInt()), trace());
+      assertThat(combineStep.purity(bTuple())).isEqualTo(PURE);
     }
 
     @Test
-    void invoke_task_is_pure_when_is_pure_argument_is_true() throws Exception {
+    void invoke_step_is_pure_when_is_pure_argument_is_true() throws Exception {
       var invoke = bInvoke(bIntType(), bMethodTuple(), bBool(false), bTuple(bInt()));
-      var invokeTask = new InvokeStep(invoke, trace());
-      assertThat(invokeTask.purity(bTuple(bMethodTuple(), bBool(true), bInt()))).isEqualTo(PURE);
+      var invokeStep = new InvokeStep(invoke, trace());
+      assertThat(invokeStep.purity(bTuple(bMethodTuple(), bBool(true), bInt()))).isEqualTo(PURE);
     }
 
     @Test
-    void invoke_task_is_impure_when_is_pure_argument_is_false() throws Exception {
+    void invoke_step_is_impure_when_is_pure_argument_is_false() throws Exception {
       var invoke = bInvoke(bIntType(), bMethodTuple(), bBool(true), bTuple(bInt()));
-      var invokeTask = new InvokeStep(invoke, trace());
-      assertThat(invokeTask.purity(bTuple(bMethodTuple(), bBool(false), bInt())))
+      var invokeStep = new InvokeStep(invoke, trace());
+      assertThat(invokeStep.purity(bTuple(bMethodTuple(), bBool(false), bInt())))
           .isEqualTo(IMPURE);
     }
 
     @Test
-    void order_task_is_pure() throws BytecodeException {
-      var orderTask = new OrderStep(bOrder(bInt()), trace());
-      assertThat(orderTask.purity(bTuple())).isEqualTo(PURE);
+    void order_step_is_pure() throws BytecodeException {
+      var orderStep = new OrderStep(bOrder(bInt()), trace());
+      assertThat(orderStep.purity(bTuple())).isEqualTo(PURE);
     }
 
     @Test
-    void pick_task_is_pure() throws BytecodeException {
-      var pickTask = new PickStep(bPick(bArray(bInt()), 0), trace());
-      assertThat(pickTask.purity(bTuple())).isEqualTo(PURE);
+    void pick_step_is_pure() throws BytecodeException {
+      var pickStep = new PickStep(bPick(bArray(bInt()), 0), trace());
+      assertThat(pickStep.purity(bTuple())).isEqualTo(PURE);
     }
 
     @Test
-    void select_task_is_pure() throws BytecodeException {
-      var selectTask = new SelectStep(bSelect(bTuple(bInt()), 0), trace());
-      assertThat(selectTask.purity(bTuple())).isEqualTo(PURE);
+    void select_step_is_pure() throws BytecodeException {
+      var selectStep = new SelectStep(bSelect(bTuple(bInt()), 0), trace());
+      assertThat(selectStep.purity(bTuple())).isEqualTo(PURE);
     }
   }
 }
