@@ -167,6 +167,7 @@ public class StepEvaluator {
         .storedLogs()
         .elements(BTuple.class)
         .map(message -> new Log(level(message), message(message)));
-    return report(step.label(), step.trace(), origin, logs);
+    var label = VM_EVALUATE.append(":" + step.name());
+    return report(label, step.trace(), origin, logs);
   }
 }

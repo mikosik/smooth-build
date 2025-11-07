@@ -9,6 +9,7 @@ import static org.smoothbuild.common.log.base.Origin.EXECUTION;
 import static org.smoothbuild.common.log.base.Origin.MEMORY;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.testing.AwaitHelper.await;
+import static org.smoothbuild.virtualmachine.VmConstants.VM_EVALUATE;
 import static org.smoothbuild.virtualmachine.evaluate.step.BOutput.bOutput;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -340,7 +341,8 @@ public class StepEvaluatorTest extends VmTestContext {
     await().until(() -> result.toMaybe().isSome());
 
     assertThat(result.get()).isEqualTo(expectedOutput.value());
-    var report = report(step.label(), step.trace(), expectedOrigin, list());
+    var label = VM_EVALUATE.append(":" + step.name());
+    var report = report(label, step.trace(), expectedOrigin, list());
     assertThat(provide().reporter().reports()).contains(report);
   }
 

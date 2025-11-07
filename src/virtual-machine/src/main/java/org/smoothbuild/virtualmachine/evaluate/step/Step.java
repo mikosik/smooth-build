@@ -1,12 +1,10 @@
 package org.smoothbuild.virtualmachine.evaluate.step;
 
-import static org.smoothbuild.virtualmachine.VmConstants.VM_EVALUATE;
 import static org.smoothbuild.virtualmachine.evaluate.step.Purity.PURE;
 
 import java.io.IOException;
 import java.util.Objects;
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
@@ -32,8 +30,8 @@ public abstract sealed class Step
     this.trace = trace;
   }
 
-  public Label label() {
-    return VM_EVALUATE.append(":" + name);
+  public String name() {
+    return name;
   }
 
   public Trace trace() {
