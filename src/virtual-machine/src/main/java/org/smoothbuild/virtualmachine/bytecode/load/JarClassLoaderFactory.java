@@ -3,7 +3,7 @@ package org.smoothbuild.virtualmachine.bytecode.load;
 import static java.lang.ClassLoader.getSystemClassLoader;
 import static okio.Okio.buffer;
 import static org.smoothbuild.common.function.Function1.memoizer;
-import static org.smoothbuild.common.reflect.ClassLoaders.mapClassLoader;
+import static org.smoothbuild.common.reflect.ClassLoaders.mappingClassLoader;
 import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.fileContent;
 import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.filePath;
 import static org.smoothbuild.virtualmachine.evaluate.plugin.UnzipBlob.unzipBlob;
@@ -58,7 +58,7 @@ public class JarClassLoaderFactory {
 
   @SuppressWarnings("NullAway")
   private ClassLoader newClassLoader(Map<String, BTuple> filesMap) {
-    return mapClassLoader(parentClassLoader, path -> {
+    return mappingClassLoader(parentClassLoader, path -> {
       BTuple file = filesMap.get(path);
       return file == null ? null : buffer(fileContent(file).source()).inputStream();
     });

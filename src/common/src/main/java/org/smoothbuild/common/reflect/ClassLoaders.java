@@ -14,16 +14,16 @@ import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.function.Function1;
 
 public class ClassLoaders {
-  public static ClassLoader mapClassLoader(
+  public static ClassLoader mappingClassLoader(
       Function1<String, InputStream, IOException> inputStreams) {
-    return mapClassLoader(ClassLoaders.class.getClassLoader(), inputStreams);
+    return mappingClassLoader(ClassLoaders.class.getClassLoader(), inputStreams);
   }
 
   /**
    * Creates mapping class loader.
    * @param parentClassLoader if null is passed then bootstrap classloader should be used as parent
    */
-  public static ClassLoader mapClassLoader(
+  public static ClassLoader mappingClassLoader(
       @Nullable ClassLoader parentClassLoader,
       Function1<String, InputStream, IOException> inputStreams) {
     try {

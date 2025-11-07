@@ -1,7 +1,7 @@
 package org.smoothbuild.common.reflect;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.reflect.ClassLoaders.mapClassLoader;
+import static org.smoothbuild.common.reflect.ClassLoaders.mappingClassLoader;
 import static org.smoothbuild.common.reflect.Classes.binaryPath;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
@@ -22,10 +22,11 @@ public class ClassLoadersTest {
       // so when mapClassLoader asks its parent loader (boot class loader) for loading MyClass it
       // will receive nothing and then will be forced to load it by itself.
       ClassLoader parentClassLoader = null;
-      var mapClassLoader = mapClassLoader(parentClassLoader, Map.of(binaryPath, inputStream)::get);
+      var mappingClassLoader =
+          mappingClassLoader(parentClassLoader, Map.of(binaryPath, inputStream)::get);
 
-      Class<?> loadedClass = mapClassLoader.loadClass(binaryName);
-      assertThat(loadedClass.getClassLoader()).isSameInstanceAs(mapClassLoader);
+      Class<?> loadedClass = mappingClassLoader.loadClass(binaryName);
+      assertThat(loadedClass.getClassLoader()).isSameInstanceAs(mappingClassLoader);
       assertThat(loadedClass.getMethod("myMethod").invoke(null)).isEqualTo("myResult");
     }
   }
@@ -39,7 +40,7 @@ public class ClassLoadersTest {
   @Test
   @SuppressWarnings("NullAway")
   void fails_for_missing_class() {
-    var mapClassLoader = mapClassLoader(Map.<String, InputStream>of()::get);
+    var mapClassLoader = mappingClassLoader(Map.<String, InputStream>of()::get);
     assertCall(() -> mapClassLoader.loadClass("SomeClass"))
         .throwsException(new ClassNotFoundException("SomeClass"));
   }

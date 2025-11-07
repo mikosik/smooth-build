@@ -4,7 +4,7 @@ import static java.lang.ClassLoader.getPlatformClassLoader;
 import static java.util.Objects.requireNonNullElse;
 import static okio.Okio.buffer;
 import static org.smoothbuild.common.filesystem.base.Path.path;
-import static org.smoothbuild.common.reflect.ClassLoaders.mapClassLoader;
+import static org.smoothbuild.common.reflect.ClassLoaders.mappingClassLoader;
 import static org.smoothbuild.stdlib.file.FileHelper.fileArrayArrayToMap;
 import static org.smoothbuild.stdlib.file.FileHelper.fileArrayToMap;
 import static org.smoothbuild.stdlib.java.util.JavaNaming.toBinaryName;
@@ -81,7 +81,7 @@ public class JunitFunc {
 
   @SuppressWarnings("NullAway")
   private static ClassLoader classLoader(ImmutableMap<String, BTuple> filesMap) {
-    return mapClassLoader(getPlatformClassLoader(), path -> {
+    return mappingClassLoader(getPlatformClassLoader(), path -> {
       BTuple file = filesMap.get(path);
       return file == null ? null : buffer(fileContent(file).source()).inputStream();
     });
