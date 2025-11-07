@@ -28,7 +28,7 @@ public final class PickStep extends Step {
       container
           .log()
           .error("Index (" + index + ") out of bounds. Array size = " + elements.size() + ".");
-      return bOutput(null, container.messages());
+      return bOutput(container.messages());
     } else {
       return bOutput(elements.get(index), container.messages());
     }

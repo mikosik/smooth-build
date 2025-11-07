@@ -3,6 +3,7 @@ package org.smoothbuild.virtualmachine.dagger;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.testing.TestingByteString.byteString;
 import static org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader.NATIVE_METHOD_NAME;
+import static org.smoothbuild.virtualmachine.evaluate.step.BOutput.bOutput;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -93,8 +94,8 @@ public interface VmTestApi extends CommonTestApi {
     return output(value, bLogArrayEmpty());
   }
 
-  public default BOutput output(BValue value, BArray messages) {
-    return new BOutput(value, messages);
+  public default BOutput output(BValue value, BArray messages) throws BytecodeException {
+    return bOutput(value, messages);
   }
 
   public default BytecodeLoader bytecodeLoader(ClassLoader systemClassLoader) {
@@ -635,7 +636,7 @@ public interface VmTestApi extends CommonTestApi {
   }
 
   public default BArray bLogArrayWithOneError() throws BytecodeException {
-    return bArray(provide().bytecodeFactory().errorLog("error message"));
+    return bArray(bErrorLog("error message"));
   }
 
   public default BArray bLogArrayEmpty() throws BytecodeException {

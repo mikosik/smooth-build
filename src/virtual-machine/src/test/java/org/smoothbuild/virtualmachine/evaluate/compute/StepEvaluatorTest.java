@@ -336,7 +336,7 @@ public class StepEvaluatorTest extends VmTestContext {
     var result = stepEvaluator.evaluate(step, arg);
     await().until(() -> result.toMaybe().isSome());
 
-    assertThat(result.get().get()).isEqualTo(expectedOutput.value());
+    assertThat(result.get()).isEqualTo(expectedOutput.value());
     var report = report(step.label(), step.trace(), expectedOrigin, list());
     assertThat(provide().reporter().reports()).contains(report);
   }

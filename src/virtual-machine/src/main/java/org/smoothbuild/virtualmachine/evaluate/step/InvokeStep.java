@@ -37,7 +37,7 @@ public final class InvokeStep extends Step {
         .load(new BMethod((BTuple) input.get(METHOD_INDEX)))
         .mapOk(m -> invokeMethod(m, input.get(ARGUMENTS_INDEX), container))
         .ifErr(e -> container.log().fatal(e))
-        .okOrGet(() -> bOutput(null, container.messages()));
+        .okOrGet(() -> bOutput(container.messages()));
   }
 
   private BOutput invokeMethod(Method method, BValue arguments, Container container)
@@ -66,18 +66,18 @@ public final class InvokeStep extends Step {
       if (!hasErrors) {
         logFaultyImplementation(container, "It returned `null` but logged no error.");
       }
-      return bOutput(null, container.messages());
+      return bOutput(container.messages());
     }
     if (!evaluationType().equals(result.evaluationType())) {
       logFaultyImplementation(
           container,
           "Its declared result type == " + evaluationType().q()
               + " but it returned expression with type == " + result.kind().q() + ".");
-      return bOutput(null, container.messages());
+      return bOutput(container.messages());
     }
     if (hasErrors) {
       logFaultyImplementation(container, "It returned non-null value but logged error.");
-      return bOutput(null, container.messages());
+      return bOutput(container.messages());
     }
     return bOutput(result, container.messages());
   }

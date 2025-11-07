@@ -51,10 +51,7 @@ public class ComputationCache {
     try (BufferedSink sink = buffer(fileSystem.sink(toPath(hash)))) {
       var storedLogs = bOutput.storedLogs();
       sink.write(storedLogs.hash().toByteString());
-      var value = bOutput.value();
-      if (value != null) {
-        sink.write(value.hash().toByteString());
-      }
+      bOutput.value().ifPresent(v -> sink.write(v.hash().toByteString()));
     }
   }
 
@@ -92,7 +89,7 @@ public class ComputationCache {
         }
       }
       if (containsErrorOrAbove(storedLogArray)) {
-        return bOutput(null, storedLogArray);
+        return bOutput(storedLogArray);
       } else {
         var valueHash = Hash.read(source);
         var value = exprDb.get(valueHash);
