@@ -23,9 +23,9 @@ public final class ChooseStep extends Step {
     var components = input.elements();
     checkArgument(components.size() == 2);
     var index = index(components);
-    var choice = chosen(components);
-    var choose = container.factory().choice((BChoiceType) evaluationType(), index, choice);
-    return bOutput(choose, container.messages());
+    var chosen = chosen(components);
+    var choice = container.factory().choice((BChoiceType) evaluationType(), index, chosen);
+    return bOutput(choice, container.messages());
   }
 
   private BInt index(List<BValue> components) {
