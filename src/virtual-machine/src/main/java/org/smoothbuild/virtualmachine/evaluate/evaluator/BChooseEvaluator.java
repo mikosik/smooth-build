@@ -1,7 +1,7 @@
-package org.smoothbuild.virtualmachine.evaluate.step;
+package org.smoothbuild.virtualmachine.evaluate.evaluator;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.virtualmachine.evaluate.step.BOutput.bOutput;
+import static org.smoothbuild.virtualmachine.evaluate.evaluator.BOutput.bOutput;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.report.Trace;
@@ -13,13 +13,13 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 
-public final class ChooseStep extends Step {
-  public ChooseStep(BChoose choose, Trace trace) {
+public final class BChooseEvaluator extends BExprEvaluator {
+  public BChooseEvaluator(BChoose choose, Trace trace) {
     super("choose", choose.hash(), choose.evaluationType(), trace);
   }
 
   @Override
-  public BOutput run(BTuple input, Container container) throws BytecodeException {
+  public BOutput evaluate(BTuple input, Container container) throws BytecodeException {
     var components = input.elements();
     checkArgument(components.size() == 2);
     var index = index(components);
@@ -28,11 +28,11 @@ public final class ChooseStep extends Step {
     return bOutput(choice, container.messages());
   }
 
-  private BInt index(List<BValue> components) {
+  private static BInt index(List<BValue> components) {
     return (BInt) components.get(0);
   }
 
-  private BValue chosen(List<BValue> components) {
+  private static BValue chosen(List<BValue> components) {
     return components.get(1);
   }
 }

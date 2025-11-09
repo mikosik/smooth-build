@@ -29,22 +29,22 @@ public class CountingReporterTest {
   @Test
   void submit_call_is_forwarded_to_wrapped_reporter() {
     var logCounters = new LogCounters();
-    var stepReporter = mock(Reporter.class);
-    var countingReporter = new CountingReporter(stepReporter, logCounters);
+    var reporter = mock(Reporter.class);
+    var countingReporter = new CountingReporter(reporter, logCounters);
 
     var label = label(":name");
     var trace = new Trace();
     countingReporter.submit(report(label, trace, DISK, list(ERROR_LOG)));
 
-    verify(stepReporter).submit(report(label, trace, DISK, list(ERROR_LOG)));
+    verify(reporter).submit(report(label, trace, DISK, list(ERROR_LOG)));
   }
 
   @ParameterizedTest
   @MethodSource
   void counters_are_incremented(Log log, Level reportedLevel) {
     var logCounters = mock(LogCounters.class);
-    var stepReporter = mock(Reporter.class);
-    var countingReporter = new CountingReporter(stepReporter, logCounters);
+    var reporter = mock(Reporter.class);
+    var countingReporter = new CountingReporter(reporter, logCounters);
 
     var label = label(":name");
     var trace = new Trace();

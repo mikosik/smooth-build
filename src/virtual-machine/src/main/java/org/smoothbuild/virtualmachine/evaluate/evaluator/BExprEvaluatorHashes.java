@@ -1,19 +1,19 @@
-package org.smoothbuild.virtualmachine.evaluate.step;
+package org.smoothbuild.virtualmachine.evaluate.evaluator;
 
 import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 
-public class StepHashes {
-  public static Hash stepHash(Step step) {
-    return switch (step) {
-      case CombineStep _ -> combineHash();
-      case ChooseStep _ -> chooseHash();
-      case InvokeStep _ -> invokeHash();
-      case OrderStep orderStep -> orderHash(orderStep.evaluationType());
-      case PickStep _ -> pickHash();
-      case SelectStep _ -> selectHash();
+public class BExprEvaluatorHashes {
+  public static Hash evaluatorHash(BExprEvaluator bExprEvaluator) {
+    return switch (bExprEvaluator) {
+      case BCombineEvaluator _ -> combineHash();
+      case BChooseEvaluator _ -> chooseHash();
+      case BInvokeEvaluator _ -> invokeHash();
+      case BOrderEvaluator bOrderEvaluator -> orderHash(bOrderEvaluator.evaluationType());
+      case BPickEvaluator _ -> pickHash();
+      case BSelectEvaluator _ -> selectHash();
     };
   }
 

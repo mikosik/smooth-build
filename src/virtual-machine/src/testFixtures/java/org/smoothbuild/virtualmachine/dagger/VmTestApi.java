@@ -3,7 +3,7 @@ package org.smoothbuild.virtualmachine.dagger;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.testing.TestingByteString.byteString;
 import static org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader.NATIVE_METHOD_NAME;
-import static org.smoothbuild.virtualmachine.evaluate.step.BOutput.bOutput;
+import static org.smoothbuild.virtualmachine.evaluate.evaluator.BOutput.bOutput;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -67,9 +67,9 @@ import org.smoothbuild.virtualmachine.bytecode.load.BytecodeLoader;
 import org.smoothbuild.virtualmachine.bytecode.load.BytecodeMethodLoader;
 import org.smoothbuild.virtualmachine.bytecode.load.JarClassLoaderFactory;
 import org.smoothbuild.virtualmachine.bytecode.load.MethodLoader;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BOutput;
 import org.smoothbuild.virtualmachine.evaluate.execute.Job;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
-import org.smoothbuild.virtualmachine.evaluate.step.BOutput;
 
 public interface VmTestApi extends CommonTestApi {
   public VmTestComponent provide();

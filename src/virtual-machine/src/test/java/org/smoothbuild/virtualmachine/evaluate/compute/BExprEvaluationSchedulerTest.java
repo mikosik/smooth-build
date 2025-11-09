@@ -10,7 +10,6 @@ import static org.smoothbuild.common.log.base.Origin.MEMORY;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.testing.AwaitHelper.await;
 import static org.smoothbuild.virtualmachine.VmConstants.VM_EVALUATE;
-import static org.smoothbuild.virtualmachine.evaluate.step.BOutput.bOutput;
 
 import java.util.concurrent.ConcurrentHashMap;
 import org.jspecify.annotations.Nullable;
@@ -25,98 +24,98 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
-import org.smoothbuild.virtualmachine.evaluate.step.BOutput;
-import org.smoothbuild.virtualmachine.evaluate.step.CombineStep;
-import org.smoothbuild.virtualmachine.evaluate.step.InvokeStep;
-import org.smoothbuild.virtualmachine.evaluate.step.OrderStep;
-import org.smoothbuild.virtualmachine.evaluate.step.PickStep;
-import org.smoothbuild.virtualmachine.evaluate.step.SelectStep;
-import org.smoothbuild.virtualmachine.evaluate.step.Step;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BCombineEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BExprEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BInvokeEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BOrderEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BOutput;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BPickEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BSelectEvaluator;
 
-public class StepEvaluatorTest extends VmTestContext {
+public class BExprEvaluationSchedulerTest extends VmTestContext {
   @Nested
-  class _combine_step {
+  class _combine_evaluator {
     @Test
     void when_cached_in_memory_and_disk() throws Exception {
       var value = bInt(17);
-      var step = new CombineStep(bCombine(bInt()), trace());
+      var evaluator = new BCombineEvaluator(bCombine(bInt()), trace());
       var input = bTuple(value);
       var memory = bTuple(bInt(1));
       var disk = bTuple(bInt(2));
 
-      assertComputationResult(step, input, memory, disk, bOutput(memory), DISK);
+      assertComputationResult(evaluator, input, memory, disk, bOutput(memory), DISK);
     }
 
     @Test
     void when_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var step = new CombineStep(bCombine(bInt()), trace());
+      var evaluator = new BCombineEvaluator(bCombine(bInt()), trace());
       var input = bTuple(value);
       var disk = bTuple(bInt(2));
 
-      assertComputationResult(step, input, null, disk, bOutput(disk), DISK);
+      assertComputationResult(evaluator, input, null, disk, bOutput(disk), DISK);
     }
 
     @Test
     void when_not_cached() throws Exception {
       var value = bInt(17);
-      var step = new CombineStep(bCombine(bInt()), trace());
+      var evaluator = new BCombineEvaluator(bCombine(bInt()), trace());
       var input = bTuple(value);
 
-      assertComputationResult(step, input, null, null, bOutput(bTuple(value)), EXECUTION);
+      assertComputationResult(evaluator, input, null, null, bOutput(bTuple(value)), EXECUTION);
     }
 
     @Test
     void executed_computation_is_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var step = new CombineStep(bCombine(bInt()), trace());
+      var evaluator = new BCombineEvaluator(bCombine(bInt()), trace());
       var input = bTuple(value);
 
-      assertCachesState(step, input, null, bTuple(value));
+      assertCachesState(evaluator, input, null, bTuple(value));
     }
   }
 
   @Nested
-  class _invoke_step {
+  class _invoke_evaluator {
     @Nested
     class _with_pure_invoke {
       @Test
       void when_cached_in_memory_and_disk() throws Exception {
         var invoke = bReturnAbcInvoke(true);
-        var step = new InvokeStep(invoke, trace());
-        var input = argumentsForInvokeStep(invoke);
+        var evaluator = new BInvokeEvaluator(invoke, trace());
+        var input = argumentsForInvokeEvaluator(invoke);
         var memory = bString("def");
         var disk = bString("ghi");
 
-        assertComputationResult(step, input, memory, disk, bOutput(memory), DISK);
+        assertComputationResult(evaluator, input, memory, disk, bOutput(memory), DISK);
       }
 
       @Test
       void when_cached_on_disk() throws Exception {
         var invoke = bReturnAbcInvoke(true);
-        var step = new InvokeStep(invoke, trace());
-        var input = argumentsForInvokeStep(invoke);
+        var evaluator = new BInvokeEvaluator(invoke, trace());
+        var input = argumentsForInvokeEvaluator(invoke);
         var disk = bString("ghi");
 
-        assertComputationResult(step, input, null, disk, bOutput(disk), DISK);
+        assertComputationResult(evaluator, input, null, disk, bOutput(disk), DISK);
       }
 
       @Test
       void when_not_cached() throws Exception {
         var invoke = bReturnAbcInvoke(true);
-        var step = new InvokeStep(invoke, trace());
-        var input = argumentsForInvokeStep(invoke);
+        var evaluator = new BInvokeEvaluator(invoke, trace());
+        var input = argumentsForInvokeEvaluator(invoke);
 
-        assertComputationResult(step, input, null, null, bOutput(bString("abc")), EXECUTION);
+        assertComputationResult(evaluator, input, null, null, bOutput(bString("abc")), EXECUTION);
       }
 
       @Test
       void executed_computation_is_cached_on_disk() throws Exception {
         var invoke = bReturnAbcInvoke(true);
-        var step = new InvokeStep(invoke, trace());
-        var input = argumentsForInvokeStep(invoke);
+        var evaluator = new BInvokeEvaluator(invoke, trace());
+        var input = argumentsForInvokeEvaluator(invoke);
 
-        assertCachesState(step, input, null, bString("abc"));
+        assertCachesState(evaluator, input, null, bString("abc"));
       }
     }
 
@@ -125,44 +124,44 @@ public class StepEvaluatorTest extends VmTestContext {
       @Test
       void when_cached_in_memory_and_disk() throws Exception {
         var invoke = bReturnAbcInvoke(false);
-        var step = new InvokeStep(invoke, trace());
-        var input = argumentsForInvokeStep(invoke);
+        var evaluator = new BInvokeEvaluator(invoke, trace());
+        var input = argumentsForInvokeEvaluator(invoke);
         var memory = bString("def");
         var disk = bString("ghi");
 
-        assertComputationResult(step, input, memory, disk, bOutput(memory), MEMORY);
+        assertComputationResult(evaluator, input, memory, disk, bOutput(memory), MEMORY);
       }
 
       @Test
       void when_cached_on_disk() throws Exception {
         var invoke = bReturnAbcInvoke(false);
-        var step = new InvokeStep(invoke, trace());
-        var input = argumentsForInvokeStep(invoke);
+        var evaluator = new BInvokeEvaluator(invoke, trace());
+        var input = argumentsForInvokeEvaluator(invoke);
         var disk = bString("ghi");
 
-        assertComputationResult(step, input, null, disk, bOutput(bString("abc")), EXECUTION);
+        assertComputationResult(evaluator, input, null, disk, bOutput(bString("abc")), EXECUTION);
       }
 
       @Test
       void when_not_cached() throws Exception {
         var invoke = bReturnAbcInvoke(false);
-        var step = new InvokeStep(invoke, trace());
-        var input = argumentsForInvokeStep(invoke);
+        var evaluator = new BInvokeEvaluator(invoke, trace());
+        var input = argumentsForInvokeEvaluator(invoke);
 
-        assertComputationResult(step, input, null, null, bOutput(bString("abc")), EXECUTION);
+        assertComputationResult(evaluator, input, null, null, bOutput(bString("abc")), EXECUTION);
       }
 
       @Test
       void executed_computation_is_cached_on_disk() throws Exception {
         var invoke = bReturnAbcInvoke(false);
-        var step = new InvokeStep(invoke, trace());
-        var input = argumentsForInvokeStep(invoke);
+        var evaluator = new BInvokeEvaluator(invoke, trace());
+        var input = argumentsForInvokeEvaluator(invoke);
 
-        assertCachesState(step, input, bOutput(bString("abc"), bLogArrayEmpty()), null);
+        assertCachesState(evaluator, input, bOutput(bString("abc"), bLogArrayEmpty()), null);
       }
     }
 
-    private BTuple argumentsForInvokeStep(BInvoke invoke) throws BytecodeException {
+    private BTuple argumentsForInvokeEvaluator(BInvoke invoke) throws BytecodeException {
       var subExprs = invoke.subExprs();
       return bTuple(
           (BValue) subExprs.method(), (BValue) subExprs.isPure(), (BValue) subExprs.arguments());
@@ -170,83 +169,83 @@ public class StepEvaluatorTest extends VmTestContext {
   }
 
   @Nested
-  class _order_step {
+  class _order_evaluator {
     @Test
     void when_cached_in_memory_and_disk() throws Exception {
       var value = bInt(17);
-      var step = new OrderStep(bOrder(bIntType()), trace());
+      var evaluator = new BOrderEvaluator(bOrder(bIntType()), trace());
       var input = bTuple(value);
       var memory = bArray(bInt(1));
       var disk = bArray(bInt(2));
 
-      assertComputationResult(step, input, memory, disk, bOutput(memory), DISK);
+      assertComputationResult(evaluator, input, memory, disk, bOutput(memory), DISK);
     }
 
     @Test
     void when_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var step = new OrderStep(bOrder(bIntType()), trace());
+      var evaluator = new BOrderEvaluator(bOrder(bIntType()), trace());
       var input = bTuple(value);
       var disk = bArray(bInt(2));
 
-      assertComputationResult(step, input, null, disk, bOutput(disk), DISK);
+      assertComputationResult(evaluator, input, null, disk, bOutput(disk), DISK);
     }
 
     @Test
     void when_not_cached() throws Exception {
       var value = bInt(17);
-      var step = new OrderStep(bOrder(bIntType()), trace());
+      var evaluator = new BOrderEvaluator(bOrder(bIntType()), trace());
       var input = bTuple(value);
 
-      assertComputationResult(step, input, null, null, bOutput(bArray(value)), EXECUTION);
+      assertComputationResult(evaluator, input, null, null, bOutput(bArray(value)), EXECUTION);
     }
 
     @Test
     void executed_computation_is_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var step = new OrderStep(bOrder(bIntType()), trace());
+      var evaluator = new BOrderEvaluator(bOrder(bIntType()), trace());
       var input = bTuple(value);
 
-      assertCachesState(step, input, null, bArray(value));
+      assertCachesState(evaluator, input, null, bArray(value));
     }
   }
 
   @Nested
-  class _pick_step {
+  class _pick_evaluator {
     @Test
     void when_cached_in_memory_and_disk() throws Exception {
       var value = bInt(17);
-      var step = new PickStep(bPick(), trace());
+      var evaluator = new BPickEvaluator(bPick(), trace());
       var input = bTuple(bArray(value), bInt(0));
       var memory = bInt(1);
       var disk = bInt(2);
 
-      assertComputationResult(step, input, memory, disk, bOutput(memory), DISK);
+      assertComputationResult(evaluator, input, memory, disk, bOutput(memory), DISK);
     }
 
     @Test
     void when_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var step = new PickStep(bPick(), trace());
+      var evaluator = new BPickEvaluator(bPick(), trace());
       var input = bTuple(bArray(value), bInt(0));
       var disk = bInt(2);
 
-      assertComputationResult(step, input, null, disk, bOutput(disk), DISK);
+      assertComputationResult(evaluator, input, null, disk, bOutput(disk), DISK);
     }
 
     @Test
     void when_not_cached() throws Exception {
       var value = bInt(17);
-      var step = new PickStep(bPick(), trace());
+      var evaluator = new BPickEvaluator(bPick(), trace());
       var input = bTuple(bArray(value), bInt(0));
 
-      assertComputationResult(step, input, null, null, bOutput(value), EXECUTION);
+      assertComputationResult(evaluator, input, null, null, bOutput(value), EXECUTION);
     }
 
     @Test
     void executed_computation_is_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var task = new PickStep(bPick(), trace());
+      var task = new BPickEvaluator(bPick(), trace());
       var input = bTuple(bArray(value), bInt(0));
 
       assertCachesState(task, input, null, value);
@@ -254,11 +253,11 @@ public class StepEvaluatorTest extends VmTestContext {
   }
 
   @Nested
-  class _select_step {
+  class _select_evaluator {
     @Test
     void when_cached_in_memory_and_disk() throws Exception {
       var value = bInt(17);
-      var task = new SelectStep(bSelect(), trace());
+      var task = new BSelectEvaluator(bSelect(), trace());
       var input = bTuple(bTuple(value), bInt(0));
       var memory = bInt(1);
       var disk = bInt(2);
@@ -269,7 +268,7 @@ public class StepEvaluatorTest extends VmTestContext {
     @Test
     void when_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var task = new SelectStep(bSelect(), trace());
+      var task = new BSelectEvaluator(bSelect(), trace());
       var input = bTuple(bTuple(value), bInt(0));
       var disk = bInt(2);
 
@@ -279,7 +278,7 @@ public class StepEvaluatorTest extends VmTestContext {
     @Test
     void when_not_cached() throws Exception {
       var value = bInt(17);
-      var task = new SelectStep(bSelect(), trace());
+      var task = new BSelectEvaluator(bSelect(), trace());
       var input = bTuple(bTuple(value), bInt(0));
 
       assertComputationResult(task, input, null, null, bOutput(value), EXECUTION);
@@ -288,7 +287,7 @@ public class StepEvaluatorTest extends VmTestContext {
     @Test
     void executed_computation_is_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var task = new SelectStep(bSelect(), trace());
+      var task = new BSelectEvaluator(bSelect(), trace());
       var input = bTuple(bTuple(value), bInt(0));
 
       assertCachesState(task, input, null, value);
@@ -296,23 +295,28 @@ public class StepEvaluatorTest extends VmTestContext {
   }
 
   private void assertComputationResult(
-      Step step,
+      BExprEvaluator bExprEvaluator,
       BTuple input,
       @Nullable BValue memoryValue,
       @Nullable BValue diskValue,
       BOutput expectedOutput,
       Origin expectedOrigin)
       throws Exception {
-    var stepEvaluator = stepEvaluatorWithCaches(step, input, memoryValue, diskValue);
-    assertComputationResult(stepEvaluator, step, input, expectedOutput, expectedOrigin);
+    var evaluationScheduler =
+        evaluationSchedulerWithCaches(bExprEvaluator, input, memoryValue, diskValue);
+    assertComputationResult(
+        evaluationScheduler, bExprEvaluator, input, expectedOutput, expectedOrigin);
   }
 
-  private StepEvaluator stepEvaluatorWithCaches(
-      Step step, BTuple input, @Nullable BValue memoryValue, @Nullable BValue diskValue)
+  private BExprEvaluationScheduler evaluationSchedulerWithCaches(
+      BExprEvaluator bExprEvaluator,
+      BTuple input,
+      @Nullable BValue memoryValue,
+      @Nullable BValue diskValue)
       throws Exception {
     var computationCache = provide().computationCache();
     var computationHashFactory = provide().computationHashFactory();
-    var computationHash = computationHashFactory.create(step, input);
+    var computationHash = computationHashFactory.create(bExprEvaluator, input);
     if (diskValue != null) {
       computationCache.write(computationHash, bOutput(diskValue));
     }
@@ -320,7 +324,7 @@ public class StepEvaluatorTest extends VmTestContext {
     if (memoryValue != null) {
       memoryCache.put(computationHash, promise(bOutput(memoryValue, bLogArrayEmpty())));
     }
-    return new StepEvaluator(
+    return new BExprEvaluationScheduler(
         computationHashFactory,
         () -> provide().container(),
         computationCache,
@@ -330,50 +334,55 @@ public class StepEvaluatorTest extends VmTestContext {
   }
 
   private void assertComputationResult(
-      StepEvaluator stepEvaluator,
-      Step step,
+      BExprEvaluationScheduler bExprEvaluationScheduler,
+      BExprEvaluator bExprEvaluator,
       BTuple input,
       BOutput expectedOutput,
       Origin expectedOrigin)
       throws Exception {
     var arg = input.elements().map(Tasks::argument);
-    var result = stepEvaluator.evaluate(step, arg);
-    await().until(() -> result.toMaybe().isSome());
+    var promise = bExprEvaluationScheduler.scheduleEvaluation(bExprEvaluator, arg);
+    await().until(() -> promise.toMaybe().isSome());
 
-    assertThat(result.get()).isEqualTo(expectedOutput.value());
-    var label = VM_EVALUATE.append(":" + step.name());
-    var report = report(label, step.trace(), expectedOrigin, list());
+    assertThat(promise.get()).isEqualTo(expectedOutput.value());
+    var label = VM_EVALUATE.append(":" + bExprEvaluator.name());
+    var report = report(label, bExprEvaluator.trace(), expectedOrigin, list());
     assertThat(provide().reporter().reports()).contains(report);
   }
 
   private void assertCachesState(
-      Step step, BTuple input, @Nullable BOutput memoryValue, @Nullable BValue diskValue)
+      BExprEvaluator bExprEvaluator,
+      BTuple input,
+      @Nullable BOutput memoryValue,
+      @Nullable BValue diskValue)
       throws Exception {
     var computationCache = provide().computationCache();
     var memoryCache = new ConcurrentHashMap<Hash, Promise<BOutput>>();
     var computationHashFactory = provide().computationHashFactory();
     var scheduler = provide().scheduler();
-    var stepEvaluator = new StepEvaluator(
+    var evaluationScheduler = new BExprEvaluationScheduler(
         computationHashFactory,
         () -> provide().container(),
         computationCache,
         scheduler,
         provide().bytecodeFactory(),
         memoryCache);
-    var result = stepEvaluator.evaluate(step, input.elements().map(Tasks::argument));
-    await().until(() -> result.toMaybe().isSome());
+    var promise = evaluationScheduler.scheduleEvaluation(
+        bExprEvaluator, input.elements().map(Tasks::argument));
+    await().until(() -> promise.toMaybe().isSome());
 
-    var stepHash = computationHashFactory.create(step, input);
+    var evaluationHash = computationHashFactory.create(bExprEvaluator, input);
 
     if (memoryValue == null) {
-      assertThat(memoryCache.containsKey(stepHash)).isFalse();
+      assertThat(memoryCache.containsKey(evaluationHash)).isFalse();
     } else {
-      assertThat(requireNonNull(memoryCache.get(stepHash)).get()).isEqualTo(memoryValue);
+      assertThat(requireNonNull(memoryCache.get(evaluationHash)).get()).isEqualTo(memoryValue);
     }
     if (diskValue == null) {
-      assertThat(computationCache.contains(stepHash)).isFalse();
+      assertThat(computationCache.contains(evaluationHash)).isFalse();
     } else {
-      assertThat(computationCache.read(stepHash, diskValue.type())).isEqualTo(bOutput(diskValue));
+      assertThat(computationCache.read(evaluationHash, diskValue.type()))
+          .isEqualTo(bOutput(diskValue));
     }
   }
 }

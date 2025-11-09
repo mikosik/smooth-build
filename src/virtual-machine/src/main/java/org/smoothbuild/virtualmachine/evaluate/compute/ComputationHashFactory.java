@@ -1,14 +1,14 @@
 package org.smoothbuild.virtualmachine.evaluate.compute;
 
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.virtualmachine.evaluate.step.StepHashes.stepHash;
+import static org.smoothbuild.virtualmachine.evaluate.evaluator.BExprEvaluatorHashes.evaluatorHash;
 
 import dagger.Lazy;
 import jakarta.inject.Inject;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.dagger.Sandbox;
-import org.smoothbuild.virtualmachine.evaluate.step.Step;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BExprEvaluator;
 
 public class ComputationHashFactory {
   /**
@@ -22,7 +22,7 @@ public class ComputationHashFactory {
     this.sandboxHash = sandboxHash;
   }
 
-  public Hash create(Step step, BTuple args) {
-    return Hash.of(list(sandboxHash.get(), stepHash(step), args.hash()));
+  public Hash create(BExprEvaluator bExprEvaluator, BTuple args) {
+    return Hash.of(list(sandboxHash.get(), evaluatorHash(bExprEvaluator), args.hash()));
   }
 }

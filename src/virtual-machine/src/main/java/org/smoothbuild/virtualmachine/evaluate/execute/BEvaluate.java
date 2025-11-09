@@ -50,14 +50,14 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch.BSubExprs;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
-import org.smoothbuild.virtualmachine.evaluate.compute.StepEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.step.ChooseStep;
-import org.smoothbuild.virtualmachine.evaluate.step.CombineStep;
-import org.smoothbuild.virtualmachine.evaluate.step.InvokeStep;
-import org.smoothbuild.virtualmachine.evaluate.step.OrderStep;
-import org.smoothbuild.virtualmachine.evaluate.step.PickStep;
-import org.smoothbuild.virtualmachine.evaluate.step.SelectStep;
-import org.smoothbuild.virtualmachine.evaluate.step.Step;
+import org.smoothbuild.virtualmachine.evaluate.compute.BExprEvaluationScheduler;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BChooseEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BCombineEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BExprEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BInvokeEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BOrderEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BPickEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BSelectEvaluator;
 
 /**
  * Evaluates BExpr.
@@ -66,18 +66,18 @@ import org.smoothbuild.virtualmachine.evaluate.step.Step;
 public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> {
   private static final Label SCHEDULE_CALL_LABEL = VM_LABEL.append(":scheduleCall");
   private final Scheduler scheduler;
-  private final StepEvaluator stepEvaluator;
+  private final BExprEvaluationScheduler bExprEvaluationScheduler;
   private final BytecodeFactory bytecodeFactory;
   private final BReferenceInliner bReferenceInliner;
 
   @Inject
   public BEvaluate(
       Scheduler scheduler,
-      StepEvaluator stepEvaluator,
+      BExprEvaluationScheduler bExprEvaluationScheduler,
       BytecodeFactory bytecodeFactory,
       BReferenceInliner bReferenceInliner) {
     this.scheduler = scheduler;
-    this.stepEvaluator = stepEvaluator;
+    this.bExprEvaluationScheduler = bExprEvaluationScheduler;
     this.bytecodeFactory = bytecodeFactory;
     this.bReferenceInliner = bReferenceInliner;
   }
@@ -110,17 +110,17 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
     Promise<Maybe<BValue>> doScheduleJob(Job job) throws BytecodeException {
       return switch (job.expr()) {
         case BCall call -> scheduleCall(job, call);
-        case BChoose choose -> scheduleOperation(job, choose, ChooseStep::new);
-        case BCombine combine -> scheduleOperation(job, combine, CombineStep::new);
+        case BChoose choose -> scheduleOperation(job, choose, BChooseEvaluator::new);
+        case BCombine combine -> scheduleOperation(job, combine, BCombineEvaluator::new);
         case BFold fold -> scheduleFold(job, fold);
         case BIf if_ -> scheduleIf(job, if_);
-        case BInvoke invoke -> scheduleOperation(job, invoke, InvokeStep::new);
+        case BInvoke invoke -> scheduleOperation(job, invoke, BInvokeEvaluator::new);
         case BLambda _ -> scheduleInlineTask(job);
         case BMap map -> scheduleMap(job, map);
-        case BOrder order -> scheduleOperation(job, order, OrderStep::new);
-        case BPick pick -> scheduleOperation(job, pick, PickStep::new);
+        case BOrder order -> scheduleOperation(job, order, BOrderEvaluator::new);
+        case BPick pick -> scheduleOperation(job, pick, BPickEvaluator::new);
         case BReference reference -> scheduleReference(job, reference);
-        case BSelect select -> scheduleOperation(job, select, SelectStep::new);
+        case BSelect select -> scheduleOperation(job, select, BSelectEvaluator::new);
         case BSwitch switch_ -> scheduleSwitch(job, switch_);
         case BValue value -> promise(some(value));
       };
@@ -304,12 +304,14 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
     }
 
     private <T extends BOperation> Promise<Maybe<BValue>> scheduleOperation(
-        Job job, T operation, Function2<T, Trace, Step, BytecodeException> stepFactory)
+        Job job,
+        T operation,
+        Function2<T, Trace, BExprEvaluator, BytecodeException> evaluatorFactory)
         throws BytecodeException {
-      var step = stepFactory.apply(operation, job.trace());
+      var bExprEvaluator = evaluatorFactory.apply(operation, job.trace());
       List<Job> subExprJobs = operation.subExprs().toList().map(e -> newJob(e, job));
       List<Promise<Maybe<BValue>>> subExprResults = subExprJobs.map(this::scheduleJob);
-      return stepEvaluator.evaluate(step, subExprResults);
+      return bExprEvaluationScheduler.scheduleEvaluation(bExprEvaluator, subExprResults);
     }
 
     private Promise<Maybe<BValue>> scheduleReference(Job job, BReference reference)

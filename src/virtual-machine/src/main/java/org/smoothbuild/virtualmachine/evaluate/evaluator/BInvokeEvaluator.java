@@ -1,11 +1,11 @@
-package org.smoothbuild.virtualmachine.evaluate.step;
+package org.smoothbuild.virtualmachine.evaluate.evaluator;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke.ARGUMENTS_INDEX;
 import static org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke.METHOD_INDEX;
-import static org.smoothbuild.virtualmachine.evaluate.step.BOutput.bOutput;
-import static org.smoothbuild.virtualmachine.evaluate.step.Purity.IMPURE;
-import static org.smoothbuild.virtualmachine.evaluate.step.Purity.PURE;
+import static org.smoothbuild.virtualmachine.evaluate.evaluator.BOutput.bOutput;
+import static org.smoothbuild.virtualmachine.evaluate.evaluator.Purity.IMPURE;
+import static org.smoothbuild.virtualmachine.evaluate.evaluator.Purity.PURE;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -20,8 +20,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 
-public final class InvokeStep extends Step {
-  public InvokeStep(BInvoke invoke, Trace trace) {
+public final class BInvokeEvaluator extends BExprEvaluator {
+  public BInvokeEvaluator(BInvoke invoke, Trace trace) {
     super("invoke", invoke.hash(), invoke.evaluationType(), trace);
   }
 
@@ -32,7 +32,7 @@ public final class InvokeStep extends Step {
   }
 
   @Override
-  public BOutput run(BTuple input, Container container) throws IOException {
+  public BOutput evaluate(BTuple input, Container container) throws IOException {
     return container
         .nativeMethodLoader()
         .load(new BMethod((BTuple) input.get(METHOD_INDEX)))

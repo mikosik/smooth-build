@@ -12,7 +12,7 @@ import static org.smoothbuild.virtualmachine.VmConstants.VM_LABEL;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.containsFatal;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.level;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.message;
-import static org.smoothbuild.virtualmachine.evaluate.step.Purity.PURE;
+import static org.smoothbuild.virtualmachine.evaluate.evaluator.Purity.PURE;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -35,15 +35,15 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.evaluate.step.BOutput;
-import org.smoothbuild.virtualmachine.evaluate.step.Purity;
-import org.smoothbuild.virtualmachine.evaluate.step.Step;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BExprEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BOutput;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.Purity;
 
 /**
  * This class is thread-safe.
  */
 @PerCommand
-public class StepEvaluator {
+public class BExprEvaluationScheduler {
   private final ComputationHashFactory computationHashFactory;
   private final Provider<Container> containerProvider;
   private final ComputationCache diskCache;
@@ -52,7 +52,7 @@ public class StepEvaluator {
   private final BytecodeFactory bytecodeFactory;
 
   @Inject
-  public StepEvaluator(
+  public BExprEvaluationScheduler(
       ComputationHashFactory computationHashFactory,
       Provider<Container> containerProvider,
       ComputationCache diskCache,
@@ -67,7 +67,7 @@ public class StepEvaluator {
         new ConcurrentHashMap<>());
   }
 
-  public StepEvaluator(
+  public BExprEvaluationScheduler(
       ComputationHashFactory computationHashFactory,
       Provider<Container> containerProvider,
       ComputationCache diskCache,
@@ -82,13 +82,14 @@ public class StepEvaluator {
     this.memoryCache = memoryCache;
   }
 
-  public Promise<Maybe<BValue>> evaluate(
-      Step step, List<? extends Promise<? extends Maybe<BValue>>> subExprResults) {
+  public Promise<Maybe<BValue>> scheduleEvaluation(
+      BExprEvaluator bExprEvaluator,
+      List<? extends Promise<? extends Maybe<BValue>>> subExprResults) {
     TaskX<BValue, BValue> taskX = (bValues) -> {
       try {
-        return evaluateStep(step, toInput(bValues));
+        return evaluate(bExprEvaluator, toInput(bValues));
       } catch (IOException | InterruptedException e) {
-        return outputForException(step, e);
+        return outputForException(bExprEvaluator, e);
       }
     };
     return scheduler.submit(taskX, subExprResults);
@@ -98,48 +99,53 @@ public class StepEvaluator {
     return bytecodeFactory.tuple(depResults);
   }
 
-  protected Output<BValue> evaluateStep(Step step, BTuple input)
+  protected Output<BValue> evaluate(BExprEvaluator bExprEvaluator, BTuple input)
       throws InterruptedException, IOException {
-    var purity = step.purity(input);
-    var hash = computationHashFactory.create(step, input);
+    var purity = bExprEvaluator.purity(input);
+    var hash = computationHashFactory.create(bExprEvaluator, input);
     var resultPromise = Promise.<BOutput>promise();
     var existingPromise = memoryCache.putIfAbsent(hash, resultPromise);
     if (existingPromise != null) {
-      var result = scheduleTaskWaitingForOtherTaskResult(step, purity, existingPromise);
+      var result = scheduleTaskWaitingForOtherTaskResult(bExprEvaluator, purity, existingPromise);
       var label = VM_LABEL.append(":scheduleJoin");
-      return schedulingOutput(result, report(label, step.trace(), list()));
+      return schedulingOutput(result, report(label, bExprEvaluator.trace(), list()));
     } else if (purity == PURE && diskCache.contains(hash)) {
-      return readEvaluationFromDiskCache(step, hash, resultPromise);
+      return readEvaluationFromDiskCache(bExprEvaluator, hash, resultPromise);
     } else {
-      return evaluateNow(step, input, resultPromise, purity, hash);
+      return evaluateNow(bExprEvaluator, input, resultPromise, purity, hash);
     }
   }
 
   private Promise<Maybe<BValue>> scheduleTaskWaitingForOtherTaskResult(
-      Step step, Purity purity, Promise<BOutput> promise) {
+      BExprEvaluator bExprEvaluator, Purity purity, Promise<BOutput> promise) {
     Task1<BOutput, BValue> task = (bOutput) -> {
       try {
-        return newOutput(step, bOutput, purity.cacheLevel());
+        return newOutput(bExprEvaluator, bOutput, purity.cacheLevel());
       } catch (BytecodeException e) {
-        return outputForException(step, e);
+        return outputForException(bExprEvaluator, e);
       }
     };
     return scheduler.submit(task, promise.map(Maybe::some));
   }
 
   private Output<BValue> readEvaluationFromDiskCache(
-      Step step, Hash hash, MutablePromise<BOutput> resultPromise) throws IOException {
-    var bOutput = diskCache.read(hash, step.evaluationType());
+      BExprEvaluator bExprEvaluator, Hash hash, MutablePromise<BOutput> resultPromise)
+      throws IOException {
+    var bOutput = diskCache.read(hash, bExprEvaluator.evaluationType());
     resultPromise.accept(bOutput);
     memoryCache.remove(hash);
-    return newOutput(step, bOutput, DISK);
+    return newOutput(bExprEvaluator, bOutput, DISK);
   }
 
   private Output<BValue> evaluateNow(
-      Step step, BTuple input, MutablePromise<BOutput> resultPromise, Purity purity, Hash hash)
+      BExprEvaluator bExprEvaluator,
+      BTuple input,
+      MutablePromise<BOutput> resultPromise,
+      Purity purity,
+      Hash hash)
       throws IOException {
     var container = containerProvider.get();
-    var bOutput = step.run(input, container);
+    var bOutput = bExprEvaluator.evaluate(input, container);
     resultPromise.accept(bOutput);
     if (purity == PURE) {
       if (!containsFatal(bOutput.storedLogs())) {
@@ -147,27 +153,27 @@ public class StepEvaluator {
       }
       memoryCache.remove(hash);
     }
-    return newOutput(step, bOutput, EXECUTION);
+    return newOutput(bExprEvaluator, bOutput, EXECUTION);
   }
 
-  private static Output<BValue> newOutput(Step step, BOutput bOutput, Origin source)
-      throws BytecodeException {
-    var report = newReport(step, bOutput, source);
+  private static Output<BValue> newOutput(
+      BExprEvaluator bExprEvaluator, BOutput bOutput, Origin source) throws BytecodeException {
+    var report = newReport(bExprEvaluator, bOutput, source);
     return bOutput.value().map(v -> output(v, report)).getOr(output(report));
   }
 
-  private static Output<BValue> outputForException(Step step, Exception e) {
+  private static Output<BValue> outputForException(BExprEvaluator bExprEvaluator, Exception e) {
     var fatal = fatal("Vm evaluation Task failed with exception:", e);
-    return output(report(VM_EVALUATE, step.trace(), list(fatal)));
+    return output(report(VM_EVALUATE, bExprEvaluator.trace(), list(fatal)));
   }
 
-  private static Report newReport(Step step, BOutput bOutput, Origin origin)
+  private static Report newReport(BExprEvaluator bExprEvaluator, BOutput bOutput, Origin origin)
       throws BytecodeException {
     var logs = bOutput
         .storedLogs()
         .elements(BTuple.class)
         .map(message -> new Log(level(message), message(message)));
-    var label = VM_EVALUATE.append(":" + step.name());
-    return report(label, step.trace(), origin, logs);
+    var label = VM_EVALUATE.append(":" + bExprEvaluator.name());
+    return report(label, bExprEvaluator.trace(), origin, logs);
   }
 }

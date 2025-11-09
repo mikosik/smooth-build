@@ -1,4 +1,4 @@
-package org.smoothbuild.virtualmachine.evaluate.step;
+package org.smoothbuild.virtualmachine.evaluate.evaluator;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.Maybe.some;

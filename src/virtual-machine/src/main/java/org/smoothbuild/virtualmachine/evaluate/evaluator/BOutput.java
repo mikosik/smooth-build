@@ -1,4 +1,4 @@
-package org.smoothbuild.virtualmachine.evaluate.step;
+package org.smoothbuild.virtualmachine.evaluate.evaluator;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.common.collect.Maybe.none;

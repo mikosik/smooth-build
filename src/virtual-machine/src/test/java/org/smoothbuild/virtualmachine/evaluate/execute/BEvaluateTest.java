@@ -54,10 +54,10 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
+import org.smoothbuild.virtualmachine.evaluate.compute.BExprEvaluationScheduler;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
-import org.smoothbuild.virtualmachine.evaluate.compute.StepEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BExprEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
-import org.smoothbuild.virtualmachine.evaluate.step.Step;
 import org.smoothbuild.virtualmachine.testing.func.nativ.ConcatStrings;
 
 public class BEvaluateTest extends VmTestContext {
@@ -551,20 +551,21 @@ public class BEvaluateTest extends VmTestContext {
       }
 
       @Test
-      void step_evaluator_that_throws_exception_is_detected() throws Exception {
+      void evaluation_scheduler_that_throws_exception_is_detected() throws Exception {
         var expr = bOrder();
         var runtimeException = new RuntimeException();
         var scheduler = provide().scheduler();
-        var stepEvaluator =
-            new StepEvaluator(mock(), mock(), mock(), scheduler, provide().bytecodeFactory()) {
+        var bExprEvaluationScheduler =
+            new BExprEvaluationScheduler(
+                mock(), mock(), mock(), scheduler, provide().bytecodeFactory()) {
               @Override
-              public Output<BValue> evaluateStep(Step task, BTuple input) {
+              public Output<BValue> evaluate(BExprEvaluator task, BTuple input) {
                 throw runtimeException;
               }
             };
         var bEvaluate = new BEvaluate(
             provide().scheduler(),
-            stepEvaluator,
+            bExprEvaluationScheduler,
             provide().bytecodeFactory(),
             provide().bReferenceInliner());
 
@@ -820,7 +821,7 @@ public class BEvaluateTest extends VmTestContext {
   private CountingBEvaluate countingBEvaluate() {
     return new CountingBEvaluate(
         provide().scheduler(),
-        provide().stepEvaluator(),
+        provide().bExprEvaluationScheduler(),
         provide().bytecodeFactory(),
         provide().bReferenceInliner());
   }
@@ -830,10 +831,10 @@ public class BEvaluateTest extends VmTestContext {
 
     private CountingBEvaluate(
         Scheduler scheduler,
-        StepEvaluator stepEvaluator,
+        BExprEvaluationScheduler bExprEvaluationScheduler,
         BytecodeFactory bytecodeFactory,
         BReferenceInliner bReferenceInliner) {
-      super(scheduler, stepEvaluator, bytecodeFactory, bReferenceInliner);
+      super(scheduler, bExprEvaluationScheduler, bytecodeFactory, bReferenceInliner);
     }
 
     @Override
@@ -864,7 +865,7 @@ public class BEvaluateTest extends VmTestContext {
   }
 
   private BEvaluate bEvaluate(NativeMethodLoader nativeMethodLoader) {
-    var stepEvaluator = new StepEvaluator(
+    var bExprEvaluationScheduler = new BExprEvaluationScheduler(
         provide().computationHashFactory(),
         () -> container(nativeMethodLoader),
         provide().computationCache(),
@@ -872,7 +873,7 @@ public class BEvaluateTest extends VmTestContext {
         provide().bytecodeFactory());
     return new BEvaluate(
         provide().scheduler(),
-        stepEvaluator,
+        bExprEvaluationScheduler,
         provide().bytecodeFactory(),
         provide().bReferenceInliner());
   }
