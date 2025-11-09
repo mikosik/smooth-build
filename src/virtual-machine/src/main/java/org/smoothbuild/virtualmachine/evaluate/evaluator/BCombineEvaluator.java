@@ -14,7 +14,7 @@ public final class BCombineEvaluator extends BExprEvaluator {
   }
 
   @Override
-  public BOutput evaluate(BTuple input, Container container) throws BytecodeException {
-    return bOutput(input, container.messages());
+  public BOutput evaluate(BTuple subExprValues, Container container) throws BytecodeException {
+    return bOutput(subExprValues, container.messages());
   }
 }

@@ -296,27 +296,27 @@ public class BExprEvaluationSchedulerTest extends VmTestContext {
 
   private void assertComputationResult(
       BExprEvaluator bExprEvaluator,
-      BTuple input,
+      BTuple subExprValues,
       @Nullable BValue memoryValue,
       @Nullable BValue diskValue,
       BOutput expectedOutput,
       Origin expectedOrigin)
       throws Exception {
     var evaluationScheduler =
-        evaluationSchedulerWithCaches(bExprEvaluator, input, memoryValue, diskValue);
+        evaluationSchedulerWithCaches(bExprEvaluator, subExprValues, memoryValue, diskValue);
     assertComputationResult(
-        evaluationScheduler, bExprEvaluator, input, expectedOutput, expectedOrigin);
+        evaluationScheduler, bExprEvaluator, subExprValues, expectedOutput, expectedOrigin);
   }
 
   private BExprEvaluationScheduler evaluationSchedulerWithCaches(
       BExprEvaluator bExprEvaluator,
-      BTuple input,
+      BTuple subExprValues,
       @Nullable BValue memoryValue,
       @Nullable BValue diskValue)
       throws Exception {
     var computationCache = provide().computationCache();
     var computationHashFactory = provide().computationHashFactory();
-    var computationHash = computationHashFactory.create(bExprEvaluator, input);
+    var computationHash = computationHashFactory.create(bExprEvaluator, subExprValues);
     if (diskValue != null) {
       computationCache.write(computationHash, bOutput(diskValue));
     }
@@ -336,11 +336,11 @@ public class BExprEvaluationSchedulerTest extends VmTestContext {
   private void assertComputationResult(
       BExprEvaluationScheduler bExprEvaluationScheduler,
       BExprEvaluator bExprEvaluator,
-      BTuple input,
+      BTuple subExprValues,
       BOutput expectedOutput,
       Origin expectedOrigin)
       throws Exception {
-    var arg = input.elements().map(Tasks::argument);
+    var arg = subExprValues.elements().map(Tasks::argument);
     var promise = bExprEvaluationScheduler.scheduleEvaluation(bExprEvaluator, arg);
     await().until(() -> promise.toMaybe().isSome());
 
@@ -352,7 +352,7 @@ public class BExprEvaluationSchedulerTest extends VmTestContext {
 
   private void assertCachesState(
       BExprEvaluator bExprEvaluator,
-      BTuple input,
+      BTuple subExprValues,
       @Nullable BOutput memoryValue,
       @Nullable BValue diskValue)
       throws Exception {
@@ -368,10 +368,10 @@ public class BExprEvaluationSchedulerTest extends VmTestContext {
         provide().bytecodeFactory(),
         memoryCache);
     var promise = evaluationScheduler.scheduleEvaluation(
-        bExprEvaluator, input.elements().map(Tasks::argument));
+        bExprEvaluator, subExprValues.elements().map(Tasks::argument));
     await().until(() -> promise.toMaybe().isSome());
 
-    var evaluationHash = computationHashFactory.create(bExprEvaluator, input);
+    var evaluationHash = computationHashFactory.create(bExprEvaluator, subExprValues);
 
     if (memoryValue == null) {
       assertThat(memoryCache.containsKey(evaluationHash)).isFalse();

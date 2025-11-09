@@ -49,11 +49,11 @@ public abstract sealed class BExprEvaluator
     return evaluationType;
   }
 
-  public Purity purity(BTuple input) throws BytecodeException {
+  public Purity purity(BTuple subExprValues) throws BytecodeException {
     return PURE;
   }
 
-  public abstract BOutput evaluate(BTuple input, Container container) throws IOException;
+  public abstract BOutput evaluate(BTuple subExprValues, Container container) throws IOException;
 
   @Override
   public int hashCode() {

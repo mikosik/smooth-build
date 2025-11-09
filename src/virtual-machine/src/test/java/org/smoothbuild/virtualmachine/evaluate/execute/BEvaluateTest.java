@@ -559,7 +559,7 @@ public class BEvaluateTest extends VmTestContext {
             new BExprEvaluationScheduler(
                 mock(), mock(), mock(), scheduler, provide().bytecodeFactory()) {
               @Override
-              public Output<BValue> evaluate(BExprEvaluator task, BTuple input) {
+              public Output<BValue> evaluate(BExprEvaluator task, BTuple subExprValues) {
                 throw runtimeException;
               }
             };

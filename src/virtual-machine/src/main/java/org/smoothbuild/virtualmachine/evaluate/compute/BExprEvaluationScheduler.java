@@ -99,10 +99,10 @@ public class BExprEvaluationScheduler {
     return bytecodeFactory.tuple(depResults);
   }
 
-  protected Output<BValue> evaluate(BExprEvaluator bExprEvaluator, BTuple input)
+  protected Output<BValue> evaluate(BExprEvaluator bExprEvaluator, BTuple subExprValues)
       throws InterruptedException, IOException {
-    var purity = bExprEvaluator.purity(input);
-    var hash = computationHashFactory.create(bExprEvaluator, input);
+    var purity = bExprEvaluator.purity(subExprValues);
+    var hash = computationHashFactory.create(bExprEvaluator, subExprValues);
     var resultPromise = Promise.<BOutput>promise();
     var existingPromise = memoryCache.putIfAbsent(hash, resultPromise);
     if (existingPromise != null) {
@@ -112,7 +112,7 @@ public class BExprEvaluationScheduler {
     } else if (purity == PURE && diskCache.contains(hash)) {
       return readEvaluationFromDiskCache(bExprEvaluator, hash, resultPromise);
     } else {
-      return evaluateNow(bExprEvaluator, input, resultPromise, purity, hash);
+      return evaluateNow(bExprEvaluator, subExprValues, resultPromise, purity, hash);
     }
   }
 
@@ -139,13 +139,13 @@ public class BExprEvaluationScheduler {
 
   private Output<BValue> evaluateNow(
       BExprEvaluator bExprEvaluator,
-      BTuple input,
+      BTuple subExprValues,
       MutablePromise<BOutput> resultPromise,
       Purity purity,
       Hash hash)
       throws IOException {
     var container = containerProvider.get();
-    var bOutput = bExprEvaluator.evaluate(input, container);
+    var bOutput = bExprEvaluator.evaluate(subExprValues, container);
     resultPromise.accept(bOutput);
     if (purity == PURE) {
       if (!containsFatal(bOutput.storedLogs())) {

@@ -129,7 +129,7 @@ public class ComputationHashFactoryTest extends VmTestContext {
     }
   }
 
-  private static Hash create(Hash sandboxHash, BExprEvaluator evaluator, BTuple input) {
-    return new ComputationHashFactory(() -> sandboxHash).create(evaluator, input);
+  private static Hash create(Hash sandboxHash, BExprEvaluator evaluator, BTuple subExprValues) {
+    return new ComputationHashFactory(() -> sandboxHash).create(evaluator, subExprValues);
   }
 }

@@ -18,8 +18,8 @@ public final class BSelectEvaluator extends BExprEvaluator {
   }
 
   @Override
-  public BOutput evaluate(BTuple input, Container container) throws BytecodeException {
-    var components = input.elements();
+  public BOutput evaluate(BTuple subExprValues, Container container) throws BytecodeException {
+    var components = subExprValues.elements();
     checkArgument(components.size() == 2);
     var tuple = selectable(components);
     var index = index(components);

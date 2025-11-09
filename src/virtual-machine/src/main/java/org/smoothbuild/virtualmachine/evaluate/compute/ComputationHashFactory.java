@@ -22,7 +22,7 @@ public class ComputationHashFactory {
     this.sandboxHash = sandboxHash;
   }
 
-  public Hash create(BExprEvaluator bExprEvaluator, BTuple args) {
-    return Hash.of(list(sandboxHash.get(), evaluatorHash(bExprEvaluator), args.hash()));
+  public Hash create(BExprEvaluator bExprEvaluator, BTuple subExprValues) {
+    return Hash.of(list(sandboxHash.get(), evaluatorHash(bExprEvaluator), subExprValues.hash()));
   }
 }

@@ -19,8 +19,8 @@ public final class BPickEvaluator extends BExprEvaluator {
   }
 
   @Override
-  public BOutput evaluate(BTuple input, Container container) throws BytecodeException {
-    var components = input.elements();
+  public BOutput evaluate(BTuple subExprValues, Container container) throws BytecodeException {
+    var components = subExprValues.elements();
     checkArgument(components.size() == 2);
     int index = index(components).toJavaBigInteger().intValue();
     var elements = array(components).elements(BValue.class);
