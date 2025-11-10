@@ -103,7 +103,7 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
       }
     }
 
-    Promise<Maybe<BValue>> scheduleJob(Job job) throws BytecodeException {
+    private Promise<Maybe<BValue>> scheduleJob(Job job) throws BytecodeException {
       return switch (job.expr()) {
         case BCall call -> scheduleCall(job, call);
         case BChoose choose -> scheduleOperation(job, choose, BChooseEvaluator::new);
