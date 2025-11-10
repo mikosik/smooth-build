@@ -35,7 +35,7 @@ public final class BSelect extends BOperation {
     var index = readAndCastMemberFromHashChain(hashes, 1, "index", BInt.class);
     if (!(selectable.evaluationType() instanceof BTupleType tupleType)) {
       throw new MemberHasWrongTypeException(
-          hash(), kind(), "tuple", BTupleType.class, selectable.evaluationType().getClass());
+          hash(), kind(), "selectable", BTupleType.class, selectable.evaluationType().getClass());
     }
     int i = index.toJavaBigInteger().intValue();
     int size = tupleType.elements().size();

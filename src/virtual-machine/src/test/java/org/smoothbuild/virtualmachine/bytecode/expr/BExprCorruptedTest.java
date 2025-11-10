@@ -1658,7 +1658,7 @@ public class BExprCorruptedTest extends VmTestContext {
     }
 
     @Test
-    void tuple_is_not_tuple_expr() throws Exception {
+    void selectable_evaluation_type_is_not_tuple() throws Exception {
       var expr = bInt(3);
       var index = bInt(0);
       var type = bSelectKind(bStringType());
@@ -1666,7 +1666,7 @@ public class BExprCorruptedTest extends VmTestContext {
 
       assertCall(() -> ((BSelect) dbGet(hash)).subExprs())
           .throwsException(new MemberHasWrongTypeException(
-              hash, type, "tuple", BTupleType.class, BIntType.class));
+              hash, type, "selectable", BTupleType.class, BIntType.class));
     }
 
     @Test
