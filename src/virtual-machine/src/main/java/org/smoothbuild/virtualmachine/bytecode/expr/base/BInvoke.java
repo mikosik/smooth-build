@@ -19,7 +19,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 public final class BInvoke extends BOperation {
   private static final int DATA_SEQ_SIZE = 3;
   public static final int METHOD_INDEX = 0;
-  public static final int IS_PURE_IDX = 1;
+  public static final int IS_PURE_INDEX = 1;
   public static final int ARGUMENTS_INDEX = 2;
 
   public BInvoke(MerkleRoot merkleRoot, BExprDb exprDb) {
@@ -32,7 +32,8 @@ public final class BInvoke extends BOperation {
     var hashes = readDataAsHashChain(DATA_SEQ_SIZE);
     var method =
         readMemberFromHashChain(hashes, METHOD_INDEX, "method", kindDb().method());
-    var isPure = readMemberFromHashChain(hashes, IS_PURE_IDX, "isPure", kindDb().bool());
+    var isPure =
+        readMemberFromHashChain(hashes, IS_PURE_INDEX, "isPure", kindDb().bool());
     var arguments = readMemberFromHashChain(hashes, ARGUMENTS_INDEX);
     if (!(arguments.evaluationType() instanceof BTupleType)) {
       throw new MemberHasWrongTypeException(
@@ -46,7 +47,7 @@ public final class BInvoke extends BOperation {
   }
 
   public BBool isPure() throws BytecodeException {
-    return readElementFromDataAsInstanceChain(IS_PURE_IDX, DATA_SEQ_SIZE, BBool.class);
+    return readElementFromDataAsInstanceChain(IS_PURE_INDEX, DATA_SEQ_SIZE, BBool.class);
   }
 
   @Override

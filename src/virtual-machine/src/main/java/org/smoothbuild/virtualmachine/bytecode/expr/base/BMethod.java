@@ -3,6 +3,10 @@ package org.smoothbuild.virtualmachine.bytecode.expr.base;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 
 public class BMethod {
+  private static final int JAR_INDEX = 0;
+  private static final int CLASS_BINARY_NAME_INDEX = 1;
+  private static final int METHOD_NAME_INDEX = 2;
+
   private final BTuple method;
 
   public BMethod(BTuple method) {
@@ -10,15 +14,15 @@ public class BMethod {
   }
 
   public BBlob jar() throws BytecodeException {
-    return (BBlob) method.elements().get(0);
+    return (BBlob) method.elements().get(JAR_INDEX);
   }
 
   public BString classBinaryName() throws BytecodeException {
-    return (BString) method.elements().get(1);
+    return (BString) method.elements().get(CLASS_BINARY_NAME_INDEX);
   }
 
   public BString methodName() throws BytecodeException {
-    return (BString) method.elements().get(2);
+    return (BString) method.elements().get(METHOD_NAME_INDEX);
   }
 
   public BTuple tuple() {

@@ -1,6 +1,9 @@
 package org.smoothbuild.virtualmachine.evaluate.evaluator;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect.DATA_SEQ_SIZE;
+import static org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect.INDEX_INDEX;
+import static org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect.SELECTABLE_INDEX;
 import static org.smoothbuild.virtualmachine.evaluate.evaluator.BOutput.bOutput;
 
 import org.smoothbuild.common.collect.List;
@@ -20,17 +23,17 @@ public final class BSelectEvaluator extends BExprEvaluator {
   @Override
   public BOutput evaluate(BTuple subExprValues, Container container) throws BytecodeException {
     var components = subExprValues.elements();
-    checkArgument(components.size() == 2);
-    var tuple = selectable(components);
+    checkArgument(components.size() == DATA_SEQ_SIZE);
+    var selectable = selectable(components);
     var index = index(components);
-    return bOutput(tuple.get(index.toJavaBigInteger().intValue()), container.messages());
+    return bOutput(selectable.get(index.toJavaBigInteger().intValue()), container.messages());
   }
 
   private static BTuple selectable(List<BValue> components) {
-    return (BTuple) components.get(0);
+    return (BTuple) components.get(SELECTABLE_INDEX);
   }
 
   private static BInt index(List<BValue> components) {
-    return (BInt) components.get(1);
+    return (BInt) components.get(INDEX_INDEX);
   }
 }

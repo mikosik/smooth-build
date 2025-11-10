@@ -16,6 +16,10 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
  * This class is thread-safe.
  */
 public final class BCall extends BOperation {
+  private static final int DATA_SEQ_SIZE = 2;
+  private static final int LAMBDA_INDEX = 0;
+  private static final int ARGUMENTS_INDEX = 1;
+
   public BCall(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
     checkArgument(merkleRoot.kind() instanceof BCallKind);
@@ -28,14 +32,14 @@ public final class BCall extends BOperation {
 
   @Override
   public BSubExprs subExprs() throws BytecodeException {
-    var hashes = readDataAsHashChain(2);
-    var lambda = readMemberFromHashChain(hashes, 0);
+    var hashes = readDataAsHashChain(DATA_SEQ_SIZE);
+    var lambda = readMemberFromHashChain(hashes, LAMBDA_INDEX);
     var lambdaEvaluationType = lambda.evaluationType();
     if (!(lambdaEvaluationType instanceof BLambdaType lambdaType)) {
       throw new MemberHasWrongEvaluationTypeException(
           hash(), kind(), "lambda", BLambdaType.class.getSimpleName(), lambdaEvaluationType);
     }
-    var args = readMemberFromHashChain(hashes, 1, "arguments", lambdaType.params());
+    var args = readMemberFromHashChain(hashes, ARGUMENTS_INDEX, "arguments", lambdaType.params());
     if (!evaluationType().equals(lambdaType.result())) {
       throw new MemberHasWrongEvaluationTypeException(
           hash(), kind(), "lambda.resultType", evaluationType(), lambdaType.result());

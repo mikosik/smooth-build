@@ -18,6 +18,10 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
  * This class is thread-safe.
  */
 public final class BSelect extends BOperation {
+  public static final int DATA_SEQ_SIZE = 2;
+  public static final int SELECTABLE_INDEX = 0;
+  public static final int INDEX_INDEX = 1;
+
   public BSelect(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
     checkArgument(merkleRoot.kind() instanceof BSelectKind);
@@ -30,16 +34,20 @@ public final class BSelect extends BOperation {
 
   @Override
   public BSubExprs subExprs() throws BytecodeException {
-    var hashes = readDataAsHashChain(2);
-    var selectable = readMemberFromHashChain(hashes, 0);
-    var index = readAndCastMemberFromHashChain(hashes, 1, "index", BInt.class);
+    var hashes = readDataAsHashChain(DATA_SEQ_SIZE);
+    var selectable = readMemberFromHashChain(hashes, SELECTABLE_INDEX);
+    var index = readAndCastMemberFromHashChain(hashes, INDEX_INDEX, "index", BInt.class);
     if (!(selectable.evaluationType() instanceof BTupleType tupleType)) {
       throw new MemberHasWrongTypeException(
-          hash(), kind(), "selectable", BTupleType.class, selectable.evaluationType().getClass());
+          hash(),
+          kind(),
+          "selectable",
+          BTupleType.class,
+          selectable.evaluationType().getClass());
     }
     int i = index.toJavaBigInteger().intValue();
     int size = tupleType.elements().size();
-    if (i < 0 || size <= i) {
+    if (i < SELECTABLE_INDEX || size <= i) {
       throw new SelectHasIndexOutOfBoundException(hash(), kind(), i, size);
     }
     var fieldType = tupleType.elements().get(i);

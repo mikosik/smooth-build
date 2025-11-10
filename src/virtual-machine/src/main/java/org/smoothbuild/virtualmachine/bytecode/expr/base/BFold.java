@@ -18,6 +18,11 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
  * This class is thread-safe.
  */
 public final class BFold extends BOperation {
+  private static final int DATA_SEQ_SIZE = 3;
+  private static final int ARRAY_INDEX = 0;
+  private static final int INITIAL_INDEX = 1;
+  private static final int FOLDER_INDEX = 2;
+
   public BFold(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
     checkArgument(merkleRoot.kind() instanceof BFoldKind);
@@ -35,16 +40,16 @@ public final class BFold extends BOperation {
 
   @Override
   public BSubExprs subExprs() throws BytecodeException {
-    var hashes = readDataAsHashChain(3);
-    var array = readMemberFromHashChain(hashes, 0);
+    var hashes = readDataAsHashChain(DATA_SEQ_SIZE);
+    var array = readMemberFromHashChain(hashes, ARRAY_INDEX);
     var arrayEvaluationType = array.evaluationType();
     if (!(arrayEvaluationType instanceof BArrayType arrayType)) {
       throw new MemberHasWrongEvaluationTypeException(
           hash(), kind(), "array", BArrayType.class.getSimpleName(), arrayEvaluationType);
     }
-    var initial = readMemberFromHashChain(hashes, 1);
+    var initial = readMemberFromHashChain(hashes, INITIAL_INDEX);
     var initialEvaluationType = initial.evaluationType();
-    var folder = readMemberFromHashChain(hashes, 2);
+    var folder = readMemberFromHashChain(hashes, FOLDER_INDEX);
     var folderEvaluationType = folder.evaluationType();
     var expectedFolderEvaluationType =
         kindDb().lambda(list(initialEvaluationType, arrayType.element()), initialEvaluationType);

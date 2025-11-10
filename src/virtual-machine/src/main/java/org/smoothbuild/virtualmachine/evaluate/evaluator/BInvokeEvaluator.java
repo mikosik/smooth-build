@@ -27,7 +27,7 @@ public final class BInvokeEvaluator extends BExprEvaluator {
 
   @Override
   public Purity purity(BTuple subExprValues) throws BytecodeException {
-    var isPure = ((BBool) subExprValues.get(BInvoke.IS_PURE_IDX)).toJavaBoolean();
+    var isPure = ((BBool) subExprValues.get(BInvoke.IS_PURE_INDEX)).toJavaBoolean();
     return isPure ? PURE : IMPURE;
   }
 

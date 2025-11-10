@@ -14,6 +14,10 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BPickKind;
  * This class is thread-safe.
  */
 public final class BPick extends BOperation {
+  public static final int DATA_SEQ_SIZE = 2;
+  public static final int PICKABLE_INDEX = 0;
+  public static final int INDEX_INDEX = 1;
+
   public BPick(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
     checkArgument(merkleRoot.kind() instanceof BPickKind);
@@ -26,9 +30,10 @@ public final class BPick extends BOperation {
 
   @Override
   public BSubExprs subExprs() throws BytecodeException {
-    var hashes = readDataAsHashChain(2);
-    var pickable = readMemberFromHashChain(hashes, 0, "pickable", kindDb().array(evaluationType()));
-    var index = readMemberFromHashChain(hashes, 1, "index", kindDb().int_());
+    var hashes = readDataAsHashChain(DATA_SEQ_SIZE);
+    var pickable = readMemberFromHashChain(
+        hashes, PICKABLE_INDEX, "pickable", kindDb().array(evaluationType()));
+    var index = readMemberFromHashChain(hashes, INDEX_INDEX, "index", kindDb().int_());
     return new BSubExprs(pickable, index);
   }
 

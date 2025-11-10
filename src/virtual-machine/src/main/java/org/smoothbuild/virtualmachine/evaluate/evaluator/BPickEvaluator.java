@@ -1,6 +1,9 @@
 package org.smoothbuild.virtualmachine.evaluate.evaluator;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.virtualmachine.bytecode.expr.base.BPick.DATA_SEQ_SIZE;
+import static org.smoothbuild.virtualmachine.bytecode.expr.base.BPick.INDEX_INDEX;
+import static org.smoothbuild.virtualmachine.bytecode.expr.base.BPick.PICKABLE_INDEX;
 import static org.smoothbuild.virtualmachine.evaluate.evaluator.BOutput.bOutput;
 
 import org.smoothbuild.common.collect.List;
@@ -20,25 +23,25 @@ public final class BPickEvaluator extends BExprEvaluator {
 
   @Override
   public BOutput evaluate(BTuple subExprValues, Container container) throws BytecodeException {
-    var components = subExprValues.elements();
-    checkArgument(components.size() == 2);
-    int index = index(components).toJavaBigInteger().intValue();
-    var elements = array(components).elements(BValue.class);
-    if (index < 0 || elements.size() <= index) {
+    var elements = subExprValues.elements();
+    checkArgument(elements.size() == DATA_SEQ_SIZE);
+    int index = index(elements).toJavaBigInteger().intValue();
+    var pickable = pickable(elements).elements(BValue.class);
+    if (index < 0 || pickable.size() <= index) {
       container
           .log()
-          .error("Index (" + index + ") out of bounds. Array size = " + elements.size() + ".");
+          .error("Index (" + index + ") out of bounds. Array size = " + pickable.size() + ".");
       return bOutput(container.messages());
     } else {
-      return bOutput(elements.get(index), container.messages());
+      return bOutput(pickable.get(index), container.messages());
     }
   }
 
-  private static BArray array(List<BValue> components) {
-    return (BArray) components.get(0);
+  private static BArray pickable(List<BValue> components) {
+    return (BArray) components.get(PICKABLE_INDEX);
   }
 
   private static BInt index(List<BValue> components) {
-    return (BInt) components.get(1);
+    return (BInt) components.get(INDEX_INDEX);
   }
 }

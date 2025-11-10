@@ -1,6 +1,9 @@
 package org.smoothbuild.virtualmachine.evaluate.evaluator;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.virtualmachine.bytecode.expr.base.BChoose.CHOSEN_INDEX;
+import static org.smoothbuild.virtualmachine.bytecode.expr.base.BChoose.DATA_SEQ_SIZE;
+import static org.smoothbuild.virtualmachine.bytecode.expr.base.BChoose.INDEX_INDEX;
 import static org.smoothbuild.virtualmachine.evaluate.evaluator.BOutput.bOutput;
 
 import org.smoothbuild.common.collect.List;
@@ -21,7 +24,7 @@ public final class BChooseEvaluator extends BExprEvaluator {
   @Override
   public BOutput evaluate(BTuple subExprValues, Container container) throws BytecodeException {
     var components = subExprValues.elements();
-    checkArgument(components.size() == 2);
+    checkArgument(components.size() == DATA_SEQ_SIZE);
     var index = index(components);
     var chosen = chosen(components);
     var choice = container.factory().choice((BChoiceType) evaluationType(), index, chosen);
@@ -29,10 +32,10 @@ public final class BChooseEvaluator extends BExprEvaluator {
   }
 
   private static BInt index(List<BValue> components) {
-    return (BInt) components.get(0);
+    return (BInt) components.get(INDEX_INDEX);
   }
 
   private static BValue chosen(List<BValue> components) {
-    return components.get(1);
+    return components.get(CHOSEN_INDEX);
   }
 }

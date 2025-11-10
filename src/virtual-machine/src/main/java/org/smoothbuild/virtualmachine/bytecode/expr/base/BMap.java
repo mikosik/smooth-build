@@ -17,6 +17,10 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BMapKind;
  * This class is thread-safe.
  */
 public final class BMap extends BOperation {
+  private static final int DATA_SEQ_SIZE = 2;
+  private static final int ARRAY_INDEX = 0;
+  private static final int MAPPER_INDEX = 1;
+
   public BMap(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
     checkArgument(merkleRoot.kind() instanceof BMapKind);
@@ -34,14 +38,14 @@ public final class BMap extends BOperation {
 
   @Override
   public BSubExprs subExprs() throws BytecodeException {
-    var hashes = readDataAsHashChain(2);
-    var array = readMemberFromHashChain(hashes, 0);
+    var hashes = readDataAsHashChain(DATA_SEQ_SIZE);
+    var array = readMemberFromHashChain(hashes, ARRAY_INDEX);
     var arrayEvaluationType = array.evaluationType();
     if (!(arrayEvaluationType instanceof BArrayType arrayType)) {
       throw new MemberHasWrongEvaluationTypeException(
           hash(), kind(), "array", BArrayType.class.getSimpleName(), arrayEvaluationType);
     }
-    var mapper = readMemberFromHashChain(hashes, 1);
+    var mapper = readMemberFromHashChain(hashes, MAPPER_INDEX);
     var mapperEvaluationType = mapper.evaluationType();
     var expectedMapperEvaluationType =
         kindDb().lambda(list(arrayType.element()), evaluationType().element());

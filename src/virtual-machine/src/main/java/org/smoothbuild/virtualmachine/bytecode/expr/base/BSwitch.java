@@ -17,6 +17,11 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BSwitchKind;
  * This class is thread-safe.
  */
 public final class BSwitch extends BOperation {
+
+  private static final int DATA_SEQ_SIZE = 2;
+  private static final int CHOICE_INDEX = 0;
+  private static final int HANDLERS_INDEX = 1;
+
   public BSwitch(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
     checkArgument(merkleRoot.kind() instanceof BSwitchKind);
@@ -29,8 +34,8 @@ public final class BSwitch extends BOperation {
 
   @Override
   public BSubExprs subExprs() throws BytecodeException {
-    var hashes = readDataAsHashChain(2);
-    var choice = readMemberFromHashChain(hashes, 0);
+    var hashes = readDataAsHashChain(DATA_SEQ_SIZE);
+    var choice = readMemberFromHashChain(hashes, CHOICE_INDEX);
     if (!(choice.evaluationType() instanceof BChoiceType choiceType)) {
       throw new MemberHasWrongTypeException(
           hash(), kind(), "choice", BChoiceType.class, choice.evaluationType().getClass());
@@ -39,7 +44,8 @@ public final class BSwitch extends BOperation {
         .alternatives()
         .map(a -> kindDb().lambda(list(a), evaluationType()))
         .construct(l -> kindDb().tuple(l));
-    var handlers = readAndCastMemberFromHashChain(hashes, 1, "handlers", BCombine.class);
+    var handlers =
+        readAndCastMemberFromHashChain(hashes, HANDLERS_INDEX, "handlers", BCombine.class);
     if (!handlers.evaluationType().equals(expectedHandlersType)) {
       throw new MemberHasWrongEvaluationTypeException(
           hash(), kind(), "handlers", expectedHandlersType, handlers.evaluationType());
