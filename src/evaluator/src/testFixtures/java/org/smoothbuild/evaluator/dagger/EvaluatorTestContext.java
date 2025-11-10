@@ -40,7 +40,7 @@ import org.smoothbuild.compilerfrontend.dagger.FrontendCompilerTestApi;
 import org.smoothbuild.evaluator.EvaluatedExprs;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.evaluate.compute.BExprEvaluationScheduler;
+import org.smoothbuild.virtualmachine.evaluate.compute.EvaluateBExprTaskCreator;
 
 public class EvaluatorTestContext implements FrontendCompilerTestApi {
   private EvaluatorTestComponent component;
@@ -190,8 +190,8 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
     return provide().reporter();
   }
 
-  public BExprEvaluationScheduler bExprEvaluationScheduler() {
-    return provide().bExprEvaluationScheduler();
+  public EvaluateBExprTaskCreator evaluateBExprTaskCreator() {
+    return provide().evaluateBExprTaskCreator();
   }
 
   public Log userFatal(int line, String message) {

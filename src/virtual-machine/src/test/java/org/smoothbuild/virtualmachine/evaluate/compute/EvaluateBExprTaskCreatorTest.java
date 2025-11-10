@@ -32,7 +32,7 @@ import org.smoothbuild.virtualmachine.evaluate.evaluator.BOutput;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BPickEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BSelectEvaluator;
 
-public class BExprEvaluationSchedulerTest extends VmTestContext {
+public class EvaluateBExprTaskCreatorTest extends VmTestContext {
   @Nested
   class _combine_evaluator {
     @Test
@@ -303,12 +303,12 @@ public class BExprEvaluationSchedulerTest extends VmTestContext {
       Origin expectedOrigin)
       throws Exception {
     var evaluationScheduler =
-        evaluationSchedulerWithCaches(bExprEvaluator, subExprValues, memoryValue, diskValue);
+        evaluateBExprTaskCreatorWithCaches(bExprEvaluator, subExprValues, memoryValue, diskValue);
     assertComputationResult(
         evaluationScheduler, bExprEvaluator, subExprValues, expectedOutput, expectedOrigin);
   }
 
-  private BExprEvaluationScheduler evaluationSchedulerWithCaches(
+  private EvaluateBExprTaskCreator evaluateBExprTaskCreatorWithCaches(
       BExprEvaluator bExprEvaluator,
       BTuple subExprValues,
       @Nullable BValue memoryValue,
@@ -324,7 +324,7 @@ public class BExprEvaluationSchedulerTest extends VmTestContext {
     if (memoryValue != null) {
       memoryCache.put(computationHash, promise(bOutput(memoryValue, bLogArrayEmpty())));
     }
-    return new BExprEvaluationScheduler(
+    return new EvaluateBExprTaskCreator(
         computationHashFactory,
         () -> provide().container(),
         computationCache,
@@ -334,14 +334,15 @@ public class BExprEvaluationSchedulerTest extends VmTestContext {
   }
 
   private void assertComputationResult(
-      BExprEvaluationScheduler bExprEvaluationScheduler,
+      EvaluateBExprTaskCreator evaluateBExprTaskCreator,
       BExprEvaluator bExprEvaluator,
       BTuple subExprValues,
       BOutput expectedOutput,
       Origin expectedOrigin)
       throws Exception {
     var arg = subExprValues.elements().map(Tasks::argument);
-    var promise = bExprEvaluationScheduler.scheduleEvaluation(bExprEvaluator, arg);
+    var taskX = evaluateBExprTaskCreator.createTask(bExprEvaluator);
+    var promise = provide().scheduler().submit(taskX, arg);
     await().until(() -> promise.toMaybe().isSome());
 
     assertThat(promise.get()).isEqualTo(expectedOutput.value());
@@ -360,15 +361,15 @@ public class BExprEvaluationSchedulerTest extends VmTestContext {
     var memoryCache = new ConcurrentHashMap<Hash, Promise<BOutput>>();
     var computationHashFactory = provide().computationHashFactory();
     var scheduler = provide().scheduler();
-    var evaluationScheduler = new BExprEvaluationScheduler(
+    var evaluationScheduler = new EvaluateBExprTaskCreator(
         computationHashFactory,
         () -> provide().container(),
         computationCache,
         scheduler,
         provide().bytecodeFactory(),
         memoryCache);
-    var promise = evaluationScheduler.scheduleEvaluation(
-        bExprEvaluator, subExprValues.elements().map(Tasks::argument));
+    var taskX = evaluationScheduler.createTask(bExprEvaluator);
+    var promise = scheduler.submit(taskX, subExprValues.elements().map(Tasks::argument));
     await().until(() -> promise.toMaybe().isSome());
 
     var evaluationHash = computationHashFactory.create(bExprEvaluator, subExprValues);

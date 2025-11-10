@@ -43,7 +43,7 @@ import org.smoothbuild.virtualmachine.evaluate.evaluator.Purity;
  * This class is thread-safe.
  */
 @PerCommand
-public class BExprEvaluationScheduler {
+public class EvaluateBExprTaskCreator {
   private final ComputationHashFactory computationHashFactory;
   private final Provider<Container> containerProvider;
   private final ComputationCache diskCache;
@@ -52,7 +52,7 @@ public class BExprEvaluationScheduler {
   private final BytecodeFactory bytecodeFactory;
 
   @Inject
-  public BExprEvaluationScheduler(
+  public EvaluateBExprTaskCreator(
       ComputationHashFactory computationHashFactory,
       Provider<Container> containerProvider,
       ComputationCache diskCache,
@@ -67,7 +67,7 @@ public class BExprEvaluationScheduler {
         new ConcurrentHashMap<>());
   }
 
-  public BExprEvaluationScheduler(
+  public EvaluateBExprTaskCreator(
       ComputationHashFactory computationHashFactory,
       Provider<Container> containerProvider,
       ComputationCache diskCache,
@@ -82,17 +82,14 @@ public class BExprEvaluationScheduler {
     this.memoryCache = memoryCache;
   }
 
-  public Promise<Maybe<BValue>> scheduleEvaluation(
-      BExprEvaluator bExprEvaluator,
-      List<? extends Promise<? extends Maybe<BValue>>> subExprResults) {
-    TaskX<BValue, BValue> taskX = (bValues) -> {
+  public TaskX<BValue, BValue> createTask(BExprEvaluator bExprEvaluator) {
+    return (bValues) -> {
       try {
         return evaluate(bExprEvaluator, toInput(bValues));
       } catch (IOException | InterruptedException e) {
         return outputForException(bExprEvaluator, e);
       }
     };
-    return scheduler.submit(taskX, subExprResults);
   }
 
   private BTuple toInput(List<BValue> depResults) throws BytecodeException {
@@ -117,7 +114,7 @@ public class BExprEvaluationScheduler {
   }
 
   private Promise<Maybe<BValue>> scheduleTaskWaitingForOtherTaskResult(
-      BExprEvaluator bExprEvaluator, Purity purity, Promise<BOutput> promise) {
+      BExprEvaluator bExprEvaluator, Purity purity, Promise<BOutput> otherTaskResult) {
     Task1<BOutput, BValue> task = (bOutput) -> {
       try {
         return newOutput(bExprEvaluator, bOutput, purity.cacheLevel());
@@ -125,7 +122,7 @@ public class BExprEvaluationScheduler {
         return outputForException(bExprEvaluator, e);
       }
     };
-    return scheduler.submit(task, promise.map(Maybe::some));
+    return scheduler.submit(task, otherTaskResult.map(Maybe::some));
   }
 
   private Output<BValue> readEvaluationFromDiskCache(
