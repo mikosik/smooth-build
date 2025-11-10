@@ -18,7 +18,7 @@ import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 
 public final class BPickEvaluator extends BExprEvaluator {
   public BPickEvaluator(BPick pick, Trace trace) {
-    super("pick", pick.hash(), pick.evaluationType(), trace);
+    super("pick", pick.evaluationType(), trace);
   }
 
   @Override

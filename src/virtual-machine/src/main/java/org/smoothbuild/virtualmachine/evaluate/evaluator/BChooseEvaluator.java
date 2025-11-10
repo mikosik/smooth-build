@@ -18,7 +18,7 @@ import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 
 public final class BChooseEvaluator extends BExprEvaluator {
   public BChooseEvaluator(BChoose choose, Trace trace) {
-    super("choose", choose.hash(), choose.evaluationType(), trace);
+    super("choose", choose.evaluationType(), trace);
   }
 
   @Override

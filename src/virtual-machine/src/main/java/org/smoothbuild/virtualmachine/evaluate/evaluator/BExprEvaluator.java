@@ -4,7 +4,6 @@ import static org.smoothbuild.virtualmachine.evaluate.evaluator.Purity.PURE;
 
 import java.io.IOException;
 import java.util.Objects;
-import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
@@ -26,13 +25,11 @@ public abstract sealed class BExprEvaluator
         BPickEvaluator,
         BSelectEvaluator {
   private final String name;
-  private final Hash hash;
   private final BType evaluationType;
   private final Trace trace;
 
-  public BExprEvaluator(String name, Hash hash, BType evaluationType, Trace trace) {
+  public BExprEvaluator(String name, BType evaluationType, Trace trace) {
     this.name = name;
-    this.hash = hash;
     this.evaluationType = evaluationType;
     this.trace = trace;
   }
@@ -57,14 +54,15 @@ public abstract sealed class BExprEvaluator
 
   @Override
   public int hashCode() {
-    return hash.hashCode();
+    return Objects.hash(this.getClass(), this.name, this.evaluationType, this.trace);
   }
 
   @Override
   public boolean equals(Object object) {
     return object instanceof BExprEvaluator that
         && Objects.equals(this.getClass(), that.getClass())
-        && Objects.equals(this.hash, that.hash)
+        && Objects.equals(this.name, that.name)
+        && Objects.equals(this.evaluationType, that.evaluationType)
         && Objects.equals(this.trace, that.trace);
   }
 }

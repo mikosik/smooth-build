@@ -17,7 +17,7 @@ import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 
 public final class BSelectEvaluator extends BExprEvaluator {
   public BSelectEvaluator(BSelect select, Trace trace) {
-    super("select", select.hash(), select.evaluationType(), trace);
+    super("select", select.evaluationType(), trace);
   }
 
   @Override
