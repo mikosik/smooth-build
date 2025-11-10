@@ -324,11 +324,11 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
     }
 
     private Promise<Maybe<BValue>> scheduleInlineTask(Job job) {
-      var inlineTask = newInlinseSchedulingTask(job);
+      var inlineTask = newInlineSchedulingTask(job);
       return scheduler.submit(inlineTask);
     }
 
-    private Task0<BValue> newInlinseSchedulingTask(Job job) {
+    private Task0<BValue> newInlineSchedulingTask(Job job) {
       return () -> {
         var label = VM_LABEL.append(":inline");
         try {
