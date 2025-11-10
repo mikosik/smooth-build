@@ -103,11 +103,7 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
       }
     }
 
-    private Promise<Maybe<BValue>> scheduleJob(Job job) throws BytecodeException {
-      return job.scheduleEvaluation(this);
-    }
-
-    Promise<Maybe<BValue>> doScheduleJob(Job job) throws BytecodeException {
+    Promise<Maybe<BValue>> scheduleJob(Job job) throws BytecodeException {
       return switch (job.expr()) {
         case BCall call -> scheduleCall(job, call);
         case BChoose choose -> scheduleOperation(job, choose, BChooseEvaluator::new);
@@ -310,7 +306,7 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
         throws BytecodeException {
       var bExprEvaluator = evaluatorFactory.apply(operation, job.trace());
       List<Job> subExprJobs = operation.subExprs().toList().map(e -> newJob(e, job));
-      List<Promise<Maybe<BValue>>> subExprResults = subExprJobs.map(this::scheduleJob);
+      List<Promise<Maybe<BValue>>> subExprResults = subExprJobs.map(job1 -> scheduleJob(job1));
       return bExprEvaluationScheduler.scheduleEvaluation(bExprEvaluator, subExprResults);
     }
 

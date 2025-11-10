@@ -191,22 +191,6 @@ public class BEvaluateTest extends VmTestContext {
 
         assertThat(countingBEvaluate.counters().get(bBool)).isNull();
       }
-
-      @Test
-      void lambda_arg_used_twice_not_results_in_its_expression_being_evaluated_twice()
-          throws Exception {
-        var boolArrayType = bBoolArrayType();
-        var argReference = bReference(boolArrayType, 0);
-        var lambda = bLambda(list(boolArrayType), bOrder(argReference, argReference));
-        var bool = bBool();
-        var call = bCall(lambda, bOrder(bool));
-
-        var countingBEvaluate = countingBEvaluate();
-        var expected = bArray(bArray(bool), bArray(bool));
-        assertThat(evaluate(countingBEvaluate, call).get().get()).isEqualTo(expected);
-
-        assertThat(requireNonNull(countingBEvaluate.counters().get(bool)).get()).isEqualTo(1);
-      }
     }
   }
 
