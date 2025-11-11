@@ -13,6 +13,13 @@ import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BFoldTest extends VmTestContext {
   @Test
+  void name() throws BytecodeException {
+    var folder = bLambda(list(bIntType(), bIntType()), bInt());
+    var bFold = bFold(bArray(bInt()), bInt(), folder);
+    assertThat(bFold.name()).isEqualTo("fold");
+  }
+
+  @Test
   void creating_fold_with_non_array_fails() {
     assertCall(() -> bFold(bInt(), bInt(), bIntIdLambda()))
         .throwsException(new IllegalArgumentException(

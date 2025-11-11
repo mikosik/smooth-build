@@ -12,6 +12,11 @@ import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BChooseTest extends VmTestContext {
   @Test
+  void name() throws BytecodeException {
+    assertThat(bChoose().name()).isEqualTo("choose");
+  }
+
+  @Test
   void setting_chosen_with_wrong_type_throws_exception() throws BytecodeException {
     var type = bChoiceType(bStringType(), bBlobType());
     assertCall(() -> {

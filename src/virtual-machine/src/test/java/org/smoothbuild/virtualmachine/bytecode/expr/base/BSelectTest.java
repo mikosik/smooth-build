@@ -4,6 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
+import java.io.IOException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
@@ -12,6 +13,12 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect.BSubExprs;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BSelectTest extends VmTestContext {
+  @Test
+  void name() throws IOException {
+    var bSelect = bSelect(bTuple(bInt(7)), bInt(0));
+    assertThat(bSelect.name()).isEqualTo("select");
+  }
+
   @Test
   void creating_select_with_non_tuple_expr_causes_exception() {
     assertCall(() -> bSelect(bInt(3), bInt(2)))

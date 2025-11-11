@@ -13,6 +13,13 @@ import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BSwitchTest extends VmTestContext {
   @Test
+  void name() throws BytecodeException {
+    var handlers = bCombine(bs2iLambda(), bi2iLambda());
+    var switch_ = bSwitch(bChoice(), handlers);
+    assertThat(switch_.name()).isEqualTo("switch");
+  }
+
+  @Test
   void creating_switch_with_handlers_size_different_than_choice_alternative_size_causes_exception()
       throws BytecodeException {
     var type = bChoiceType(bStringType(), bIntType());

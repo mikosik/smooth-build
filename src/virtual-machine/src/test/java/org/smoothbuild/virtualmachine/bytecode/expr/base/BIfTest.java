@@ -13,6 +13,12 @@ import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BIfTest extends VmTestContext {
   @Test
+  void name() throws BytecodeException {
+    var bIf = bIf(bBool(true), bInt(1), bInt(2));
+    assertThat(bIf.name()).isEqualTo("if");
+  }
+
+  @Test
   void creating_if_with_non_bool_condition_fails() {
     assertCall(() -> bIf(bInt(), bInt(), bInt()))
         .throwsException(new IllegalArgumentException(

@@ -4,6 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
+import java.io.IOException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
@@ -11,6 +12,12 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BOrderTest extends VmTestContext {
+  @Test
+  void name() throws IOException {
+    var bOrder = bOrder(bIntType());
+    assertThat(bOrder.name()).isEqualTo("order");
+  }
+
   @Test
   void kind_returns_kind() throws Exception {
     var order = bOrder(bIntType());

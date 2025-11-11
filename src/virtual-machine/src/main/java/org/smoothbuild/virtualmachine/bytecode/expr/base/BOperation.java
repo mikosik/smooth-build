@@ -1,5 +1,7 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.base;
 
+import static com.google.common.base.CaseFormat.LOWER_CAMEL;
+import static com.google.common.base.CaseFormat.UPPER_CAMEL;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
@@ -25,9 +27,16 @@ public abstract sealed class BOperation extends BExpr
         BReference,
         BSelect,
         BSwitch {
+  private final String name;
+
   public BOperation(MerkleRoot merkleRoot, BExprDb exprDb) {
     checkArgument(merkleRoot.kind() instanceof BOperationKind);
     super(merkleRoot, exprDb);
+    this.name = UPPER_CAMEL.to(LOWER_CAMEL, getClass().getSimpleName().substring(1));
+  }
+
+  public String name() {
+    return name;
   }
 
   @Override

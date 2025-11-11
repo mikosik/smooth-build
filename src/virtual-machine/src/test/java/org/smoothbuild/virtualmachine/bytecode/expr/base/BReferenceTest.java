@@ -3,6 +3,7 @@ package org.smoothbuild.virtualmachine.bytecode.expr.base;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 
+import java.io.IOException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
@@ -10,6 +11,12 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BReferenceTest extends VmTestContext {
+  @Test
+  void name() throws IOException {
+    var bReference = bReference(123);
+    assertThat(bReference.name()).isEqualTo("reference");
+  }
+
   @Test
   void type_of_var_expr_is_var_type() throws Exception {
     assertThat(bReference(bIntType(), 123).kind()).isEqualTo(bReferenceKind(bIntType()));

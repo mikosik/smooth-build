@@ -4,6 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
+import java.io.IOException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
@@ -12,6 +13,14 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick.BSubExprs;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BPickTest extends VmTestContext {
+  @Test
+  void name() throws IOException {
+    var pickable = bArray(bInt(7));
+    var index = bInt(0);
+    var bPick = bPick(pickable, index);
+    assertThat(bPick.name()).isEqualTo("pick");
+  }
+
   @Test
   void creating_pick_with_non_array_expr_as_pickable_causes_exception() {
     assertCall(() -> bPick(bInt(3), bInt(2)))

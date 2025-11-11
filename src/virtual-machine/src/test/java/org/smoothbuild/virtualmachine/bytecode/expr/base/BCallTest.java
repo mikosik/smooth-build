@@ -7,10 +7,16 @@ import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall.BSubExprs;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BCallTest extends VmTestContext {
+  @Test
+  void name() throws BytecodeException {
+    assertThat(bCall().name()).isEqualTo("call");
+  }
+
   @Test
   void creating_call_with_lambda_type_not_being_lambda_causes_exception() {
     assertCall(() -> bCall(bInt()))

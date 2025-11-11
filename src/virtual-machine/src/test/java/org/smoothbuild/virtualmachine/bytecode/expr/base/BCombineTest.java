@@ -11,6 +11,11 @@ import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BCombineTest extends VmTestContext {
   @Test
+  void name() throws BytecodeException {
+    assertThat(bCombine().name()).isEqualTo("combine");
+  }
+
+  @Test
   void kind_returns_kind() throws Exception {
     var combine = bCombine(bInt(3));
     assertThat(combine.kind()).isEqualTo(bCombineKind(bIntType()));

@@ -4,6 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
+import java.io.IOException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
@@ -11,6 +12,16 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke.BSubExprs;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BInvokeTest extends VmTestContext {
+  @Test
+  void name() throws IOException {
+    var bInvoke = bInvoke(
+        bLambdaType(bIntType(), bStringType()),
+        bMethodTuple(bBlob(7), "a", "b"),
+        bBool(true),
+        bTuple());
+    assertThat(bInvoke.name()).isEqualTo("invoke");
+  }
+
   @Test
   void creating_fails_when_method_evaluation_type_is_not_tuple() {
     assertCall(() -> bInvoke(bIntType(), bInt(), bBool(), bTuple()))
