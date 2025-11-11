@@ -12,7 +12,7 @@ import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 
 public final class BOrderEvaluator extends BExprEvaluator {
   public BOrderEvaluator(BOrder order, Trace trace) {
-    super("order", order.evaluationType(), trace);
+    super(order, trace);
   }
 
   @Override

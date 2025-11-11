@@ -10,7 +10,7 @@ import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 
 public final class BCombineEvaluator extends BExprEvaluator {
   public BCombineEvaluator(BCombine combine, Trace trace) {
-    super("combine", combine.evaluationType(), trace);
+    super(combine, trace);
   }
 
   @Override

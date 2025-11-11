@@ -22,7 +22,7 @@ import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 
 public final class BInvokeEvaluator extends BExprEvaluator {
   public BInvokeEvaluator(BInvoke invoke, Trace trace) {
-    super("invoke", invoke.evaluationType(), trace);
+    super(invoke, trace);
   }
 
   @Override
