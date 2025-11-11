@@ -346,7 +346,7 @@ public class EvaluateBExprTaskCreatorTest extends VmTestContext {
     await().until(() -> promise.toMaybe().isSome());
 
     assertThat(promise.get()).isEqualTo(expectedOutput.value());
-    var label = VM_EVALUATE.append(":" + bExprEvaluator.name());
+    var label = VM_EVALUATE.append(":" + bExprEvaluator.operation().name());
     var report = report(label, bExprEvaluator.trace(), expectedOrigin, list());
     assertThat(provide().reporter().reports()).contains(report);
   }

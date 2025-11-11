@@ -19,7 +19,7 @@ public final class BOrderEvaluator extends BExprEvaluator {
   public BOutput evaluate(BTuple subExprValues, Container container) throws BytecodeException {
     BArray array = container
         .factory()
-        .arrayBuilder((BArrayType) evaluationType())
+        .arrayBuilder((BArrayType) operation().evaluationType())
         .addAll(subExprValues.elements())
         .build();
     return bOutput(array, container.messages());

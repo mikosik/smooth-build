@@ -8,7 +8,6 @@ import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOperation;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 
 /**
@@ -35,14 +34,6 @@ public abstract sealed class BExprEvaluator
 
   public BOperation operation() {
     return operation;
-  }
-
-  public String name() {
-    return operation().name();
-  }
-
-  public BType evaluationType() {
-    return operation().evaluationType();
   }
 
   public Trace trace() {

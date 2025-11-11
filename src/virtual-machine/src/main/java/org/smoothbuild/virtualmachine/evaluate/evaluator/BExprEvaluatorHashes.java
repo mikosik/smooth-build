@@ -11,7 +11,8 @@ public class BExprEvaluatorHashes {
       case BCombineEvaluator _ -> combineHash();
       case BChooseEvaluator _ -> chooseHash();
       case BInvokeEvaluator _ -> invokeHash();
-      case BOrderEvaluator bOrderEvaluator -> orderHash(bOrderEvaluator.evaluationType());
+      case BOrderEvaluator bOrderEvaluator ->
+        orderHash(bOrderEvaluator.operation().evaluationType());
       case BPickEvaluator _ -> pickHash();
       case BSelectEvaluator _ -> selectHash();
     };

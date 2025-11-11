@@ -128,7 +128,7 @@ public class EvaluateBExprTaskCreator {
   private Output<BValue> readEvaluationFromDiskCache(
       BExprEvaluator bExprEvaluator, Hash hash, MutablePromise<BOutput> resultPromise)
       throws IOException {
-    var bOutput = diskCache.read(hash, bExprEvaluator.evaluationType());
+    var bOutput = diskCache.read(hash, bExprEvaluator.operation().evaluationType());
     resultPromise.accept(bOutput);
     memoryCache.remove(hash);
     return newOutput(bExprEvaluator, bOutput, DISK);
@@ -170,7 +170,7 @@ public class EvaluateBExprTaskCreator {
         .storedLogs()
         .elements(BTuple.class)
         .map(message -> new Log(level(message), message(message)));
-    var label = VM_EVALUATE.append(":" + bExprEvaluator.name());
+    var label = VM_EVALUATE.append(":" + bExprEvaluator.operation().name());
     return report(label, bExprEvaluator.trace(), origin, logs);
   }
 }

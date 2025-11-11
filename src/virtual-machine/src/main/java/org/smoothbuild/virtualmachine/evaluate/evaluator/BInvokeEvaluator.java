@@ -71,10 +71,10 @@ public final class BInvokeEvaluator extends BExprEvaluator {
       }
       return bOutput(container.messages());
     }
-    if (!evaluationType().equals(result.evaluationType())) {
+    if (!operation().evaluationType().equals(result.evaluationType())) {
       logFaultyImplementation(
           container,
-          "Its declared result type == " + evaluationType().q()
+          "Its declared result type == " + operation().evaluationType().q()
               + " but it returned expression with type == " + result.kind().q() + ".");
       return bOutput(container.messages());
     }

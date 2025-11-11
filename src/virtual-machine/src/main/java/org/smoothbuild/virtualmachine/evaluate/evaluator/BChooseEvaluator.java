@@ -27,7 +27,8 @@ public final class BChooseEvaluator extends BExprEvaluator {
     checkArgument(components.size() == DATA_SEQ_SIZE);
     var index = index(components);
     var chosen = chosen(components);
-    var choice = container.factory().choice((BChoiceType) evaluationType(), index, chosen);
+    var choice =
+        container.factory().choice((BChoiceType) operation().evaluationType(), index, chosen);
     return bOutput(choice, container.messages());
   }
 
