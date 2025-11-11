@@ -52,8 +52,8 @@ public class BIfTest extends VmTestContext {
 
   @Test
   void if_can_be_read_back_by_hash() throws Exception {
-    var ifB = bIf(bBool(true), bInt(1), bInt(2));
-    assertThat(exprDbOther().get(ifB.hash())).isEqualTo(ifB);
+    var bIf = bIf(bBool(true), bInt(1), bInt(2));
+    assertThat(exprDbOther().get(bIf.hash())).isEqualTo(bIf);
   }
 
   @Test
@@ -61,15 +61,15 @@ public class BIfTest extends VmTestContext {
     var condition = bBool(true);
     var then_ = bInt(1);
     var else_ = bInt(2);
-    var ifB = bIf(condition, then_, else_);
-    assertThat(((BIf) exprDbOther().get(ifB.hash())).subExprs())
+    var bIf = bIf(condition, then_, else_);
+    assertThat(((BIf) exprDbOther().get(bIf.hash())).subExprs())
         .isEqualTo(new BSubExprs(condition, then_, else_));
   }
 
   @Test
   void to_string() throws Exception {
-    var ifB = bIf(bBool(true), bInt(1), bInt(2));
-    assertThat(ifB.toString())
+    var bIf = bIf(bBool(true), bInt(1), bInt(2));
+    assertThat(bIf.toString())
         .isEqualTo(
             """
         BIf(
