@@ -26,8 +26,8 @@ public abstract sealed class BOperation extends BExpr
         BSelect,
         BSwitch {
   public BOperation(MerkleRoot merkleRoot, BExprDb exprDb) {
-    super(merkleRoot, exprDb);
     checkArgument(merkleRoot.kind() instanceof BOperationKind);
+    super(merkleRoot, exprDb);
   }
 
   @Override
