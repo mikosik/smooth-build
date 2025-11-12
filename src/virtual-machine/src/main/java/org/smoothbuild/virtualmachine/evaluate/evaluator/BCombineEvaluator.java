@@ -8,7 +8,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 
-public final class BCombineEvaluator extends BExprEvaluator {
+public final class BCombineEvaluator extends BOperationEvaluator {
   public BCombineEvaluator(BCombine combine, Trace trace) {
     super(combine, trace);
   }

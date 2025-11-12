@@ -6,13 +6,13 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 
 public class BExprEvaluatorHashes {
-  public static Hash evaluatorHash(BExprEvaluator bExprEvaluator) {
-    return switch (bExprEvaluator) {
+  public static Hash evaluatorHash(BOperationEvaluator evaluator) {
+    return switch (evaluator) {
       case BCombineEvaluator _ -> combineHash();
       case BChooseEvaluator _ -> chooseHash();
       case BInvokeEvaluator _ -> invokeHash();
-      case BOrderEvaluator bOrderEvaluator ->
-        orderHash(bOrderEvaluator.operation().evaluationType());
+      case BOrderEvaluator orderEvaluator ->
+        orderHash(orderEvaluator.operation().evaluationType());
       case BPickEvaluator _ -> pickHash();
       case BSelectEvaluator _ -> selectHash();
     };

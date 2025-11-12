@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
-public class BExprEvaluatorTest extends VmTestContext {
+public class BOperationEvaluatorTest extends VmTestContext {
   @Nested
   class _purity {
     @Test

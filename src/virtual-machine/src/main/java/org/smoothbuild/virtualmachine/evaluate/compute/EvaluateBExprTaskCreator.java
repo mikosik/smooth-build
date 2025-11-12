@@ -35,7 +35,7 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.BExprEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BOperationEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BOutput;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.Purity;
 
@@ -82,12 +82,12 @@ public class EvaluateBExprTaskCreator {
     this.memoryCache = memoryCache;
   }
 
-  public TaskX<BValue, BValue> createTask(BExprEvaluator bExprEvaluator) {
+  public TaskX<BValue, BValue> createTask(BOperationEvaluator evaluator) {
     return (bValues) -> {
       try {
-        return evaluate(bExprEvaluator, toInput(bValues));
+        return evaluate(evaluator, toInput(bValues));
       } catch (IOException | InterruptedException e) {
-        return outputForException(bExprEvaluator, e);
+        return outputForException(evaluator, e);
       }
     };
   }
@@ -96,53 +96,53 @@ public class EvaluateBExprTaskCreator {
     return bytecodeFactory.tuple(depResults);
   }
 
-  protected Output<BValue> evaluate(BExprEvaluator bExprEvaluator, BTuple subExprValues)
+  protected Output<BValue> evaluate(BOperationEvaluator evaluator, BTuple subExprValues)
       throws InterruptedException, IOException {
-    var purity = bExprEvaluator.purity(subExprValues);
-    var hash = computationHashFactory.create(bExprEvaluator, subExprValues);
+    var purity = evaluator.purity(subExprValues);
+    var hash = computationHashFactory.create(evaluator, subExprValues);
     var resultPromise = Promise.<BOutput>promise();
     var existingPromise = memoryCache.putIfAbsent(hash, resultPromise);
     if (existingPromise != null) {
-      var result = scheduleTaskWaitingForOtherTaskResult(bExprEvaluator, purity, existingPromise);
+      var result = scheduleTaskWaitingForOtherTaskResult(evaluator, purity, existingPromise);
       var label = VM_LABEL.append(":scheduleJoin");
-      return schedulingOutput(result, report(label, bExprEvaluator.trace(), list()));
+      return schedulingOutput(result, report(label, evaluator.trace(), list()));
     } else if (purity == PURE && diskCache.contains(hash)) {
-      return readEvaluationFromDiskCache(bExprEvaluator, hash, resultPromise);
+      return readEvaluationFromDiskCache(evaluator, hash, resultPromise);
     } else {
-      return evaluateNow(bExprEvaluator, subExprValues, resultPromise, purity, hash);
+      return evaluateNow(evaluator, subExprValues, resultPromise, purity, hash);
     }
   }
 
   private Promise<Maybe<BValue>> scheduleTaskWaitingForOtherTaskResult(
-      BExprEvaluator bExprEvaluator, Purity purity, Promise<BOutput> otherTaskResult) {
+      BOperationEvaluator evaluator, Purity purity, Promise<BOutput> otherTaskResult) {
     Task1<BOutput, BValue> task = (bOutput) -> {
       try {
-        return newOutput(bExprEvaluator, bOutput, purity.cacheLevel());
+        return newOutput(evaluator, bOutput, purity.cacheLevel());
       } catch (BytecodeException e) {
-        return outputForException(bExprEvaluator, e);
+        return outputForException(evaluator, e);
       }
     };
     return scheduler.submit(task, otherTaskResult.map(Maybe::some));
   }
 
   private Output<BValue> readEvaluationFromDiskCache(
-      BExprEvaluator bExprEvaluator, Hash hash, MutablePromise<BOutput> resultPromise)
+      BOperationEvaluator evaluator, Hash hash, MutablePromise<BOutput> resultPromise)
       throws IOException {
-    var bOutput = diskCache.read(hash, bExprEvaluator.operation().evaluationType());
+    var bOutput = diskCache.read(hash, evaluator.operation().evaluationType());
     resultPromise.accept(bOutput);
     memoryCache.remove(hash);
-    return newOutput(bExprEvaluator, bOutput, DISK);
+    return newOutput(evaluator, bOutput, DISK);
   }
 
   private Output<BValue> evaluateNow(
-      BExprEvaluator bExprEvaluator,
+      BOperationEvaluator evaluator,
       BTuple subExprValues,
       MutablePromise<BOutput> resultPromise,
       Purity purity,
       Hash hash)
       throws IOException {
     var container = containerProvider.get();
-    var bOutput = bExprEvaluator.evaluate(subExprValues, container);
+    var bOutput = evaluator.evaluate(subExprValues, container);
     resultPromise.accept(bOutput);
     if (purity == PURE) {
       if (!containsFatal(bOutput.storedLogs())) {
@@ -150,27 +150,27 @@ public class EvaluateBExprTaskCreator {
       }
       memoryCache.remove(hash);
     }
-    return newOutput(bExprEvaluator, bOutput, EXECUTION);
+    return newOutput(evaluator, bOutput, EXECUTION);
   }
 
   private static Output<BValue> newOutput(
-      BExprEvaluator bExprEvaluator, BOutput bOutput, Origin source) throws BytecodeException {
-    var report = newReport(bExprEvaluator, bOutput, source);
+      BOperationEvaluator evaluator, BOutput bOutput, Origin source) throws BytecodeException {
+    var report = newReport(evaluator, bOutput, source);
     return bOutput.value().map(v -> output(v, report)).getOr(output(report));
   }
 
-  private static Output<BValue> outputForException(BExprEvaluator bExprEvaluator, Exception e) {
+  private static Output<BValue> outputForException(BOperationEvaluator evaluator, Exception e) {
     var fatal = fatal("Vm evaluation Task failed with exception:", e);
-    return output(report(VM_EVALUATE, bExprEvaluator.trace(), list(fatal)));
+    return output(report(VM_EVALUATE, evaluator.trace(), list(fatal)));
   }
 
-  private static Report newReport(BExprEvaluator bExprEvaluator, BOutput bOutput, Origin origin)
+  private static Report newReport(BOperationEvaluator evaluator, BOutput bOutput, Origin origin)
       throws BytecodeException {
     var logs = bOutput
         .storedLogs()
         .elements(BTuple.class)
         .map(message -> new Log(level(message), message(message)));
-    var label = VM_EVALUATE.append(":" + bExprEvaluator.operation().name());
-    return report(label, bExprEvaluator.trace(), origin, logs);
+    var label = VM_EVALUATE.append(":" + evaluator.operation().name());
+    return report(label, evaluator.trace(), origin, logs);
   }
 }

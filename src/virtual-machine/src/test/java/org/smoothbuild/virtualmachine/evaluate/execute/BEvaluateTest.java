@@ -56,7 +56,7 @@ import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 import org.smoothbuild.virtualmachine.evaluate.compute.EvaluateBExprTaskCreator;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.BExprEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BOperationEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.testing.func.nativ.ConcatStrings;
 
@@ -543,7 +543,7 @@ public class BEvaluateTest extends VmTestContext {
             new EvaluateBExprTaskCreator(
                 mock(), mock(), mock(), scheduler, provide().bytecodeFactory()) {
               @Override
-              public Output<BValue> evaluate(BExprEvaluator task, BTuple subExprValues) {
+              public Output<BValue> evaluate(BOperationEvaluator evaluator, BTuple subExprValues) {
                 throw runtimeException;
               }
             };

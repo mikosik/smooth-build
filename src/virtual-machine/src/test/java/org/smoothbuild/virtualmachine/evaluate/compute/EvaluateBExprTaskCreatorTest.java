@@ -25,8 +25,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BCombineEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.BExprEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BInvokeEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BOperationEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BOrderEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BOutput;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BPickEvaluator;
@@ -295,7 +295,7 @@ public class EvaluateBExprTaskCreatorTest extends VmTestContext {
   }
 
   private void assertComputationResult(
-      BExprEvaluator bExprEvaluator,
+      BOperationEvaluator evaluator,
       BTuple subExprValues,
       @Nullable BValue memoryValue,
       @Nullable BValue diskValue,
@@ -303,20 +303,20 @@ public class EvaluateBExprTaskCreatorTest extends VmTestContext {
       Origin expectedOrigin)
       throws Exception {
     var evaluationScheduler =
-        evaluateBExprTaskCreatorWithCaches(bExprEvaluator, subExprValues, memoryValue, diskValue);
+        evaluateBExprTaskCreatorWithCaches(evaluator, subExprValues, memoryValue, diskValue);
     assertComputationResult(
-        evaluationScheduler, bExprEvaluator, subExprValues, expectedOutput, expectedOrigin);
+        evaluationScheduler, evaluator, subExprValues, expectedOutput, expectedOrigin);
   }
 
   private EvaluateBExprTaskCreator evaluateBExprTaskCreatorWithCaches(
-      BExprEvaluator bExprEvaluator,
+      BOperationEvaluator evaluator,
       BTuple subExprValues,
       @Nullable BValue memoryValue,
       @Nullable BValue diskValue)
       throws Exception {
     var computationCache = provide().computationCache();
     var computationHashFactory = provide().computationHashFactory();
-    var computationHash = computationHashFactory.create(bExprEvaluator, subExprValues);
+    var computationHash = computationHashFactory.create(evaluator, subExprValues);
     if (diskValue != null) {
       computationCache.write(computationHash, bOutput(diskValue));
     }
@@ -335,24 +335,24 @@ public class EvaluateBExprTaskCreatorTest extends VmTestContext {
 
   private void assertComputationResult(
       EvaluateBExprTaskCreator evaluateBExprTaskCreator,
-      BExprEvaluator bExprEvaluator,
+      BOperationEvaluator evaluator,
       BTuple subExprValues,
       BOutput expectedOutput,
       Origin expectedOrigin)
       throws Exception {
     var arg = subExprValues.elements().map(Tasks::argument);
-    var taskX = evaluateBExprTaskCreator.createTask(bExprEvaluator);
+    var taskX = evaluateBExprTaskCreator.createTask(evaluator);
     var promise = provide().scheduler().submit(taskX, arg);
     await().until(() -> promise.toMaybe().isSome());
 
     assertThat(promise.get()).isEqualTo(expectedOutput.value());
-    var label = VM_EVALUATE.append(":" + bExprEvaluator.operation().name());
-    var report = report(label, bExprEvaluator.trace(), expectedOrigin, list());
+    var label = VM_EVALUATE.append(":" + evaluator.operation().name());
+    var report = report(label, evaluator.trace(), expectedOrigin, list());
     assertThat(provide().reporter().reports()).contains(report);
   }
 
   private void assertCachesState(
-      BExprEvaluator bExprEvaluator,
+      BOperationEvaluator evaluator,
       BTuple subExprValues,
       @Nullable BOutput memoryValue,
       @Nullable BValue diskValue)
@@ -368,11 +368,11 @@ public class EvaluateBExprTaskCreatorTest extends VmTestContext {
         scheduler,
         provide().bytecodeFactory(),
         memoryCache);
-    var taskX = evaluationScheduler.createTask(bExprEvaluator);
+    var taskX = evaluationScheduler.createTask(evaluator);
     var promise = scheduler.submit(taskX, subExprValues.elements().map(Tasks::argument));
     await().until(() -> promise.toMaybe().isSome());
 
-    var evaluationHash = computationHashFactory.create(bExprEvaluator, subExprValues);
+    var evaluationHash = computationHashFactory.create(evaluator, subExprValues);
 
     if (memoryValue == null) {
       assertThat(memoryCache.containsKey(evaluationHash)).isFalse();

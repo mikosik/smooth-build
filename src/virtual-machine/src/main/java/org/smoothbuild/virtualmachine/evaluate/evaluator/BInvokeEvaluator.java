@@ -20,7 +20,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 
-public final class BInvokeEvaluator extends BExprEvaluator {
+public final class BInvokeEvaluator extends BOperationEvaluator {
   public BInvokeEvaluator(BInvoke invoke, Trace trace) {
     super(invoke, trace);
   }

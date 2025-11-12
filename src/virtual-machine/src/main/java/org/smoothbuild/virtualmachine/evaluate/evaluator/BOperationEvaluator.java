@@ -17,7 +17,7 @@ import org.smoothbuild.virtualmachine.evaluate.compute.Container;
  *
  * This class is thread-safe.
  */
-public abstract sealed class BExprEvaluator
+public abstract sealed class BOperationEvaluator
     permits BChooseEvaluator,
         BCombineEvaluator,
         BInvokeEvaluator,
@@ -27,7 +27,7 @@ public abstract sealed class BExprEvaluator
   private final BOperation operation;
   private final Trace trace;
 
-  public BExprEvaluator(BOperation operation, Trace trace) {
+  public BOperationEvaluator(BOperation operation, Trace trace) {
     this.operation = operation;
     this.trace = trace;
   }
@@ -53,7 +53,7 @@ public abstract sealed class BExprEvaluator
 
   @Override
   public boolean equals(Object object) {
-    return object instanceof BExprEvaluator that
+    return object instanceof BOperationEvaluator that
         && Objects.equals(this.getClass(), that.getClass())
         && Objects.equals(this.operation, that.operation)
         && Objects.equals(this.trace, that.trace);

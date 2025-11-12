@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
-public class BExprEvaluatorHashesCollisionTest extends VmTestContext {
+public class BOperationEvaluatorHashesCollisionTest extends VmTestContext {
   @Test
   void each_task_has_different_hash() throws Exception {
     List<Hash> list = new ArrayList<>();
@@ -26,8 +26,8 @@ public class BExprEvaluatorHashesCollisionTest extends VmTestContext {
     addHash(list, set, new BSelectEvaluator(bSelect(), trace()));
   }
 
-  private void addHash(List<Hash> list, Set<Hash> set, BExprEvaluator bExprEvaluator) {
-    var hash = BExprEvaluatorHashes.evaluatorHash(bExprEvaluator);
+  private void addHash(List<Hash> list, Set<Hash> set, BOperationEvaluator evaluator) {
+    var hash = BExprEvaluatorHashes.evaluatorHash(evaluator);
     if (set.contains(hash)) {
       fail("Hash collision for hash " + hash + " index of previous occurrence "
           + list.indexOf(hash));

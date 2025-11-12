@@ -52,8 +52,8 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.evaluate.compute.EvaluateBExprTaskCreator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BChooseEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BCombineEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.BExprEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BInvokeEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BOperationEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BOrderEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BPickEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BSelectEvaluator;
@@ -303,10 +303,10 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
     }
 
     private <T extends BOperation> Promise<Maybe<BValue>> scheduleOperation(
-        Job job, T operation, BExprEvaluator bExprEvaluator) throws BytecodeException {
+        Job job, T operation, BOperationEvaluator evaluator) throws BytecodeException {
       List<Job> subExprJobs = operation.subExprs().toList().map(e -> newJob(e, job));
       List<Promise<Maybe<BValue>>> subExprResults = subExprJobs.map(job1 -> scheduleJob(job1));
-      return scheduler.submit(evaluateBExprTaskCreator.createTask(bExprEvaluator), subExprResults);
+      return scheduler.submit(evaluateBExprTaskCreator.createTask(evaluator), subExprResults);
     }
 
     private Promise<Maybe<BValue>> scheduleReference(Job job, BReference reference)

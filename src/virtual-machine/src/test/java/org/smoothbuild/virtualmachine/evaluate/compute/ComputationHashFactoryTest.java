@@ -8,8 +8,8 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BCombineEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.BExprEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BInvokeEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BOperationEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BOrderEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BPickEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BSelectEvaluator;
@@ -129,7 +129,8 @@ public class ComputationHashFactoryTest extends VmTestContext {
     }
   }
 
-  private static Hash create(Hash sandboxHash, BExprEvaluator evaluator, BTuple subExprValues) {
+  private static Hash create(
+      Hash sandboxHash, BOperationEvaluator evaluator, BTuple subExprValues) {
     return new ComputationHashFactory(() -> sandboxHash).create(evaluator, subExprValues);
   }
 }

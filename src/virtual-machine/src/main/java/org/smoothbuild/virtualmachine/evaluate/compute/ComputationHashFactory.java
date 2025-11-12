@@ -8,7 +8,7 @@ import jakarta.inject.Inject;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.dagger.Sandbox;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.BExprEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BOperationEvaluator;
 
 public class ComputationHashFactory {
   /**
@@ -22,7 +22,7 @@ public class ComputationHashFactory {
     this.sandboxHash = sandboxHash;
   }
 
-  public Hash create(BExprEvaluator bExprEvaluator, BTuple subExprValues) {
-    return Hash.of(list(sandboxHash.get(), evaluatorHash(bExprEvaluator), subExprValues.hash()));
+  public Hash create(BOperationEvaluator evaluator, BTuple subExprValues) {
+    return Hash.of(list(sandboxHash.get(), evaluatorHash(evaluator), subExprValues.hash()));
   }
 }
