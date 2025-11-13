@@ -3,8 +3,8 @@ package org.smoothbuild.virtualmachine.evaluate.execute;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.BOperationEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.BPickEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.OperationEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.PickEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.execute.BEvaluate.JobContext;
 
 public final class PickJob extends OperationJob {
@@ -16,7 +16,7 @@ public final class PickJob extends OperationJob {
   }
 
   @Override
-  protected BOperationEvaluator createEvaluator() {
-    return new BPickEvaluator(pick, trace());
+  protected OperationEvaluator createEvaluator() {
+    return new PickEvaluator(pick, trace());
   }
 }

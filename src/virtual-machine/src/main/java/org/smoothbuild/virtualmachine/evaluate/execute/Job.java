@@ -20,7 +20,7 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.compute.CachingOperatorEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.BOperationEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.OperationEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.execute.BEvaluate.JobContext;
 
 public abstract sealed class Job permits LambdaJob, SchedulingJob, ValueJob {
@@ -74,7 +74,7 @@ public abstract sealed class Job permits LambdaJob, SchedulingJob, ValueJob {
     return bytecodeFactory().call(lambdaExpr, bytecodeFactory().tuple(arguments));
   }
 
-  protected Output<BValue> outputForException(BOperationEvaluator evaluator, Exception e) {
+  protected Output<BValue> outputForException(OperationEvaluator evaluator, Exception e) {
     var fatal = fatal("Vm evaluation Task failed with exception:", e);
     return output(report(VM_EVALUATE, evaluator.trace(), list(fatal)));
   }

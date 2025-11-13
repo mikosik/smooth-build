@@ -25,13 +25,13 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BOperation;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.BCombineEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.BInvokeEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.BOperationEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.BOrderEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BOutput;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.BPickEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.BSelectEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.CombineEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.InvokeEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.OperationEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.OrderEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.PickEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.SelectEvaluator;
 
 public class CachingOperatorEvaluatorTest extends VmTestContext {
   @Nested
@@ -39,7 +39,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
     @Test
     void when_cached_in_memory_and_disk() throws Exception {
       var value = bInt(17);
-      var evaluator = new BCombineEvaluator(bCombine(bInt()), trace());
+      var evaluator = new CombineEvaluator(bCombine(bInt()), trace());
       var input = bTuple(value);
       var memory = bTuple(bInt(1));
       var disk = bTuple(bInt(2));
@@ -50,7 +50,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
     @Test
     void when_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var evaluator = new BCombineEvaluator(bCombine(bInt()), trace());
+      var evaluator = new CombineEvaluator(bCombine(bInt()), trace());
       var input = bTuple(value);
       var disk = bTuple(bInt(2));
 
@@ -60,7 +60,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
     @Test
     void when_not_cached() throws Exception {
       var value = bInt(17);
-      var evaluator = new BCombineEvaluator(bCombine(bInt()), trace());
+      var evaluator = new CombineEvaluator(bCombine(bInt()), trace());
       var input = bTuple(value);
 
       assertComputationResult(evaluator, input, null, null, bOutput(bTuple(value)), EXECUTION);
@@ -69,7 +69,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
     @Test
     void executed_computation_is_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var evaluator = new BCombineEvaluator(bCombine(bInt()), trace());
+      var evaluator = new CombineEvaluator(bCombine(bInt()), trace());
       var input = bTuple(value);
 
       assertCachesState(evaluator, input, null, bTuple(value));
@@ -83,7 +83,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
       @Test
       void when_cached_in_memory_and_disk() throws Exception {
         var invoke = bReturnAbcInvoke(true);
-        var evaluator = new BInvokeEvaluator(invoke, trace());
+        var evaluator = new InvokeEvaluator(invoke, trace());
         var input = argumentsForInvokeEvaluator(invoke);
         var memory = bString("def");
         var disk = bString("ghi");
@@ -94,7 +94,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
       @Test
       void when_cached_on_disk() throws Exception {
         var invoke = bReturnAbcInvoke(true);
-        var evaluator = new BInvokeEvaluator(invoke, trace());
+        var evaluator = new InvokeEvaluator(invoke, trace());
         var input = argumentsForInvokeEvaluator(invoke);
         var disk = bString("ghi");
 
@@ -104,7 +104,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
       @Test
       void when_not_cached() throws Exception {
         var invoke = bReturnAbcInvoke(true);
-        var evaluator = new BInvokeEvaluator(invoke, trace());
+        var evaluator = new InvokeEvaluator(invoke, trace());
         var input = argumentsForInvokeEvaluator(invoke);
 
         assertComputationResult(evaluator, input, null, null, bOutput(bString("abc")), EXECUTION);
@@ -113,7 +113,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
       @Test
       void executed_computation_is_cached_on_disk() throws Exception {
         var invoke = bReturnAbcInvoke(true);
-        var evaluator = new BInvokeEvaluator(invoke, trace());
+        var evaluator = new InvokeEvaluator(invoke, trace());
         var input = argumentsForInvokeEvaluator(invoke);
 
         assertCachesState(evaluator, input, null, bString("abc"));
@@ -125,7 +125,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
       @Test
       void when_cached_in_memory_and_disk() throws Exception {
         var invoke = bReturnAbcInvoke(false);
-        var evaluator = new BInvokeEvaluator(invoke, trace());
+        var evaluator = new InvokeEvaluator(invoke, trace());
         var input = argumentsForInvokeEvaluator(invoke);
         var memory = bString("def");
         var disk = bString("ghi");
@@ -136,7 +136,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
       @Test
       void when_cached_on_disk() throws Exception {
         var invoke = bReturnAbcInvoke(false);
-        var evaluator = new BInvokeEvaluator(invoke, trace());
+        var evaluator = new InvokeEvaluator(invoke, trace());
         var input = argumentsForInvokeEvaluator(invoke);
         var disk = bString("ghi");
 
@@ -146,7 +146,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
       @Test
       void when_not_cached() throws Exception {
         var invoke = bReturnAbcInvoke(false);
-        var evaluator = new BInvokeEvaluator(invoke, trace());
+        var evaluator = new InvokeEvaluator(invoke, trace());
         var input = argumentsForInvokeEvaluator(invoke);
 
         assertComputationResult(evaluator, input, null, null, bOutput(bString("abc")), EXECUTION);
@@ -155,7 +155,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
       @Test
       void executed_computation_is_cached_on_disk() throws Exception {
         var invoke = bReturnAbcInvoke(false);
-        var evaluator = new BInvokeEvaluator(invoke, trace());
+        var evaluator = new InvokeEvaluator(invoke, trace());
         var input = argumentsForInvokeEvaluator(invoke);
 
         assertCachesState(evaluator, input, bOutput(bString("abc"), bLogArrayEmpty()), null);
@@ -174,7 +174,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
     @Test
     void when_cached_in_memory_and_disk() throws Exception {
       var value = bInt(17);
-      var evaluator = new BOrderEvaluator(bOrder(bIntType()), trace());
+      var evaluator = new OrderEvaluator(bOrder(bIntType()), trace());
       var input = bTuple(value);
       var memory = bArray(bInt(1));
       var disk = bArray(bInt(2));
@@ -185,7 +185,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
     @Test
     void when_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var evaluator = new BOrderEvaluator(bOrder(bIntType()), trace());
+      var evaluator = new OrderEvaluator(bOrder(bIntType()), trace());
       var input = bTuple(value);
       var disk = bArray(bInt(2));
 
@@ -195,7 +195,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
     @Test
     void when_not_cached() throws Exception {
       var value = bInt(17);
-      var evaluator = new BOrderEvaluator(bOrder(bIntType()), trace());
+      var evaluator = new OrderEvaluator(bOrder(bIntType()), trace());
       var input = bTuple(value);
 
       assertComputationResult(evaluator, input, null, null, bOutput(bArray(value)), EXECUTION);
@@ -204,7 +204,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
     @Test
     void executed_computation_is_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var evaluator = new BOrderEvaluator(bOrder(bIntType()), trace());
+      var evaluator = new OrderEvaluator(bOrder(bIntType()), trace());
       var input = bTuple(value);
 
       assertCachesState(evaluator, input, null, bArray(value));
@@ -216,7 +216,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
     @Test
     void when_cached_in_memory_and_disk() throws Exception {
       var value = bInt(17);
-      var evaluator = new BPickEvaluator(bPick(), trace());
+      var evaluator = new PickEvaluator(bPick(), trace());
       var input = bTuple(bArray(value), bInt(0));
       var memory = bInt(1);
       var disk = bInt(2);
@@ -227,7 +227,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
     @Test
     void when_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var evaluator = new BPickEvaluator(bPick(), trace());
+      var evaluator = new PickEvaluator(bPick(), trace());
       var input = bTuple(bArray(value), bInt(0));
       var disk = bInt(2);
 
@@ -237,7 +237,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
     @Test
     void when_not_cached() throws Exception {
       var value = bInt(17);
-      var evaluator = new BPickEvaluator(bPick(), trace());
+      var evaluator = new PickEvaluator(bPick(), trace());
       var input = bTuple(bArray(value), bInt(0));
 
       assertComputationResult(evaluator, input, null, null, bOutput(value), EXECUTION);
@@ -246,7 +246,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
     @Test
     void executed_computation_is_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var task = new BPickEvaluator(bPick(), trace());
+      var task = new PickEvaluator(bPick(), trace());
       var input = bTuple(bArray(value), bInt(0));
 
       assertCachesState(task, input, null, value);
@@ -258,45 +258,45 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
     @Test
     void when_cached_in_memory_and_disk() throws Exception {
       var value = bInt(17);
-      var task = new BSelectEvaluator(bSelect(), trace());
+      var evaluator = new SelectEvaluator(bSelect(), trace());
       var input = bTuple(bTuple(value), bInt(0));
       var memory = bInt(1);
       var disk = bInt(2);
 
-      assertComputationResult(task, input, memory, disk, bOutput(memory), DISK);
+      assertComputationResult(evaluator, input, memory, disk, bOutput(memory), DISK);
     }
 
     @Test
     void when_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var task = new BSelectEvaluator(bSelect(), trace());
+      var evaluator = new SelectEvaluator(bSelect(), trace());
       var input = bTuple(bTuple(value), bInt(0));
       var disk = bInt(2);
 
-      assertComputationResult(task, input, null, disk, bOutput(disk), DISK);
+      assertComputationResult(evaluator, input, null, disk, bOutput(disk), DISK);
     }
 
     @Test
     void when_not_cached() throws Exception {
       var value = bInt(17);
-      var task = new BSelectEvaluator(bSelect(), trace());
+      var evaluator = new SelectEvaluator(bSelect(), trace());
       var input = bTuple(bTuple(value), bInt(0));
 
-      assertComputationResult(task, input, null, null, bOutput(value), EXECUTION);
+      assertComputationResult(evaluator, input, null, null, bOutput(value), EXECUTION);
     }
 
     @Test
     void executed_computation_is_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var task = new BSelectEvaluator(bSelect(), trace());
+      var evaluator = new SelectEvaluator(bSelect(), trace());
       var input = bTuple(bTuple(value), bInt(0));
 
-      assertCachesState(task, input, null, value);
+      assertCachesState(evaluator, input, null, value);
     }
   }
 
   private void assertComputationResult(
-      BOperationEvaluator evaluator,
+      OperationEvaluator evaluator,
       BTuple subExprValues,
       @Nullable BValue memoryValue,
       @Nullable BValue diskValue,
@@ -336,7 +336,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
 
   private void assertComputationResult(
       CachingOperatorEvaluator cachingOperatorEvaluator,
-      BOperationEvaluator evaluator,
+      OperationEvaluator evaluator,
       BTuple subExprValues,
       BOutput expectedOutput,
       Origin expectedOrigin)
@@ -353,7 +353,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
   }
 
   private void assertCachesState(
-      BOperationEvaluator evaluator,
+      OperationEvaluator evaluator,
       BTuple subExprValues,
       @Nullable BOutput memoryValue,
       @Nullable BValue diskValue)

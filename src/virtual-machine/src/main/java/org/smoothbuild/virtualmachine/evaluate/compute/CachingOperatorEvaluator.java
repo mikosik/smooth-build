@@ -35,8 +35,8 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.BOperationEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BOutput;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.OperationEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.Purity;
 
 /**
@@ -82,7 +82,7 @@ public class CachingOperatorEvaluator {
     this.memoryCache = memoryCache;
   }
 
-  public TaskX<BValue, BValue> createTask(BOperationEvaluator evaluator) {
+  public TaskX<BValue, BValue> createTask(OperationEvaluator evaluator) {
     return (bValues) -> {
       try {
         return evaluate(evaluator, bValues);
@@ -92,7 +92,7 @@ public class CachingOperatorEvaluator {
     };
   }
 
-  public Output<BValue> evaluate(BOperationEvaluator evaluator, List<BValue> bValues)
+  public Output<BValue> evaluate(OperationEvaluator evaluator, List<BValue> bValues)
       throws InterruptedException, IOException {
     return evaluate(evaluator, toInput(bValues));
   }
@@ -101,7 +101,7 @@ public class CachingOperatorEvaluator {
     return bytecodeFactory.tuple(depResults);
   }
 
-  protected Output<BValue> evaluate(BOperationEvaluator evaluator, BTuple subExprValues)
+  protected Output<BValue> evaluate(OperationEvaluator evaluator, BTuple subExprValues)
       throws InterruptedException, IOException {
     var purity = evaluator.purity(subExprValues);
     var hash = computationHashFactory.create(evaluator.operation(), subExprValues);
@@ -119,7 +119,7 @@ public class CachingOperatorEvaluator {
   }
 
   private Promise<Maybe<BValue>> scheduleTaskWaitingForOtherTaskResult(
-      BOperationEvaluator evaluator, Purity purity, Promise<BOutput> otherTaskResult) {
+      OperationEvaluator evaluator, Purity purity, Promise<BOutput> otherTaskResult) {
     Task1<BOutput, BValue> task = (bOutput) -> {
       try {
         return newOutput(evaluator, bOutput, purity.cacheLevel());
@@ -131,7 +131,7 @@ public class CachingOperatorEvaluator {
   }
 
   private Output<BValue> readEvaluationFromDiskCache(
-      BOperationEvaluator evaluator, Hash hash, MutablePromise<BOutput> resultPromise)
+      OperationEvaluator evaluator, Hash hash, MutablePromise<BOutput> resultPromise)
       throws IOException {
     var bOutput = diskCache.read(hash, evaluator.operation().evaluationType());
     resultPromise.accept(bOutput);
@@ -140,7 +140,7 @@ public class CachingOperatorEvaluator {
   }
 
   private Output<BValue> evaluateNow(
-      BOperationEvaluator evaluator,
+      OperationEvaluator evaluator,
       BTuple subExprValues,
       MutablePromise<BOutput> resultPromise,
       Purity purity,
@@ -159,17 +159,17 @@ public class CachingOperatorEvaluator {
   }
 
   private static Output<BValue> newOutput(
-      BOperationEvaluator evaluator, BOutput bOutput, Origin source) throws BytecodeException {
+      OperationEvaluator evaluator, BOutput bOutput, Origin source) throws BytecodeException {
     var report = newReport(evaluator, bOutput, source);
     return bOutput.value().map(v -> output(v, report)).getOr(output(report));
   }
 
-  private static Output<BValue> outputForException(BOperationEvaluator evaluator, Exception e) {
+  private static Output<BValue> outputForException(OperationEvaluator evaluator, Exception e) {
     var fatal = fatal("Vm evaluation Task failed with exception:", e);
     return output(report(VM_EVALUATE, evaluator.trace(), list(fatal)));
   }
 
-  private static Report newReport(BOperationEvaluator evaluator, BOutput bOutput, Origin origin)
+  private static Report newReport(OperationEvaluator evaluator, BOutput bOutput, Origin origin)
       throws BytecodeException {
     var logs = bOutput
         .storedLogs()

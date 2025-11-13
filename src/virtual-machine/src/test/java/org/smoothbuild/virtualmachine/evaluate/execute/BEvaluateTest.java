@@ -56,7 +56,7 @@ import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 import org.smoothbuild.virtualmachine.evaluate.compute.CachingOperatorEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.BOperationEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.OperationEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.testing.func.nativ.ConcatStrings;
 
@@ -543,7 +543,7 @@ public class BEvaluateTest extends VmTestContext {
             new CachingOperatorEvaluator(
                 mock(), mock(), mock(), scheduler, provide().bytecodeFactory()) {
               @Override
-              public Output<BValue> evaluate(BOperationEvaluator evaluator, BTuple subExprValues) {
+              public Output<BValue> evaluate(OperationEvaluator evaluator, BTuple subExprValues) {
                 throw runtimeException;
               }
             };
