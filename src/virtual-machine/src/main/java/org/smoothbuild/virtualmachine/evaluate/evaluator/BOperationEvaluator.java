@@ -3,7 +3,6 @@ package org.smoothbuild.virtualmachine.evaluate.evaluator;
 import static org.smoothbuild.virtualmachine.evaluate.evaluator.Purity.PURE;
 
 import java.io.IOException;
-import java.util.Objects;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOperation;
@@ -45,17 +44,4 @@ public abstract sealed class BOperationEvaluator
   }
 
   public abstract BOutput evaluate(BTuple subExprValues, Container container) throws IOException;
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.getClass(), this.operation, this.trace);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    return object instanceof BOperationEvaluator that
-        && Objects.equals(this.getClass(), that.getClass())
-        && Objects.equals(this.operation, that.operation)
-        && Objects.equals(this.trace, that.trace);
-  }
 }
