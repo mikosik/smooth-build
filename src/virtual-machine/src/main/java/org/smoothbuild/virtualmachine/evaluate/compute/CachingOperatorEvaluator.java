@@ -104,7 +104,7 @@ public class CachingOperatorEvaluator {
   protected Output<BValue> evaluate(BOperationEvaluator evaluator, BTuple subExprValues)
       throws InterruptedException, IOException {
     var purity = evaluator.purity(subExprValues);
-    var hash = computationHashFactory.create(evaluator, subExprValues);
+    var hash = computationHashFactory.create(evaluator.operation(), subExprValues);
     var resultPromise = Promise.<BOutput>promise();
     var existingPromise = memoryCache.putIfAbsent(hash, resultPromise);
     if (existingPromise != null) {

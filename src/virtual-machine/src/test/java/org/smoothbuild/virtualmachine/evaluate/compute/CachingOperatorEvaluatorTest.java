@@ -21,6 +21,7 @@ import org.smoothbuild.common.log.base.Origin;
 import org.smoothbuild.common.schedule.Tasks;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BOperation;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
@@ -302,21 +303,21 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
       BOutput expectedOutput,
       Origin expectedOrigin)
       throws Exception {
-    var evaluationScheduler =
-        evaluateBExprTaskCreatorWithCaches(evaluator, subExprValues, memoryValue, diskValue);
+    var evaluationScheduler = cachingOperatorEvaluatorWithCaches(
+        evaluator.operation(), subExprValues, memoryValue, diskValue);
     assertComputationResult(
         evaluationScheduler, evaluator, subExprValues, expectedOutput, expectedOrigin);
   }
 
-  private CachingOperatorEvaluator evaluateBExprTaskCreatorWithCaches(
-      BOperationEvaluator evaluator,
+  private CachingOperatorEvaluator cachingOperatorEvaluatorWithCaches(
+      BOperation operation,
       BTuple subExprValues,
       @Nullable BValue memoryValue,
       @Nullable BValue diskValue)
       throws Exception {
     var computationCache = provide().computationCache();
     var computationHashFactory = provide().computationHashFactory();
-    var computationHash = computationHashFactory.create(evaluator, subExprValues);
+    var computationHash = computationHashFactory.create(operation, subExprValues);
     if (diskValue != null) {
       computationCache.write(computationHash, bOutput(diskValue));
     }
@@ -372,7 +373,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
     var promise = scheduler.submit(taskX, subExprValues.elements().map(Tasks::argument));
     await().until(() -> promise.toMaybe().isSome());
 
-    var evaluationHash = computationHashFactory.create(evaluator, subExprValues);
+    var evaluationHash = computationHashFactory.create(evaluator.operation(), subExprValues);
 
     if (memoryValue == null) {
       assertThat(memoryCache.containsKey(evaluationHash)).isFalse();
