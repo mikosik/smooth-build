@@ -32,7 +32,7 @@ import org.smoothbuild.virtualmachine.evaluate.evaluator.BOutput;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BPickEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BSelectEvaluator;
 
-public class EvaluateBExprTaskCreatorTest extends VmTestContext {
+public class CachingOperatorEvaluatorTest extends VmTestContext {
   @Nested
   class _combine_evaluator {
     @Test
@@ -308,7 +308,7 @@ public class EvaluateBExprTaskCreatorTest extends VmTestContext {
         evaluationScheduler, evaluator, subExprValues, expectedOutput, expectedOrigin);
   }
 
-  private EvaluateBExprTaskCreator evaluateBExprTaskCreatorWithCaches(
+  private CachingOperatorEvaluator evaluateBExprTaskCreatorWithCaches(
       BOperationEvaluator evaluator,
       BTuple subExprValues,
       @Nullable BValue memoryValue,
@@ -324,7 +324,7 @@ public class EvaluateBExprTaskCreatorTest extends VmTestContext {
     if (memoryValue != null) {
       memoryCache.put(computationHash, promise(bOutput(memoryValue, bLogArrayEmpty())));
     }
-    return new EvaluateBExprTaskCreator(
+    return new CachingOperatorEvaluator(
         computationHashFactory,
         () -> provide().container(),
         computationCache,
@@ -334,14 +334,14 @@ public class EvaluateBExprTaskCreatorTest extends VmTestContext {
   }
 
   private void assertComputationResult(
-      EvaluateBExprTaskCreator evaluateBExprTaskCreator,
+      CachingOperatorEvaluator cachingOperatorEvaluator,
       BOperationEvaluator evaluator,
       BTuple subExprValues,
       BOutput expectedOutput,
       Origin expectedOrigin)
       throws Exception {
     var arg = subExprValues.elements().map(Tasks::argument);
-    var taskX = evaluateBExprTaskCreator.createTask(evaluator);
+    var taskX = cachingOperatorEvaluator.createTask(evaluator);
     var promise = provide().scheduler().submit(taskX, arg);
     await().until(() -> promise.toMaybe().isSome());
 
@@ -361,7 +361,7 @@ public class EvaluateBExprTaskCreatorTest extends VmTestContext {
     var memoryCache = new ConcurrentHashMap<Hash, Promise<BOutput>>();
     var computationHashFactory = provide().computationHashFactory();
     var scheduler = provide().scheduler();
-    var evaluationScheduler = new EvaluateBExprTaskCreator(
+    var evaluationScheduler = new CachingOperatorEvaluator(
         computationHashFactory,
         () -> provide().container(),
         computationCache,

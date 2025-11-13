@@ -1,36 +1,19 @@
 package org.smoothbuild.virtualmachine.evaluate.execute;
 
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.Maybe.none;
-import static org.smoothbuild.common.collect.Maybe.some;
-import static org.smoothbuild.common.concurrent.Promise.promise;
-import static org.smoothbuild.common.log.base.Log.fatal;
-import static org.smoothbuild.common.log.location.Locations.unknownLocation;
-import static org.smoothbuild.common.log.report.Report.report;
-import static org.smoothbuild.common.schedule.Output.output;
-import static org.smoothbuild.common.schedule.Output.schedulingOutput;
+import static org.smoothbuild.common.schedule.Output.successOutput;
 import static org.smoothbuild.virtualmachine.VmConstants.VM_LABEL;
 
 import jakarta.inject.Inject;
+import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.concurrent.Promise;
-import org.smoothbuild.common.log.base.Label;
-import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.report.Trace;
-import org.smoothbuild.common.log.report.TraceLine;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Scheduler;
-import org.smoothbuild.common.schedule.Task0;
 import org.smoothbuild.common.schedule.Task1;
-import org.smoothbuild.common.schedule.Task2;
 import org.smoothbuild.common.tuple.Tuple2;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoice;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoose;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
@@ -39,376 +22,85 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BOperation;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch.BSubExprs;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
-import org.smoothbuild.virtualmachine.evaluate.compute.EvaluateBExprTaskCreator;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.BChooseEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.BCombineEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.BInvokeEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.BOperationEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.BOrderEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.BPickEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.BSelectEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.compute.CachingOperatorEvaluator;
 
 /**
  * Evaluates BExpr.
  * This class is thread-safe.
  */
 public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> {
-  private static final Label SCHEDULE_CALL_LABEL = VM_LABEL.append(":scheduleCall");
   private final Scheduler scheduler;
-  private final EvaluateBExprTaskCreator evaluateBExprTaskCreator;
+  private final CachingOperatorEvaluator cachingOperatorEvaluator;
   private final BytecodeFactory bytecodeFactory;
   private final BReferenceInliner bReferenceInliner;
 
   @Inject
   public BEvaluate(
       Scheduler scheduler,
-      EvaluateBExprTaskCreator evaluateBExprTaskCreator,
+      CachingOperatorEvaluator cachingOperatorEvaluator,
       BytecodeFactory bytecodeFactory,
       BReferenceInliner bReferenceInliner) {
     this.scheduler = scheduler;
-    this.evaluateBExprTaskCreator = evaluateBExprTaskCreator;
+    this.cachingOperatorEvaluator = cachingOperatorEvaluator;
     this.bytecodeFactory = bytecodeFactory;
     this.bReferenceInliner = bReferenceInliner;
   }
 
   @Override
   public Output<BValue> execute(Tuple2<BExpr, BExprAttributes> expr) {
-    return new Worker(expr.element2()).scheduleEvaluate(expr.element1());
+    var jobContext = new JobContext(
+        this,
+        bReferenceInliner,
+        bytecodeFactory,
+        cachingOperatorEvaluator,
+        scheduler,
+        expr.element2());
+    var label = VM_LABEL.append(":schedule");
+    var job = jobContext.newJob(expr.element1(), list(), new Trace());
+    return successOutput(job.evaluate(), label);
   }
 
-  public class Worker {
-    private final BExprAttributes bExprAttributes;
-
-    private Worker(BExprAttributes bExprAttributes) {
-      this.bExprAttributes = bExprAttributes;
+  public record JobContext(
+      BEvaluate bEvaluate,
+      BReferenceInliner referenceInliner,
+      BytecodeFactory bytecodeFactory,
+      CachingOperatorEvaluator cachingOperatorEvaluator,
+      Scheduler scheduler,
+      BExprAttributes exprAttributes) {
+    public Job newJob(BExpr expr, List<Job> environment, Trace trace) {
+      return bEvaluate.newJob(this, expr, environment, trace);
     }
-
-    public Output<BValue> scheduleEvaluate(BExpr expr) {
-      var label = VM_LABEL.append(":schedule");
-      try {
-        return successOutput(scheduleJob(newJob(expr)), label);
-      } catch (BytecodeException e) {
-        return failedSchedulingOutput(label, e);
-      }
-    }
-
-    private Promise<Maybe<BValue>> scheduleJob(Job job) throws BytecodeException {
-      return switch (job.expr()) {
-        case BCall call -> scheduleCall(job, call);
-        case BChoose choose ->
-          scheduleOperation(job, choose, new BChooseEvaluator(choose, job.trace()));
-        case BCombine combine ->
-          scheduleOperation(job, combine, new BCombineEvaluator(combine, job.trace()));
-        case BFold fold -> scheduleFold(job, fold);
-        case BIf if_ -> scheduleIf(job, if_);
-        case BInvoke invoke ->
-          scheduleOperation(job, invoke, new BInvokeEvaluator(invoke, job.trace()));
-        case BLambda _ -> scheduleInlineTask(job);
-        case BMap map -> scheduleMap(job, map);
-        case BOrder order -> scheduleOperation(job, order, new BOrderEvaluator(order, job.trace()));
-        case BPick pick -> scheduleOperation(job, pick, new BPickEvaluator(pick, job.trace()));
-        case BReference reference -> scheduleReference(job, reference);
-        case BSelect select ->
-          scheduleOperation(job, select, new BSelectEvaluator(select, job.trace()));
-        case BSwitch switch_ -> scheduleSwitch(job, switch_);
-        case BValue value -> promise(some(value));
-      };
-    }
-
-    // Call operation
-
-    private Promise<Maybe<BValue>> scheduleCall(Job callJob, BCall bCall) throws BytecodeException {
-      var subExprs = bCall.subExprs();
-      var lambda = subExprs.lambda();
-      var lambdaArgs = subExprs.arguments();
-      if (lambdaArgs instanceof BCombine combine) {
-        return scheduleCallWithCombineArgs(callJob, bCall, lambda, combine);
-      } else if (lambdaArgs instanceof BTuple tuple) {
-        return scheduleCallWithTupleArgs(callJob, bCall, lambda, tuple);
-      } else { // BExpr that evaluates to BTuple
-        return scheduleCallWithExprArgs(callJob, bCall, lambda, lambdaArgs);
-      }
-    }
-
-    private Promise<Maybe<BValue>> scheduleCallWithCombineArgs(
-        Job callJob, BCall call, BExpr lambdaExpr, BCombine combine) throws BytecodeException {
-      var schedulingTask = newCallWithCombineArgsSchedulingTask(callJob, call, combine);
-      var lambdaPromise = scheduleNewJob(lambdaExpr, callJob);
-      return scheduler.submit(schedulingTask, lambdaPromise);
-    }
-
-    private Task1<BValue, BValue> newCallWithCombineArgsSchedulingTask(
-        Job callJob, BCall call, BCombine combine) {
-      return (lambdaValue) -> {
-        var bLambda = (BLambda) lambdaValue;
-        try {
-          var argJobs = combine.subExprs().items().map(e -> newJob(e, callJob));
-          var bodyEnvironmentJobs = argJobs.addAll(callJob.environment());
-          var bodyTrace = newTrace(call, bLambda, callJob.trace());
-          var bodyJob = newJob(bLambda.body(), bodyEnvironmentJobs, bodyTrace);
-          return successOutput(scheduleJob(bodyJob), SCHEDULE_CALL_LABEL, callJob.trace());
-        } catch (BytecodeException e) {
-          return failedSchedulingOutput(SCHEDULE_CALL_LABEL, callJob.trace(), e);
-        }
-      };
-    }
-
-    private Promise<Maybe<BValue>> scheduleCallWithTupleArgs(
-        Job callJob, BCall bCall, BExpr lambdaExpr, BTuple tuple) throws BytecodeException {
-      var schedulingTask = newCallWithTupleArgsSchedulingTask(callJob, bCall, lambdaExpr, tuple);
-      var lambdaPromise = scheduleNewJob(lambdaExpr, callJob);
-      return scheduler.submit(schedulingTask, lambdaPromise);
-    }
-
-    private Task1<BValue, BValue> newCallWithTupleArgsSchedulingTask(
-        Job callJob, BCall bCall, BExpr lambdaExpr, BTuple tuple) {
-      return (lambdaValue) -> {
-        var bLambda = (BLambda) lambdaValue;
-        try {
-          var result =
-              scheduleCallBodyWithTupleArguments(callJob, bCall, lambdaExpr, tuple, bLambda);
-          return successOutput(result, SCHEDULE_CALL_LABEL, callJob.trace());
-        } catch (BytecodeException e) {
-          return failedSchedulingOutput(SCHEDULE_CALL_LABEL, callJob.trace(), e);
-        }
-      };
-    }
-
-    private Promise<Maybe<BValue>> scheduleCallWithExprArgs(
-        Job callJob, BCall bCall, BExpr lambdaExpr, BExpr lambdaArgs) throws BytecodeException {
-      var schedulingTask = newCallWithExprArgsSchedulingTask(callJob, bCall, lambdaExpr);
-      /*
-       * Performance can be improved. It just evaluates whole arguments expression
-       * without taking into account whether lambda's body actually uses any argument at all.
-       */
-      var lambdaPromise = scheduleNewJob(lambdaExpr, callJob);
-      var argsPromise = scheduleNewJob(lambdaArgs, callJob);
-      return scheduler.submit(schedulingTask, lambdaPromise, argsPromise);
-    }
-
-    private Task2<BValue, BValue, BValue> newCallWithExprArgsSchedulingTask(
-        Job callJob, BCall bCall, BExpr lambdaExpr) {
-      return (lambdaValue, argsValue) -> {
-        try {
-          var bLambda = (BLambda) lambdaValue;
-          var argsTuple = (BTuple) argsValue;
-          return successOutput(
-              scheduleCallBodyWithTupleArguments(callJob, bCall, lambdaExpr, argsTuple, bLambda),
-              SCHEDULE_CALL_LABEL,
-              callJob.trace());
-        } catch (BytecodeException e) {
-          return failedSchedulingOutput(SCHEDULE_CALL_LABEL, callJob.trace(), e);
-        }
-      };
-    }
-
-    private Promise<Maybe<BValue>> scheduleCallBodyWithTupleArguments(
-        Job callJob, BCall bCall, BExpr lambdaExpr, BTuple tuple, BLambda bLambda)
-        throws BytecodeException {
-      var argumentJobs = tuple.elements().map(BEvaluate.this::newJob);
-      var bodyEnvironmentJobs = argumentJobs.addAll(callJob.environment());
-      var bodyTrace = newTrace(bCall, lambdaExpr, callJob.trace());
-      var bodyJob = newJob(bLambda.body(), bodyEnvironmentJobs, bodyTrace);
-      return scheduleJob(bodyJob);
-    }
-
-    private Promise<Maybe<BValue>> scheduleIf(Job ifJob, BIf if_) throws BytecodeException {
-      var subExprs = if_.subExprs();
-      var schedulingTask = newIfSchedulingTask(ifJob, subExprs);
-      var conditionPromise = scheduleNewJob(subExprs.condition(), ifJob);
-      return scheduler.submit(schedulingTask, conditionPromise);
-    }
-
-    private Task1<BValue, BValue> newIfSchedulingTask(Job ifJob, BIf.BSubExprs subExprs) {
-      return (conditionValue) -> {
-        var label = VM_LABEL.append(":scheduleIf");
-        try {
-          var condition = ((BBool) conditionValue).toJavaBoolean();
-          return successOutput(
-              scheduleNewJob(condition ? subExprs.then_() : subExprs.else_(), ifJob),
-              label,
-              ifJob.trace());
-        } catch (BytecodeException e) {
-          return failedSchedulingOutput(label, ifJob.trace(), e);
-        }
-      };
-    }
-
-    private Promise<Maybe<BValue>> scheduleMap(Job mapJob, BMap map) throws BytecodeException {
-      var subExprs = map.subExprs();
-      var arrayArg = subExprs.array();
-      var schedulingTask = newMapSchedulingTask(mapJob, subExprs);
-      var arrayPromise = scheduleNewJob(arrayArg, mapJob);
-      return scheduler.submit(schedulingTask, arrayPromise);
-    }
-
-    private Task1<BValue, BValue> newMapSchedulingTask(Job mapJob, BMap.BSubExprs subExprs) {
-      return (arrayValue) -> {
-        var label = VM_LABEL.append(":scheduleMap");
-        try {
-          var array = ((BArray) arrayValue);
-          var mapperArg = subExprs.mapper();
-          var calls = array.elements(BValue.class).map(e -> newCall(mapperArg, list(e)));
-          var mappingLambdaResultType = ((BLambdaType) mapperArg.evaluationType()).result();
-          var arrayType = bytecodeFactory.arrayType(mappingLambdaResultType);
-          var order = bytecodeFactory.order(arrayType, calls);
-          return successOutput(scheduleNewJob(order, mapJob), label, mapJob.trace());
-        } catch (BytecodeException e) {
-          return failedSchedulingOutput(label, mapJob.trace(), e);
-        }
-      };
-    }
-
-    private Promise<Maybe<BValue>> scheduleFold(Job foldJob, BFold fold) throws BytecodeException {
-      var subExprs = fold.subExprs();
-      var arrayArg = subExprs.array();
-      var initialArg = subExprs.initial();
-      var schedulingTask = newFoldSchedulingTask(foldJob, subExprs);
-      var arrayPromise = scheduleNewJob(arrayArg, foldJob);
-      var initialPromise = scheduleNewJob(initialArg, foldJob);
-      return scheduler.submit(schedulingTask, arrayPromise, initialPromise);
-    }
-
-    private Task2<BValue, BValue, BValue> newFoldSchedulingTask(
-        Job foldJob, BFold.BSubExprs subExprs) {
-      return (arrayValue, initialValue) -> {
-        var label = VM_LABEL.append(":scheduleFold");
-        try {
-          var array = ((BArray) arrayValue);
-          var folderArg = subExprs.folder();
-          BExpr result = initialValue;
-          for (BValue element : array.elements(BValue.class)) {
-            result =
-                bytecodeFactory.call(folderArg, bytecodeFactory.combine(list(result, element)));
-          }
-          return successOutput(scheduleNewJob(result, foldJob), label, foldJob.trace());
-        } catch (BytecodeException e) {
-          return failedSchedulingOutput(label, foldJob.trace(), e);
-        }
-      };
-    }
-
-    private BExpr newCall(BExpr lambdaExpr, List<BValue> arguments) throws BytecodeException {
-      return bytecodeFactory.call(lambdaExpr, bytecodeFactory.tuple(arguments));
-    }
-
-    private <T extends BOperation> Promise<Maybe<BValue>> scheduleOperation(
-        Job job, T operation, BOperationEvaluator evaluator) throws BytecodeException {
-      List<Job> subExprJobs = operation.subExprs().toList().map(e -> newJob(e, job));
-      List<Promise<Maybe<BValue>>> subExprResults = subExprJobs.map(job1 -> scheduleJob(job1));
-      return scheduler.submit(evaluateBExprTaskCreator.createTask(evaluator), subExprResults);
-    }
-
-    private Promise<Maybe<BValue>> scheduleReference(Job job, BReference reference)
-        throws BytecodeException {
-      int index = reference.index().toJavaBigInteger().intValue();
-      var referencedJob = job.environment().get(index);
-      var jobEvaluationType = referencedJob.expr().evaluationType();
-      if (jobEvaluationType.equals(reference.evaluationType())) {
-        return scheduleJob(referencedJob);
-      } else {
-        throw new RuntimeException("environment(%d) evaluationType is %s but expected %s."
-            .formatted(index, jobEvaluationType.q(), reference.evaluationType().q()));
-      }
-    }
-
-    private Promise<Maybe<BValue>> scheduleInlineTask(Job job) {
-      var inlineTask = newInlineSchedulingTask(job);
-      return scheduler.submit(inlineTask);
-    }
-
-    private Task0<BValue> newInlineSchedulingTask(Job job) {
-      return () -> {
-        var label = VM_LABEL.append(":inline");
-        try {
-          var inlined = (BValue) bReferenceInliner.inline(job);
-          List<Log> logs = list();
-          return output(inlined, report(label, job.trace(), logs));
-        } catch (BytecodeException e) {
-          return failedOutput(label, some(job.trace()), "Vm inline Task failed with exception:", e);
-        }
-      };
-    }
-
-    private Promise<Maybe<BValue>> scheduleSwitch(Job switchJob, BSwitch switch_)
-        throws BytecodeException {
-      var subExprs = switch_.subExprs();
-      var choicePromise = scheduleNewJob(subExprs.choice(), switchJob);
-      var schedulingTask = newSwitchSchedulingTask(switchJob, subExprs);
-      return scheduler.submit(schedulingTask, choicePromise);
-    }
-
-    private Task1<BValue, BValue> newSwitchSchedulingTask(Job switchJob, BSubExprs subExprs) {
-      return (choiceValue) -> {
-        var label = VM_LABEL.append(":scheduleChoice");
-        try {
-          var members = ((BChoice) choiceValue).members();
-          var index = members.index().toJavaBigInteger();
-          var handler = subExprs.handlers().items().get(index.intValue());
-          var call = newCall(handler, list(members.chosen()));
-          var result = scheduleNewJob(call, switchJob);
-          return successOutput(result, label, switchJob.trace());
-        } catch (BytecodeException e) {
-          return failedSchedulingOutput(label, switchJob.trace(), e);
-        }
-      };
-    }
-
-    // helpers
-
-    private Promise<Maybe<BValue>> scheduleNewJob(BExpr bExpr, Job parentJob)
-        throws BytecodeException {
-      return scheduleJob(newJob(bExpr, parentJob));
-    }
-
-    private <T> Output<T> successOutput(Promise<Maybe<T>> resultPromise, Label label) {
-      return schedulingOutput(resultPromise, report(label, none(), list()));
-    }
-
-    private <T> Output<T> successOutput(Promise<Maybe<T>> resultPromise, Label label, Trace trace) {
-      return schedulingOutput(resultPromise, report(label, trace, list()));
-    }
-
-    private <T> Output<T> failedSchedulingOutput(Label label, Trace trace, Throwable e) {
-      return failedOutput(label, some(trace), "Scheduling task failed with exception:", e);
-    }
-
-    private <T> Output<T> failedSchedulingOutput(Label label, Throwable e) {
-      return failedOutput(label, none(), "Scheduling task failed with exception:", e);
-    }
-
-    private <T> Output<T> failedOutput(
-        Label label, Maybe<Trace> trace, String message, Throwable e) {
-      return output(report(label, trace, list(fatal(message, e))));
-    }
-
-    private Trace newTrace(BCall call, BExpr called, Trace next) {
-      var name = bExprAttributes.names().getOrDefault(called.hash(), "???");
-      var location = bExprAttributes.locations().getOrDefault(call.hash(), unknownLocation());
-      return new Trace(new TraceLine(name, location, next.topLine()));
-    }
-  }
-
-  private Job newJob(BExpr expr) {
-    return newJob(expr, list(), new Trace());
-  }
-
-  private Job newJob(BExpr expr, Job parentJob) {
-    return newJob(expr, parentJob.environment(), parentJob.trace());
   }
 
   // Visible for testing
-  protected Job newJob(BExpr expr, List<Job> environment, Trace trace) {
-    return new Job(expr, environment, trace);
+  public Job newJob(JobContext jobContext, BExpr expr, List<Job> environment, Trace trace) {
+    return newJobStatic(jobContext, expr, environment, trace);
+  }
+
+  @SuppressWarnings("NullAway")
+  public static Job newJobStatic(
+      @Nullable JobContext jobContext, BExpr expr, List<Job> environment, Trace trace) {
+    return switch (expr) {
+      case BChoose choose -> new ChooseJob(jobContext, choose, environment, trace);
+      case BOrder order -> new OrderJob(jobContext, order, environment, trace);
+      case BSelect select -> new SelectJob(jobContext, select, environment, trace);
+      case BPick pick -> new PickJob(jobContext, pick, environment, trace);
+      case BInvoke invoke -> new InvokeJob(jobContext, invoke, environment, trace);
+      case BCombine combine -> new CombineJob(jobContext, combine, environment, trace);
+      case BSwitch switch_ -> new SwitchJob(jobContext, switch_, environment, trace);
+      case BCall call -> new CallJob(jobContext, call, environment, trace);
+      case BIf if_ -> new IfJob(jobContext, if_, environment, trace);
+      case BMap map -> new MapJob(jobContext, map, environment, trace);
+      case BFold fold -> new FoldJob(jobContext, fold, environment, trace);
+      case BLambda lambda -> new LambdaJob(jobContext, lambda, environment, trace);
+      case BReference reference -> new ReferenceJob(jobContext, reference, environment, trace);
+      case BValue value -> new ValueJob(jobContext, value, environment, trace);
+    };
   }
 }

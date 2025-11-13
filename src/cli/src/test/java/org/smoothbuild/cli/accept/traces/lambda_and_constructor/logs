@@ -28,20 +28,28 @@
 :evaluator:getCompiledExprs 
 :scheduler:scheduleParallel 
 :vm:schedule 
+:vm:schedule:call 
 :vm:inline 
   @ <empty trace>
 :vm:scheduleCall 
   @ <empty trace>
+:vm:schedule:call 
+:vm:schedule:reference 
 :vm:inline 
   @ <empty trace>
 :vm:scheduleCall 
   @ {t-project}/module.smooth:4 apply
+:vm:schedule:call 
 :vm:inline 
   @ {t-project}/module.smooth:5 result:lambda~1
 @ {t-project}/module.smooth:4 apply
 :vm:scheduleCall 
   @ {t-project}/module.smooth:5 result:lambda~1
 @ {t-project}/module.smooth:4 apply
+:vm:schedule:combine 
+:vm:schedule:reference 
+:vm:schedule:reference 
+:vm:schedule:reference 
 :vm:evaluate:combine 
   @ {t-project}/module.smooth:4 MyStruct
 @ {t-project}/module.smooth:5 result:lambda~1

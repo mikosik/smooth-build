@@ -1,0 +1,41 @@
+package org.smoothbuild.virtualmachine.evaluate.execute;
+
+import java.io.IOException;
+import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.concurrent.Promise;
+import org.smoothbuild.common.log.report.Trace;
+import org.smoothbuild.common.schedule.Output;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BOperation;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BOperationEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.execute.BEvaluate.JobContext;
+
+public abstract sealed class OperationJob extends SchedulingJob
+    permits ChooseJob, CombineJob, InvokeJob, OrderJob, PickJob, SelectJob {
+  private final BOperation operation;
+
+  public OperationJob(
+      JobContext jobContext, BOperation operation, List<Job> environment, Trace trace) {
+    super(jobContext, operation, environment, trace);
+    this.operation = operation;
+  }
+
+  @Override
+  public Promise<Maybe<BValue>> schedule() throws BytecodeException {
+    var subExprResults = operation.subExprs().toList().map(this::job).map(Job::evaluate);
+    return scheduler().submit(this::evaluate, subExprResults);
+  }
+
+  private Output<BValue> evaluate(List<BValue> bValues) {
+    var evaluator = createEvaluator();
+    try {
+      return cachingOperatorEvaluator().evaluate(evaluator, bValues);
+    } catch (IOException | InterruptedException e) {
+      return outputForException(evaluator, e);
+    }
+  }
+
+  protected abstract BOperationEvaluator createEvaluator();
+}

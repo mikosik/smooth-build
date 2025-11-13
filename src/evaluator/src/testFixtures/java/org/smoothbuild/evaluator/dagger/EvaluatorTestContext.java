@@ -40,7 +40,7 @@ import org.smoothbuild.compilerfrontend.dagger.FrontendCompilerTestApi;
 import org.smoothbuild.evaluator.EvaluatedExprs;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.evaluate.compute.EvaluateBExprTaskCreator;
+import org.smoothbuild.virtualmachine.evaluate.compute.CachingOperatorEvaluator;
 
 public class EvaluatorTestContext implements FrontendCompilerTestApi {
   private EvaluatorTestComponent component;
@@ -190,7 +190,7 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
     return provide().reporter();
   }
 
-  public EvaluateBExprTaskCreator evaluateBExprTaskCreator() {
+  public CachingOperatorEvaluator evaluateBExprTaskCreator() {
     return provide().evaluateBExprTaskCreator();
   }
 

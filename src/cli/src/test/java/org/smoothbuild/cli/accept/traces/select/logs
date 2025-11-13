@@ -28,10 +28,14 @@
 :evaluator:getCompiledExprs 
 :scheduler:scheduleParallel 
 :vm:schedule 
+:vm:schedule:select 
+:vm:schedule:call 
 :vm:inline 
   @ <empty trace>
 :vm:scheduleCall 
   @ <empty trace>
+:vm:schedule:combine 
+:vm:schedule:reference 
 :vm:evaluate:combine 
   @ {t-project}/module.smooth:4 MyStruct
 :vm:evaluate:select 

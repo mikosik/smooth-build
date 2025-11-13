@@ -1,0 +1,133 @@
+package org.smoothbuild.virtualmachine.evaluate.execute;
+
+import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.log.location.Locations.unknownLocation;
+import static org.smoothbuild.common.schedule.Output.successOutput;
+import static org.smoothbuild.virtualmachine.VmConstants.VM_LABEL;
+
+import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.concurrent.Promise;
+import org.smoothbuild.common.log.base.Label;
+import org.smoothbuild.common.log.report.Trace;
+import org.smoothbuild.common.log.report.TraceLine;
+import org.smoothbuild.common.schedule.Task1;
+import org.smoothbuild.common.schedule.Task2;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
+import org.smoothbuild.virtualmachine.evaluate.execute.BEvaluate.JobContext;
+
+public final class CallJob extends SchedulingJob {
+  private static final Label SCHEDULE_CALL_LABEL = VM_LABEL.append(":scheduleCall");
+  private final BCall call;
+
+  public CallJob(JobContext jobContext, BCall call, List<Job> environment, Trace trace) {
+    super(jobContext, call, environment, trace);
+    this.call = call;
+  }
+
+  @Override
+  public Promise<Maybe<BValue>> schedule() throws BytecodeException {
+    var subExprs = call.subExprs();
+    var lambda = subExprs.lambda();
+    var lambdaArgs = subExprs.arguments();
+    if (lambdaArgs instanceof BCombine combine) {
+      return scheduleCallWithCombineArgs(call, lambda, combine);
+    } else if (lambdaArgs instanceof BTuple tuple) {
+      return scheduleCallWithTupleArgs(call, lambda, tuple);
+    } else { // BExpr that evaluates to BTuple
+      return scheduleCallWithExprArgs(call, lambda, lambdaArgs);
+    }
+  }
+
+  private Promise<Maybe<BValue>> scheduleCallWithCombineArgs(
+      BCall call, BExpr lambdaExpr, BCombine combine) throws BytecodeException {
+    var schedulingTask = newCallWithCombineArgsSchedulingTask(call, combine);
+    var lambdaPromise = evaluate(lambdaExpr);
+    return scheduler().submit(schedulingTask, lambdaPromise);
+  }
+
+  private Task1<BValue, BValue> newCallWithCombineArgsSchedulingTask(BCall call, BCombine combine) {
+    return (lambdaValue) -> {
+      var bLambda = (BLambda) lambdaValue;
+      try {
+        var argJobs = combine.subExprs().items().map(this::job);
+        var bodyEnvironmentJobs = argJobs.addAll(environment());
+        var bodyTrace = newTrace(call, bLambda, trace());
+        var schedule = job(bLambda.body(), bodyEnvironmentJobs, bodyTrace).evaluate();
+        return successOutput(schedule, SCHEDULE_CALL_LABEL, trace());
+      } catch (BytecodeException e) {
+        return failedSchedulingOutput(SCHEDULE_CALL_LABEL, trace(), e);
+      }
+    };
+  }
+
+  private Promise<Maybe<BValue>> scheduleCallWithTupleArgs(
+      BCall bCall, BExpr lambdaExpr, BTuple tuple) throws BytecodeException {
+    var schedulingTask = newCallWithTupleArgsSchedulingTask(bCall, lambdaExpr, tuple);
+    var lambdaPromise = evaluate(lambdaExpr);
+    return scheduler().submit(schedulingTask, lambdaPromise);
+  }
+
+  private Task1<BValue, BValue> newCallWithTupleArgsSchedulingTask(
+      BCall bCall, BExpr lambdaExpr, BTuple tuple) {
+    return (lambdaValue) -> {
+      var bLambda = (BLambda) lambdaValue;
+      try {
+        var result = scheduleCallBodyWithTupleArguments(
+            tuple, bLambda, newTrace(bCall, lambdaExpr, trace()));
+        return successOutput(result, SCHEDULE_CALL_LABEL, trace());
+      } catch (BytecodeException e) {
+        return failedSchedulingOutput(SCHEDULE_CALL_LABEL, trace(), e);
+      }
+    };
+  }
+
+  private Promise<Maybe<BValue>> scheduleCallWithExprArgs(
+      BCall bCall, BExpr lambdaExpr, BExpr lambdaArgs) throws BytecodeException {
+    var schedulingTask = newCallWithExprArgsSchedulingTask(bCall, lambdaExpr);
+    /*
+     * Performance can be improved. It just evaluates whole arguments expression
+     * without taking into account whether lambda's body actually uses any argument at all.
+     */
+    var lambdaPromise = evaluate(lambdaExpr);
+    var argsPromise = evaluate(lambdaArgs);
+    return scheduler().submit(schedulingTask, lambdaPromise, argsPromise);
+  }
+
+  private Task2<BValue, BValue, BValue> newCallWithExprArgsSchedulingTask(
+      BCall bCall, BExpr lambdaExpr) {
+    return (lambdaValue, argsValue) -> {
+      try {
+        var bLambda = (BLambda) lambdaValue;
+        var argsTuple = (BTuple) argsValue;
+        var trace = newTrace(bCall, lambdaExpr, trace());
+        return successOutput(
+            scheduleCallBodyWithTupleArguments(argsTuple, bLambda, trace),
+            SCHEDULE_CALL_LABEL,
+            trace());
+      } catch (BytecodeException e) {
+        return failedSchedulingOutput(SCHEDULE_CALL_LABEL, trace(), e);
+      }
+    };
+  }
+
+  private Promise<Maybe<BValue>> scheduleCallBodyWithTupleArguments(
+      BTuple tuple, BLambda bLambda, Trace trace) throws BytecodeException {
+    var argumentJobs = tuple.elements().map(j -> job(j, list(), new Trace()));
+    var bodyEnvironmentJobs = argumentJobs.addAll(environment());
+    var bodyJob = job(bLambda.body(), bodyEnvironmentJobs, trace);
+    return bodyJob.evaluate();
+  }
+
+  private Trace newTrace(BCall call, BExpr called, Trace next) {
+    var name = exprAttributes().names().getOrDefault(called.hash(), "???");
+    var location = exprAttributes().locations().getOrDefault(call.hash(), unknownLocation());
+    return new Trace(new TraceLine(name, location, next.topLine()));
+  }
+}

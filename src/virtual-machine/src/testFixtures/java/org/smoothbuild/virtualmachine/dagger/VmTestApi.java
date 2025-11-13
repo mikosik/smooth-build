@@ -3,7 +3,7 @@ package org.smoothbuild.virtualmachine.dagger;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.testing.TestingByteString.byteString;
 import static org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader.NATIVE_METHOD_NAME;
-import static org.smoothbuild.virtualmachine.evaluate.evaluator.BOutput.bOutput;
+import static org.smoothbuild.virtualmachine.evaluate.execute.BEvaluate.newJobStatic;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -78,8 +78,8 @@ public interface VmTestApi extends CommonTestApi {
     return job(expr, list(environment));
   }
 
-  public default Job job(BExpr expr, List<BExpr> list) {
-    return new Job(expr, list.map(this::job), new Trace());
+  public default Job job(BExpr expr, List<BExpr> environment) {
+    return newJobStatic(null, expr, environment.map(this::job), new Trace());
   }
 
   public default Job job(BExpr expr) {

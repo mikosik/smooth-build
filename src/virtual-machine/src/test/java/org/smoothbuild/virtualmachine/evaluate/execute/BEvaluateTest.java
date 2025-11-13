@@ -54,8 +54,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
+import org.smoothbuild.virtualmachine.evaluate.compute.CachingOperatorEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
-import org.smoothbuild.virtualmachine.evaluate.compute.EvaluateBExprTaskCreator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BOperationEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.testing.func.nativ.ConcatStrings;
@@ -540,7 +540,7 @@ public class BEvaluateTest extends VmTestContext {
         var runtimeException = new RuntimeException();
         var scheduler = provide().scheduler();
         var bExprEvaluationScheduler =
-            new EvaluateBExprTaskCreator(
+            new CachingOperatorEvaluator(
                 mock(), mock(), mock(), scheduler, provide().bytecodeFactory()) {
               @Override
               public Output<BValue> evaluate(BOperationEvaluator evaluator, BTuple subExprValues) {
@@ -815,16 +815,16 @@ public class BEvaluateTest extends VmTestContext {
 
     private CountingBEvaluate(
         Scheduler scheduler,
-        EvaluateBExprTaskCreator evaluateBExprTaskCreator,
+        CachingOperatorEvaluator cachingOperatorEvaluator,
         BytecodeFactory bytecodeFactory,
         BReferenceInliner bReferenceInliner) {
-      super(scheduler, evaluateBExprTaskCreator, bytecodeFactory, bReferenceInliner);
+      super(scheduler, cachingOperatorEvaluator, bytecodeFactory, bReferenceInliner);
     }
 
     @Override
-    protected Job newJob(BExpr expr, List<Job> environment, Trace trace) {
+    public Job newJob(JobContext jobContext, BExpr expr, List<Job> environment, Trace trace) {
       counters.computeIfAbsent(expr, k -> new AtomicInteger()).incrementAndGet();
-      return super.newJob(expr, environment, trace);
+      return super.newJob(jobContext, expr, environment, trace);
     }
 
     private ConcurrentHashMap<BExpr, AtomicInteger> counters() {
@@ -849,7 +849,7 @@ public class BEvaluateTest extends VmTestContext {
   }
 
   private BEvaluate bEvaluate(NativeMethodLoader nativeMethodLoader) {
-    var evaluateBExprTaskCreator = new EvaluateBExprTaskCreator(
+    var evaluateBExprTaskCreator = new CachingOperatorEvaluator(
         provide().computationHashFactory(),
         () -> container(nativeMethodLoader),
         provide().computationCache(),

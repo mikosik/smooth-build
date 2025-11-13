@@ -43,7 +43,7 @@ import org.smoothbuild.virtualmachine.evaluate.evaluator.Purity;
  * This class is thread-safe.
  */
 @PerCommand
-public class EvaluateBExprTaskCreator {
+public class CachingOperatorEvaluator {
   private final ComputationHashFactory computationHashFactory;
   private final Provider<Container> containerProvider;
   private final ComputationCache diskCache;
@@ -52,7 +52,7 @@ public class EvaluateBExprTaskCreator {
   private final BytecodeFactory bytecodeFactory;
 
   @Inject
-  public EvaluateBExprTaskCreator(
+  public CachingOperatorEvaluator(
       ComputationHashFactory computationHashFactory,
       Provider<Container> containerProvider,
       ComputationCache diskCache,
@@ -67,7 +67,7 @@ public class EvaluateBExprTaskCreator {
         new ConcurrentHashMap<>());
   }
 
-  public EvaluateBExprTaskCreator(
+  public CachingOperatorEvaluator(
       ComputationHashFactory computationHashFactory,
       Provider<Container> containerProvider,
       ComputationCache diskCache,
@@ -85,11 +85,16 @@ public class EvaluateBExprTaskCreator {
   public TaskX<BValue, BValue> createTask(BOperationEvaluator evaluator) {
     return (bValues) -> {
       try {
-        return evaluate(evaluator, toInput(bValues));
+        return evaluate(evaluator, bValues);
       } catch (IOException | InterruptedException e) {
         return outputForException(evaluator, e);
       }
     };
+  }
+
+  public Output<BValue> evaluate(BOperationEvaluator evaluator, List<BValue> bValues)
+      throws InterruptedException, IOException {
+    return evaluate(evaluator, toInput(bValues));
   }
 
   private BTuple toInput(List<BValue> depResults) throws BytecodeException {

@@ -28,6 +28,9 @@
 :evaluator:getCompiledExprs 
 :scheduler:scheduleParallel 
 :vm:schedule 
+:vm:schedule:call 
+:vm:schedule:call 
+:vm:schedule:call 
 :vm:inline 
   @ <empty trace>
 :vm:scheduleCall 
@@ -40,6 +43,8 @@
   @ {t-project}/module.smooth:2 ???
 :vm:scheduleCall 
   @ <empty trace>
+:vm:schedule:order 
+:vm:schedule:reference 
 :vm:evaluate:order 
   @ {t-project}/module.smooth:2 ???
 :scheduler:join 

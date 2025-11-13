@@ -28,14 +28,18 @@
 :evaluator:getCompiledExprs 
 :scheduler:scheduleParallel 
 :vm:schedule 
+:vm:schedule:call 
 :vm:inline 
   @ <empty trace>
 :vm:scheduleCall 
   @ <empty trace>
+:vm:schedule:reference 
+:vm:schedule:call 
 :vm:inline 
   @ <empty trace>
 :vm:scheduleCall 
   @ <empty trace>
+:vm:schedule:order 
 :vm:evaluate:order 
   @ {t-project}/module.smooth:3 returnArray
 :scheduler:join 

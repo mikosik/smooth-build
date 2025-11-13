@@ -1,0 +1,25 @@
+package org.smoothbuild.virtualmachine.evaluate.execute;
+
+import static org.smoothbuild.common.collect.Maybe.some;
+import static org.smoothbuild.common.concurrent.Promise.promise;
+
+import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.concurrent.Promise;
+import org.smoothbuild.common.log.report.Trace;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
+import org.smoothbuild.virtualmachine.evaluate.execute.BEvaluate.JobContext;
+
+public final class ValueJob extends Job {
+  private final BValue value;
+
+  public ValueJob(JobContext jobContext, BValue value, List<Job> environment, Trace trace) {
+    super(jobContext, value, environment, trace);
+    this.value = value;
+  }
+
+  @Override
+  public Promise<Maybe<BValue>> evaluate() {
+    return promise(some(value));
+  }
+}
