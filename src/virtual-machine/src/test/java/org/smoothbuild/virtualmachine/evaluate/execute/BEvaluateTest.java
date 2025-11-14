@@ -57,6 +57,8 @@ import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 import org.smoothbuild.virtualmachine.evaluate.compute.CachingOperatorEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.OperationEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.job.BReferenceInliner;
+import org.smoothbuild.virtualmachine.evaluate.job.Job;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.testing.func.nativ.ConcatStrings;
 

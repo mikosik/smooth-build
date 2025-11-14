@@ -68,7 +68,7 @@ import org.smoothbuild.virtualmachine.bytecode.load.BytecodeMethodLoader;
 import org.smoothbuild.virtualmachine.bytecode.load.JarClassLoaderFactory;
 import org.smoothbuild.virtualmachine.bytecode.load.MethodLoader;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BOutput;
-import org.smoothbuild.virtualmachine.evaluate.execute.Job;
+import org.smoothbuild.virtualmachine.evaluate.job.Job;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public interface VmTestApi extends CommonTestApi {

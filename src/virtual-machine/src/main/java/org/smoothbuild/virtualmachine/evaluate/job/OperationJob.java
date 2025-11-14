@@ -1,4 +1,4 @@
-package org.smoothbuild.virtualmachine.evaluate.execute;
+package org.smoothbuild.virtualmachine.evaluate.job;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;

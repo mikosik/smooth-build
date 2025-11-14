@@ -29,6 +29,22 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.compute.CachingOperatorEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.job.BReferenceInliner;
+import org.smoothbuild.virtualmachine.evaluate.job.CallJob;
+import org.smoothbuild.virtualmachine.evaluate.job.ChooseJob;
+import org.smoothbuild.virtualmachine.evaluate.job.CombineJob;
+import org.smoothbuild.virtualmachine.evaluate.job.FoldJob;
+import org.smoothbuild.virtualmachine.evaluate.job.IfJob;
+import org.smoothbuild.virtualmachine.evaluate.job.InvokeJob;
+import org.smoothbuild.virtualmachine.evaluate.job.Job;
+import org.smoothbuild.virtualmachine.evaluate.job.LambdaJob;
+import org.smoothbuild.virtualmachine.evaluate.job.MapJob;
+import org.smoothbuild.virtualmachine.evaluate.job.OrderJob;
+import org.smoothbuild.virtualmachine.evaluate.job.PickJob;
+import org.smoothbuild.virtualmachine.evaluate.job.ReferenceJob;
+import org.smoothbuild.virtualmachine.evaluate.job.SelectJob;
+import org.smoothbuild.virtualmachine.evaluate.job.SwitchJob;
+import org.smoothbuild.virtualmachine.evaluate.job.ValueJob;
 
 /**
  * Evaluates BExpr.

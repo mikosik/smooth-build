@@ -20,7 +20,7 @@ import org.smoothbuild.virtualmachine.evaluate.compute.ComputationCache;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationHashFactory;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 import org.smoothbuild.virtualmachine.evaluate.execute.BEvaluate;
-import org.smoothbuild.virtualmachine.evaluate.execute.BReferenceInliner;
+import org.smoothbuild.virtualmachine.evaluate.job.BReferenceInliner;
 
 @Component(
     modules = {

@@ -14,6 +14,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
+import org.smoothbuild.virtualmachine.evaluate.job.ReferenceIndexOutOfBoundsException;
 
 public class BReferenceInlinerTest extends VmTestContext {
   @Nested

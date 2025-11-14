@@ -1,4 +1,4 @@
-package org.smoothbuild.virtualmachine.evaluate.execute;
+package org.smoothbuild.virtualmachine.evaluate.job;
 
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.some;
@@ -22,6 +22,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.compute.CachingOperatorEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.OperationEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.execute.BEvaluate.JobContext;
+import org.smoothbuild.virtualmachine.evaluate.execute.BExprAttributes;
 
 public abstract sealed class Job permits LambdaJob, SchedulingJob, ValueJob {
   private final JobContext jobContext;

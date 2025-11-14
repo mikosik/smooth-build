@@ -1,4 +1,4 @@
-package org.smoothbuild.virtualmachine.evaluate.execute;
+package org.smoothbuild.virtualmachine.evaluate.job;
 
 import static org.smoothbuild.common.schedule.Output.successOutput;
 import static org.smoothbuild.virtualmachine.VmConstants.VM_LABEL;

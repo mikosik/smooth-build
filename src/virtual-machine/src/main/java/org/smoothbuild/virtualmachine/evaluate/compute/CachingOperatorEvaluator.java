@@ -30,7 +30,6 @@ import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Scheduler;
 import org.smoothbuild.common.schedule.Task1;
-import org.smoothbuild.common.schedule.TaskX;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;

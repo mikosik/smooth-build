@@ -1,4 +1,4 @@
-package org.smoothbuild.virtualmachine.evaluate.execute;
+package org.smoothbuild.virtualmachine.evaluate.job;
 
 public class ReferenceIndexOutOfBoundsException extends RuntimeException {
   public ReferenceIndexOutOfBoundsException(int index, int boundVarsSize) {
