@@ -1,6 +1,5 @@
 package org.smoothbuild.virtualmachine.evaluate.execute;
 
-import java.io.IOException;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
@@ -29,12 +28,7 @@ public abstract sealed class OperationJob extends SchedulingJob
   }
 
   private Output<BValue> evaluate(List<BValue> bValues) {
-    var evaluator = createEvaluator();
-    try {
-      return cachingOperatorEvaluator().evaluate(evaluator, bValues);
-    } catch (IOException | InterruptedException e) {
-      return outputForException(evaluator, e);
-    }
+    return cachingOperatorEvaluator().evaluate(createEvaluator(), bValues);
   }
 
   protected abstract OperationEvaluator createEvaluator();

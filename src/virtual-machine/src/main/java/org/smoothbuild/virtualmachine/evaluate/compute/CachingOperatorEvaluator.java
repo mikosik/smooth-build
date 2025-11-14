@@ -82,19 +82,12 @@ public class CachingOperatorEvaluator {
     this.memoryCache = memoryCache;
   }
 
-  public TaskX<BValue, BValue> createTask(OperationEvaluator evaluator) {
-    return (bValues) -> {
-      try {
-        return evaluate(evaluator, bValues);
-      } catch (IOException | InterruptedException e) {
-        return outputForException(evaluator, e);
-      }
-    };
-  }
-
-  public Output<BValue> evaluate(OperationEvaluator evaluator, List<BValue> bValues)
-      throws InterruptedException, IOException {
-    return evaluate(evaluator, toInput(bValues));
+  public Output<BValue> evaluate(OperationEvaluator evaluator, List<BValue> bValues) {
+    try {
+      return evaluate(evaluator, toInput(bValues));
+    } catch (IOException e) {
+      return outputForException(evaluator, e);
+    }
   }
 
   private BTuple toInput(List<BValue> depResults) throws BytecodeException {
@@ -102,7 +95,7 @@ public class CachingOperatorEvaluator {
   }
 
   protected Output<BValue> evaluate(OperationEvaluator evaluator, BTuple subExprValues)
-      throws InterruptedException, IOException {
+      throws IOException {
     var purity = evaluator.purity(subExprValues);
     var hash = computationHashFactory.create(evaluator.operation(), subExprValues);
     var resultPromise = Promise.<BOutput>promise();

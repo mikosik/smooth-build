@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.base.Origin;
-import org.smoothbuild.common.schedule.Tasks;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOperation;
@@ -341,10 +340,11 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
       BOutput expectedOutput,
       Origin expectedOrigin)
       throws Exception {
-    var arg = subExprValues.elements().map(Tasks::argument);
-    var taskX = cachingOperatorEvaluator.createTask(evaluator);
-    var promise = provide().scheduler().submit(taskX, arg);
+    var output = cachingOperatorEvaluator.evaluate(evaluator, subExprValues);
+    var promise = output.result();
+
     await().until(() -> promise.toMaybe().isSome());
+    provide().reporter().submit(output.report());
 
     assertThat(promise.get()).isEqualTo(expectedOutput.value());
     var label = VM_EVALUATE.append(":" + evaluator.operation().name());
@@ -362,15 +362,15 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
     var memoryCache = new ConcurrentHashMap<Hash, Promise<BOutput>>();
     var computationHashFactory = provide().computationHashFactory();
     var scheduler = provide().scheduler();
-    var evaluationScheduler = new CachingOperatorEvaluator(
+    var cachingOperatorEvaluator = new CachingOperatorEvaluator(
         computationHashFactory,
         () -> provide().container(),
         computationCache,
         scheduler,
         provide().bytecodeFactory(),
         memoryCache);
-    var taskX = evaluationScheduler.createTask(evaluator);
-    var promise = scheduler.submit(taskX, subExprValues.elements().map(Tasks::argument));
+    var output = cachingOperatorEvaluator.evaluate(evaluator, subExprValues);
+    var promise = output.result();
     await().until(() -> promise.toMaybe().isSome());
 
     var evaluationHash = computationHashFactory.create(evaluator.operation(), subExprValues);
