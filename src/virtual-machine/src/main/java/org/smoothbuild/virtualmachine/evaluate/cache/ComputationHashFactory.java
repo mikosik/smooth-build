@@ -1,7 +1,7 @@
 package org.smoothbuild.virtualmachine.evaluate.cache;
 
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.virtualmachine.evaluate.evaluator.OperationHashes.operationHash;
+import static org.smoothbuild.virtualmachine.evaluate.cache.OperationHashes.operationHash;
 
 import dagger.Lazy;
 import jakarta.inject.Inject;

@@ -1,4 +1,4 @@
-package org.smoothbuild.virtualmachine.evaluate.evaluator;
+package org.smoothbuild.virtualmachine.evaluate.cache;
 
 import static org.smoothbuild.common.collect.List.list;
 
