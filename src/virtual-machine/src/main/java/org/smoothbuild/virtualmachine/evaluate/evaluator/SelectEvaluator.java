@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect.DATA_SEQ_SIZE;
 import static org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect.INDEX_INDEX;
 import static org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect.SELECTABLE_INDEX;
-import static org.smoothbuild.virtualmachine.evaluate.evaluator.BOutput.bOutput;
+import static org.smoothbuild.virtualmachine.evaluate.plugin.BOutput.bOutput;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.report.Trace;
@@ -13,7 +13,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.evaluate.compute.Container;
+import org.smoothbuild.virtualmachine.evaluate.plugin.BOutput;
+import org.smoothbuild.virtualmachine.evaluate.plugin.Container;
 
 public final class SelectEvaluator extends OperationEvaluator {
   public SelectEvaluator(BSelect select, Trace trace) {

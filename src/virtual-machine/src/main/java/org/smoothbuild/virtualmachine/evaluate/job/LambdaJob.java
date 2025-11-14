@@ -15,7 +15,7 @@ import org.smoothbuild.virtualmachine.VmConstants;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.evaluate.execute.BEvaluate.JobContext;
+import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask.JobContext;
 
 public final class LambdaJob extends Job {
   public LambdaJob(JobContext jobContext, BLambda lambda, List<Job> environment, Trace trace) {

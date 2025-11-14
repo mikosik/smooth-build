@@ -1,13 +1,15 @@
 package org.smoothbuild.virtualmachine.evaluate.evaluator;
 
-import static org.smoothbuild.virtualmachine.evaluate.evaluator.Purity.PURE;
+import static org.smoothbuild.virtualmachine.evaluate.base.Purity.PURE;
 
 import java.io.IOException;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOperation;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
-import org.smoothbuild.virtualmachine.evaluate.compute.Container;
+import org.smoothbuild.virtualmachine.evaluate.base.Purity;
+import org.smoothbuild.virtualmachine.evaluate.plugin.BOutput;
+import org.smoothbuild.virtualmachine.evaluate.plugin.Container;
 
 /**
  * Evaluates single {@link org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr BExpr}.

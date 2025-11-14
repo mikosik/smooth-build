@@ -1,4 +1,4 @@
-package org.smoothbuild.virtualmachine.evaluate.compute;
+package org.smoothbuild.virtualmachine.evaluate.plugin;
 
 import jakarta.inject.Inject;
 import java.util.ArrayList;
@@ -12,8 +12,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.load.FileContentReader;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.virtualmachine.dagger.Project;
-import org.smoothbuild.virtualmachine.evaluate.plugin.MessageLogger;
-import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
+import org.smoothbuild.virtualmachine.evaluate.base.BFileCreator;
 
 /**
  * This class is NOT thread-safe.

@@ -1,4 +1,4 @@
-package org.smoothbuild.virtualmachine.evaluate.compute;
+package org.smoothbuild.virtualmachine.evaluate.cache;
 
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Log.fatal;
@@ -12,7 +12,7 @@ import static org.smoothbuild.virtualmachine.VmConstants.VM_LABEL;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.containsFatal;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.level;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.message;
-import static org.smoothbuild.virtualmachine.evaluate.evaluator.Purity.PURE;
+import static org.smoothbuild.virtualmachine.evaluate.base.Purity.PURE;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -34,9 +34,10 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.BOutput;
+import org.smoothbuild.virtualmachine.evaluate.base.Purity;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.OperationEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.Purity;
+import org.smoothbuild.virtualmachine.evaluate.plugin.BOutput;
+import org.smoothbuild.virtualmachine.evaluate.plugin.Container;
 
 /**
  * This class is thread-safe.

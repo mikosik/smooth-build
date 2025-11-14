@@ -1,4 +1,4 @@
-package org.smoothbuild.virtualmachine.evaluate.compute;
+package org.smoothbuild.virtualmachine.evaluate.cache;
 
 import jakarta.inject.Inject;
 import org.smoothbuild.common.init.Initializable;

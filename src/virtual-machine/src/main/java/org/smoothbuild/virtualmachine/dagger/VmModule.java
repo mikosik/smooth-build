@@ -11,7 +11,7 @@ import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.init.Initializable;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDbInitializer;
-import org.smoothbuild.virtualmachine.evaluate.compute.ComputationCacheInitializer;
+import org.smoothbuild.virtualmachine.evaluate.cache.ComputationCacheInitializer;
 
 @Module
 public interface VmModule {

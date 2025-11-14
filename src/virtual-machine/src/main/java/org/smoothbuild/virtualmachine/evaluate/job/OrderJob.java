@@ -3,9 +3,9 @@ package org.smoothbuild.virtualmachine.evaluate.job;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
+import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask.JobContext;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.OperationEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.OrderEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.execute.BEvaluate.JobContext;
 
 public final class OrderJob extends OperationJob {
   private final BOrder order;

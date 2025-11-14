@@ -1,12 +1,12 @@
-package org.smoothbuild.virtualmachine.evaluate.compute;
+package org.smoothbuild.virtualmachine.evaluate.cache;
 
 import static okio.Okio.buffer;
 import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.containsErrorOrAbove;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.isValidLevel;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.levelAsString;
-import static org.smoothbuild.virtualmachine.evaluate.compute.ComputeCacheException.corruptedValueException;
-import static org.smoothbuild.virtualmachine.evaluate.evaluator.BOutput.bOutput;
+import static org.smoothbuild.virtualmachine.evaluate.cache.ComputeCacheException.corruptedValueException;
+import static org.smoothbuild.virtualmachine.evaluate.plugin.BOutput.bOutput;
 
 import com.google.common.annotations.VisibleForTesting;
 import jakarta.inject.Inject;
@@ -24,7 +24,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 import org.smoothbuild.virtualmachine.dagger.ComputationDb;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.BOutput;
+import org.smoothbuild.virtualmachine.evaluate.plugin.BOutput;
 
 /**
  * This class is thread-safe.

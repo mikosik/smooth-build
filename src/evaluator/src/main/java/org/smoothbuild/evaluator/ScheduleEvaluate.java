@@ -25,8 +25,8 @@ import org.smoothbuild.compilerfrontend.lang.define.SPolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.lang.name.Bindings;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
-import org.smoothbuild.virtualmachine.evaluate.execute.BEvaluate;
-import org.smoothbuild.virtualmachine.evaluate.execute.BExprAttributes;
+import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask;
+import org.smoothbuild.virtualmachine.evaluate.base.BExprAttributes;
 
 public class ScheduleEvaluate implements Task2<List<FullPath>, List<String>, EvaluatedExprs> {
   private final Scheduler scheduler;
@@ -57,13 +57,14 @@ public class ScheduleEvaluate implements Task2<List<FullPath>, List<String>, Eva
       implements Task2<List<SExpr>, Bindings<SPolyEvaluable>, EvaluatedExprs> {
     private final Scheduler scheduler;
     private final BackendCompile backendCompile;
-    private final BEvaluate bEvaluate;
+    private final BEvaluateTask bEvaluateTask;
 
     @Inject
-    public EvaluateCore(Scheduler scheduler, BackendCompile backendCompile, BEvaluate bEvaluate) {
+    public EvaluateCore(
+        Scheduler scheduler, BackendCompile backendCompile, BEvaluateTask bEvaluateTask) {
       this.scheduler = scheduler;
       this.backendCompile = backendCompile;
-      this.bEvaluate = bEvaluate;
+      this.bEvaluateTask = bEvaluateTask;
     }
 
     @Override
@@ -71,7 +72,7 @@ public class ScheduleEvaluate implements Task2<List<FullPath>, List<String>, Eva
       var compiledExprs = scheduler.submit(backendCompile, argument(sExprs), argument(evaluables));
       var getLabel = EVALUATOR_LABEL.append(":getCompiledExprs");
       var bExprs = scheduler.submit(task1(getLabel, this::toTuples), compiledExprs);
-      var evaluated = scheduler.submit(scheduler.newParallelTask(bEvaluate), bExprs);
+      var evaluated = scheduler.submit(scheduler.newParallelTask(bEvaluateTask), bExprs);
       var mergeLabel = EVALUATOR_LABEL.append(":merge");
       var evaluate =
           scheduler.submit(task2(mergeLabel, EvaluatedExprs::new), argument(sExprs), evaluated);

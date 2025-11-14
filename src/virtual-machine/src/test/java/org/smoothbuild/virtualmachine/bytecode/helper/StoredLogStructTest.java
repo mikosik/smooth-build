@@ -1,4 +1,4 @@
-package org.smoothbuild.virtualmachine.evaluate.base;
+package org.smoothbuild.virtualmachine.bytecode.helper;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.containsErrorOrAbove;

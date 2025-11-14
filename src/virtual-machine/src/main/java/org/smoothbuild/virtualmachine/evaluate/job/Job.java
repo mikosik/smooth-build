@@ -1,12 +1,7 @@
 package org.smoothbuild.virtualmachine.evaluate.job;
 
-import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.some;
-import static org.smoothbuild.common.log.base.Log.fatal;
-import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.schedule.Output.failedOutput;
-import static org.smoothbuild.common.schedule.Output.output;
-import static org.smoothbuild.virtualmachine.VmConstants.VM_EVALUATE;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
@@ -19,10 +14,10 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.evaluate.compute.CachingOperatorEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.OperationEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.execute.BEvaluate.JobContext;
-import org.smoothbuild.virtualmachine.evaluate.execute.BExprAttributes;
+import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask.JobContext;
+import org.smoothbuild.virtualmachine.evaluate.base.BExprAttributes;
+import org.smoothbuild.virtualmachine.evaluate.base.BReferenceInliner;
+import org.smoothbuild.virtualmachine.evaluate.cache.CachingOperatorEvaluator;
 
 public abstract sealed class Job permits LambdaJob, SchedulingJob, ValueJob {
   private final JobContext jobContext;
@@ -73,11 +68,6 @@ public abstract sealed class Job permits LambdaJob, SchedulingJob, ValueJob {
 
   public BExpr call(BExpr lambdaExpr, List<BValue> arguments) throws BytecodeException {
     return bytecodeFactory().call(lambdaExpr, bytecodeFactory().tuple(arguments));
-  }
-
-  protected Output<BValue> outputForException(OperationEvaluator evaluator, Exception e) {
-    var fatal = fatal("Vm evaluation Task failed with exception:", e);
-    return output(report(VM_EVALUATE, evaluator.trace(), list(fatal)));
   }
 
   public BytecodeFactory bytecodeFactory() {

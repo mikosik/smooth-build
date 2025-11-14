@@ -15,12 +15,12 @@ import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
 import org.smoothbuild.virtualmachine.bytecode.load.FileContentReader;
-import org.smoothbuild.virtualmachine.evaluate.compute.CachingOperatorEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.compute.ComputationCache;
-import org.smoothbuild.virtualmachine.evaluate.compute.ComputationHashFactory;
-import org.smoothbuild.virtualmachine.evaluate.compute.Container;
-import org.smoothbuild.virtualmachine.evaluate.execute.BEvaluate;
-import org.smoothbuild.virtualmachine.evaluate.job.BReferenceInliner;
+import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask;
+import org.smoothbuild.virtualmachine.evaluate.base.BReferenceInliner;
+import org.smoothbuild.virtualmachine.evaluate.cache.CachingOperatorEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.cache.ComputationCache;
+import org.smoothbuild.virtualmachine.evaluate.cache.ComputationHashFactory;
+import org.smoothbuild.virtualmachine.evaluate.plugin.Container;
 
 @Component(
     modules = {
@@ -32,7 +32,7 @@ import org.smoothbuild.virtualmachine.evaluate.job.BReferenceInliner;
     })
 @PerCommand
 public interface VmTestComponent extends CommonTestComponent {
-  BEvaluate bEvaluate();
+  BEvaluateTask bEvaluate();
 
   Container container();
 

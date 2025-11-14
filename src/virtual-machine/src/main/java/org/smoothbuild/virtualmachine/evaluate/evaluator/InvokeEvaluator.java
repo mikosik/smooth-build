@@ -3,9 +3,9 @@ package org.smoothbuild.virtualmachine.evaluate.evaluator;
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke.ARGUMENTS_INDEX;
 import static org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke.METHOD_INDEX;
-import static org.smoothbuild.virtualmachine.evaluate.evaluator.BOutput.bOutput;
-import static org.smoothbuild.virtualmachine.evaluate.evaluator.Purity.IMPURE;
-import static org.smoothbuild.virtualmachine.evaluate.evaluator.Purity.PURE;
+import static org.smoothbuild.virtualmachine.evaluate.base.Purity.IMPURE;
+import static org.smoothbuild.virtualmachine.evaluate.base.Purity.PURE;
+import static org.smoothbuild.virtualmachine.evaluate.plugin.BOutput.bOutput;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -18,7 +18,9 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.evaluate.compute.Container;
+import org.smoothbuild.virtualmachine.evaluate.base.Purity;
+import org.smoothbuild.virtualmachine.evaluate.plugin.BOutput;
+import org.smoothbuild.virtualmachine.evaluate.plugin.Container;
 
 public final class InvokeEvaluator extends OperationEvaluator {
   public InvokeEvaluator(BInvoke invoke, Trace trace) {

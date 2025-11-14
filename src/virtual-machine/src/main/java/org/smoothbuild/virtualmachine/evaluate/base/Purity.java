@@ -1,4 +1,4 @@
-package org.smoothbuild.virtualmachine.evaluate.evaluator;
+package org.smoothbuild.virtualmachine.evaluate.base;
 
 import static org.smoothbuild.common.log.base.Origin.DISK;
 import static org.smoothbuild.common.log.base.Origin.MEMORY;

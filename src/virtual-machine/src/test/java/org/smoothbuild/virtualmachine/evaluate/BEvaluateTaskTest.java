@@ -1,4 +1,4 @@
-package org.smoothbuild.virtualmachine.evaluate.execute;
+package org.smoothbuild.virtualmachine.evaluate;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
@@ -54,15 +54,16 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
-import org.smoothbuild.virtualmachine.evaluate.compute.CachingOperatorEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.compute.Container;
+import org.smoothbuild.virtualmachine.evaluate.base.BExprAttributes;
+import org.smoothbuild.virtualmachine.evaluate.base.BReferenceInliner;
+import org.smoothbuild.virtualmachine.evaluate.cache.CachingOperatorEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.OperationEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.job.BReferenceInliner;
 import org.smoothbuild.virtualmachine.evaluate.job.Job;
+import org.smoothbuild.virtualmachine.evaluate.plugin.Container;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.testing.func.nativ.ConcatStrings;
 
-public class BEvaluateTest extends VmTestContext {
+public class BEvaluateTaskTest extends VmTestContext {
   public static final ConcurrentHashMap<String, AtomicInteger> COUNTERS = new ConcurrentHashMap<>();
   public static final ConcurrentHashMap<String, CountDownLatch> COUNTDOWNS =
       new ConcurrentHashMap<>();
@@ -350,8 +351,8 @@ public class BEvaluateTest extends VmTestContext {
         var invoke = bInvoke(bIntType(), methodTuple, bTuple(bInt(33)));
         var nativeMethodLoader = mock(NativeMethodLoader.class);
         when(nativeMethodLoader.load(eq(new BMethod(methodTuple))))
-            .thenReturn(
-                ok(BEvaluateTest.class.getMethod("returnIntParam", NativeApi.class, BTuple.class)));
+            .thenReturn(ok(BEvaluateTaskTest.class.getMethod(
+                "returnIntParam", NativeApi.class, BTuple.class)));
         assertThat(evaluate(bEvaluate(nativeMethodLoader), invoke).get().get()).isEqualTo(bInt(33));
       }
 
@@ -476,7 +477,7 @@ public class BEvaluateTest extends VmTestContext {
               reports,
               FATAL,
               "Task execution failed with exception:\n"
-                  + "org.smoothbuild.virtualmachine.evaluate.execute.ReferenceIndexOutOfBoundsException:"
+                  + "org.smoothbuild.virtualmachine.evaluate.job.ReferenceIndexOutOfBoundsException:"
                   + " Reference index = 2 is out of bounds. Bound variables size = 1.");
         }
 
@@ -549,7 +550,7 @@ public class BEvaluateTest extends VmTestContext {
                 throw runtimeException;
               }
             };
-        var bEvaluate = new BEvaluate(
+        var bEvaluate = new BEvaluateTask(
             provide().scheduler(),
             bExprEvaluationScheduler,
             provide().bytecodeFactory(),
@@ -758,13 +759,14 @@ public class BEvaluateTest extends VmTestContext {
     return evaluate(provide().bEvaluate(), expr).get().get();
   }
 
-  private Promise<Maybe<BValue>> evaluate(BEvaluate bEvaluate, BExpr expr) {
-    return evaluate(bEvaluate, expr, new BExprAttributes());
+  private Promise<Maybe<BValue>> evaluate(BEvaluateTask bEvaluateTask, BExpr expr) {
+    return evaluate(bEvaluateTask, expr, new BExprAttributes());
   }
 
   private Promise<Maybe<BValue>> evaluate(
-      BEvaluate bEvaluate, BExpr expr, BExprAttributes bExprAttributes) {
-    var result = provide().scheduler().submit(bEvaluate, argument(tuple(expr, bExprAttributes)));
+      BEvaluateTask bEvaluateTask, BExpr expr, BExprAttributes bExprAttributes) {
+    var result =
+        provide().scheduler().submit(bEvaluateTask, argument(tuple(expr, bExprAttributes)));
     await().until(() -> result.toMaybe().isSome());
     return result;
   }
@@ -778,7 +780,7 @@ public class BEvaluateTest extends VmTestContext {
     var nativeMethodLoader = mock(NativeMethodLoader.class);
     when(nativeMethodLoader.load(any()))
         .thenReturn(
-            ok(BEvaluateTest.class.getMethod("memoizeString", NativeApi.class, BTuple.class)));
+            ok(BEvaluateTaskTest.class.getMethod("memoizeString", NativeApi.class, BTuple.class)));
     return nativeMethodLoader;
   }
 
@@ -812,7 +814,7 @@ public class BEvaluateTest extends VmTestContext {
         provide().bReferenceInliner());
   }
 
-  private static class CountingBEvaluate extends BEvaluate {
+  private static class CountingBEvaluate extends BEvaluateTask {
     private final ConcurrentHashMap<BExpr, AtomicInteger> counters = new ConcurrentHashMap<>();
 
     private CountingBEvaluate(
@@ -850,14 +852,14 @@ public class BEvaluateTest extends VmTestContext {
     }
   }
 
-  private BEvaluate bEvaluate(NativeMethodLoader nativeMethodLoader) {
+  private BEvaluateTask bEvaluate(NativeMethodLoader nativeMethodLoader) {
     var evaluateBExprTaskCreator = new CachingOperatorEvaluator(
         provide().computationHashFactory(),
         () -> container(nativeMethodLoader),
         provide().computationCache(),
         provide().scheduler(),
         provide().bytecodeFactory());
-    return new BEvaluate(
+    return new BEvaluateTask(
         provide().scheduler(),
         evaluateBExprTaskCreator,
         provide().bytecodeFactory(),

@@ -1,4 +1,4 @@
-package org.smoothbuild.virtualmachine.evaluate.job;
+package org.smoothbuild.virtualmachine.evaluate.base;
 
 import jakarta.inject.Inject;
 import org.smoothbuild.common.collect.List;
@@ -19,6 +19,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
+import org.smoothbuild.virtualmachine.evaluate.job.Job;
+import org.smoothbuild.virtualmachine.evaluate.job.ReferenceIndexOutOfBoundsException;
 
 public class BReferenceInliner {
   private final BytecodeFactory bytecodeFactory;

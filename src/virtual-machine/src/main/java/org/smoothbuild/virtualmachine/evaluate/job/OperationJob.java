@@ -8,8 +8,8 @@ import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOperation;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
+import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask.JobContext;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.OperationEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.execute.BEvaluate.JobContext;
 
 public abstract sealed class OperationJob extends SchedulingJob
     permits ChooseJob, CombineJob, InvokeJob, OrderJob, PickJob, SelectJob {

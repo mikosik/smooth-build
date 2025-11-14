@@ -20,7 +20,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.evaluate.execute.BEvaluate.JobContext;
+import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask.JobContext;
 
 public final class CallJob extends SchedulingJob {
   private static final Label SCHEDULE_CALL_LABEL = VM_LABEL.append(":scheduleCall");

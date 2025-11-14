@@ -1,8 +1,8 @@
 package org.smoothbuild.virtualmachine.evaluate.evaluator;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.virtualmachine.evaluate.evaluator.Purity.IMPURE;
-import static org.smoothbuild.virtualmachine.evaluate.evaluator.Purity.PURE;
+import static org.smoothbuild.virtualmachine.evaluate.base.Purity.IMPURE;
+import static org.smoothbuild.virtualmachine.evaluate.base.Purity.PURE;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

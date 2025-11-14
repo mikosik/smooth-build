@@ -1,4 +1,4 @@
-package org.smoothbuild.virtualmachine.evaluate.compute;
+package org.smoothbuild.virtualmachine.evaluate.cache;
 
 import java.io.IOException;
 import org.smoothbuild.common.base.Hash;

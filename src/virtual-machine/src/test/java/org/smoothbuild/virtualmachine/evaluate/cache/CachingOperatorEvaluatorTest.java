@@ -1,4 +1,4 @@
-package org.smoothbuild.virtualmachine.evaluate.compute;
+package org.smoothbuild.virtualmachine.evaluate.cache;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Objects.requireNonNull;
@@ -24,13 +24,13 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BOperation;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.BOutput;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.CombineEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.InvokeEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.OperationEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.OrderEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.PickEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.SelectEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.plugin.BOutput;
 
 public class CachingOperatorEvaluatorTest extends VmTestContext {
   @Nested

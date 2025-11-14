@@ -1,4 +1,4 @@
-package org.smoothbuild.virtualmachine.evaluate.execute;
+package org.smoothbuild.virtualmachine.evaluate;
 
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.schedule.Output.successOutput;
@@ -28,8 +28,9 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.evaluate.compute.CachingOperatorEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.job.BReferenceInliner;
+import org.smoothbuild.virtualmachine.evaluate.base.BExprAttributes;
+import org.smoothbuild.virtualmachine.evaluate.base.BReferenceInliner;
+import org.smoothbuild.virtualmachine.evaluate.cache.CachingOperatorEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.job.CallJob;
 import org.smoothbuild.virtualmachine.evaluate.job.ChooseJob;
 import org.smoothbuild.virtualmachine.evaluate.job.CombineJob;
@@ -50,14 +51,14 @@ import org.smoothbuild.virtualmachine.evaluate.job.ValueJob;
  * Evaluates BExpr.
  * This class is thread-safe.
  */
-public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> {
+public class BEvaluateTask implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> {
   private final Scheduler scheduler;
   private final CachingOperatorEvaluator cachingOperatorEvaluator;
   private final BytecodeFactory bytecodeFactory;
   private final BReferenceInliner bReferenceInliner;
 
   @Inject
-  public BEvaluate(
+  public BEvaluateTask(
       Scheduler scheduler,
       CachingOperatorEvaluator cachingOperatorEvaluator,
       BytecodeFactory bytecodeFactory,
@@ -83,14 +84,14 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
   }
 
   public record JobContext(
-      BEvaluate bEvaluate,
+      BEvaluateTask bEvaluateTask,
       BReferenceInliner referenceInliner,
       BytecodeFactory bytecodeFactory,
       CachingOperatorEvaluator cachingOperatorEvaluator,
       Scheduler scheduler,
       BExprAttributes exprAttributes) {
     public Job newJob(BExpr expr, List<Job> environment, Trace trace) {
-      return bEvaluate.newJob(this, expr, environment, trace);
+      return bEvaluateTask.newJob(this, expr, environment, trace);
     }
   }
 
