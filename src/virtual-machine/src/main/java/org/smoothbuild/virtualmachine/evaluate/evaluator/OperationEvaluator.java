@@ -20,11 +20,11 @@ import org.smoothbuild.virtualmachine.evaluate.plugin.Container;
  */
 public abstract sealed class OperationEvaluator
     permits BChooseEvaluator,
-    BCombineEvaluator,
-    BInvokeEvaluator,
-    BOrderEvaluator,
-    BPickEvaluator,
-    BSelectEvaluator {
+        BCombineEvaluator,
+        BInvokeEvaluator,
+        BOrderEvaluator,
+        BPickEvaluator,
+        BSelectEvaluator {
   private final BOperation operation;
   private final Trace trace;
 

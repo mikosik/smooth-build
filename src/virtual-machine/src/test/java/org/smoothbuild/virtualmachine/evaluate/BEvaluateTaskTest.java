@@ -19,12 +19,14 @@ import static org.smoothbuild.common.log.base.Level.FATAL;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.Origin.DISK;
 import static org.smoothbuild.common.log.base.Origin.EXECUTION;
+import static org.smoothbuild.common.log.location.Locations.unknownLocation;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.schedule.Scheduler.LABEL;
 import static org.smoothbuild.common.schedule.Tasks.argument;
 import static org.smoothbuild.common.testing.AwaitHelper.await;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
 import static org.smoothbuild.virtualmachine.VmConstants.VM_EVALUATE;
+import static org.smoothbuild.virtualmachine.VmConstants.VM_LABEL;
 
 import com.google.common.base.Splitter;
 import java.util.ArrayList;
@@ -488,11 +490,10 @@ public class BEvaluateTaskTest extends VmTestContext {
           var lambda = bLambda(list(bBlobType()), bReference(bIntType(), 0));
           var call = bCall(lambda, bBlob());
           evaluate(provide().bEvaluate(), call);
-          assertReportsContains(
-              provide().reporter().reports(),
-              FATAL,
-              "Task execution failed with exception:\n"
-                  + "java.lang.RuntimeException: environment(0) evaluationType is `Blob` but expected `Int`.");
+          var trace = trace("???", unknownLocation());
+          var fatal = fatal("environment(0) evaluationType is `Blob` but expected `Int`.");
+          var expected = report(VM_LABEL.append(":schedule:reference"), trace, list(fatal));
+          assertThat(provide().reporter().reports()).contains(expected);
         }
       }
 

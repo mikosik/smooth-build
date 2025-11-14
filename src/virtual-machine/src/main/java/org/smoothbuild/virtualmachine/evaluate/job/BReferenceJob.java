@@ -19,14 +19,14 @@ public final class BReferenceJob extends SchedulingJob {
   }
 
   @Override
-  public Promise<Maybe<BValue>> schedule() throws BytecodeException {
+  public Promise<Maybe<BValue>> schedule() throws BytecodeException, JobException {
     int index = reference.index().toJavaBigInteger().intValue();
     var referencedJob = environment().get(index);
     var jobEvaluationType = referencedJob.expr().evaluationType();
     if (jobEvaluationType.equals(reference.evaluationType())) {
       return referencedJob.evaluate();
     } else {
-      throw new RuntimeException("environment(%d) evaluationType is %s but expected %s."
+      throw new JobException("environment(%d) evaluationType is %s but expected %s."
           .formatted(index, jobEvaluationType.q(), reference.evaluationType().q()));
     }
   }

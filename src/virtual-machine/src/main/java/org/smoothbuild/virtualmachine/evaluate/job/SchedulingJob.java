@@ -1,5 +1,10 @@
 package org.smoothbuild.virtualmachine.evaluate.job;
 
+import static org.smoothbuild.common.base.Throwables.messageFrom;
+import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.log.base.Log.fatal;
+import static org.smoothbuild.common.log.report.Report.report;
+import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.common.schedule.Output.successOutput;
 import static org.smoothbuild.virtualmachine.VmConstants.VM_LABEL;
 
@@ -29,10 +34,12 @@ public abstract sealed class SchedulingJob extends Job
         return successOutput(result, label);
       } catch (BytecodeException e) {
         return failedSchedulingOutput(label, trace(), e);
+      } catch (JobException e) {
+        return output(report(label, trace(), list(fatal(messageFrom(e)))));
       }
     };
     return scheduler().submit(t);
   }
 
-  public abstract Promise<Maybe<BValue>> schedule() throws BytecodeException;
+  public abstract Promise<Maybe<BValue>> schedule() throws JobException, BytecodeException;
 }
