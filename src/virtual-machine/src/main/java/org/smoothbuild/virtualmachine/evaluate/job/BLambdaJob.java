@@ -17,8 +17,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask.JobContext;
 
-public final class LambdaJob extends Job {
-  public LambdaJob(JobContext jobContext, BLambda lambda, List<Job> environment, Trace trace) {
+public final class BLambdaJob extends Job {
+  public BLambdaJob(JobContext jobContext, BLambda lambda, List<Job> environment, Trace trace) {
     super(jobContext, lambda, environment, trace);
   }
 

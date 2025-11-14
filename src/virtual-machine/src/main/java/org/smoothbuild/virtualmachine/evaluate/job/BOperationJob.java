@@ -11,11 +11,11 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask.JobContext;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.OperationEvaluator;
 
-public abstract sealed class OperationJob extends SchedulingJob
-    permits ChooseJob, CombineJob, InvokeJob, OrderJob, PickJob, SelectJob {
+public abstract sealed class BOperationJob extends SchedulingJob
+    permits BChooseJob, BCombineJob, BInvokeJob, BOrderJob, BPickJob, BSelectJob {
   private final BOperation operation;
 
-  public OperationJob(
+  public BOperationJob(
       JobContext jobContext, BOperation operation, List<Job> environment, Trace trace) {
     super(jobContext, operation, environment, trace);
     this.operation = operation;

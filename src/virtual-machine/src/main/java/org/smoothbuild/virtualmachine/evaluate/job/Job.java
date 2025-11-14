@@ -19,7 +19,7 @@ import org.smoothbuild.virtualmachine.evaluate.base.BExprAttributes;
 import org.smoothbuild.virtualmachine.evaluate.base.BReferenceInliner;
 import org.smoothbuild.virtualmachine.evaluate.cache.CachingOperatorEvaluator;
 
-public abstract sealed class Job permits LambdaJob, SchedulingJob, ValueJob {
+public abstract sealed class Job permits BLambdaJob, SchedulingJob, BValueJob {
   private final JobContext jobContext;
   private final BExpr expr;
   private final List<Job> environment;

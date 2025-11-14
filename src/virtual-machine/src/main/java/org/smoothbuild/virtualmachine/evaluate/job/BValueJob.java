@@ -10,10 +10,10 @@ import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask.JobContext;
 
-public final class ValueJob extends Job {
+public final class BValueJob extends Job {
   private final BValue value;
 
-  public ValueJob(JobContext jobContext, BValue value, List<Job> environment, Trace trace) {
+  public BValueJob(JobContext jobContext, BValue value, List<Job> environment, Trace trace) {
     super(jobContext, value, environment, trace);
     this.value = value;
   }

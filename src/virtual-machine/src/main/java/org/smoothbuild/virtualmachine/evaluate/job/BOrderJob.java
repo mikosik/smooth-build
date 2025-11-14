@@ -4,19 +4,19 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask.JobContext;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BOrderEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.OperationEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.OrderEvaluator;
 
-public final class OrderJob extends OperationJob {
+public final class BOrderJob extends BOperationJob {
   private final BOrder order;
 
-  public OrderJob(JobContext jobContext, BOrder order, List<Job> environment, Trace trace) {
+  public BOrderJob(JobContext jobContext, BOrder order, List<Job> environment, Trace trace) {
     super(jobContext, order, environment, trace);
     this.order = order;
   }
 
   @Override
   protected OperationEvaluator createEvaluator() {
-    return new OrderEvaluator(order, trace());
+    return new BOrderEvaluator(order, trace());
   }
 }

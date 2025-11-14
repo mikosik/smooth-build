@@ -19,12 +19,12 @@ import org.smoothbuild.virtualmachine.evaluate.plugin.Container;
  * This class is thread-safe.
  */
 public abstract sealed class OperationEvaluator
-    permits ChooseEvaluator,
-        CombineEvaluator,
-        InvokeEvaluator,
-        OrderEvaluator,
-        PickEvaluator,
-        SelectEvaluator {
+    permits BChooseEvaluator,
+    BCombineEvaluator,
+    BInvokeEvaluator,
+    BOrderEvaluator,
+    BPickEvaluator,
+    BSelectEvaluator {
   private final BOperation operation;
   private final Trace trace;
 

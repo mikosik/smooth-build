@@ -17,10 +17,10 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask.JobContext;
 
-public final class MapJob extends SchedulingJob {
+public final class BMapJob extends SchedulingJob {
   private final BMap map;
 
-  public MapJob(JobContext jobContext, BMap map, List<Job> environment, Trace trace) {
+  public BMapJob(JobContext jobContext, BMap map, List<Job> environment, Trace trace) {
     super(jobContext, map, environment, trace);
     this.map = map;
   }

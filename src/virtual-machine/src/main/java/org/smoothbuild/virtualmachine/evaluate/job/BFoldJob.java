@@ -17,10 +17,10 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BFold.BSubExprs;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask.JobContext;
 
-public final class FoldJob extends SchedulingJob {
+public final class BFoldJob extends SchedulingJob {
   private final BFold fold;
 
-  public FoldJob(JobContext jobContext, BFold fold, List<Job> environment, Trace trace) {
+  public BFoldJob(JobContext jobContext, BFold fold, List<Job> environment, Trace trace) {
     super(jobContext, fold, environment, trace);
     this.fold = fold;
   }

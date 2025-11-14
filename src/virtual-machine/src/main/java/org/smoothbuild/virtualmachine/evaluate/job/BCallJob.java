@@ -22,11 +22,11 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask.JobContext;
 
-public final class CallJob extends SchedulingJob {
+public final class BCallJob extends SchedulingJob {
   private static final Label SCHEDULE_CALL_LABEL = VM_LABEL.append(":scheduleCall");
   private final BCall call;
 
-  public CallJob(JobContext jobContext, BCall call, List<Job> environment, Trace trace) {
+  public BCallJob(JobContext jobContext, BCall call, List<Job> environment, Trace trace) {
     super(jobContext, call, environment, trace);
     this.call = call;
   }

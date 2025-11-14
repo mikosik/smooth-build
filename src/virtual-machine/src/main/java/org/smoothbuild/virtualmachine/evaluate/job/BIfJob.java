@@ -14,10 +14,10 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask.JobContext;
 
-public final class IfJob extends SchedulingJob {
+public final class BIfJob extends SchedulingJob {
   private final BIf if_;
 
-  public IfJob(JobContext jobContext, BIf if_, List<Job> environment, Trace trace) {
+  public BIfJob(JobContext jobContext, BIf if_, List<Job> environment, Trace trace) {
     super(jobContext, if_, environment, trace);
     this.if_ = if_;
   }

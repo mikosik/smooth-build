@@ -16,10 +16,10 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch.BSubExprs;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask.JobContext;
 
-public final class SwitchJob extends SchedulingJob {
+public final class BSwitchJob extends SchedulingJob {
   private final BSwitch switch_;
 
-  public SwitchJob(JobContext jobContext, BSwitch switch_, List<Job> environment, Trace trace) {
+  public BSwitchJob(JobContext jobContext, BSwitch switch_, List<Job> environment, Trace trace) {
     super(jobContext, switch_, environment, trace);
     this.switch_ = switch_;
   }

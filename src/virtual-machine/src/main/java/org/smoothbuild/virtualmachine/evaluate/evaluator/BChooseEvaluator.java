@@ -17,8 +17,8 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
 import org.smoothbuild.virtualmachine.evaluate.plugin.BOutput;
 import org.smoothbuild.virtualmachine.evaluate.plugin.Container;
 
-public final class ChooseEvaluator extends OperationEvaluator {
-  public ChooseEvaluator(BChoose choose, Trace trace) {
+public final class BChooseEvaluator extends OperationEvaluator {
+  public BChooseEvaluator(BChoose choose, Trace trace) {
     super(choose, trace);
   }
 

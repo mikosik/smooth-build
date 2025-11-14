@@ -9,10 +9,10 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask.JobContext;
 
-public final class ReferenceJob extends SchedulingJob {
+public final class BReferenceJob extends SchedulingJob {
   private final BReference reference;
 
-  public ReferenceJob(
+  public BReferenceJob(
       JobContext jobContext, BReference reference, List<Job> environment, Trace trace) {
     super(jobContext, reference, environment, trace);
     this.reference = reference;

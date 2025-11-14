@@ -4,19 +4,19 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask.JobContext;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BSelectEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.OperationEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.SelectEvaluator;
 
-public final class SelectJob extends OperationJob {
+public final class BSelectJob extends BOperationJob {
   private final BSelect pick;
 
-  public SelectJob(JobContext jobContext, BSelect pick, List<Job> environment, Trace trace) {
+  public BSelectJob(JobContext jobContext, BSelect pick, List<Job> environment, Trace trace) {
     super(jobContext, pick, environment, trace);
     this.pick = pick;
   }
 
   @Override
   protected OperationEvaluator createEvaluator() {
-    return new SelectEvaluator(pick, trace());
+    return new BSelectEvaluator(pick, trace());
   }
 }

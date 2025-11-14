@@ -31,21 +31,21 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.base.BExprAttributes;
 import org.smoothbuild.virtualmachine.evaluate.base.BReferenceInliner;
 import org.smoothbuild.virtualmachine.evaluate.cache.CachingOperatorEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.job.CallJob;
-import org.smoothbuild.virtualmachine.evaluate.job.ChooseJob;
-import org.smoothbuild.virtualmachine.evaluate.job.CombineJob;
-import org.smoothbuild.virtualmachine.evaluate.job.FoldJob;
-import org.smoothbuild.virtualmachine.evaluate.job.IfJob;
-import org.smoothbuild.virtualmachine.evaluate.job.InvokeJob;
+import org.smoothbuild.virtualmachine.evaluate.job.BCallJob;
+import org.smoothbuild.virtualmachine.evaluate.job.BChooseJob;
+import org.smoothbuild.virtualmachine.evaluate.job.BCombineJob;
+import org.smoothbuild.virtualmachine.evaluate.job.BFoldJob;
+import org.smoothbuild.virtualmachine.evaluate.job.BIfJob;
+import org.smoothbuild.virtualmachine.evaluate.job.BInvokeJob;
+import org.smoothbuild.virtualmachine.evaluate.job.BLambdaJob;
+import org.smoothbuild.virtualmachine.evaluate.job.BMapJob;
+import org.smoothbuild.virtualmachine.evaluate.job.BOrderJob;
+import org.smoothbuild.virtualmachine.evaluate.job.BPickJob;
+import org.smoothbuild.virtualmachine.evaluate.job.BReferenceJob;
+import org.smoothbuild.virtualmachine.evaluate.job.BSelectJob;
+import org.smoothbuild.virtualmachine.evaluate.job.BSwitchJob;
+import org.smoothbuild.virtualmachine.evaluate.job.BValueJob;
 import org.smoothbuild.virtualmachine.evaluate.job.Job;
-import org.smoothbuild.virtualmachine.evaluate.job.LambdaJob;
-import org.smoothbuild.virtualmachine.evaluate.job.MapJob;
-import org.smoothbuild.virtualmachine.evaluate.job.OrderJob;
-import org.smoothbuild.virtualmachine.evaluate.job.PickJob;
-import org.smoothbuild.virtualmachine.evaluate.job.ReferenceJob;
-import org.smoothbuild.virtualmachine.evaluate.job.SelectJob;
-import org.smoothbuild.virtualmachine.evaluate.job.SwitchJob;
-import org.smoothbuild.virtualmachine.evaluate.job.ValueJob;
 
 /**
  * Evaluates BExpr.
@@ -104,20 +104,20 @@ public class BEvaluateTask implements Task1<Tuple2<BExpr, BExprAttributes>, BVal
   public static Job newJobStatic(
       @Nullable JobContext jobContext, BExpr expr, List<Job> environment, Trace trace) {
     return switch (expr) {
-      case BChoose choose -> new ChooseJob(jobContext, choose, environment, trace);
-      case BOrder order -> new OrderJob(jobContext, order, environment, trace);
-      case BSelect select -> new SelectJob(jobContext, select, environment, trace);
-      case BPick pick -> new PickJob(jobContext, pick, environment, trace);
-      case BInvoke invoke -> new InvokeJob(jobContext, invoke, environment, trace);
-      case BCombine combine -> new CombineJob(jobContext, combine, environment, trace);
-      case BSwitch switch_ -> new SwitchJob(jobContext, switch_, environment, trace);
-      case BCall call -> new CallJob(jobContext, call, environment, trace);
-      case BIf if_ -> new IfJob(jobContext, if_, environment, trace);
-      case BMap map -> new MapJob(jobContext, map, environment, trace);
-      case BFold fold -> new FoldJob(jobContext, fold, environment, trace);
-      case BLambda lambda -> new LambdaJob(jobContext, lambda, environment, trace);
-      case BReference reference -> new ReferenceJob(jobContext, reference, environment, trace);
-      case BValue value -> new ValueJob(jobContext, value, environment, trace);
+      case BChoose choose -> new BChooseJob(jobContext, choose, environment, trace);
+      case BOrder order -> new BOrderJob(jobContext, order, environment, trace);
+      case BSelect select -> new BSelectJob(jobContext, select, environment, trace);
+      case BPick pick -> new BPickJob(jobContext, pick, environment, trace);
+      case BInvoke invoke -> new BInvokeJob(jobContext, invoke, environment, trace);
+      case BCombine combine -> new BCombineJob(jobContext, combine, environment, trace);
+      case BSwitch switch_ -> new BSwitchJob(jobContext, switch_, environment, trace);
+      case BCall call -> new BCallJob(jobContext, call, environment, trace);
+      case BIf if_ -> new BIfJob(jobContext, if_, environment, trace);
+      case BMap map -> new BMapJob(jobContext, map, environment, trace);
+      case BFold fold -> new BFoldJob(jobContext, fold, environment, trace);
+      case BLambda lambda -> new BLambdaJob(jobContext, lambda, environment, trace);
+      case BReference reference -> new BReferenceJob(jobContext, reference, environment, trace);
+      case BValue value -> new BValueJob(jobContext, value, environment, trace);
     };
   }
 }
