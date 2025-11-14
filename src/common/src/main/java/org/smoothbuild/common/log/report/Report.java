@@ -1,5 +1,7 @@
 package org.smoothbuild.common.log.report;
 
+import static com.google.common.base.Strings.padStart;
+import static org.smoothbuild.common.base.Strings.indent;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
@@ -66,19 +68,37 @@ public record Report(Label label, Maybe<Trace> trace, Origin origin, List<Log> l
     return new Report(label, trace, origin, function1.apply(logs));
   }
 
-  public String toPrettyString() {
-    var builder = new StringBuilder();
-    builder.append(this.label());
-    builder.append(" ");
-    builder.append(origin);
+  @Override
+  public String toString() {
+    return reportToString(label, trace, origin, logs);
+  }
+
+  static String reportToString(Label label, Maybe<Trace> trace, Origin origin, List<Log> logs) {
+    var builder = new StringBuilder(labelPlusOrigin(label, origin));
     trace.ifPresent(t -> {
-      builder.append("\n  ");
-      builder.append(t);
+      builder.append("\n");
+      builder.append(indent(t.toString()));
     });
-    for (var log : this.logs()) {
-      builder.append("\n  ");
-      builder.append(log.toPrettyString());
+
+    for (Log log : logs) {
+      builder.append("\n");
+      builder.append(formatLog(log));
     }
+    builder.append("\n");
     return builder.toString();
+  }
+
+  private static String labelPlusOrigin(Label label, Origin origin) {
+    var labelString = label.toString();
+    var originString = origin.toString();
+    if (originString.isEmpty()) {
+      return labelString;
+    } else {
+      return labelString + padStart(originString, 79 - labelString.length(), ' ');
+    }
+  }
+
+  private static String formatLog(Log log) {
+    return indent(log.toPrettyString());
   }
 }

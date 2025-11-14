@@ -26,14 +26,14 @@ public class EvaluatorTracesTest extends EvaluatorTestContext {
 
   private Map<String, String> generateFiles(GoldenFilesTestCase testCase) throws IOException {
     var code = testCase.readFile("smooth");
-    var actualLogs = compileAndGetLogs(code);
+    var actualLogs = evaluateAndGetLogs(code);
     return Map.of("logs", actualLogs);
   }
 
-  private String compileAndGetLogs(String code) throws IOException {
+  private String evaluateAndGetLogs(String code) throws IOException {
     createUserModule(code);
     evaluate("result");
-    return reporter().reports().map(Report::toPrettyString).toString("\n");
+    return reporter().reports().map(Report::toString).toString("");
   }
 
   static class ArgumentsProvider extends GoldenFilesArgumentsProvider {
