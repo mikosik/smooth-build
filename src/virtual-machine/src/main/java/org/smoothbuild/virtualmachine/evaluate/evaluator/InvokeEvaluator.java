@@ -2,6 +2,7 @@ package org.smoothbuild.virtualmachine.evaluate.evaluator;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke.ARGUMENTS_INDEX;
+import static org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke.IS_PURE_INDEX;
 import static org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke.METHOD_INDEX;
 import static org.smoothbuild.virtualmachine.evaluate.base.Purity.IMPURE;
 import static org.smoothbuild.virtualmachine.evaluate.base.Purity.PURE;
@@ -29,7 +30,7 @@ public final class InvokeEvaluator extends OperationEvaluator {
 
   @Override
   public Purity purity(BTuple subExprValues) throws BytecodeException {
-    var isPure = ((BBool) subExprValues.get(BInvoke.IS_PURE_INDEX)).toJavaBoolean();
+    var isPure = ((BBool) subExprValues.get(IS_PURE_INDEX)).toJavaBoolean();
     return isPure ? PURE : IMPURE;
   }
 
