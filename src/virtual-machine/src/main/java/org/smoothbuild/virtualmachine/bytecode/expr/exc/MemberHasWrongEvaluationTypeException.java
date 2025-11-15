@@ -13,8 +13,8 @@ public class MemberHasWrongEvaluationTypeException extends DecodeExprException {
   }
 
   public MemberHasWrongEvaluationTypeException(
-      Hash hash, BKind kind, String memberName, String expected, BType actual) {
-    super(buildMessage(hash, kind, memberName, expected, actual.name()));
+      Hash hash, BKind kind, String memberName, Class<?> expected, BType actual) {
+    super(buildMessage(hash, kind, memberName, expected.getSimpleName(), actual.name()));
   }
 
   private static String buildMessage(

@@ -43,7 +43,7 @@ public final class BMap extends BOperation {
     var arrayEvaluationType = array.evaluationType();
     if (!(arrayEvaluationType instanceof BArrayType arrayType)) {
       throw new MemberHasWrongEvaluationTypeException(
-          hash(), kind(), "array", BArrayType.class.getSimpleName(), arrayEvaluationType);
+          hash(), kind(), "array", BArrayType.class, arrayEvaluationType);
     }
     var mapper = readMemberFromHashChain(hashes, MAPPER_INDEX);
     var mapperEvaluationType = mapper.evaluationType();

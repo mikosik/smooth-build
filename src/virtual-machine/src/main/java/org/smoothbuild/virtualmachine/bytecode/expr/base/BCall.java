@@ -37,7 +37,7 @@ public final class BCall extends BOperation {
     var lambdaEvaluationType = lambda.evaluationType();
     if (!(lambdaEvaluationType instanceof BLambdaType lambdaType)) {
       throw new MemberHasWrongEvaluationTypeException(
-          hash(), kind(), "lambda", BLambdaType.class.getSimpleName(), lambdaEvaluationType);
+          hash(), kind(), "lambda", BLambdaType.class, lambdaEvaluationType);
     }
     var args = readMemberFromHashChain(hashes, ARGUMENTS_INDEX, "arguments", lambdaType.params());
     if (!evaluationType().equals(lambdaType.result())) {

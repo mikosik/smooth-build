@@ -70,8 +70,10 @@ import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeHashChainExcepti
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeStringException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.NoSuchDataException;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.kind.exc.DecodeKindException;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
@@ -359,7 +361,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var hash = hash(hash(type), hash(hash(notLambda), hash(args)));
       assertCall(() -> ((BCall) dbGet(hash)).subExprs())
           .throwsException(new MemberHasWrongEvaluationTypeException(
-              hash, type, "lambda", "BLambdaType", bIntType()));
+              hash, type, "lambda", BLambdaType.class, bIntType()));
     }
 
     @Test
@@ -1081,7 +1083,7 @@ public class BExprCorruptedTest extends VmTestContext {
 
       assertCall(() -> ((BMap) dbGet(hash)).subExprs())
           .throwsException(new MemberHasWrongEvaluationTypeException(
-              hash, kind, "array", "BArrayType", bIntType()));
+              hash, kind, "array", BArrayType.class, bIntType()));
     }
 
     @Test
@@ -1091,10 +1093,11 @@ public class BExprCorruptedTest extends VmTestContext {
       var dataHash = hash(hash(array), hash(notMapper));
       var kind = bMapKind(bIntArrayType());
       var hash = hash(hash(kind), dataHash);
+      var mapperType = bLambdaType(list(bIntType()), bIntType());
 
       assertCall(() -> ((BMap) dbGet(hash)).subExprs())
           .throwsException(new MemberHasWrongEvaluationTypeException(
-              hash, kind, "mapper", "(Int)->Int", bIntType()));
+              hash, kind, "mapper", mapperType, bIntType()));
     }
 
     @Test
@@ -1104,10 +1107,11 @@ public class BExprCorruptedTest extends VmTestContext {
       var dataHash = hash(hash(array), hash(mapperWithTwoParams));
       var kind = bMapKind(bIntArrayType());
       var hash = hash(hash(kind), dataHash);
+      var mapperType = bLambdaType(list(bIntType()), bIntType());
 
       assertCall(() -> ((BMap) dbGet(hash)).subExprs())
           .throwsException(new MemberHasWrongEvaluationTypeException(
-              hash, kind, "mapper", "(Int)->Int", mapperWithTwoParams.type()));
+              hash, kind, "mapper", mapperType, mapperWithTwoParams.type()));
     }
 
     @Test
@@ -1117,10 +1121,11 @@ public class BExprCorruptedTest extends VmTestContext {
       var dataHash = hash(hash(array), hash(mapper));
       var kind = bMapKind(bIntArrayType());
       var hash = hash(hash(kind), dataHash);
+      var mapperType = bLambdaType(list(bStringType()), bIntType());
 
       assertCall(() -> ((BMap) dbGet(hash)).subExprs())
           .throwsException(new MemberHasWrongEvaluationTypeException(
-              hash, kind, "mapper", "(String)->Int", mapper.type()));
+              hash, kind, "mapper", mapperType, mapper.type()));
     }
 
     @Test
@@ -1130,10 +1135,11 @@ public class BExprCorruptedTest extends VmTestContext {
       var dataHash = hash(hash(array), hash(mapper));
       var kind = bMapKind(bStringArrayType());
       var hash = hash(hash(kind), dataHash);
+      var mapperType = bLambdaType(list(bIntType()), bStringType());
 
       assertCall(() -> ((BMap) dbGet(hash)).subExprs())
           .throwsException(new MemberHasWrongEvaluationTypeException(
-              hash, kind, "mapper", "(Int)->String", mapper.type()));
+              hash, kind, "mapper", mapperType, mapper.type()));
     }
   }
 
@@ -1221,7 +1227,7 @@ public class BExprCorruptedTest extends VmTestContext {
 
       assertCall(() -> ((BFold) dbGet(hash)).subExprs())
           .throwsException(new MemberHasWrongEvaluationTypeException(
-              hash, kind, "array", "BArrayType", bIntType()));
+              hash, kind, "array", BArrayType.class, bIntType()));
     }
 
     @Test
@@ -1232,10 +1238,11 @@ public class BExprCorruptedTest extends VmTestContext {
       var dataHash = hash(hash(array), hash(initial), hash(notFolder));
       var kind = bFoldKind(bIntType());
       var hash = hash(hash(kind), dataHash);
+      var folderType = bLambdaType(list(bIntType(), bIntType()), bIntType());
 
       assertCall(() -> ((BFold) dbGet(hash)).subExprs())
           .throwsException(new MemberHasWrongEvaluationTypeException(
-              hash, kind, "folder", "(Int,Int)->Int", bIntType()));
+              hash, kind, "folder", folderType, bIntType()));
     }
 
     @Test
@@ -1246,10 +1253,11 @@ public class BExprCorruptedTest extends VmTestContext {
       var dataHash = hash(hash(array), hash(initial), hash(folderWithOneParam));
       var kind = bFoldKind(bIntType());
       var hash = hash(hash(kind), dataHash);
+      var folderType = bLambdaType(list(bIntType(), bIntType()), bIntType());
 
       assertCall(() -> ((BFold) dbGet(hash)).subExprs())
           .throwsException(new MemberHasWrongEvaluationTypeException(
-              hash, kind, "folder", "(Int,Int)->Int", folderWithOneParam.type()));
+              hash, kind, "folder", folderType, folderWithOneParam.type()));
     }
 
     @Test
@@ -1260,10 +1268,11 @@ public class BExprCorruptedTest extends VmTestContext {
       var dataHash = hash(hash(array), hash(initial), hash(folderWithWrongFirstParam));
       var kind = bFoldKind(bIntType());
       var hash = hash(hash(kind), dataHash);
+      var folderType = bLambdaType(list(bIntType(), bIntType()), bIntType());
 
       assertCall(() -> ((BFold) dbGet(hash)).subExprs())
           .throwsException(new MemberHasWrongEvaluationTypeException(
-              hash, kind, "folder", "(Int,Int)->Int", folderWithWrongFirstParam.type()));
+              hash, kind, "folder", folderType, folderWithWrongFirstParam.type()));
     }
 
     @Test
@@ -1274,10 +1283,11 @@ public class BExprCorruptedTest extends VmTestContext {
       var dataHash = hash(hash(array), hash(initial), hash(folderWithWrongSecondParam));
       var kind = bFoldKind(bIntType());
       var hash = hash(hash(kind), dataHash);
+      var folderType = bLambdaType(list(bIntType(), bIntType()), bIntType());
 
       assertCall(() -> ((BFold) dbGet(hash)).subExprs())
           .throwsException(new MemberHasWrongEvaluationTypeException(
-              hash, kind, "folder", "(Int,Int)->Int", folderWithWrongSecondParam.type()));
+              hash, kind, "folder", folderType, folderWithWrongSecondParam.type()));
     }
 
     @Test
@@ -1288,10 +1298,11 @@ public class BExprCorruptedTest extends VmTestContext {
       var dataHash = hash(hash(array), hash(initial), hash(folderWithWrongResultType));
       var kind = bFoldKind(bIntType());
       var hash = hash(hash(kind), dataHash);
+      var folderType = bLambdaType(list(bIntType(), bIntType()), bIntType());
 
       assertCall(() -> ((BFold) dbGet(hash)).subExprs())
           .throwsException(new MemberHasWrongEvaluationTypeException(
-              hash, kind, "folder", "(Int,Int)->Int", folderWithWrongResultType.type()));
+              hash, kind, "folder", folderType, folderWithWrongResultType.type()));
     }
   }
 

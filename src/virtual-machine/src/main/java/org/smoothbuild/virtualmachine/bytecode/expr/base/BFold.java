@@ -45,7 +45,7 @@ public final class BFold extends BOperation {
     var arrayEvaluationType = array.evaluationType();
     if (!(arrayEvaluationType instanceof BArrayType arrayType)) {
       throw new MemberHasWrongEvaluationTypeException(
-          hash(), kind(), "array", BArrayType.class.getSimpleName(), arrayEvaluationType);
+          hash(), kind(), "array", BArrayType.class, arrayEvaluationType);
     }
     var initial = readMemberFromHashChain(hashes, INITIAL_INDEX);
     var initialEvaluationType = initial.evaluationType();
