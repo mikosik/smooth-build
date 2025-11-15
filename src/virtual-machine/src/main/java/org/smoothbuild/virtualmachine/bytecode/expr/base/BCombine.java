@@ -39,8 +39,7 @@ public final class BCombine extends BOperation {
     var items = readDataAsExprChain(BExpr.class);
     var actualType = kindDb().tuple(items.map(BExpr::evaluationType));
     if (!actualType.equals(evaluationType())) {
-      throw new MemberHasWrongTypeException(
-          hash(), kind(), "elements", evaluationType(), actualType);
+      throw new MemberHasWrongTypeException(hash(), kind(), "items", evaluationType(), actualType);
     }
     return items;
   }

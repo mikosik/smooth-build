@@ -808,7 +808,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var actualType = bTupleType(bIntType());
       assertCall(() -> ((BCombine) dbGet(hash)).subExprs())
           .throwsException(
-              new MemberHasWrongTypeException(hash, type, "elements", expectedType, actualType));
+              new MemberHasWrongTypeException(hash, type, "items", expectedType, actualType));
     }
 
     @Test
@@ -822,7 +822,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var actualType = bTupleType(bIntType(), bStringType());
       assertCall(() -> ((BCombine) dbGet(hash)).subExprs())
           .throwsException(
-              new MemberHasWrongTypeException(hash, type, "elements", expectedType, actualType));
+              new MemberHasWrongTypeException(hash, type, "items", expectedType, actualType));
     }
   }
 
