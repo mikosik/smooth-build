@@ -172,7 +172,7 @@ public abstract sealed class BExpr permits BOperation, BValue {
     return readNode(nodePath, hashes.get(nodeIndex));
   }
 
-  protected BExpr readNode(String nodePath, Hash nodeHash) throws BytecodeException {
+  private BExpr readNode(String nodePath, Hash nodeHash) throws BytecodeException {
     return invokeAndChainBytecodeException(
         () -> exprDb.get(nodeHash), e -> new DecodeExprNodeException(hash(), kind(), nodePath, e));
   }
