@@ -161,6 +161,23 @@ public abstract sealed class BExpr permits BOperation, BValue {
     }
   }
 
+  protected BExpr readMemberFromHashChain(
+      List<Hash> hashes, int index, String nodeName, Class<?> expectedEvaluationType)
+      throws BytecodeException {
+    var expr = readMemberFromHashChain(hashes, index);
+    validateEvaluationType(nodeName, expectedEvaluationType, expr.evaluationType());
+    return expr;
+  }
+
+  protected void validateEvaluationType(
+      String nodeName, Class<?> expectedEvaluationType, BType evaluationType)
+      throws MemberHasWrongEvaluationTypeException {
+    if (!expectedEvaluationType.isInstance(evaluationType)) {
+      throw new MemberHasWrongEvaluationTypeException(
+          hash(), kind(), nodeName, expectedEvaluationType, evaluationType);
+    }
+  }
+
   protected <T extends BExpr> T readAndCastMemberFromHashChain(
       List<Hash> hashes, int index, String name, Class<T> clazz) throws BytecodeException {
     return castMember(readMemberFromHashChain(hashes, index), name, clazz);

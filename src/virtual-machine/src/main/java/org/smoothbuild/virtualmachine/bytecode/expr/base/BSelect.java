@@ -8,7 +8,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberHasWrongTypeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberHasWrongEvaluationTypeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.SelectHasIndexOutOfBoundException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.SelectHasWrongEvaluationTypeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BSelectKind;
@@ -38,12 +38,8 @@ public final class BSelect extends BOperation {
     var selectable = readMemberFromHashChain(hashes, SELECTABLE_INDEX);
     var index = readAndCastMemberFromHashChain(hashes, INDEX_INDEX, "index", BInt.class);
     if (!(selectable.evaluationType() instanceof BTupleType tupleType)) {
-      throw new MemberHasWrongTypeException(
-          hash(),
-          kind(),
-          "selectable",
-          BTupleType.class,
-          selectable.evaluationType().getClass());
+      throw new MemberHasWrongEvaluationTypeException(
+          hash(), kind(), "selectable", BTupleType.class, selectable.evaluationType());
     }
     int i = index.toJavaBigInteger().intValue();
     int size = tupleType.elements().size();

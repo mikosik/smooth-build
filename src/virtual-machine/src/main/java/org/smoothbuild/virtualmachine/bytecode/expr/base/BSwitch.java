@@ -9,7 +9,6 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberHasWrongEvaluationTypeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberHasWrongTypeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BSwitchKind;
 
@@ -37,8 +36,8 @@ public final class BSwitch extends BOperation {
     var hashes = readDataAsHashChain(DATA_SEQ_SIZE);
     var choice = readMemberFromHashChain(hashes, CHOICE_INDEX);
     if (!(choice.evaluationType() instanceof BChoiceType choiceType)) {
-      throw new MemberHasWrongTypeException(
-          hash(), kind(), "choice", BChoiceType.class, choice.evaluationType().getClass());
+      throw new MemberHasWrongEvaluationTypeException(
+          hash(), kind(), "choice", BChoiceType.class, choice.evaluationType());
     }
     var expectedHandlersType = choiceType
         .alternatives()

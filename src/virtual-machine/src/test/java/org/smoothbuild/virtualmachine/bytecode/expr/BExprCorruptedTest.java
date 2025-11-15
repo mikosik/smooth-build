@@ -71,7 +71,7 @@ import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeStringException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.NoSuchDataException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
@@ -691,6 +691,19 @@ public class BExprCorruptedTest extends VmTestContext {
 
       assertCall(() -> ((BSwitch) dbGet(hash)).subExprs())
           .throwsException(new NodeChainSizeIsWrongException(hash, switchKind, DATA_PATH, 2, 3));
+    }
+
+    @Test
+    void choice_evaluation_type_is_not_choice_type() throws Exception {
+      var switchKind = bSwitchKind(bIntType());
+      var choice = bInt();
+      var handlers = bCombine(bs2iLambda(), bi2iLambda(), bi2iLambda());
+      var dataHash = hash(hash(choice), hash(handlers));
+      var hash = hash(hash(switchKind), dataHash);
+
+      assertCall(() -> ((BSwitch) dbGet(hash)).subExprs())
+          .throwsException(new MemberHasWrongEvaluationTypeException(
+              hash, switchKind, "choice", BChoiceType.class, bIntType()));
     }
 
     @Test
@@ -1419,8 +1432,8 @@ public class BExprCorruptedTest extends VmTestContext {
       var hash = hash(hash(kind), hash(hash(method), hash(isPure), hash(arguments)));
 
       assertCall(() -> ((BInvoke) dbGet(hash)).subExprs().arguments())
-          .throwsException(new MemberHasWrongTypeException(
-              hash, kind, "arguments", BTupleType.class, BIntType.class));
+          .throwsException(new MemberHasWrongEvaluationTypeException(
+              hash, kind, "arguments", BTupleType.class, bIntType()));
     }
   }
 
@@ -1676,8 +1689,8 @@ public class BExprCorruptedTest extends VmTestContext {
       var hash = hash(hash(type), hash(hash(expr), hash(index)));
 
       assertCall(() -> ((BSelect) dbGet(hash)).subExprs())
-          .throwsException(new MemberHasWrongTypeException(
-              hash, type, "selectable", BTupleType.class, BIntType.class));
+          .throwsException(new MemberHasWrongEvaluationTypeException(
+              hash, type, "selectable", BTupleType.class, bIntType()));
     }
 
     @Test
