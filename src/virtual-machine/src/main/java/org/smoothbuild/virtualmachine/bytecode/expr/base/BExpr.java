@@ -133,7 +133,7 @@ public abstract sealed class BExpr permits BOperation, BValue {
         e -> new DecodeExprNodeException(hash(), kind(), DATA_PATH, e));
   }
 
-  protected <T> T readElementFromDataAsInstanceChain(int i, int expectedSize, Class<T> clazz)
+  protected <T> T readElementFromDataAsExprChain(int i, int expectedSize, Class<T> clazz)
       throws BytecodeException {
     var expr = readElementFromDataAsExprChain(i, expectedSize);
     return castNode(dataNodePath(i), expr, clazz);

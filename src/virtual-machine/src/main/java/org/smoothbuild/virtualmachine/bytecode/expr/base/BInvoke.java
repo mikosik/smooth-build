@@ -47,7 +47,7 @@ public final class BInvoke extends BOperation {
   }
 
   public BBool isPure() throws BytecodeException {
-    return readElementFromDataAsInstanceChain(IS_PURE_INDEX, DATA_SEQ_SIZE, BBool.class);
+    return readElementFromDataAsExprChain(IS_PURE_INDEX, DATA_SEQ_SIZE, BBool.class);
   }
 
   @Override
