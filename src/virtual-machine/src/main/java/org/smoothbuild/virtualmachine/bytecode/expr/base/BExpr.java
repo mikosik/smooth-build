@@ -144,14 +144,14 @@ public abstract sealed class BExpr permits BOperation, BValue {
   protected void checkMemberEvaluationType(String name, BType actual, BType expected)
       throws MemberHasWrongEvaluationTypeException {
     if (!actual.equals(expected)) {
-      throw new MemberHasWrongEvaluationTypeException(hash(), kind(), name, expected, actual);
+      throw new MemberHasWrongEvaluationTypeException(this, name, expected, actual);
     }
   }
 
   protected void checkMemberEvaluationType(String name, BType actual, Class<?> expected)
       throws MemberHasWrongEvaluationTypeException {
     if (!expected.isInstance(actual)) {
-      throw new MemberHasWrongEvaluationTypeException(hash(), kind(), name, expected, actual);
+      throw new MemberHasWrongEvaluationTypeException(this, name, expected, actual);
     }
   }
 

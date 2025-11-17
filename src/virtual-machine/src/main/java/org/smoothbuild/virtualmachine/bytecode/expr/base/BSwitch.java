@@ -41,7 +41,7 @@ public final class BSwitch extends BOperation {
     var handlers = members.get(HANDLERS_INDEX).asInstanceOf(BCombine.class);
     if (!handlers.evaluationType().equals(expectedHandlersType)) {
       throw new MemberHasWrongEvaluationTypeException(
-          hash(), kind(), "handlers", expectedHandlersType, handlers.evaluationType());
+          this, "handlers", expectedHandlersType, handlers.evaluationType());
     }
     return new BSubExprs(choice, handlers);
   }

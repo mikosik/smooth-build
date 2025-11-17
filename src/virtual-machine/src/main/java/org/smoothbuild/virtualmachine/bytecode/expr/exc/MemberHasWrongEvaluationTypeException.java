@@ -3,13 +3,25 @@ package org.smoothbuild.virtualmachine.bytecode.expr.exc;
 import static org.smoothbuild.common.base.Strings.q;
 
 import org.smoothbuild.common.base.Hash;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 
 public class MemberHasWrongEvaluationTypeException extends DecodeExprException {
   public MemberHasWrongEvaluationTypeException(
+      BExpr owner, String memberName, BType expected, BType actual) {
+    super(buildMessage(owner.hash(), owner.kind(), memberName, expected.name(), actual.name()));
+  }
+
+  public MemberHasWrongEvaluationTypeException(
       Hash hash, BKind kind, String memberName, BType expected, BType actual) {
     super(buildMessage(hash, kind, memberName, expected.name(), actual.name()));
+  }
+
+  public MemberHasWrongEvaluationTypeException(
+      BExpr owner, String memberName, Class<?> expected, BType actual) {
+    super(buildMessage(
+        owner.hash(), owner.kind(), memberName, expected.getSimpleName(), actual.name()));
   }
 
   public MemberHasWrongEvaluationTypeException(
