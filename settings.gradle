@@ -26,7 +26,7 @@ dependencyResolutionManagement {
       library('jspecify', 'org.jspecify:jspecify:1.0.0')
       library('dagger', 'com.google.dagger:dagger:2.57.2')
       library('dagger-compiler', 'com.google.dagger:dagger-compiler:2.57.2')
-      library('okio', 'com.squareup.okio:okio:3.16.2')
+      library('okio', 'com.squareup.okio:okio:3.16.4')
       library('picocli', 'info.picocli:picocli:4.7.7')
       library('zip4j', 'net.lingala.zip4j:zip4j:2.11.5')
       library('awaitility', 'org.awaitility:awaitility:4.3.0')
