@@ -1,17 +1,17 @@
 package org.smoothbuild.virtualmachine.evaluate.job;
 
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.schedule.Output.failedOutput;
 import static org.smoothbuild.common.schedule.Output.output;
+import static org.smoothbuild.virtualmachine.VmConstants.VM_LABEL;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
-import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.schedule.Task0;
-import org.smoothbuild.virtualmachine.VmConstants;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
@@ -25,11 +25,10 @@ public final class BLambdaJob extends Job {
   @Override
   public Promise<Maybe<BValue>> evaluate() {
     var inlineTask = (Task0<BValue>) () -> {
-      var label = VmConstants.VM_LABEL.append(":inline");
+      var label = VM_LABEL.append(":inline");
       try {
         var inlined = (BValue) referenceInliner().inline(this);
-        List<Log> logs = List.list();
-        return output(inlined, report(label, trace(), logs));
+        return output(inlined, report(label, trace(), list()));
       } catch (BytecodeException e) {
         return failedOutput(label, some(trace()), "Vm inline Task failed with exception:", e);
       }
