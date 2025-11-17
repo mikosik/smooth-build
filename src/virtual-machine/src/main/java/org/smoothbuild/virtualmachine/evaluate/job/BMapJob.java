@@ -2,11 +2,11 @@ package org.smoothbuild.virtualmachine.evaluate.job;
 
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.schedule.Output.successOutput;
-import static org.smoothbuild.virtualmachine.VmConstants.VM_LABEL;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
+import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.schedule.Task1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
@@ -36,7 +36,6 @@ public final class BMapJob extends SchedulingJob {
 
   private Task1<BValue, BValue> newMapSchedulingTask(BSubExprs subExprs) {
     return (arrayValue) -> {
-      var label = VM_LABEL.append(":scheduleMap");
       try {
         var array = ((BArray) arrayValue);
         var mapperArg = subExprs.mapper();
@@ -44,10 +43,14 @@ public final class BMapJob extends SchedulingJob {
         var mappingLambdaResultType = ((BLambdaType) mapperArg.evaluationType()).result();
         var arrayType = bytecodeFactory().arrayType(mappingLambdaResultType);
         var order = bytecodeFactory().order(arrayType, calls);
-        return successOutput(evaluate(order), label, trace());
+        return successOutput(evaluate(order), executeLabel(), trace());
       } catch (BytecodeException e) {
-        return failedSchedulingOutput(label, trace(), e);
+        return failedSchedulingOutput(executeLabel(), trace(), e);
       }
     };
+  }
+
+  private Label executeLabel() {
+    return scheduleLabel2("execute");
   }
 }

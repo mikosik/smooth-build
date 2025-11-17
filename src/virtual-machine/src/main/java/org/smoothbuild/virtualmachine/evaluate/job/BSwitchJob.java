@@ -2,11 +2,11 @@ package org.smoothbuild.virtualmachine.evaluate.job;
 
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.schedule.Output.successOutput;
-import static org.smoothbuild.virtualmachine.VmConstants.VM_LABEL;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
+import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.schedule.Task1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
@@ -34,17 +34,20 @@ public final class BSwitchJob extends SchedulingJob {
 
   private Task1<BValue, BValue> newSwitchSchedulingTask(BSubExprs subExprs) {
     return (choiceValue) -> {
-      var label = VM_LABEL.append(":scheduleChoice");
       try {
         var members = ((BChoice) choiceValue).components();
         var index = members.index().toJavaBigInteger();
         var handler = subExprs.handlers().items().get(index.intValue());
         var call = call(handler, list(members.chosen()));
         var result = evaluate(call);
-        return successOutput(result, label, trace());
+        return successOutput(result, executeLabel(), trace());
       } catch (BytecodeException e) {
-        return failedSchedulingOutput(label, trace(), e);
+        return failedSchedulingOutput(executeLabel(), trace(), e);
       }
     };
+  }
+
+  private Label executeLabel() {
+    return scheduleLabel2("execute");
   }
 }

@@ -3,7 +3,6 @@ package org.smoothbuild.virtualmachine.evaluate.job;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.location.Locations.unknownLocation;
 import static org.smoothbuild.common.schedule.Output.successOutput;
-import static org.smoothbuild.virtualmachine.VmConstants.VM_LABEL;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
@@ -23,7 +22,6 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask.JobContext;
 
 public final class BCallJob extends SchedulingJob {
-  private static final Label SCHEDULE_CALL_LABEL = VM_LABEL.append(":scheduleCall");
   private final BCall call;
 
   public BCallJob(JobContext jobContext, BCall call, List<Job> environment, Trace trace) {
@@ -60,9 +58,9 @@ public final class BCallJob extends SchedulingJob {
         var bodyEnvironmentJobs = argJobs.addAll(environment());
         var bodyTrace = newTrace(call, bLambda, trace());
         var schedule = job(bLambda.body(), bodyEnvironmentJobs, bodyTrace).evaluate();
-        return successOutput(schedule, SCHEDULE_CALL_LABEL, trace());
+        return successOutput(schedule, executeLabel(), trace());
       } catch (BytecodeException e) {
-        return failedSchedulingOutput(SCHEDULE_CALL_LABEL, trace(), e);
+        return failedSchedulingOutput(executeLabel(), trace(), e);
       }
     };
   }
@@ -81,9 +79,9 @@ public final class BCallJob extends SchedulingJob {
       try {
         var result = scheduleCallBodyWithTupleArguments(
             tuple, bLambda, newTrace(bCall, lambdaExpr, trace()));
-        return successOutput(result, SCHEDULE_CALL_LABEL, trace());
+        return successOutput(result, executeLabel(), trace());
       } catch (BytecodeException e) {
-        return failedSchedulingOutput(SCHEDULE_CALL_LABEL, trace(), e);
+        return failedSchedulingOutput(executeLabel(), trace(), e);
       }
     };
   }
@@ -108,11 +106,9 @@ public final class BCallJob extends SchedulingJob {
         var argsTuple = (BTuple) argsValue;
         var trace = newTrace(bCall, lambdaExpr, trace());
         return successOutput(
-            scheduleCallBodyWithTupleArguments(argsTuple, bLambda, trace),
-            SCHEDULE_CALL_LABEL,
-            trace());
+            scheduleCallBodyWithTupleArguments(argsTuple, bLambda, trace), executeLabel(), trace());
       } catch (BytecodeException e) {
-        return failedSchedulingOutput(SCHEDULE_CALL_LABEL, trace(), e);
+        return failedSchedulingOutput(executeLabel(), trace(), e);
       }
     };
   }
@@ -123,6 +119,10 @@ public final class BCallJob extends SchedulingJob {
     var bodyEnvironmentJobs = argumentJobs.addAll(environment());
     var bodyJob = job(bLambda.body(), bodyEnvironmentJobs, trace);
     return bodyJob.evaluate();
+  }
+
+  private Label executeLabel() {
+    return scheduleLabel2("execute");
   }
 
   private Trace newTrace(BCall call, BExpr called, Trace next) {

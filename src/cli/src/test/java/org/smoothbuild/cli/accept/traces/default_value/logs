@@ -31,13 +31,13 @@
 :vm:schedule:call
 :vm:inline
   @ <empty trace>
-:vm:scheduleCall
+:vm:schedule:call:execute
   @ <empty trace>
 :vm:schedule:reference
 :vm:schedule:call
 :vm:inline
   @ <empty trace>
-:vm:scheduleCall
+:vm:schedule:call:execute
   @ <empty trace>
 :vm:schedule:order
 :vm:evaluate:order

@@ -5,9 +5,9 @@ import static org.smoothbuild.common.schedule.Output.successOutput;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
+import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.schedule.Task1;
-import org.smoothbuild.virtualmachine.VmConstants;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
@@ -26,16 +26,19 @@ public final class BIfJob extends SchedulingJob {
   public Promise<Maybe<BValue>> schedule() throws BytecodeException {
     var subExprs = if_.subExprs();
     var schedulingTask = (Task1<BValue, BValue>) (conditionValue) -> {
-      var label = VmConstants.VM_LABEL.append(":scheduleIf");
       try {
         var condition = ((BBool) conditionValue).toJavaBoolean();
         return successOutput(
-            evaluate(condition ? subExprs.then_() : subExprs.else_()), label, trace());
+            evaluate(condition ? subExprs.then_() : subExprs.else_()), executeLabel(), trace());
       } catch (BytecodeException e) {
-        return failedSchedulingOutput(label, trace(), e);
+        return failedSchedulingOutput(executeLabel(), trace(), e);
       }
     };
     var conditionPromise = evaluate(subExprs.condition());
     return scheduler().submit(schedulingTask, conditionPromise);
+  }
+
+  private Label executeLabel() {
+    return scheduleLabel2("execute");
   }
 }

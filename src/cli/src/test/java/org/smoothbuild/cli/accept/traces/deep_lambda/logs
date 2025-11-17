@@ -33,15 +33,15 @@
 :vm:schedule:call
 :vm:inline
   @ <empty trace>
-:vm:scheduleCall
+:vm:schedule:call:execute
   @ <empty trace>
 :vm:inline
   @ {t-project}/module.smooth:2 mylambda:lambda~1
-:vm:scheduleCall
+:vm:schedule:call:execute
   @ <empty trace>
 :vm:inline
   @ {t-project}/module.smooth:2 ???
-:vm:scheduleCall
+:vm:schedule:call:execute
   @ <empty trace>
 :vm:schedule:order
 :vm:schedule:reference

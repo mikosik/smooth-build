@@ -31,19 +31,19 @@
 :vm:schedule:call
 :vm:inline
   @ <empty trace>
-:vm:scheduleCall
+:vm:schedule:call:execute
   @ <empty trace>
 :vm:schedule:call
 :vm:schedule:reference
 :vm:inline
   @ <empty trace>
-:vm:scheduleCall
+:vm:schedule:call:execute
   @ {t-project}/module.smooth:4 apply
 :vm:schedule:call
 :vm:inline
   @ {t-project}/module.smooth:5 result:lambda~1
   @ {t-project}/module.smooth:4 apply
-:vm:scheduleCall
+:vm:schedule:call:execute
   @ {t-project}/module.smooth:5 result:lambda~1
   @ {t-project}/module.smooth:4 apply
 :vm:schedule:combine

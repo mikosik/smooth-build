@@ -31,18 +31,18 @@
 :vm:schedule:call
 :vm:inline
   @ <empty trace>
-:vm:scheduleCall
+:vm:schedule:call:execute
   @ <empty trace>
 :vm:schedule:call
 :vm:inline
   @ {t-project}/module.smooth:1 myfunc
-:vm:scheduleCall
+:vm:schedule:call:execute
   @ {t-project}/module.smooth:1 myfunc
 :vm:schedule:call
 :vm:schedule:reference
 :vm:inline
   @ {t-project}/module.smooth:1 myfunc
-:vm:scheduleCall
+:vm:schedule:call:execute
   @ {t-project}/module.smooth:2 apply
   @ {t-project}/module.smooth:1 myfunc
 :vm:schedule:order
