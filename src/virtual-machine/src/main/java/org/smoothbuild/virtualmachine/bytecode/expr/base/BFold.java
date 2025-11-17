@@ -8,7 +8,6 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberHasWrongEvaluationTypeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BFoldKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
@@ -18,7 +17,6 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
  * This class is thread-safe.
  */
 public final class BFold extends BOperation {
-  private static final int DATA_SEQ_SIZE = 3;
   private static final int ARRAY_INDEX = 0;
   private static final int INITIAL_INDEX = 1;
   private static final int FOLDER_INDEX = 2;
@@ -40,23 +38,14 @@ public final class BFold extends BOperation {
 
   @Override
   public BSubExprs subExprs() throws BytecodeException {
-    var hashes = readDataAsHashChain(DATA_SEQ_SIZE);
-    var array = readMemberFromHashChain(hashes, ARRAY_INDEX);
-    var arrayEvaluationType = array.evaluationType();
-    if (!(arrayEvaluationType instanceof BArrayType arrayType)) {
-      throw new MemberHasWrongEvaluationTypeException(
-          hash(), kind(), "array", BArrayType.class, arrayEvaluationType);
-    }
-    var initial = readMemberFromHashChain(hashes, INITIAL_INDEX);
+    var members = members("array", "initial", "folder");
+    var array = members.get(ARRAY_INDEX).asExpr(BArrayType.class);
+    var arrayType = (BArrayType) array.evaluationType();
+    var initial = members.get(INITIAL_INDEX).asExpr();
     var initialEvaluationType = initial.evaluationType();
-    var folder = readMemberFromHashChain(hashes, FOLDER_INDEX);
-    var folderEvaluationType = folder.evaluationType();
     var expectedFolderEvaluationType =
         kindDb().lambda(list(initialEvaluationType, arrayType.element()), initialEvaluationType);
-    if (!folderEvaluationType.equals(expectedFolderEvaluationType)) {
-      throw new MemberHasWrongEvaluationTypeException(
-          hash(), kind(), "folder", expectedFolderEvaluationType, folderEvaluationType);
-    }
+    var folder = members.get(FOLDER_INDEX).asExpr(expectedFolderEvaluationType);
     return new BSubExprs(array, initial, folder);
   }
 

@@ -9,7 +9,6 @@ import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.NodeHasWrongTypeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
 
 /**
@@ -35,11 +34,11 @@ public final class BArray extends BValue {
   }
 
   public long size() throws BytecodeException {
-    return readDataAsHashChainSize();
+    return hashCoundInDataNode();
   }
 
-  public <T extends BValue> List<T> elements(Class<T> elemTJ) throws BytecodeException {
-    assertIsIterableAs(elemTJ);
+  public <T extends BValue> List<T> elements(Class<T> clazz) throws BytecodeException {
+    assertIsIterableAs(clazz);
     @SuppressWarnings("unchecked")
     List<T> result = (List<T>) elementsMemoizer.apply();
     return result;
@@ -54,20 +53,8 @@ public final class BArray extends BValue {
   }
 
   private List<BValue> instantiateElements() throws BytecodeException {
-    var elements = readElements();
-    var expectedElementType = type().element();
-    for (int i = 0; i < elements.size(); i++) {
-      var elemT = elements.get(i).type();
-      if (!expectedElementType.equals(elemT)) {
-        throw new NodeHasWrongTypeException(
-            hash(), kind(), DATA_PATH, i, expectedElementType, elemT);
-      }
-    }
-    return elements;
-  }
-
-  private List<BValue> readElements() throws BytecodeException {
-    return readDataAsExprChain(BValue.class);
+    var elementType = type().element().javaType();
+    return loneElementsMember("elements").asListOfInstancesOf(elementType);
   }
 
   @Override
@@ -75,7 +62,7 @@ public final class BArray extends BValue {
     return new ToStringBuilder(getClass().getSimpleName())
         .addField("hash", hash())
         .addField("type", type())
-        .addListField("elements", readElements().map(BExpr::exprToString))
+        .addListField("elements", elements(BValue.class).map(BExpr::exprToString))
         .toString();
   }
 }

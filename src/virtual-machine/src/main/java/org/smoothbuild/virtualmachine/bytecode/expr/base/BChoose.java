@@ -16,7 +16,6 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BChooseKind;
  * This class is thread-safe.
  */
 public final class BChoose extends BOperation {
-  public static final int DATA_SEQ_SIZE = 2;
   public static final int INDEX_INDEX = 0;
   public static final int CHOSEN_INDEX = 1;
 
@@ -37,8 +36,8 @@ public final class BChoose extends BOperation {
 
   @Override
   public BSubExprs subExprs() throws BytecodeException {
-    var hashes = readDataAsHashChain(DATA_SEQ_SIZE);
-    var index = readAndCastMemberFromHashChain(hashes, INDEX_INDEX, "index", BInt.class);
+    var members = members("index", "chosen");
+    var index = members.get(INDEX_INDEX).asInstanceOf(BInt.class);
 
     int i = index.toJavaBigInteger().intValue();
     var evaluationType = kind().evaluationType();
@@ -48,8 +47,8 @@ public final class BChoose extends BOperation {
       throw new ChooseHasIndexOutOfBoundException(hash(), evaluationType, i, size);
     }
 
-    var expectedExprType = alternatives.get(i);
-    var chosen = readMemberFromHashChain(hashes, CHOSEN_INDEX, "chosen", expectedExprType);
+    var expectedEvaluationType = alternatives.get(i);
+    var chosen = members.get(CHOSEN_INDEX).asExpr(expectedEvaluationType);
     return new BChoose.BSubExprs(index, chosen);
   }
 

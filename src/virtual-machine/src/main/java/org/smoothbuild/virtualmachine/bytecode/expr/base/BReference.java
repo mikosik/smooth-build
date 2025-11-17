@@ -28,7 +28,7 @@ public final class BReference extends BOperation {
   }
 
   public BInt index() throws BytecodeException {
-    return readData(BInt.class);
+    return loneMember("index").asInstanceOf(BInt.class);
   }
 
   @Override

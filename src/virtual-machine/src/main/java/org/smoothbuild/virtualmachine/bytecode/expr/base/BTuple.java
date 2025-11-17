@@ -50,9 +50,9 @@ public final class BTuple extends BValue {
   private List<BValue> instantiateItems() throws BytecodeException {
     var type = type();
     var expectedElementTs = type.elements();
-    var elements = readDataAsValueChain(expectedElementTs.size());
-    var elementTypes = elements.map(BValue::type);
-    validateTuple(type, elementTypes);
+    var members = loneElementsMember("elements", expectedElementTs.size());
+    var elements = members.asListOfInstancesOf(BValue.class);
+    validateTuple(type, elements.map(BValue::type));
     return elements;
   }
 

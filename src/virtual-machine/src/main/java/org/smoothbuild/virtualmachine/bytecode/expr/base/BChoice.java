@@ -16,7 +16,6 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
  * This class is thread-safe.
  */
 public final class BChoice extends BValue {
-  private static final int DATA_SEQ_SIZE = 2;
   private static final int INDEX_INDEX = 0;
   private static final int CHOSEN_INDEX = 1;
 
@@ -35,9 +34,9 @@ public final class BChoice extends BValue {
     return (BChoiceType) super.kind();
   }
 
-  public BSubExprs members() throws BytecodeException {
-    var hashes = readDataAsHashChain(DATA_SEQ_SIZE);
-    var index = readAndCastMemberFromHashChain(hashes, INDEX_INDEX, "index", BInt.class);
+  public BSubExprs components() throws BytecodeException {
+    var members = members("index", "chosen");
+    var index = members.get(INDEX_INDEX).asInstanceOf(BInt.class);
 
     int i = index.toJavaBigInteger().intValue();
     var alternatives = type().alternatives();
@@ -47,7 +46,7 @@ public final class BChoice extends BValue {
     }
 
     var expectedExprType = alternatives.get(i);
-    var value = readAndCastMemberFromHashChain(hashes, CHOSEN_INDEX, "chosen", BValue.class);
+    var value = members.get(CHOSEN_INDEX).asInstanceOf(BValue.class);
     var itemType = value.evaluationType();
     if (!itemType.equals(expectedExprType)) {
       throw new MemberHasWrongTypeException(hash(), kind(), "chosen", expectedExprType, itemType);
@@ -60,7 +59,7 @@ public final class BChoice extends BValue {
     return new ToStringBuilder(getClass().getSimpleName())
         .addField("hash", hash())
         .addField("type", type())
-        .addListField("members", members().toList().map(BExpr::exprToString))
+        .addListField("members", components().toList().map(BExpr::exprToString))
         .toString();
   }
 

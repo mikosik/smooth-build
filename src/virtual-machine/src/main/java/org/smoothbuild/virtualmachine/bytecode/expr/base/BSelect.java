@@ -8,7 +8,6 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberHasWrongEvaluationTypeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.SelectHasIndexOutOfBoundException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.SelectHasWrongEvaluationTypeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BSelectKind;
@@ -18,7 +17,6 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
  * This class is thread-safe.
  */
 public final class BSelect extends BOperation {
-  public static final int DATA_SEQ_SIZE = 2;
   public static final int SELECTABLE_INDEX = 0;
   public static final int INDEX_INDEX = 1;
 
@@ -34,14 +32,11 @@ public final class BSelect extends BOperation {
 
   @Override
   public BSubExprs subExprs() throws BytecodeException {
-    var hashes = readDataAsHashChain(DATA_SEQ_SIZE);
-    var selectable = readMemberFromHashChain(hashes, SELECTABLE_INDEX);
-    var index = readAndCastMemberFromHashChain(hashes, INDEX_INDEX, "index", BInt.class);
-    if (!(selectable.evaluationType() instanceof BTupleType tupleType)) {
-      throw new MemberHasWrongEvaluationTypeException(
-          hash(), kind(), "selectable", BTupleType.class, selectable.evaluationType());
-    }
+    var members = members("selectable", "index");
+    var selectable = members.get(SELECTABLE_INDEX).asExpr(BTupleType.class);
+    var index = members.get(INDEX_INDEX).asInstanceOf(BInt.class);
     int i = index.toJavaBigInteger().intValue();
+    var tupleType = (BTupleType) selectable.evaluationType();
     int size = tupleType.elements().size();
     if (i < SELECTABLE_INDEX || size <= i) {
       throw new SelectHasIndexOutOfBoundException(hash(), kind(), i, size);

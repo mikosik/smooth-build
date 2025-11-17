@@ -29,7 +29,7 @@ public final class BLambda extends BValue {
   }
 
   public BExpr body() throws BytecodeException {
-    return readData("body", type().result());
+    return loneMember("body").asExpr(type().result());
   }
 
   @Override

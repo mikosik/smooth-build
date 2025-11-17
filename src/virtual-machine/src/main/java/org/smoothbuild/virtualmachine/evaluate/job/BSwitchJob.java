@@ -36,7 +36,7 @@ public final class BSwitchJob extends SchedulingJob {
     return (choiceValue) -> {
       var label = VM_LABEL.append(":scheduleChoice");
       try {
-        var members = ((BChoice) choiceValue).members();
+        var members = ((BChoice) choiceValue).components();
         var index = members.index().toJavaBigInteger();
         var handler = subExprs.handlers().items().get(index.intValue());
         var call = call(handler, list(members.chosen()));

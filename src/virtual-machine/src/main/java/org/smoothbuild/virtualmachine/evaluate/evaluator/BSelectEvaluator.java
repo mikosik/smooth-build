@@ -1,7 +1,5 @@
 package org.smoothbuild.virtualmachine.evaluate.evaluator;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect.DATA_SEQ_SIZE;
 import static org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect.INDEX_INDEX;
 import static org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect.SELECTABLE_INDEX;
 import static org.smoothbuild.virtualmachine.evaluate.plugin.BOutput.bOutput;
@@ -24,7 +22,6 @@ public final class BSelectEvaluator extends OperationEvaluator {
   @Override
   public BOutput evaluate(BTuple subExprValues, Container container) throws BytecodeException {
     var components = subExprValues.elements();
-    checkArgument(components.size() == DATA_SEQ_SIZE);
     var selectable = selectable(components);
     var index = index(components);
     return bOutput(selectable.get(index.toJavaBigInteger().intValue()), container.messages());

@@ -1,7 +1,5 @@
 package org.smoothbuild.virtualmachine.evaluate.evaluator;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.virtualmachine.bytecode.expr.base.BPick.DATA_SEQ_SIZE;
 import static org.smoothbuild.virtualmachine.bytecode.expr.base.BPick.INDEX_INDEX;
 import static org.smoothbuild.virtualmachine.bytecode.expr.base.BPick.PICKABLE_INDEX;
 import static org.smoothbuild.virtualmachine.evaluate.plugin.BOutput.bOutput;
@@ -25,7 +23,6 @@ public final class BPickEvaluator extends OperationEvaluator {
   @Override
   public BOutput evaluate(BTuple subExprValues, Container container) throws BytecodeException {
     var elements = subExprValues.elements();
-    checkArgument(elements.size() == DATA_SEQ_SIZE);
     int index = index(elements).toJavaBigInteger().intValue();
     var pickable = pickable(elements).elements(BValue.class);
     if (index < 0 || pickable.size() <= index) {

@@ -15,7 +15,6 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BIfKind;
  * This class is thread-safe.
  */
 public final class BIf extends BOperation {
-  private static final int DATA_SEQ_SIZE = 3;
   private static final int CONDITION_INDEX = 0;
   private static final int THEN_INDEX = 1;
   private static final int ELSE_INDEX = 2;
@@ -27,11 +26,10 @@ public final class BIf extends BOperation {
 
   @Override
   public BSubExprs subExprs() throws BytecodeException {
-    var hashes = readDataAsHashChain(DATA_SEQ_SIZE);
-    var condition =
-        readMemberFromHashChain(hashes, CONDITION_INDEX, "condition", kindDb().bool());
-    var then_ = readMemberFromHashChain(hashes, THEN_INDEX, "then", evaluationType());
-    var else_ = readMemberFromHashChain(hashes, ELSE_INDEX, "else", evaluationType());
+    var members = members("condition", "then", "else");
+    var condition = members.get(CONDITION_INDEX).asExpr(kindDb().bool());
+    var then_ = members.get(THEN_INDEX).asExpr(evaluationType());
+    var else_ = members.get(ELSE_INDEX).asExpr(evaluationType());
     return new BSubExprs(condition, then_, else_);
   }
 

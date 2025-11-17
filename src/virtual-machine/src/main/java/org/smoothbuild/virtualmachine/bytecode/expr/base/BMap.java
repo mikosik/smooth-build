@@ -8,7 +8,6 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberHasWrongEvaluationTypeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BMapKind;
 
@@ -17,7 +16,6 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BMapKind;
  * This class is thread-safe.
  */
 public final class BMap extends BOperation {
-  private static final int DATA_SEQ_SIZE = 2;
   private static final int ARRAY_INDEX = 0;
   private static final int MAPPER_INDEX = 1;
 
@@ -38,21 +36,12 @@ public final class BMap extends BOperation {
 
   @Override
   public BSubExprs subExprs() throws BytecodeException {
-    var hashes = readDataAsHashChain(DATA_SEQ_SIZE);
-    var array = readMemberFromHashChain(hashes, ARRAY_INDEX);
-    var arrayEvaluationType = array.evaluationType();
-    if (!(arrayEvaluationType instanceof BArrayType arrayType)) {
-      throw new MemberHasWrongEvaluationTypeException(
-          hash(), kind(), "array", BArrayType.class, arrayEvaluationType);
-    }
-    var mapper = readMemberFromHashChain(hashes, MAPPER_INDEX);
-    var mapperEvaluationType = mapper.evaluationType();
+    var members = members("array", "mapper");
+    var array = members.get(ARRAY_INDEX).asExpr(BArrayType.class);
+    var arrayType = (BArrayType) array.evaluationType();
     var expectedMapperEvaluationType =
         kindDb().lambda(list(arrayType.element()), evaluationType().element());
-    if (!mapperEvaluationType.equals(expectedMapperEvaluationType)) {
-      throw new MemberHasWrongEvaluationTypeException(
-          hash(), kind(), "mapper", expectedMapperEvaluationType, mapperEvaluationType);
-    }
+    var mapper = members.get(MAPPER_INDEX).asExpr(expectedMapperEvaluationType);
     return new BSubExprs(array, mapper);
   }
 

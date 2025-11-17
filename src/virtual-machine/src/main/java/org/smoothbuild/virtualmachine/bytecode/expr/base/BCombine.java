@@ -36,7 +36,7 @@ public final class BCombine extends BOperation {
   }
 
   public List<BExpr> items() throws BytecodeException {
-    var items = readDataAsExprChain(BExpr.class);
+    var items = loneElementsMember("items").elements();
     var actualType = kindDb().tuple(items.map(BExpr::evaluationType));
     if (!actualType.equals(evaluationType())) {
       throw new MemberHasWrongTypeException(hash(), kind(), "items", evaluationType(), actualType);

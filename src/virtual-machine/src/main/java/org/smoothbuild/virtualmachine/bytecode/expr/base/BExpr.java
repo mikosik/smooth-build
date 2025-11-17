@@ -1,12 +1,15 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.base;
 
-import static com.google.common.base.Preconditions.checkElementIndex;
+import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.virtualmachine.bytecode.expr.Helpers.invokeAndChainBytecodeException;
 import static org.smoothbuild.virtualmachine.bytecode.expr.Helpers.invokeAndChainHashedDbException;
 
 import java.util.Objects;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
@@ -15,8 +18,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.exc.BExprDbException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprNodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberHasWrongEvaluationTypeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberHasWrongTypeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.NodeChainSizeIsWrongException;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.NodeClassIsWrongException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.MembersSizeIsWrongException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
@@ -70,61 +72,62 @@ public abstract sealed class BExpr permits BOperation, BValue {
 
   public abstract String exprToString() throws BytecodeException;
 
+  protected List<Member> members(String... names) throws BytecodeException {
+    List<Hash> chain = readDataAsHashChain();
+    if (chain.size() != names.length) {
+      throw new MembersSizeIsWrongException(hash(), kind(), DATA_PATH, names.length, chain.size());
+    }
+    Member[] array = new Member[names.length];
+    for (var i = 0; i < array.length; i++) {
+      array[i] = member(names[i], chain.get(i));
+    }
+    return list(array);
+  }
+
+  protected Member loneMember(String name) throws BytecodeException {
+    return member(name, dataHash());
+  }
+
+  private Member member(String name, Hash hash) throws BytecodeException {
+    return new Member(this, readNode(name, hash), name);
+  }
+
+  protected ElementsMember loneElementsMember(String name) throws BytecodeException {
+    return loneElementsMember(name, none());
+  }
+
+  protected ElementsMember loneElementsMember(String name, int expectedCount)
+      throws BytecodeException {
+    return this.loneElementsMember(name, some(expectedCount));
+  }
+
+  private ElementsMember loneElementsMember(String name, Maybe<Integer> expectedCount)
+      throws BytecodeException {
+    var chain = readDataAsHashChain();
+    expectedCount.ifPresent(expected -> {
+      if (chain.size() != expected) {
+        throw new MembersSizeIsWrongException(hash(), kind(), name, expected, chain.size());
+      }
+    });
+    var exprs = readDataAsExprChain(chain, name);
+    return new ElementsMember(this, exprs, name);
+  }
+
   protected <T> T readData(Function0<T, HashedDbException> reader) throws BytecodeException {
     return invokeAndChainHashedDbException(
         reader, e -> new DecodeExprNodeException(hash(), kind(), DATA_PATH, e));
   }
 
-  protected <T extends BExpr> T readData(Class<T> clazz) throws BytecodeException {
-    var exprB = readData();
-    return castNode(DATA_PATH, exprB, clazz);
-  }
-
-  protected BExpr readData(String memberName, BType expectedEvaluationType)
-      throws BytecodeException {
-    var expr = readNode(DATA_PATH, dataHash());
-    validateEvaluationType(memberName, expectedEvaluationType, expr.evaluationType());
-    return expr;
-  }
-
-  protected BExpr readData() throws BytecodeException {
-    return readNode(DATA_PATH, dataHash());
-  }
-
-  protected long readDataAsHashChainSize() throws BytecodeException {
+  protected long hashCoundInDataNode() throws BytecodeException {
     return invokeAndChainHashedDbException(
         () -> exprDb.hashedDb().readHashChainSize(dataHash()),
         e -> new DecodeExprNodeException(hash(), kind(), DATA_PATH, e));
   }
 
-  protected List<BValue> readDataAsValueChain(int expectedSize) throws BytecodeException {
-    var chainHashes = readDataAsHashChain(expectedSize);
-    var exprs = readDataAsExprChain(chainHashes);
-    return castDataChainElements(exprs, BValue.class);
-  }
-
-  protected <T extends BExpr> List<T> readDataAsExprChain(Class<T> clazz) throws BytecodeException {
-    var exprs = readDataAsExprChain();
-    return castDataChainElements(exprs, clazz);
-  }
-
-  protected List<BExpr> readDataAsExprChain() throws BytecodeException {
-    var chainHashes = readDataAsHashChain();
-    return readDataAsExprChain(chainHashes);
-  }
-
-  private List<BExpr> readDataAsExprChain(List<Hash> chain) throws BytecodeException {
+  private List<BExpr> readDataAsExprChain(List<Hash> chain, String name) throws BytecodeException {
     return chain
         .zipWithIndex()
-        .map(tuple -> readNode(dataNodePath(tuple.element2()), chain.get(tuple.element2())));
-  }
-
-  protected List<Hash> readDataAsHashChain(int expectedSize) throws BExprDbException {
-    List<Hash> data = readDataAsHashChain();
-    if (data.size() != expectedSize) {
-      throw new NodeChainSizeIsWrongException(hash(), kind(), DATA_PATH, expectedSize, data.size());
-    }
-    return data;
+        .map(tuple -> readNode(name + "[" + tuple.element2() + "]", chain.get(tuple.element2())));
   }
 
   private List<Hash> readDataAsHashChain() throws BExprDbException {
@@ -133,105 +136,33 @@ public abstract sealed class BExpr permits BOperation, BValue {
         e -> new DecodeExprNodeException(hash(), kind(), DATA_PATH, e));
   }
 
-  protected <T> T readElementFromDataAsExprChain(int i, int expectedSize, Class<T> clazz)
-      throws BytecodeException {
-    var expr = readElementFromDataAsExprChain(i, expectedSize);
-    return castNode(dataNodePath(i), expr, clazz);
-  }
-
-  private BExpr readElementFromDataAsExprChain(int i, int expectedSize) throws BytecodeException {
-    var elemHash = readHashFromDataAsHashChain(i, expectedSize);
-    return readNode(dataNodePath(i), elemHash);
-  }
-
-  protected BExpr readMemberFromHashChain(
-      List<Hash> hashes, int index, String nodeName, BType expectedEvaluationType)
-      throws BytecodeException {
-    var expr = readMemberFromHashChain(hashes, index);
-    validateEvaluationType(nodeName, expectedEvaluationType, expr.evaluationType());
-    return expr;
-  }
-
-  protected void validateEvaluationType(
-      String nodeName, BType expectedEvaluationType, BType evaluationType)
-      throws MemberHasWrongEvaluationTypeException {
-    if (!evaluationType.equals(expectedEvaluationType)) {
-      throw new MemberHasWrongEvaluationTypeException(
-          hash(), kind(), nodeName, expectedEvaluationType, evaluationType);
-    }
-  }
-
-  protected BExpr readMemberFromHashChain(
-      List<Hash> hashes, int index, String nodeName, Class<?> expectedEvaluationType)
-      throws BytecodeException {
-    var expr = readMemberFromHashChain(hashes, index);
-    validateEvaluationType(nodeName, expectedEvaluationType, expr.evaluationType());
-    return expr;
-  }
-
-  protected void validateEvaluationType(
-      String nodeName, Class<?> expectedEvaluationType, BType evaluationType)
-      throws MemberHasWrongEvaluationTypeException {
-    if (!expectedEvaluationType.isInstance(evaluationType)) {
-      throw new MemberHasWrongEvaluationTypeException(
-          hash(), kind(), nodeName, expectedEvaluationType, evaluationType);
-    }
-  }
-
-  protected <T extends BExpr> T readAndCastMemberFromHashChain(
-      List<Hash> hashes, int index, String name, Class<T> clazz) throws BytecodeException {
-    return castMember(readMemberFromHashChain(hashes, index), name, clazz);
-  }
-
-  protected BExpr readMemberFromHashChain(List<Hash> hashes, int nodeIndex)
-      throws BytecodeException {
-    var nodePath = dataNodePath(nodeIndex);
-    return readNode(nodePath, hashes.get(nodeIndex));
-  }
-
   private BExpr readNode(String nodePath, Hash nodeHash) throws BytecodeException {
     return invokeAndChainBytecodeException(
         () -> exprDb.get(nodeHash), e -> new DecodeExprNodeException(hash(), kind(), nodePath, e));
   }
 
-  private Hash readHashFromDataAsHashChain(int i, int expectedSize) throws BExprDbException {
-    checkElementIndex(i, expectedSize);
-    return readDataAsHashChain(expectedSize).get(i);
-  }
-
-  private <T> List<T> castDataChainElements(List<BExpr> elements, Class<T> clazz)
-      throws BExprDbException {
-    for (int i = 0; i < elements.size(); i++) {
-      castNode(dataNodePath(i), elements.get(i), clazz);
+  protected void checkMemberEvaluationType(String name, BType actual, BType expected)
+      throws MemberHasWrongEvaluationTypeException {
+    if (!actual.equals(expected)) {
+      throw new MemberHasWrongEvaluationTypeException(hash(), kind(), name, expected, actual);
     }
-    @SuppressWarnings("unchecked")
-    List<T> result = (List<T>) elements;
-    return result;
   }
 
-  protected <T> T castMember(BExpr nodeExpr, String name, Class<T> clazz) throws BExprDbException {
-    if (clazz.isInstance(nodeExpr)) {
+  protected void checkMemberEvaluationType(String name, BType actual, Class<?> expected)
+      throws MemberHasWrongEvaluationTypeException {
+    if (!expected.isInstance(actual)) {
+      throw new MemberHasWrongEvaluationTypeException(hash(), kind(), name, expected, actual);
+    }
+  }
+
+  protected <T> T castMember(BExpr member, String name, Class<T> clazz) throws BExprDbException {
+    if (clazz.isInstance(member)) {
       @SuppressWarnings("unchecked")
-      T result = (T) nodeExpr;
+      T result = (T) member;
       return result;
     } else {
-      throw new MemberHasWrongTypeException(hash(), kind(), name, clazz, nodeExpr.getClass());
+      throw new MemberHasWrongTypeException(hash(), kind(), name, clazz, member.getClass());
     }
-  }
-
-  protected <T> T castNode(String nodePath, BExpr nodeExpr, Class<T> clazz)
-      throws BExprDbException {
-    if (clazz.isInstance(nodeExpr)) {
-      @SuppressWarnings("unchecked")
-      T result = (T) nodeExpr;
-      return result;
-    } else {
-      throw new NodeClassIsWrongException(hash(), kind(), nodePath, clazz, nodeExpr.getClass());
-    }
-  }
-
-  protected static String dataNodePath(int i) {
-    return DATA_PATH + "[" + i + "]";
   }
 
   @Override

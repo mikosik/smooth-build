@@ -16,7 +16,6 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
  * This class is thread-safe.
  */
 public final class BInvoke extends BOperation {
-  private static final int DATA_SEQ_SIZE = 3;
   public static final int METHOD_INDEX = 0;
   public static final int IS_PURE_INDEX = 1;
   public static final int ARGUMENTS_INDEX = 2;
@@ -28,17 +27,19 @@ public final class BInvoke extends BOperation {
 
   @Override
   public BSubExprs subExprs() throws BytecodeException {
-    var hashes = readDataAsHashChain(DATA_SEQ_SIZE);
-    var method =
-        readMemberFromHashChain(hashes, METHOD_INDEX, "method", kindDb().method());
-    var isPure =
-        readMemberFromHashChain(hashes, IS_PURE_INDEX, "isPure", kindDb().bool());
-    var arguments = readMemberFromHashChain(hashes, ARGUMENTS_INDEX, "arguments", BTupleType.class);
+    var members = fetchMembers();
+    var method = members.get(METHOD_INDEX).asExpr(kindDb().method());
+    var isPure = members.get(IS_PURE_INDEX).asExpr(kindDb().bool());
+    var arguments = members.get(ARGUMENTS_INDEX).asExpr(BTupleType.class);
     return new BSubExprs(method, isPure, arguments);
   }
 
   public BBool isPure() throws BytecodeException {
-    return readElementFromDataAsExprChain(IS_PURE_INDEX, DATA_SEQ_SIZE, BBool.class);
+    return fetchMembers().get(IS_PURE_INDEX).asInstanceOf(BBool.class);
+  }
+
+  private List<Member> fetchMembers() throws BytecodeException {
+    return members("method", "isPure", "arguments");
   }
 
   @Override
