@@ -17,7 +17,7 @@ public class ListCommand extends ProjectCommand {
 
   @Override
   protected Integer executeCommand(Path projectDir) {
-    var commandRunnerFactory = DaggerListCommandRunnerFactory.builder()
+    var commandRunnerFactory = DaggerListCommandComponent.builder()
         .aliasPathMap(createAliasToPathMap(projectDir))
         .out(out())
         .logLevel(filterLogs)

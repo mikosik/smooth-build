@@ -88,7 +88,7 @@ public class BuildCommand extends ProjectCommand {
 
   @Override
   protected Integer executeCommand(Path projectDir) {
-    var commandRunnerFactory = DaggerBuildCommandRunnerFactory.builder()
+    var commandRunnerFactory = DaggerBuildCommandComponent.builder()
         .aliasPathMap(createAliasToPathMap(projectDir))
         .out(out())
         .logLevel(filterLogs)

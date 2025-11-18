@@ -1,9 +1,10 @@
-package org.smoothbuild.cli.command.version;
+package org.smoothbuild.cli.command.build;
 
 import dagger.BindsInstance;
 import dagger.Component;
 import java.io.PrintWriter;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.function.Predicate;
 import org.smoothbuild.cli.command.base.BaseModule;
 import org.smoothbuild.cli.command.base.TaskRunner;
@@ -14,11 +15,12 @@ import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.TaskFilter;
 import org.smoothbuild.common.log.report.TraceFilter;
+import org.smoothbuild.virtualmachine.dagger.VmModule;
 
-@Component(modules = {BaseModule.class})
+@Component(modules = {BaseModule.class, VmModule.class})
 @PerCommand
-public interface VersionCommandRunnerFactory {
-  TaskRunner<ScheduleVersion> versionCommandRunner();
+public interface BuildCommandComponent {
+  TaskRunner<ScheduleBuild> buildCommandRunner();
 
   @Component.Builder
   interface Builder {
@@ -37,6 +39,9 @@ public interface VersionCommandRunnerFactory {
     @BindsInstance
     Builder filterTraces(@TraceFilter Predicate<Report> filterTraces);
 
-    VersionCommandRunnerFactory build();
+    @BindsInstance
+    Builder arguments(List<String> arguments);
+
+    BuildCommandComponent build();
   }
 }

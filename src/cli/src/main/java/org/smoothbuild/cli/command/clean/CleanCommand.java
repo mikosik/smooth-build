@@ -17,7 +17,7 @@ public class CleanCommand extends ProjectCommand {
 
   @Override
   protected Integer executeCommand(Path projectDir) {
-    var commandRunnerFactory = DaggerCleanCommandRunnerFactory.builder()
+    var commandRunnerFactory = DaggerCleanCommandComponent.builder()
         .aliasPathMap(createAliasToPathMap(projectDir))
         .out(out())
         .logLevel(filterLogs)

@@ -1,4 +1,4 @@
-package org.smoothbuild.cli.command.clean;
+package org.smoothbuild.cli.command.list;
 
 import dagger.BindsInstance;
 import dagger.Component;
@@ -17,8 +17,8 @@ import org.smoothbuild.common.log.report.TraceFilter;
 
 @Component(modules = {BaseModule.class})
 @PerCommand
-public interface CleanCommandRunnerFactory {
-  TaskRunner<ScheduleClean> cleanRunner();
+public interface ListCommandComponent {
+  TaskRunner<ScheduleList> listCommandRunner();
 
   @Component.Builder
   interface Builder {
@@ -37,6 +37,6 @@ public interface CleanCommandRunnerFactory {
     @BindsInstance
     Builder filterTraces(@TraceFilter Predicate<Report> filterTraces);
 
-    CleanCommandRunnerFactory build();
+    ListCommandComponent build();
   }
 }

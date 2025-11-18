@@ -15,7 +15,7 @@ public class VersionCommand extends LoggingCommand implements Callable<Integer> 
 
   @Override
   public Integer call() {
-    var commandRunnerFactory = DaggerVersionCommandRunnerFactory.builder()
+    var commandRunnerFactory = DaggerVersionCommandComponent.builder()
         .aliasPathMap(createAliasToPathMap())
         .out(out())
         .logLevel(filterLogs)
