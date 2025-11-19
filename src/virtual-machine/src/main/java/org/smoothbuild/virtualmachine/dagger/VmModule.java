@@ -13,7 +13,7 @@ import org.smoothbuild.common.init.Initializable;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDbInitializer;
 import org.smoothbuild.virtualmachine.evaluate.cache.ComputationCacheInitializer;
 
-@Module
+@Module(subcomponents = {VmComponent.class})
 public interface VmModule {
   @Binds
   @IntoSet

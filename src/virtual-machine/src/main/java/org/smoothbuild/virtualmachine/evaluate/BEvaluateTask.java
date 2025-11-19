@@ -11,7 +11,6 @@ import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Scheduler;
 import org.smoothbuild.common.schedule.Task1;
-import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoose;
@@ -28,6 +27,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
+import org.smoothbuild.virtualmachine.dagger.PerVm;
 import org.smoothbuild.virtualmachine.evaluate.base.BExprAttributes;
 import org.smoothbuild.virtualmachine.evaluate.base.BReferenceInliner;
 import org.smoothbuild.virtualmachine.evaluate.cache.CachingOperatorEvaluator;
@@ -51,7 +51,9 @@ import org.smoothbuild.virtualmachine.evaluate.job.Job;
  * Evaluates BExpr.
  * This class is thread-safe.
  */
-public class BEvaluateTask implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> {
+@PerVm
+public class BEvaluateTask implements Task1<BExpr, BValue> {
+  private final BExprAttributes bExprAttributes;
   private final Scheduler scheduler;
   private final CachingOperatorEvaluator cachingOperatorEvaluator;
   private final BytecodeFactory bytecodeFactory;
@@ -59,10 +61,12 @@ public class BEvaluateTask implements Task1<Tuple2<BExpr, BExprAttributes>, BVal
 
   @Inject
   public BEvaluateTask(
+      BExprAttributes bExprAttributes,
       Scheduler scheduler,
       CachingOperatorEvaluator cachingOperatorEvaluator,
       BytecodeFactory bytecodeFactory,
       BReferenceInliner bReferenceInliner) {
+    this.bExprAttributes = bExprAttributes;
     this.scheduler = scheduler;
     this.cachingOperatorEvaluator = cachingOperatorEvaluator;
     this.bytecodeFactory = bytecodeFactory;
@@ -70,16 +74,16 @@ public class BEvaluateTask implements Task1<Tuple2<BExpr, BExprAttributes>, BVal
   }
 
   @Override
-  public Output<BValue> execute(Tuple2<BExpr, BExprAttributes> expr) {
+  public Output<BValue> execute(BExpr expr) {
     var jobContext = new JobContext(
         this,
         bReferenceInliner,
         bytecodeFactory,
         cachingOperatorEvaluator,
         scheduler,
-        expr.element2());
+        bExprAttributes);
     var label = VM_LABEL.append(":schedule");
-    var job = jobContext.newJob(expr.element1(), list(), new Trace());
+    var job = jobContext.newJob(expr, list(), new Trace());
     return successOutput(job.evaluate(), label);
   }
 

@@ -2,7 +2,7 @@
 :initializer:initializeHashedDb
 :initializer:initializeComputationCache
 :scheduler:join
-:evaluator:schedule
+:evaluator:scheduleFrontendCompile
 :compiler:frontend:schedule
 :compiler:frontend:loadInternalModule
 :compiler:frontend:schedule:module
@@ -23,9 +23,10 @@
 :evaluator:getMembersAndImported
 :evaluator:findValues
 :evaluator:getMembersAndImported
-:evaluator:scheduleEvaluate
+:evaluator:scheduleBackendCompile
 :compiler:backend:generateBytecode
-:evaluator:getCompiledExprs
+:evaluator:scheduleVmEvaluation
+:evaluator:getBExprs
 :scheduler:scheduleParallel
 :vm:schedule
 :vm:schedule:call

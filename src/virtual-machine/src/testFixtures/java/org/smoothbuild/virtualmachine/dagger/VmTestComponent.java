@@ -15,7 +15,6 @@ import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
 import org.smoothbuild.virtualmachine.bytecode.load.FileContentReader;
-import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask;
 import org.smoothbuild.virtualmachine.evaluate.base.BReferenceInliner;
 import org.smoothbuild.virtualmachine.evaluate.cache.CachingOperatorEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.cache.ComputationCache;
@@ -32,7 +31,7 @@ import org.smoothbuild.virtualmachine.evaluate.plugin.Container;
     })
 @PerCommand
 public interface VmTestComponent extends CommonTestComponent {
-  BEvaluateTask bEvaluate();
+  VmComponent.Builder vmComponentBuilder();
 
   Container container();
 
