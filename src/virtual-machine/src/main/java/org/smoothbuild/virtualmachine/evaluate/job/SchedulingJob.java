@@ -27,7 +27,7 @@ public abstract sealed class SchedulingJob extends Job
 
   @Override
   public Promise<Maybe<BValue>> evaluate() {
-    Task0<BValue> t = () -> {
+    Task0<BValue> task = () -> {
       try {
         var result = schedule();
         return successOutput(result, scheduleLabel());
@@ -37,7 +37,7 @@ public abstract sealed class SchedulingJob extends Job
         return output(report(scheduleLabel(), trace(), list(fatal(messageFrom(e)))));
       }
     };
-    return scheduler().submit(t);
+    return scheduler().submit(task);
   }
 
   protected Label scheduleLabel2(String name) {
