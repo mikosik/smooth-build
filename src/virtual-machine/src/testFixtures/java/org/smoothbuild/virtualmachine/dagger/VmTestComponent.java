@@ -39,7 +39,7 @@ public interface VmTestComponent extends CommonTestComponent {
 
   FileContentReader fileContentReader();
 
-  CachingOperatorEvaluator evaluateBExprTaskCreator();
+  CachingOperatorEvaluator cachingOperatorEvaluator();
 
   ComputationHashFactory computationHashFactory();
 

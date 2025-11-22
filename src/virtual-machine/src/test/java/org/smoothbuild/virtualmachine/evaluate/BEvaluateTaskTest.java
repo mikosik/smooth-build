@@ -813,7 +813,7 @@ public class BEvaluateTaskTest extends VmTestContext {
     return new CountingJobContext(
         provide().bReferenceInliner(),
         provide().bytecodeFactory(),
-        provide().evaluateBExprTaskCreator(),
+        provide().cachingOperatorEvaluator(),
         provide().scheduler(),
         bExprAttributes);
   }

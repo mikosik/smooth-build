@@ -191,7 +191,7 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
   }
 
   public CachingOperatorEvaluator evaluateBExprTaskCreator() {
-    return provide().evaluateBExprTaskCreator();
+    return provide().cachingOperatorEvaluator();
   }
 
   public Log userFatal(int line, String message) {
