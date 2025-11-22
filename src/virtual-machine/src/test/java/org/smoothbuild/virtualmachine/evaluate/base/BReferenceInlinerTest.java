@@ -304,13 +304,13 @@ public class BReferenceInlinerTest extends VmTestContext {
   }
 
   private void assertReferenceInliningReplacesReference(
-      Function1<BExpr, BExpr, IOException> factory) throws IOException {
+      Function1<BExpr, BExpr, IOException> factory) throws Exception {
     assertReferenceInliningReplacesReference(2, bInt(3), factory);
   }
 
   private void assertReferenceInliningReplacesReference(
       int referencedIndex, BInt expectedReplacement, Function1<BExpr, BExpr, IOException> factory)
-      throws IOException {
+      throws Exception {
     List<BExpr> environment = list(bInt(1), bInt(2), bInt(3));
     assertReferenceInliningReplacesReference(
         referencedIndex, expectedReplacement, environment, factory);
@@ -321,7 +321,7 @@ public class BReferenceInlinerTest extends VmTestContext {
       BExpr expectedReplacement,
       List<BExpr> environment,
       Function1<BExpr, BExpr, IOException> factory)
-      throws IOException {
+      throws Exception {
     var referenceEvaluationType = environment.get(referencedIndex).evaluationType();
     BExpr expr = factory.apply(bReference(referenceEvaluationType, referencedIndex));
     BExpr expected = factory.apply(expectedReplacement);
@@ -336,7 +336,7 @@ public class BReferenceInlinerTest extends VmTestContext {
   }
 
   private void assertReferenceInliningDoesNotChangeExpression(
-      int referencedIndex, Function1<BExpr, BExpr, IOException> factory) throws IOException {
+      int referencedIndex, Function1<BExpr, BExpr, IOException> factory) throws Exception {
     var expr = factory.apply(bReference(bIntType(), referencedIndex));
     var job = job(expr, bInt(1), bInt(2), bInt(3));
     assertThat(provide().bReferenceInliner().inline(job)).isSameInstanceAs(expr);

@@ -28,7 +28,7 @@ public final class BLambdaJob extends Job {
       try {
         var inlined = (BValue) referenceInliner().inline(this);
         return output(inlined, report(label, trace(), list()));
-      } catch (BytecodeException e) {
+      } catch (BytecodeException | ReferenceIndexOutOfBoundsException e) {
         return failedOutput(label, some(trace()), "Vm inline Task failed with exception:", e);
       }
     };

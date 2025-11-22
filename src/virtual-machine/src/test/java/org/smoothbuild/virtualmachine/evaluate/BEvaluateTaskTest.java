@@ -480,7 +480,7 @@ public class BEvaluateTaskTest extends VmTestContext {
           assertReportsContains(
               reports,
               FATAL,
-              "Task execution failed with exception:\n"
+              "Vm inline Task failed with exception:\n"
                   + "org.smoothbuild.virtualmachine.evaluate.job.ReferenceIndexOutOfBoundsException:"
                   + " Reference index = 2 is out of bounds. Bound variables size = 1.");
         }
