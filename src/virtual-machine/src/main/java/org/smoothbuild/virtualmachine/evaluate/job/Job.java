@@ -14,7 +14,6 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask.JobContext;
 import org.smoothbuild.virtualmachine.evaluate.base.BExprAttributes;
 import org.smoothbuild.virtualmachine.evaluate.base.BReferenceInliner;
 import org.smoothbuild.virtualmachine.evaluate.cache.CachingOperatorEvaluator;

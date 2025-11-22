@@ -14,7 +14,6 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoice;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch.BSubExprs;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask.JobContext;
 
 public final class BSwitchJob extends SchedulingJob {
   private final BSwitch switch_;

@@ -15,7 +15,6 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BFold;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BFold.BSubExprs;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask.JobContext;
 
 public final class BFoldJob extends SchedulingJob {
   private final BFold fold;

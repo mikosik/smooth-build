@@ -3,7 +3,6 @@ package org.smoothbuild.virtualmachine.dagger;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.testing.TestingByteString.byteString;
 import static org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader.NATIVE_METHOD_NAME;
-import static org.smoothbuild.virtualmachine.evaluate.BEvaluateTask.newJobStatic;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -67,23 +66,52 @@ import org.smoothbuild.virtualmachine.bytecode.load.BytecodeLoader;
 import org.smoothbuild.virtualmachine.bytecode.load.BytecodeMethodLoader;
 import org.smoothbuild.virtualmachine.bytecode.load.JarClassLoaderFactory;
 import org.smoothbuild.virtualmachine.bytecode.load.MethodLoader;
+import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask;
+import org.smoothbuild.virtualmachine.evaluate.base.BExprAttributes;
 import org.smoothbuild.virtualmachine.evaluate.job.Job;
+import org.smoothbuild.virtualmachine.evaluate.job.JobContext;
 import org.smoothbuild.virtualmachine.evaluate.plugin.BOutput;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public interface VmTestApi extends CommonTestApi {
   public VmTestComponent provide();
 
+  public default BEvaluateTask bEvaluateTask() {
+    return bEvaluateTask(new BExprAttributes());
+  }
+
+  public default BEvaluateTask bEvaluateTask(BExprAttributes bExprAttributes) {
+    return provide()
+        .vmComponentBuilder()
+        .bExprAttributes(bExprAttributes)
+        .build()
+        .bEvaluateTask();
+  }
+
   public default Job job(BExpr expr, BExpr... environment) {
     return job(expr, list(environment));
   }
 
-  public default Job job(BExpr expr, List<BExpr> environment) {
-    return newJobStatic(null, expr, environment.map(this::job), new Trace());
-  }
-
   public default Job job(BExpr expr) {
     return job(expr, list());
+  }
+
+  public default Job job(BExpr expr, List<BExpr> environment) {
+    var jobContext = jobContext();
+    return jobContext.newJob(
+        expr, environment.map(e -> jobContext.newJob(e, list(), new Trace())), new Trace());
+  }
+
+  public default JobContext jobContext() {
+    return jobContext(new BExprAttributes());
+  }
+
+  private JobContext jobContext(BExprAttributes bExprAttributes) {
+    return provide()
+        .vmComponentBuilder()
+        .bExprAttributes(bExprAttributes)
+        .build()
+        .jobContext();
   }
 
   public default FullPath moduleFullPath() {

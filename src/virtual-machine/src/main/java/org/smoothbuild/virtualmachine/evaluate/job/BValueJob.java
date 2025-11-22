@@ -8,7 +8,6 @@ import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask.JobContext;
 
 public final class BValueJob extends Job {
   private final BValue value;

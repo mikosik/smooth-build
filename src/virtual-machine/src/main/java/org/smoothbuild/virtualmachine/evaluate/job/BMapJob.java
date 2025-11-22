@@ -15,7 +15,6 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap.BSubExprs;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
-import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask.JobContext;
 
 public final class BMapJob extends SchedulingJob {
   private final BMap map;

@@ -60,6 +60,7 @@ import org.smoothbuild.virtualmachine.evaluate.base.BReferenceInliner;
 import org.smoothbuild.virtualmachine.evaluate.cache.CachingOperatorEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.OperationEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.job.Job;
+import org.smoothbuild.virtualmachine.evaluate.job.JobContext;
 import org.smoothbuild.virtualmachine.evaluate.plugin.Container;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.testing.func.nativ.ConcatStrings;
@@ -176,10 +177,11 @@ public class BEvaluateTaskTest extends VmTestContext {
         var lambda = bLambda(bOrder(bInt));
         var call = bCall(lambda);
 
-        var countingBEvaluate = countingBEvaluate();
+        var countingJobContext = provideCountingJobContext();
+        var countingBEvaluate = new BEvaluateTask(countingJobContext);
         assertThat(evaluate(countingBEvaluate, call).get().get()).isEqualTo(bArray(bInt));
 
-        assertThat(requireNonNull(countingBEvaluate.counters().get(bInt)).intValue())
+        assertThat(requireNonNull(countingJobContext.counters().get(bInt)).intValue())
             .isEqualTo(1);
       }
 
@@ -190,10 +192,11 @@ public class BEvaluateTaskTest extends VmTestContext {
         var bBool = bBool();
         var call = bCall(lambda, bOrder(bBool));
 
-        var countingBEvaluate = countingBEvaluate();
+        var countingJobContext = provideCountingJobContext();
+        var countingBEvaluate = new BEvaluateTask(countingJobContext);
         assertThat(evaluate(countingBEvaluate, call).get().get()).isEqualTo(bInt(7));
 
-        assertThat(countingBEvaluate.counters().get(bBool)).isNull();
+        assertThat(countingJobContext.counters().get(bBool)).isNull();
       }
     }
   }
@@ -415,7 +418,7 @@ public class BEvaluateTaskTest extends VmTestContext {
         @Test
         void pick_with_index_outside_of_bounds() throws Exception {
           var pick = bPick(bArray(bInt(10), bInt(11), bInt(12), bInt(13)), bInt(4));
-          evaluate(provideBEvaluateTask(), pick);
+          evaluate(bEvaluateTask(), pick);
           if (!provide().reporter().reports().anyMatches(this::isResultWithIndexOutOfBoundsError)) {
             fail("Expected report ERROR caused by index out of bounds but got:\n"
                 + provide().reporter());
@@ -429,7 +432,7 @@ public class BEvaluateTaskTest extends VmTestContext {
         @Test
         void pick_with_index_negative() throws Exception {
           var pick = bPick(bArray(bInt(10), bInt(11), bInt(12), bInt(13)), bInt(-1));
-          evaluate(provideBEvaluateTask(), pick);
+          evaluate(bEvaluateTask(), pick);
           var reporter = provide().reporter();
           if (!reporter.reports().anyMatches(this::isResultWithNegativeIndexError)) {
             fail("Expected report with ERROR caused by index out of bounds, but got:\n" + reporter);
@@ -472,7 +475,7 @@ public class BEvaluateTaskTest extends VmTestContext {
         void var_referencing_with_index_out_of_bounds_causes_fatal() throws Exception {
           var lambda = bLambda(list(bIntType()), bReference(bIntType(), 2));
           var call = bCall(lambda, bInt(7));
-          evaluate(provideBEvaluateTask(), call);
+          evaluate(bEvaluateTask(), call);
           var reports = provide().reporter().reports();
           assertReportsContains(
               reports,
@@ -488,7 +491,7 @@ public class BEvaluateTaskTest extends VmTestContext {
                 throws Exception {
           var lambda = bLambda(list(bBlobType()), bReference(bIntType(), 0));
           var call = bCall(lambda, bBlob());
-          evaluate(provideBEvaluateTask(), call);
+          evaluate(bEvaluateTask(), call);
           var trace = trace("???", unknownLocation());
           var fatal = fatal("environment(0) evaluationType is `Blob` but expected `Int`.");
           var expected = report(VM_LABEL.append(":schedule:reference"), trace, list(fatal));
@@ -508,7 +511,7 @@ public class BEvaluateTaskTest extends VmTestContext {
     class _errors {
       @Test
       void task_throwing_runtime_exception_causes_fatal() throws Exception {
-        var bEvaluate = provideBEvaluateTask();
+        var bEvaluate = bEvaluateTask();
         var expr = throwExceptionCall();
         evaluate(bEvaluate, expr);
 
@@ -542,7 +545,7 @@ public class BEvaluateTaskTest extends VmTestContext {
         var expr = bOrder();
         var runtimeException = new RuntimeException();
         var scheduler = provide().scheduler();
-        var bExprEvaluationScheduler =
+        var cachingOperatorEvaluator =
             new CachingOperatorEvaluator(
                 mock(), mock(), mock(), scheduler, provide().bytecodeFactory()) {
               @Override
@@ -550,30 +553,19 @@ public class BEvaluateTaskTest extends VmTestContext {
                 throw runtimeException;
               }
             };
-        var bEvaluate = new BEvaluateTask(
+
+        var bEvaluate = new BEvaluateTask(new JobContext(
             new BExprAttributes(),
             provide().scheduler(),
-            bExprEvaluationScheduler,
+            cachingOperatorEvaluator,
             provide().bytecodeFactory(),
-            provide().bReferenceInliner());
+            provide().bReferenceInliner()));
 
         evaluate(bEvaluate, expr);
         var fatal = fatal("Task execution failed with exception:", runtimeException);
         assertThat(provide().reporter().reports()).contains(report(LABEL, list(fatal)));
       }
     }
-  }
-
-  private BEvaluateTask provideBEvaluateTask() {
-    return provideBEvaluateTask(new BExprAttributes());
-  }
-
-  private BEvaluateTask provideBEvaluateTask(BExprAttributes bExprAttributes) {
-    return provide()
-        .vmComponentBuilder()
-        .bExprAttributes(bExprAttributes)
-        .build()
-        .bEvaluateTask();
   }
 
   private static boolean taskReportWith(Report report, Level level, String messageStart) {
@@ -664,7 +656,7 @@ public class BEvaluateTaskTest extends VmTestContext {
     }
 
     private void assertTaskReport(BExpr expr, String operationName, Trace trace, Origin origin) {
-      evaluate(provideBEvaluateTask(), expr);
+      evaluate(bEvaluateTask(), expr);
       var taskReport = report(VM_EVALUATE.append(":" + operationName), trace, origin, list());
       assertThat(provide().reporter().reports()).contains(taskReport);
     }
@@ -675,7 +667,7 @@ public class BEvaluateTaskTest extends VmTestContext {
         String operationName,
         Trace trace,
         Origin origin) {
-      evaluate(provideBEvaluateTask(bExprAttributes), expr);
+      evaluate(bEvaluateTask(bExprAttributes), expr);
       var taskReport = report(VM_EVALUATE.append(":" + operationName), trace, origin, list());
       assertThat(provide().reporter().reports()).contains(taskReport);
     }
@@ -710,7 +702,7 @@ public class BEvaluateTaskTest extends VmTestContext {
           invokeExecuteCommands(testName, "INC1"),
           invokeExecuteCommands(testName, "INC1"));
       var reporter = provide().reporter();
-      var bEvaluate = provideBEvaluateTask();
+      var bEvaluate = bEvaluateTask();
       assertThat(evaluate(bEvaluate, bExpr).get().get())
           .isEqualTo(bArray(bString("1"), bString("1"), bString("1"), bString("1")));
 
@@ -769,7 +761,7 @@ public class BEvaluateTaskTest extends VmTestContext {
   }
 
   private BValue evaluate(BExpr expr) {
-    return evaluate(provideBEvaluateTask(new BExprAttributes()), expr).get().get();
+    return evaluate(bEvaluateTask(new BExprAttributes()), expr).get().get();
   }
 
   private Promise<Maybe<BValue>> evaluate(BEvaluateTask bEvaluateTask, BExpr expr) {
@@ -813,34 +805,35 @@ public class BEvaluateTaskTest extends VmTestContext {
     return expected;
   }
 
-  private CountingBEvaluate countingBEvaluate() {
-    return new CountingBEvaluate(
-        provide().scheduler(),
-        provide().evaluateBExprTaskCreator(),
-        provide().bytecodeFactory(),
-        provide().bReferenceInliner());
+  private CountingJobContext provideCountingJobContext() {
+    return provideCountingJobContext(new BExprAttributes());
   }
 
-  private static class CountingBEvaluate extends BEvaluateTask {
+  private CountingJobContext provideCountingJobContext(BExprAttributes bExprAttributes) {
+    return new CountingJobContext(
+        provide().bReferenceInliner(),
+        provide().bytecodeFactory(),
+        provide().evaluateBExprTaskCreator(),
+        provide().scheduler(),
+        bExprAttributes);
+  }
+
+  private static class CountingJobContext extends JobContext {
     private final ConcurrentHashMap<BExpr, AtomicInteger> counters = new ConcurrentHashMap<>();
 
-    private CountingBEvaluate(
-        Scheduler scheduler,
-        CachingOperatorEvaluator cachingOperatorEvaluator,
+    private CountingJobContext(
+        BReferenceInliner referenceInliner,
         BytecodeFactory bytecodeFactory,
-        BReferenceInliner bReferenceInliner) {
-      super(
-          new BExprAttributes(),
-          scheduler,
-          cachingOperatorEvaluator,
-          bytecodeFactory,
-          bReferenceInliner);
+        CachingOperatorEvaluator cachingOperatorEvaluator,
+        Scheduler scheduler,
+        BExprAttributes exprAttributes) {
+      super(exprAttributes, scheduler, cachingOperatorEvaluator, bytecodeFactory, referenceInliner);
     }
 
     @Override
-    public Job newJob(JobContext jobContext, BExpr expr, List<Job> environment, Trace trace) {
+    public Job newJob(BExpr expr, List<Job> environment, Trace trace) {
       counters.computeIfAbsent(expr, k -> new AtomicInteger()).incrementAndGet();
-      return super.newJob(jobContext, expr, environment, trace);
+      return super.newJob(expr, environment, trace);
     }
 
     private ConcurrentHashMap<BExpr, AtomicInteger> counters() {
@@ -865,18 +858,19 @@ public class BEvaluateTaskTest extends VmTestContext {
   }
 
   private BEvaluateTask bEvaluate(NativeMethodLoader nativeMethodLoader) {
-    var evaluateBExprTaskCreator = new CachingOperatorEvaluator(
+    var cachingOperatorEvaluator = new CachingOperatorEvaluator(
         provide().computationHashFactory(),
         () -> container(nativeMethodLoader),
         provide().computationCache(),
         provide().scheduler(),
         provide().bytecodeFactory());
-    return new BEvaluateTask(
+    var jobContext = new JobContext(
         new BExprAttributes(),
         provide().scheduler(),
-        evaluateBExprTaskCreator,
+        cachingOperatorEvaluator,
         provide().bytecodeFactory(),
         provide().bReferenceInliner());
+    return new BEvaluateTask(jobContext);
   }
 
   private Container container(NativeMethodLoader nativeMethodLoader) {

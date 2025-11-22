@@ -12,7 +12,6 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask.JobContext;
 
 public final class BIfJob extends SchedulingJob {
   private final BIf if_;

@@ -17,7 +17,6 @@ import org.smoothbuild.common.schedule.Task0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOperation;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask.JobContext;
 
 public abstract sealed class SchedulingJob extends Job
     permits BCallJob, BFoldJob, BIfJob, BMapJob, BOperationJob, BReferenceJob, BSwitchJob {

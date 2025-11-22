@@ -19,7 +19,6 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask.JobContext;
 
 public final class BCallJob extends SchedulingJob {
   private final BCall call;

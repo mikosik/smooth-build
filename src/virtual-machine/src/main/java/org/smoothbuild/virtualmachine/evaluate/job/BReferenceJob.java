@@ -7,7 +7,6 @@ import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask.JobContext;
 
 public final class BReferenceJob extends SchedulingJob {
   private final BReference reference;

@@ -8,7 +8,6 @@ import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOperation;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask.JobContext;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.OperationEvaluator;
 
 public abstract sealed class BOperationJob extends SchedulingJob

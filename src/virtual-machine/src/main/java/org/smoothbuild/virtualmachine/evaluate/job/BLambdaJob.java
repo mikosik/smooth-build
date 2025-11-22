@@ -15,7 +15,6 @@ import org.smoothbuild.common.schedule.Task0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask.JobContext;
 
 public final class BLambdaJob extends Job {
   public BLambdaJob(JobContext jobContext, BLambda lambda, List<Job> environment, Trace trace) {
