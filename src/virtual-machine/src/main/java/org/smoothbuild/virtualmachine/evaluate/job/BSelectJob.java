@@ -7,15 +7,15 @@ import org.smoothbuild.virtualmachine.evaluate.evaluator.BSelectEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.OperationEvaluator;
 
 public final class BSelectJob extends BOperationJob {
-  private final BSelect pick;
+  private final BSelect select;
 
-  public BSelectJob(JobContext jobContext, BSelect pick, List<Job> environment, Trace trace) {
-    super(jobContext, pick, environment, trace);
-    this.pick = pick;
+  public BSelectJob(JobContext jobContext, BSelect select, List<Job> environment, Trace trace) {
+    super(jobContext, select, environment, trace);
+    this.select = select;
   }
 
   @Override
   protected OperationEvaluator createEvaluator() {
-    return new BSelectEvaluator(pick, trace());
+    return new BSelectEvaluator(select, trace());
   }
 }
