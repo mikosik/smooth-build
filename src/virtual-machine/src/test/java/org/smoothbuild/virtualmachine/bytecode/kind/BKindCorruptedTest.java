@@ -16,6 +16,7 @@ import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.IF;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.INT;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.INVOKE;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.LAMBDA;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.LAMBDA_REF;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.MAP;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.ORDER;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.PICK;
@@ -718,6 +719,34 @@ public class BKindCorruptedTest extends VmTestContext {
         protected _operation_kind_tests() {
           super(REFERENCE);
         }
+      }
+    }
+
+    @Nested
+    class _lambda_ref {
+      @Test
+      void learning_test() throws Exception {
+        /*
+         * This test makes sure that other tests in this class use proper scheme
+         * to save LAMBDA_REF kind in HashedDb.
+         */
+        var hash = hash(hash(LAMBDA_REF.byteMarker()), hash(bLambdaType(bIntType())));
+        assertThat(hash).isEqualTo(bLambdaRefKind(bLambdaType(bIntType())).hash());
+      }
+
+      @Nested
+      class _operation_kind_tests extends AbstractOperationKindTestSuite {
+        protected _operation_kind_tests() {
+          super(LAMBDA_REF, BLambdaType.class);
+        }
+      }
+
+      @Test
+      void with_evaluation_type_not_being_lambda_type() throws Exception {
+        var hash = hash(hash(LAMBDA_REF.byteMarker()), hash(bIntType()));
+        assertThatGet(hash)
+            .throwsException(new DecodeKindWrongNodeKindException(
+                hash, LAMBDA_REF, DATA_PATH, BLambdaType.class, BIntType.class));
       }
     }
 

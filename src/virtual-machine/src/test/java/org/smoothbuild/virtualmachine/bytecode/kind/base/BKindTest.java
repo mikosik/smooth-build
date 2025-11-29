@@ -51,7 +51,7 @@ public class BKindTest extends VmTestContext {
     assertThat(execute(factoryCall).q()).isEqualTo("`" + name + "`");
   }
 
-  @ParameterizedTest
+  @ParameterizedTest(name = "{1}")
   @MethodSource("names")
   public void to_string(Function1<BKindDb, BKind, BytecodeException> factoryCall, String name)
       throws Exception {
@@ -90,7 +90,8 @@ public class BKindTest extends VmTestContext {
         args(f -> f.pick(f.int_()), "PICK"),
         args(f -> f.select(f.int_()), "SELECT"),
         args(f -> f.switch_(f.int_()), "SWITCH"),
-        args(f -> f.reference(f.int_()), "REFERENCE"));
+        args(f -> f.reference(f.int_()), "REFERENCE"),
+        args(f -> f.lambdaRef(f.lambda(list(), f.int_())), "LAMBDA_REF"));
   }
 
   @Nested

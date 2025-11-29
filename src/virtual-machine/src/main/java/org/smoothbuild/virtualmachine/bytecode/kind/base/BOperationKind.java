@@ -15,7 +15,8 @@ public abstract sealed class BOperationKind extends BKind
         BPickKind,
         BReferenceKind,
         BSelectKind,
-        BSwitchKind {
+        BSwitchKind,
+        BLambdaRefKind {
   private final BType evaluationType;
 
   protected BOperationKind(

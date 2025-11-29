@@ -19,6 +19,7 @@ import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.IF;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.INT;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.INVOKE;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.LAMBDA;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.LAMBDA_REF;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.MAP;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.ORDER;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.PICK;
@@ -51,6 +52,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BIfKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BInvokeKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaRefKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BMapKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BOperationKind;
@@ -153,7 +155,7 @@ public class BKindDb {
     return newOperation(INVOKE, evaluationType, BInvokeKind::new);
   }
 
-  public BMapKind map(BType evaluationType) throws BKindDbException {
+  public BMapKind map(BArrayType evaluationType) throws BKindDbException {
     return newOperation(MAP, evaluationType, BMapKind::new);
   }
 
@@ -203,6 +205,10 @@ public class BKindDb {
     return newOperation(REFERENCE, evaluationType, BReferenceKind::new);
   }
 
+  public BLambdaRefKind lambdaRef(BLambdaType evaluationType) throws BKindDbException {
+    return newOperation(LAMBDA_REF, evaluationType, BLambdaRefKind::new);
+  }
+
   public BSelectKind select(BType evaluationType) throws BKindDbException {
     return newOperation(SELECT, evaluationType, BSelectKind::new);
   }
@@ -234,6 +240,8 @@ public class BKindDb {
       case ORDER -> readOperationKind(hash, children, id, BArrayType.class, BOrderKind::new);
       case PICK -> readOperationKind(hash, children, id, BType.class, BPickKind::new);
       case REFERENCE -> readOperationKind(hash, children, id, BType.class, BReferenceKind::new);
+      case LAMBDA_REF ->
+        readOperationKind(hash, children, id, BLambdaType.class, BLambdaRefKind::new);
       case SELECT -> readOperationKind(hash, children, id, BType.class, BSelectKind::new);
       case SWITCH -> readOperationKind(hash, children, id, BType.class, BSwitchKind::new);
       case TUPLE -> readTupleType(hash, children);
@@ -269,12 +277,12 @@ public class BKindDb {
     return cache(factory.apply(hash));
   }
 
-  private <T extends BOperationKind> T readOperationKind(
+  private <K extends BOperationKind, T extends BType> K readOperationKind(
       Hash hash,
       List<Hash> rootChildren,
       KindId id,
-      Class<? extends BType> expectedEvaluationTypeClass,
-      BiFunction<Hash, BType, T> factory)
+      Class<T> expectedEvaluationTypeClass,
+      BiFunction<Hash, T, K> factory)
       throws DecodeKindException {
     var evaluationType = readDataAsType(hash, rootChildren, id, expectedEvaluationTypeClass);
     return newOperation(factory, hash, evaluationType);
@@ -396,14 +404,14 @@ public class BKindDb {
     return cache(new BTupleType(rootHash, items));
   }
 
-  private <T extends BOperationKind> T newOperation(
-      KindId id, BType evaluationType, BiFunction<Hash, BType, T> factory) throws BKindDbException {
+  private <K extends BOperationKind, T extends BType> K newOperation(
+      KindId id, T evaluationType, BiFunction<Hash, T, K> factory) throws BKindDbException {
     var rootHash = writeRoot(id, evaluationType);
     return newOperation(factory, rootHash, evaluationType);
   }
 
-  private <T extends BOperationKind> T newOperation(
-      BiFunction<Hash, BType, T> factory, Hash rootHash, BType evaluationType) {
+  private <K extends BOperationKind, T extends BType> K newOperation(
+      BiFunction<Hash, T, K> factory, Hash rootHash, T evaluationType) {
     return cache(factory.apply(rootHash, evaluationType));
   }
 

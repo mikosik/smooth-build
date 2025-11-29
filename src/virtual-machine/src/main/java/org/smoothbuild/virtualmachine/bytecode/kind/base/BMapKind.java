@@ -8,9 +8,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
 
 public final class BMapKind extends BOperationKind {
-  public BMapKind(Hash hash, BType evaluationType) {
+  public BMapKind(Hash hash, BArrayType evaluationType) {
     super(hash, "MAP", BMap.class, evaluationType);
-    checkArgument(evaluationType instanceof BArrayType);
   }
 
   @Override

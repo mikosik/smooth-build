@@ -18,7 +18,7 @@ public class BExprCollisionTest extends VmTestContext {
     for (var expr : exprBs()) {
       var hash = expr.hash();
       if (map.containsKey(hash)) {
-        fail("Hash " + hash + " is used by two ExprB: " + expr + " and " + map.get(hash) + ".");
+        fail("Hash " + hash + " is used by two BExpr: " + expr + " and " + map.get(hash) + ".");
       }
       map.put(hash, expr);
     }
@@ -99,6 +99,9 @@ public class BExprCollisionTest extends VmTestContext {
         bReference(bIntType(), 0),
         bReference(bIntType(), 1),
         bReference(bStringType(), 0),
+        bLambdaRef(bLambdaType(bIntType()), bInt(0)),
+        bLambdaRef(bLambdaType(bIntType()), bInt(1)),
+        bLambdaRef(bLambdaType(bStringType()), bInt(0)),
         bSelect(bTuple(bInt(1), bString("a")), bInt(0)),
         bSelect(bTuple(bInt(1), bString("a")), bInt(1)),
         bSelect(bTuple(bInt(1), bString("b")), bInt(0)));

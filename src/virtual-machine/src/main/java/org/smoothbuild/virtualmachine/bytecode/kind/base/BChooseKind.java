@@ -11,9 +11,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoose;
  * This class is immutable.
  */
 public final class BChooseKind extends BOperationKind {
-  public BChooseKind(Hash hash, BType evaluationType) {
+  public BChooseKind(Hash hash, BChoiceType evaluationType) {
     super(hash, "CHOOSE", BChoose.class, evaluationType);
-    checkArgument(evaluationType instanceof BChoiceType);
   }
 
   @Override

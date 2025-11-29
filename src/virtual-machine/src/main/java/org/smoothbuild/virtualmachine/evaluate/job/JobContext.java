@@ -13,6 +13,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BFold;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambdaRef;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
@@ -63,6 +64,9 @@ public class JobContext {
       case BFold fold -> new BFoldJob(this, fold, environment, trace);
       case BLambda lambda -> new BLambdaJob(this, lambda, environment, trace);
       case BReference reference -> new BReferenceJob(this, reference, environment, trace);
+      case BLambdaRef _ ->
+        throw new IllegalArgumentException(
+            "BLambdaRef cannot be evaluated. It must be replaced with referenced BLambda.");
       case BValue value -> new BValueJob(this, value, environment, trace);
     };
   }

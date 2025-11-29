@@ -389,6 +389,30 @@ public class BExprStableHashTest extends VmTestContext {
   }
 
   @Nested
+  class _lambda_ref {
+    @Test
+    void name_one() throws Exception {
+      assertThat(bLambdaRef(bLambdaType(bIntType()), bInt(1)).hash())
+          .isEqualTo(
+              Hash.decode("7a6256a4193cb69b3b3016f0fe5ccf5723d557ee2f9a18e1cf00a818683f5b6c"));
+    }
+
+    @Test
+    void name_two() throws Exception {
+      assertThat(bLambdaRef(bLambdaType(bIntType()), bInt(2)).hash())
+          .isEqualTo(
+              Hash.decode("96434350e5f031b154251b86bf5513ba6433408d6dff157db2ebc78660157ac9"));
+    }
+
+    @Test
+    void lambda_type_string() throws Exception {
+      assertThat(bLambdaRef(bLambdaType(bStringType()), bInt(1)).hash())
+          .isEqualTo(
+              Hash.decode("aa38178fadf3fdbb63ca47ae0d13ebbe8abb529fcaf37f8e4f9cbbabf9a9bfa5"));
+    }
+  }
+
+  @Nested
   class _select {
     @Test
     void select() throws Exception {

@@ -33,6 +33,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambdaRef;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
@@ -156,6 +157,10 @@ public class BytecodeFactory {
 
   public BReference reference(BType evaluationType, BInt index) throws BytecodeException {
     return exprDb.newReference(evaluationType, index);
+  }
+
+  public BLambdaRef lambdaRef(BLambdaType evaluationType, BValue value) throws BytecodeException {
+    return exprDb.newLambdaRef(evaluationType, value);
   }
 
   public BSelect select(BExpr selectable, BInt index) throws BytecodeException {

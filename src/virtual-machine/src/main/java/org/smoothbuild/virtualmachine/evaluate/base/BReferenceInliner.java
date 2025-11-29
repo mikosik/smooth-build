@@ -15,6 +15,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BFold;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambdaRef;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
@@ -70,6 +71,7 @@ public class BReferenceInliner {
       case BOrder order -> rewriteOrder(order, resolver);
       case BPick pick -> rewritePick(pick, resolver);
       case BReference reference -> rewriteReference(reference, resolver);
+      case BLambdaRef reference -> rewriteLambdaRef(reference);
       case BSelect select -> rewriteSelect(select, resolver);
       case BSwitch switch_ -> rewriteSwitch(switch_, resolver);
       case BValue value -> value;
@@ -256,6 +258,10 @@ public class BReferenceInliner {
   private BExpr rewriteReference(BReference reference, Resolver resolver)
       throws BytecodeException, ReferenceIndexOutOfBoundsException {
     return resolver.resolve(reference);
+  }
+
+  private BExpr rewriteLambdaRef(BLambdaRef lambdaRef) {
+    return lambdaRef;
   }
 
   private static class Resolver {

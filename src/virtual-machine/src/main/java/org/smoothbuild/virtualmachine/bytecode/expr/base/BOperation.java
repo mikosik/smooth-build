@@ -24,6 +24,7 @@ public abstract sealed class BOperation extends BExpr
         BMap,
         BOrder,
         BPick,
+        BLambdaRef,
         BReference,
         BSelect,
         BSwitch {
