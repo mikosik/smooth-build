@@ -50,7 +50,7 @@ subprojects { subproject ->
 
         apply plugin: 'net.ltgt.errorprone'
         dependencies {
-            errorprone "com.google.errorprone:error_prone_core:2.44.0"
+            errorprone "com.google.errorprone:error_prone_core:2.45.0"
             api libs.jspecify
             errorprone 'com.uber.nullaway:nullaway:0.12.12'
         }
