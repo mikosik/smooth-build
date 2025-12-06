@@ -233,7 +233,7 @@ public sealed interface Result<R> permits Err, Ok {
     public boolean equals(Object obj) {
       return obj != null
           && obj.getClass() == this.getClass()
-          && Objects.equals(this.message, ((Err) obj).message);
+          && Objects.equals(this.message, ((Err<?>) obj).message);
     }
 
     @Override
