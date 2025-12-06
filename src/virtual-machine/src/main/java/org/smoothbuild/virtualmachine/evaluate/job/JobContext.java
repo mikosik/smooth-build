@@ -16,19 +16,19 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambdaRef;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BParamRef;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.dagger.PerVm;
 import org.smoothbuild.virtualmachine.evaluate.base.BExprAttributes;
-import org.smoothbuild.virtualmachine.evaluate.base.BReferenceInliner;
+import org.smoothbuild.virtualmachine.evaluate.base.BParamRefInliner;
 import org.smoothbuild.virtualmachine.evaluate.cache.CachingOperatorEvaluator;
 
 @PerVm
 public class JobContext {
-  private final BReferenceInliner referenceInliner;
+  private final BParamRefInliner paramRefInliner;
   private final BytecodeFactory bytecodeFactory;
   private final CachingOperatorEvaluator cachingOperatorEvaluator;
   private final Scheduler scheduler;
@@ -40,8 +40,8 @@ public class JobContext {
       Scheduler scheduler,
       CachingOperatorEvaluator cachingOperatorEvaluator,
       BytecodeFactory bytecodeFactory,
-      BReferenceInliner referenceInliner) {
-    this.referenceInliner = referenceInliner;
+      BParamRefInliner paramRefInliner) {
+    this.paramRefInliner = paramRefInliner;
     this.bytecodeFactory = bytecodeFactory;
     this.cachingOperatorEvaluator = cachingOperatorEvaluator;
     this.scheduler = scheduler;
@@ -63,7 +63,7 @@ public class JobContext {
       case BMap map -> new BMapJob(this, map, environment, trace);
       case BFold fold -> new BFoldJob(this, fold, environment, trace);
       case BLambda lambda -> new BLambdaJob(this, lambda, environment, trace);
-      case BReference reference -> new BReferenceJob(this, reference, environment, trace);
+      case BParamRef paramRef -> new BParamRefJob(this, paramRef, environment, trace);
       case BLambdaRef _ ->
         throw new IllegalArgumentException(
             "BLambdaRef cannot be evaluated. It must be replaced with referenced BLambda.");
@@ -71,8 +71,8 @@ public class JobContext {
     };
   }
 
-  public BReferenceInliner referenceInliner() {
-    return referenceInliner;
+  public BParamRefInliner paramRefInliner() {
+    return paramRefInliner;
   }
 
   public BytecodeFactory bytecodeFactory() {

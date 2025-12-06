@@ -19,8 +19,8 @@ import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.LAMBDA;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.LAMBDA_REF;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.MAP;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.ORDER;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.PARAM_REF;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.PICK;
-import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.REFERENCE;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.SELECT;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.STRING;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.SWITCH;
@@ -43,7 +43,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BReferenceKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BParamRefKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BStringType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
@@ -146,10 +146,10 @@ public class BKindCorruptedTest extends VmTestContext {
 
       @Test
       void with_type_being_operation_type() throws Exception {
-        var hash = hash(hash(ARRAY.byteMarker()), hash(bReferenceKind()));
+        var hash = hash(hash(ARRAY.byteMarker()), hash(bParamRefKind()));
         assertThatGet(hash)
             .throwsException(new DecodeKindWrongNodeKindException(
-                hash, ARRAY, DATA_PATH, BType.class, BReferenceKind.class));
+                hash, ARRAY, DATA_PATH, BType.class, BParamRefKind.class));
       }
     }
 
@@ -234,10 +234,10 @@ public class BKindCorruptedTest extends VmTestContext {
       void with_result_being_operation_type() throws Exception {
         var paramType = bTupleType(bStringType(), bBoolType());
         var typeHash =
-            hash(hash(LAMBDA.byteMarker()), hash(hash(paramType), hash(bReferenceKind())));
+            hash(hash(LAMBDA.byteMarker()), hash(hash(paramType), hash(bParamRefKind())));
         assertCall(() -> provide().kindDb().get(typeHash))
             .throwsException(new DecodeKindWrongNodeKindException(
-                typeHash, LAMBDA, BKindDb.LAMBDA_RES_PATH, BType.class, BReferenceKind.class));
+                typeHash, LAMBDA, BKindDb.LAMBDA_RES_PATH, BType.class, BParamRefKind.class));
       }
 
       @Test
@@ -270,10 +270,10 @@ public class BKindCorruptedTest extends VmTestContext {
       @Test
       void with_params_being_operation_type() throws Exception {
         var typeHash =
-            hash(hash(LAMBDA.byteMarker()), hash(hash(bReferenceKind()), hash(bIntType())));
+            hash(hash(LAMBDA.byteMarker()), hash(hash(bParamRefKind()), hash(bIntType())));
         assertCall(() -> provide().kindDb().get(typeHash))
             .throwsException(new DecodeKindWrongNodeKindException(
-                typeHash, LAMBDA, LAMBDA_PARAMS_PATH, BType.class, BReferenceKind.class));
+                typeHash, LAMBDA, LAMBDA_PARAMS_PATH, BType.class, BParamRefKind.class));
       }
 
       @Test
@@ -331,10 +331,10 @@ public class BKindCorruptedTest extends VmTestContext {
 
       @Test
       void with_elements_being_chain_of_operation_types() throws Exception {
-        var hash = hash(hash(CHOICE.byteMarker()), hash(hash(bReferenceKind())));
+        var hash = hash(hash(CHOICE.byteMarker()), hash(hash(bParamRefKind())));
         assertThatGet(hash)
             .throwsException(new DecodeKindWrongNodeKindException(
-                hash, CHOICE, "data", 0, BType.class, BReferenceKind.class));
+                hash, CHOICE, "data", 0, BType.class, BParamRefKind.class));
       }
 
       @Test
@@ -392,10 +392,10 @@ public class BKindCorruptedTest extends VmTestContext {
 
       @Test
       void with_elements_being_chain_of_operation_types() throws Exception {
-        var hash = hash(hash(TUPLE.byteMarker()), hash(hash(bReferenceKind())));
+        var hash = hash(hash(TUPLE.byteMarker()), hash(hash(bParamRefKind())));
         assertThatGet(hash)
             .throwsException(new DecodeKindWrongNodeKindException(
-                hash, TUPLE, "data", 0, BType.class, BReferenceKind.class));
+                hash, TUPLE, "data", 0, BType.class, BParamRefKind.class));
       }
 
       @Test
@@ -708,16 +708,16 @@ public class BKindCorruptedTest extends VmTestContext {
       void learning_test() throws Exception {
         /*
          * This test makes sure that other tests in this class use proper scheme
-         * to save REFERENCE kind in HashedDb.
+         * to save PARAM_REF kind in HashedDb.
          */
-        var hash = hash(hash(REFERENCE.byteMarker()), hash(bIntType()));
-        assertThat(hash).isEqualTo(bReferenceKind(bIntType()).hash());
+        var hash = hash(hash(PARAM_REF.byteMarker()), hash(bIntType()));
+        assertThat(hash).isEqualTo(bParamRefKind(bIntType()).hash());
       }
 
       @Nested
       class _operation_kind_tests extends AbstractOperationKindTestSuite {
         protected _operation_kind_tests() {
-          super(REFERENCE);
+          super(PARAM_REF);
         }
       }
     }
@@ -825,10 +825,10 @@ public class BKindCorruptedTest extends VmTestContext {
 
       @Test
       void with_evaluation_type_being_operation_kind() throws Exception {
-        var hash = hash(hash(kindId.byteMarker()), hash(bReferenceKind()));
+        var hash = hash(hash(kindId.byteMarker()), hash(bParamRefKind()));
         assertThatGet(hash)
             .throwsException(new DecodeKindWrongNodeKindException(
-                hash, kindId, DATA_PATH, type, BReferenceKind.class));
+                hash, kindId, DATA_PATH, type, BParamRefKind.class));
       }
     }
   }

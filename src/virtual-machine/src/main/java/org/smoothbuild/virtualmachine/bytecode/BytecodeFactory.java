@@ -37,8 +37,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambdaRef;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BParamRef;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch;
@@ -155,8 +155,8 @@ public class BytecodeFactory {
     return exprDb.newPick(pickable, index);
   }
 
-  public BReference reference(BType evaluationType, BInt index) throws BytecodeException {
-    return exprDb.newReference(evaluationType, index);
+  public BParamRef paramRef(BType evaluationType, BInt index) throws BytecodeException {
+    return exprDb.newParamRef(evaluationType, index);
   }
 
   public BLambdaRef lambdaRef(BLambdaType evaluationType, BValue value) throws BytecodeException {

@@ -13,7 +13,7 @@ public abstract sealed class BOperationKind extends BKind
         BMapKind,
         BOrderKind,
         BPickKind,
-        BReferenceKind,
+        BParamRefKind,
         BSelectKind,
         BSwitchKind,
         BLambdaRefKind {

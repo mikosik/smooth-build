@@ -24,9 +24,9 @@ public class FoldFunc {
     var folderParamType = f.lambdaType(f.tupleType(a, e), a);
     var parameterTypes = f.tupleType(arrayParamType, initialParamType, folderParamType);
 
-    var arrayParamReference = f.reference(arrayParamType, f.int_(BigInteger.ZERO));
-    var initialParamReference = f.reference(initialParamType, f.int_(BigInteger.ONE));
-    var folderParamReference = f.reference(folderParamType, f.int_(BigInteger.TWO));
+    var arrayParamReference = f.paramRef(arrayParamType, f.int_(BigInteger.ZERO));
+    var initialParamReference = f.paramRef(initialParamType, f.int_(BigInteger.ONE));
+    var folderParamReference = f.paramRef(folderParamType, f.int_(BigInteger.TWO));
 
     var funcType = f.lambdaType(parameterTypes, resultType);
     var body = f.fold(arrayParamReference, initialParamReference, folderParamReference);

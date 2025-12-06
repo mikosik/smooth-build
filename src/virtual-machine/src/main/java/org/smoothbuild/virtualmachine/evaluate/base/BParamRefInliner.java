@@ -18,29 +18,29 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambdaRef;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BParamRef;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.job.Job;
-import org.smoothbuild.virtualmachine.evaluate.job.ReferenceIndexOutOfBoundsException;
+import org.smoothbuild.virtualmachine.evaluate.job.ParamRefIndexOutOfBoundsException;
 
-public class BReferenceInliner {
+public class BParamRefInliner {
   private final BytecodeFactory bytecodeFactory;
 
   @Inject
-  public BReferenceInliner(BytecodeFactory bytecodeFactory) {
+  public BParamRefInliner(BytecodeFactory bytecodeFactory) {
     this.bytecodeFactory = bytecodeFactory;
   }
 
-  public BExpr inline(Job job) throws BytecodeException, ReferenceIndexOutOfBoundsException {
+  public BExpr inline(Job job) throws BytecodeException, ParamRefIndexOutOfBoundsException {
     List<BExpr> inlinedEnvironment = rewriteJobs(job);
     return rewriteExpr(job.expr(), new Resolver(inlinedEnvironment));
   }
 
   private List<BExpr> rewriteJobs(Job job)
-      throws BytecodeException, ReferenceIndexOutOfBoundsException {
+      throws BytecodeException, ParamRefIndexOutOfBoundsException {
     ArrayList<BExpr> result = new ArrayList<>();
     for (var element : job.environment()) {
       result.add(inline(element));
@@ -49,7 +49,7 @@ public class BReferenceInliner {
   }
 
   private List<BExpr> rewriteExprs(List<BExpr> elements, Resolver resolver)
-      throws BytecodeException, ReferenceIndexOutOfBoundsException {
+      throws BytecodeException, ParamRefIndexOutOfBoundsException {
     ArrayList<BExpr> result = new ArrayList<>();
     for (var element : elements) {
       result.add(rewriteExpr(element, resolver));
@@ -58,7 +58,7 @@ public class BReferenceInliner {
   }
 
   private BExpr rewriteExpr(BExpr expr, Resolver resolver)
-      throws BytecodeException, ReferenceIndexOutOfBoundsException {
+      throws BytecodeException, ParamRefIndexOutOfBoundsException {
     return switch (expr) {
       case BCall call -> rewriteCall(call, resolver);
       case BCombine combine -> rewriteCombine(combine, resolver);
@@ -70,7 +70,7 @@ public class BReferenceInliner {
       case BMap map -> rewriteMap(map, resolver);
       case BOrder order -> rewriteOrder(order, resolver);
       case BPick pick -> rewritePick(pick, resolver);
-      case BReference reference -> rewriteReference(reference, resolver);
+      case BParamRef paramRef -> rewriteParamRef(paramRef, resolver);
       case BLambdaRef reference -> rewriteLambdaRef(reference);
       case BSelect select -> rewriteSelect(select, resolver);
       case BSwitch switch_ -> rewriteSwitch(switch_, resolver);
@@ -79,7 +79,7 @@ public class BReferenceInliner {
   }
 
   private BExpr rewriteCall(BCall call, Resolver resolver)
-      throws BytecodeException, ReferenceIndexOutOfBoundsException {
+      throws BytecodeException, ParamRefIndexOutOfBoundsException {
     var subExprs = call.subExprs();
     var lambda = subExprs.lambda();
     var arguments = subExprs.arguments();
@@ -93,7 +93,7 @@ public class BReferenceInliner {
   }
 
   private BSwitch rewriteSwitch(BSwitch switch_, Resolver resolver)
-      throws BytecodeException, ReferenceIndexOutOfBoundsException {
+      throws BytecodeException, ParamRefIndexOutOfBoundsException {
     var subExprs = switch_.subExprs();
     var choice = subExprs.choice();
     var handlers = subExprs.handlers();
@@ -107,7 +107,7 @@ public class BReferenceInliner {
   }
 
   private BCombine rewriteCombine(BCombine combine, Resolver resolver)
-      throws BytecodeException, ReferenceIndexOutOfBoundsException {
+      throws BytecodeException, ParamRefIndexOutOfBoundsException {
     var items = combine.subExprs().items();
     var rewrittenItems = rewriteExprs(items, resolver);
     if (items.equals(rewrittenItems)) {
@@ -118,7 +118,7 @@ public class BReferenceInliner {
   }
 
   private BChoose rewriteChoose(BChoose choose, Resolver resolver)
-      throws BytecodeException, ReferenceIndexOutOfBoundsException {
+      throws BytecodeException, ParamRefIndexOutOfBoundsException {
     var subExprs = choose.subExprs();
     var index = subExprs.index();
     var chosen = subExprs.chosen();
@@ -132,7 +132,7 @@ public class BReferenceInliner {
   }
 
   private BExpr rewriteIf(BIf if_, Resolver resolver)
-      throws BytecodeException, ReferenceIndexOutOfBoundsException {
+      throws BytecodeException, ParamRefIndexOutOfBoundsException {
     var subExprs = if_.subExprs();
     var condition = subExprs.condition();
     var then_ = subExprs.then_();
@@ -150,7 +150,7 @@ public class BReferenceInliner {
   }
 
   private BExpr rewriteInvoke(BInvoke invoke, Resolver resolver)
-      throws BytecodeException, ReferenceIndexOutOfBoundsException {
+      throws BytecodeException, ParamRefIndexOutOfBoundsException {
     var subExprs = invoke.subExprs();
     var method = subExprs.method();
     var isPure = subExprs.isPure();
@@ -171,7 +171,7 @@ public class BReferenceInliner {
   }
 
   private BLambda rewriteLambda(BLambda lambda, Resolver resolver)
-      throws BytecodeException, ReferenceIndexOutOfBoundsException {
+      throws BytecodeException, ParamRefIndexOutOfBoundsException {
     var lambdaType = lambda.type();
     int paramsSize = lambdaType.params().size();
     var body = lambda.body();
@@ -184,7 +184,7 @@ public class BReferenceInliner {
   }
 
   private BExpr rewriteMap(BMap map, Resolver resolver)
-      throws BytecodeException, ReferenceIndexOutOfBoundsException {
+      throws BytecodeException, ParamRefIndexOutOfBoundsException {
     var subExprs = map.subExprs();
     var array = subExprs.array();
     var mapper = subExprs.mapper();
@@ -199,7 +199,7 @@ public class BReferenceInliner {
   }
 
   private BExpr rewriteFold(BFold fold, Resolver resolver)
-      throws BytecodeException, ReferenceIndexOutOfBoundsException {
+      throws BytecodeException, ParamRefIndexOutOfBoundsException {
     var subExprs = fold.subExprs();
     var array = subExprs.array();
     var initial = subExprs.initial();
@@ -219,7 +219,7 @@ public class BReferenceInliner {
   }
 
   private BExpr rewriteOrder(BOrder order, Resolver resolver)
-      throws BytecodeException, ReferenceIndexOutOfBoundsException {
+      throws BytecodeException, ParamRefIndexOutOfBoundsException {
     var elements = order.elements();
     var rewrittenElements = rewriteExprs(elements, resolver);
     if (elements.equals(rewrittenElements)) {
@@ -230,7 +230,7 @@ public class BReferenceInliner {
   }
 
   private BExpr rewritePick(BPick pick, Resolver resolver)
-      throws BytecodeException, ReferenceIndexOutOfBoundsException {
+      throws BytecodeException, ParamRefIndexOutOfBoundsException {
     var subExprs = pick.subExprs();
     var pickable = subExprs.pickable();
     var index = subExprs.index();
@@ -244,7 +244,7 @@ public class BReferenceInliner {
   }
 
   private BExpr rewriteSelect(BSelect select, Resolver resolver)
-      throws BytecodeException, ReferenceIndexOutOfBoundsException {
+      throws BytecodeException, ParamRefIndexOutOfBoundsException {
     var subExprs = select.subExprs();
     var selectable = subExprs.selectable();
     var rewrittenSelectable = rewriteExpr(selectable, resolver);
@@ -255,9 +255,9 @@ public class BReferenceInliner {
     }
   }
 
-  private BExpr rewriteReference(BReference reference, Resolver resolver)
-      throws BytecodeException, ReferenceIndexOutOfBoundsException {
-    return resolver.resolve(reference);
+  private BExpr rewriteParamRef(BParamRef paramRef, Resolver resolver)
+      throws BytecodeException, ParamRefIndexOutOfBoundsException {
+    return resolver.resolve(paramRef);
   }
 
   private BExpr rewriteLambdaRef(BLambdaRef lambdaRef) {
@@ -281,28 +281,27 @@ public class BReferenceInliner {
       return new Resolver(paramCount + delta, environment);
     }
 
-    private BExpr resolve(BReference reference)
-        throws BytecodeException, ReferenceIndexOutOfBoundsException {
-      int index = reference.index().toJavaBigInteger().intValue();
+    private BExpr resolve(BParamRef paramRef)
+        throws BytecodeException, ParamRefIndexOutOfBoundsException {
+      int index = paramRef.index().toJavaBigInteger().intValue();
       if (index < 0) {
-        throw new ReferenceIndexOutOfBoundsException(index, paramCount + environment.size());
+        throw new ParamRefIndexOutOfBoundsException(index, paramCount + environment.size());
       }
       if (index < paramCount) {
-        return reference;
+        return paramRef;
       }
       int environmentIndex = index - paramCount;
       if (environmentIndex < environment.size()) {
         var referenced = environment.get(environmentIndex);
         var jobEvaluationType = referenced.evaluationType();
-        if (jobEvaluationType.equals(reference.evaluationType())) {
+        if (jobEvaluationType.equals(paramRef.evaluationType())) {
           return referenced;
         } else {
           throw new RuntimeException("environment(%d) evaluationType is %s but expected %s."
-              .formatted(
-                  index, jobEvaluationType.q(), reference.evaluationType().q()));
+              .formatted(index, jobEvaluationType.q(), paramRef.evaluationType().q()));
         }
       }
-      throw new ReferenceIndexOutOfBoundsException(index, paramCount + environment.size());
+      throw new ParamRefIndexOutOfBoundsException(index, paramCount + environment.size());
     }
   }
 }

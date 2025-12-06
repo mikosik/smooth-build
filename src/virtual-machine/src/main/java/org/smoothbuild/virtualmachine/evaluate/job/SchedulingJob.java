@@ -19,7 +19,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BOperation;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 
 public abstract sealed class SchedulingJob extends Job
-    permits BCallJob, BFoldJob, BIfJob, BMapJob, BOperationJob, BReferenceJob, BSwitchJob {
+    permits BCallJob, BFoldJob, BIfJob, BMapJob, BOperationJob, BParamRefJob, BSwitchJob {
   public SchedulingJob(
       JobContext jobContext, BOperation operation, List<Job> environment, Trace trace) {
     super(jobContext, operation, environment, trace);

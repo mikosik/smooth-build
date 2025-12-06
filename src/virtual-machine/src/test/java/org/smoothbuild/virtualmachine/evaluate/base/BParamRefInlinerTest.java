@@ -14,9 +14,9 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
-import org.smoothbuild.virtualmachine.evaluate.job.ReferenceIndexOutOfBoundsException;
+import org.smoothbuild.virtualmachine.evaluate.job.ParamRefIndexOutOfBoundsException;
 
-public class BReferenceInlinerTest extends VmTestContext {
+public class BParamRefInlinerTest extends VmTestContext {
   @Nested
   class _without_references {
 
@@ -171,7 +171,7 @@ public class BReferenceInlinerTest extends VmTestContext {
 
     @Test
     void combine() throws Exception {
-      assertReferenceInliningReplacesReference(BReferenceInlinerTest.this::bCombine);
+      assertReferenceInliningReplacesReference(BParamRefInlinerTest.this::bCombine);
     }
 
     @Test
@@ -247,7 +247,7 @@ public class BReferenceInlinerTest extends VmTestContext {
 
     @Test
     void order() throws Exception {
-      assertReferenceInliningReplacesReference(BReferenceInlinerTest.this::bOrder);
+      assertReferenceInliningReplacesReference(BParamRefInlinerTest.this::bOrder);
     }
 
     @Test
@@ -287,16 +287,16 @@ public class BReferenceInlinerTest extends VmTestContext {
 
   @Test
   void reference_with_index_equal_to_environment_size_causes_exception() throws Exception {
-    var job = job(bReference(bStringType(), 3), bInt(), bInt(), bInt(17));
-    assertCall(() -> provide().bReferenceInliner().inline(job))
-        .throwsException(new ReferenceIndexOutOfBoundsException(3, 3));
+    var job = job(bParamRef(bStringType(), 3), bInt(), bInt(), bInt(17));
+    assertCall(() -> provide().bParamRefInliner().inline(job))
+        .throwsException(new ParamRefIndexOutOfBoundsException(3, 3));
   }
 
   @Test
   void reference_with_negative_index_causes_exception() throws Exception {
-    var job = job(bReference(bStringType(), -1), bInt(), bInt(), bInt(17));
-    assertCall(() -> provide().bReferenceInliner().inline(job))
-        .throwsException(new ReferenceIndexOutOfBoundsException(-1, 3));
+    var job = job(bParamRef(bStringType(), -1), bInt(), bInt(), bInt(17));
+    assertCall(() -> provide().bParamRefInliner().inline(job))
+        .throwsException(new ParamRefIndexOutOfBoundsException(-1, 3));
   }
 
   private BLambda bFolderLambda() throws BytecodeException {
@@ -323,10 +323,10 @@ public class BReferenceInlinerTest extends VmTestContext {
       Function1<BExpr, BExpr, IOException> factory)
       throws Exception {
     var referenceEvaluationType = environment.get(referencedIndex).evaluationType();
-    BExpr expr = factory.apply(bReference(referenceEvaluationType, referencedIndex));
+    BExpr expr = factory.apply(bParamRef(referenceEvaluationType, referencedIndex));
     BExpr expected = factory.apply(expectedReplacement);
     var job = job(expr, environment);
-    var inlined = provide().bReferenceInliner().inline(job);
+    var inlined = provide().bParamRefInliner().inline(job);
     assertThat(inlined).isEqualTo(expected);
   }
 
@@ -337,8 +337,8 @@ public class BReferenceInlinerTest extends VmTestContext {
 
   private void assertReferenceInliningDoesNotChangeExpression(
       int referencedIndex, Function1<BExpr, BExpr, IOException> factory) throws Exception {
-    var expr = factory.apply(bReference(bIntType(), referencedIndex));
+    var expr = factory.apply(bParamRef(bIntType(), referencedIndex));
     var job = job(expr, bInt(1), bInt(2), bInt(3));
-    assertThat(provide().bReferenceInliner().inline(job)).isSameInstanceAs(expr);
+    assertThat(provide().bParamRefInliner().inline(job)).isSameInstanceAs(expr);
   }
 }

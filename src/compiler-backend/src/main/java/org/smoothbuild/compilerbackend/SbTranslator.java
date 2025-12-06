@@ -203,8 +203,8 @@ public class SbTranslator {
       if (itemS != null) {
         var evaluationType = typeTranslator.translate(itemS.type());
         var index = BigInteger.valueOf(lexicalEnvironment.indexOf(name));
-        var bReference = bytecodeF.reference(evaluationType, index);
-        return saveNalAndReturn(name.toString(), sMonoReference, bReference);
+        var bParamRef = bytecodeF.paramRef(evaluationType, index);
+        return saveNalAndReturn(name.toString(), sMonoReference, bParamRef);
       }
     }
     throw new SbTranslatorException(compileErrorMessage(
@@ -296,7 +296,7 @@ public class SbTranslator {
         .params()
         .elements()
         .zipWithIndex()
-        .map(t -> bytecodeF.reference(t.element1(), BigInteger.valueOf(t.element2())));
+        .map(t -> bytecodeF.paramRef(t.element1(), BigInteger.valueOf(t.element2())));
     return bytecodeF.combine(argumentReferences);
   }
 
@@ -311,7 +311,7 @@ public class SbTranslator {
     return sParamTypes
         .elements()
         .zipWithIndex()
-        .map(tuple -> bytecodeF.reference(tuple.element1(), BigInteger.valueOf(tuple.element2())));
+        .map(tuple -> bytecodeF.paramRef(tuple.element1(), BigInteger.valueOf(tuple.element2())));
   }
 
   private BOrder translateOrder(SOrder sOrder) throws SbTranslatorException {

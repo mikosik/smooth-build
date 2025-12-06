@@ -8,7 +8,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BReferenceKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BParamRefKind;
 
 /**
  * References bound value using De Bruijn indexing with zero-based numbering.
@@ -16,10 +16,10 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BReferenceKind;
  * <p>
  * This class is thread-safe.
  */
-public final class BReference extends BOperation {
-  public BReference(MerkleRoot merkleRoot, BExprDb exprDb) {
+public final class BParamRef extends BOperation {
+  public BParamRef(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
-    checkArgument(merkleRoot.kind() instanceof BReferenceKind);
+    checkArgument(merkleRoot.kind() instanceof BParamRefKind);
   }
 
   @Override

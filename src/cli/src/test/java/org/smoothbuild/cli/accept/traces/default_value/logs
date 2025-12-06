@@ -34,7 +34,7 @@
   @ <empty trace>
 :vm:schedule:call:execute
   @ <empty trace>
-:vm:schedule:reference
+:vm:schedule:paramRef
 :vm:schedule:call
 :vm:inline
   @ <empty trace>

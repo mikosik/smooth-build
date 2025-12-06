@@ -36,7 +36,7 @@
 :vm:schedule:call:execute
   @ <empty trace>
 :vm:schedule:combine
-:vm:schedule:reference
+:vm:schedule:paramRef
 :vm:evaluate:combine
   @ {t-project}/module.smooth:4 MyStruct
 :vm:evaluate:select

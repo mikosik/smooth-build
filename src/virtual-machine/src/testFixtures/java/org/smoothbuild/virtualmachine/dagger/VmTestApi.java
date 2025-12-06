@@ -35,8 +35,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambdaRef;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BParamRef;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch;
@@ -57,8 +57,8 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaRefKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BMapKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BOrderKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BParamRefKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BPickKind;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BReferenceKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BSelectKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BStringType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BSwitchKind;
@@ -317,12 +317,12 @@ public interface VmTestApi extends CommonTestApi {
     return provide().kindDb().pick(evaluationType);
   }
 
-  public default BReferenceKind bReferenceKind() throws BytecodeException {
-    return bReferenceKind(bIntType());
+  public default BParamRefKind bParamRefKind() throws BytecodeException {
+    return bParamRefKind(bIntType());
   }
 
-  public default BReferenceKind bReferenceKind(BType evaluationType) throws BytecodeException {
-    return provide().kindDb().reference(evaluationType);
+  public default BParamRefKind bParamRefKind(BType evaluationType) throws BytecodeException {
+    return provide().kindDb().paramRef(evaluationType);
   }
 
   public default BLambdaRefKind bLambdaRefKind(BLambdaType evaluationType)
@@ -490,11 +490,11 @@ public interface VmTestApi extends CommonTestApi {
   }
 
   public default BLambda bIntIdLambda() throws BytecodeException {
-    return bLambda(list(bIntType()), bReference(bIntType(), 0));
+    return bLambda(list(bIntType()), bParamRef(bIntType(), 0));
   }
 
   public default BLambda bStringIdLambda() throws BytecodeException {
-    return bLambda(list(bStringType()), bReference(bStringType(), 0));
+    return bLambda(list(bStringType()), bParamRef(bStringType(), 0));
   }
 
   public default BLambda bs2iLambda() throws BytecodeException {
@@ -769,12 +769,12 @@ public interface VmTestApi extends CommonTestApi {
     return provide().bytecodeFactory().pick(array, index);
   }
 
-  public default BReference bReference(int index) throws BytecodeException {
-    return bReference(bIntType(), index);
+  public default BParamRef bParamRef(int index) throws BytecodeException {
+    return bParamRef(bIntType(), index);
   }
 
-  public default BReference bReference(BType evaluationType, int index) throws BytecodeException {
-    return provide().bytecodeFactory().reference(evaluationType, bInt(index));
+  public default BParamRef bParamRef(BType evaluationType, int index) throws BytecodeException {
+    return provide().bytecodeFactory().paramRef(evaluationType, bInt(index));
   }
 
   public default BLambdaRef bLambdaRef(BLambdaType evaluationType, BValue value)

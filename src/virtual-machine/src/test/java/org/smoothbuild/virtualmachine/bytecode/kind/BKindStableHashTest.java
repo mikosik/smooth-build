@@ -76,7 +76,7 @@ public class BKindStableHashTest extends VmTestContext {
             t.bSelectKind(t.bIntType()),
             "7d0bf9c43c4674d53c1bdfa7a8783ab8c9d608c46b90bfd9d99208e101c86677"),
         arguments(
-            t.bReferenceKind(t.bIntType()),
+            t.bParamRefKind(t.bIntType()),
             "caf484ac9e60b0b662b1aee490192288de4e44832518aaff3b78ebe732098560"),
         arguments(
             t.bLambdaRefKind(t.bLambdaType(t.bIntType())),
