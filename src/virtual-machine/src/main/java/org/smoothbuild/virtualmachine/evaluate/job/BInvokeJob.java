@@ -15,7 +15,7 @@ public final class BInvokeJob extends BOperationJob {
   }
 
   @Override
-  protected OperationEvaluator createEvaluator() {
+  protected OperationEvaluator<BInvoke> createEvaluator() {
     return new BInvokeEvaluator(invoke, trace());
   }
 }

@@ -23,7 +23,7 @@ import org.smoothbuild.virtualmachine.evaluate.base.Purity;
 import org.smoothbuild.virtualmachine.evaluate.plugin.BOutput;
 import org.smoothbuild.virtualmachine.evaluate.plugin.Container;
 
-public final class BInvokeEvaluator extends OperationEvaluator {
+public final class BInvokeEvaluator extends OperationEvaluator<BInvoke> {
   public BInvokeEvaluator(BInvoke invoke, Trace trace) {
     super(invoke, trace);
   }

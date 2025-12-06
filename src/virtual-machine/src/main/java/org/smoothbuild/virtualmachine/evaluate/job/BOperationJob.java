@@ -30,5 +30,5 @@ public abstract sealed class BOperationJob extends SchedulingJob
     return cachingOperatorEvaluator().evaluate(createEvaluator(), bValues);
   }
 
-  protected abstract OperationEvaluator createEvaluator();
+  protected abstract OperationEvaluator<?> createEvaluator();
 }

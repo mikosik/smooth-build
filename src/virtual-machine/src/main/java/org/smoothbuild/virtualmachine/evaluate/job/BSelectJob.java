@@ -15,7 +15,7 @@ public final class BSelectJob extends BOperationJob {
   }
 
   @Override
-  protected OperationEvaluator createEvaluator() {
+  protected OperationEvaluator<BSelect> createEvaluator() {
     return new BSelectEvaluator(select, trace());
   }
 }

@@ -15,7 +15,7 @@ public final class BPickJob extends BOperationJob {
   }
 
   @Override
-  protected OperationEvaluator createEvaluator() {
+  protected OperationEvaluator<BPick> createEvaluator() {
     return new BPickEvaluator(pick, trace());
   }
 }

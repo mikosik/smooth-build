@@ -15,7 +15,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.plugin.BOutput;
 import org.smoothbuild.virtualmachine.evaluate.plugin.Container;
 
-public final class BPickEvaluator extends OperationEvaluator {
+public final class BPickEvaluator extends OperationEvaluator<BPick> {
   public BPickEvaluator(BPick pick, Trace trace) {
     super(pick, trace);
   }

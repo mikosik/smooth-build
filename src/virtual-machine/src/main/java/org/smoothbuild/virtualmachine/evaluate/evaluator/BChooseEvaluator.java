@@ -11,11 +11,10 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoose;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
 import org.smoothbuild.virtualmachine.evaluate.plugin.BOutput;
 import org.smoothbuild.virtualmachine.evaluate.plugin.Container;
 
-public final class BChooseEvaluator extends OperationEvaluator {
+public final class BChooseEvaluator extends OperationEvaluator<BChoose> {
   public BChooseEvaluator(BChoose choose, Trace trace) {
     super(choose, trace);
   }
@@ -25,8 +24,7 @@ public final class BChooseEvaluator extends OperationEvaluator {
     var components = subExprValues.elements();
     var index = index(components);
     var chosen = chosen(components);
-    var choice =
-        container.factory().choice((BChoiceType) operation().evaluationType(), index, chosen);
+    var choice = container.factory().choice(operation().evaluationType(), index, chosen);
     return bOutput(choice, container.messages());
   }
 

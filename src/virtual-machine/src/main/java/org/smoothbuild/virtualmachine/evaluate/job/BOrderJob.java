@@ -15,7 +15,7 @@ public final class BOrderJob extends BOperationJob {
   }
 
   @Override
-  protected OperationEvaluator createEvaluator() {
+  protected OperationEvaluator<BOrder> createEvaluator() {
     return new BOrderEvaluator(order, trace());
   }
 }

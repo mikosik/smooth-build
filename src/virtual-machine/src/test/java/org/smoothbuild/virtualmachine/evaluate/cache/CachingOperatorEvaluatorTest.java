@@ -295,7 +295,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
   }
 
   private void assertComputationResult(
-      OperationEvaluator evaluator,
+      OperationEvaluator<?> evaluator,
       BTuple subExprValues,
       @Nullable BValue memoryValue,
       @Nullable BValue diskValue,
@@ -335,7 +335,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
 
   private void assertComputationResult(
       CachingOperatorEvaluator cachingOperatorEvaluator,
-      OperationEvaluator evaluator,
+      OperationEvaluator<?> evaluator,
       BTuple subExprValues,
       BOutput expectedOutput,
       Origin expectedOrigin)
@@ -353,7 +353,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
   }
 
   private void assertCachesState(
-      OperationEvaluator evaluator,
+      OperationEvaluator<?> evaluator,
       BTuple subExprValues,
       @Nullable BOutput memoryValue,
       @Nullable BValue diskValue)

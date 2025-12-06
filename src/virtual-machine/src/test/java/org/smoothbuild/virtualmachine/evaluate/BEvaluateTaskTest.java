@@ -549,7 +549,8 @@ public class BEvaluateTaskTest extends VmTestContext {
             new CachingOperatorEvaluator(
                 mock(), mock(), mock(), scheduler, provide().bytecodeFactory()) {
               @Override
-              public Output<BValue> evaluate(OperationEvaluator evaluator, BTuple subExprValues) {
+              public Output<BValue> evaluate(
+                  OperationEvaluator<?> evaluator, BTuple subExprValues) {
                 throw runtimeException;
               }
             };

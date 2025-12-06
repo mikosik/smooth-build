@@ -15,7 +15,7 @@ public final class BCombineJob extends BOperationJob {
   }
 
   @Override
-  protected OperationEvaluator createEvaluator() {
+  protected OperationEvaluator<BCombine> createEvaluator() {
     return new BCombineEvaluator(combine, trace());
   }
 }

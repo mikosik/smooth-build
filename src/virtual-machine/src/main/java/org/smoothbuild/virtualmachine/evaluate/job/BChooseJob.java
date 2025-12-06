@@ -15,7 +15,7 @@ public final class BChooseJob extends BOperationJob {
   }
 
   @Override
-  protected OperationEvaluator createEvaluator() {
+  protected OperationEvaluator<BChoose> createEvaluator() {
     return new BChooseEvaluator(choose, trace());
   }
 }
