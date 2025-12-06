@@ -7,12 +7,11 @@ import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.base.IdentifiableCode;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 
-public final class PStruct implements PTypeDefinition, PContainer, IdentifiableCode {
+public final class PStruct implements PTypeDefinition, PContainer {
   private final String nameText;
   private final NList<PItem> fields;
   private final Location location;

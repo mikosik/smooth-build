@@ -8,7 +8,6 @@ import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.base.IdentifiableCode;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
@@ -17,7 +16,7 @@ import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
  * Annotated value (one that has not a body).
  * This class is immutable.
  */
-public final class SAnnotatedValue implements SNamedValue, IdentifiableCode {
+public final class SAnnotatedValue implements SNamedValue {
   private final SAnnotation annotation;
   private final SType type;
   private final Fqn fqn;
