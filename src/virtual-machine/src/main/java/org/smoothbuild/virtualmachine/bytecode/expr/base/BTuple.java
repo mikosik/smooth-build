@@ -69,7 +69,7 @@ public final class BTuple extends BValue {
     return new ToStringBuilder(getClass().getSimpleName())
         .addField("hash", hash())
         .addField("type", type())
-        .addListField("elements", elements().map(BExpr::exprToString))
+        .addListField("elements", elements().map(BExpr::toString))
         .toString();
   }
 }

@@ -62,7 +62,7 @@ public final class BArray extends BValue {
     return new ToStringBuilder(getClass().getSimpleName())
         .addField("hash", hash())
         .addField("type", type())
-        .addListField("elements", elements(BValue.class).map(BExpr::exprToString))
+        .addListField("elements", elements(BValue.class).map(BExpr::toString))
         .toString();
   }
 }

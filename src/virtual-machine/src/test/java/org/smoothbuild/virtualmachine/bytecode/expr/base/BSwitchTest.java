@@ -120,18 +120,16 @@ public class BSwitchTest extends VmTestContext {
           choice = BChoice(
             hash = 656815d265879fc6dbd78bdc187affd260d2b6af8bcfad10dc9b32f5c5ae9d4b
             type = {String|Int}
-            members = [
-              BInt(
-                hash = 7188b43d5debd8d65201a289a38515321a8419bc78b29e75675211deff8b08ba
-                type = Int
-                value = 0
-              )
-              BString(
-                hash = 1e1c0b706a66964d2af072b61122f728afb591ebfeacaec9ef1b846e00a16676
-                type = String
-                value = "7"
-              )
-            ]
+            index = BInt(
+              hash = 7188b43d5debd8d65201a289a38515321a8419bc78b29e75675211deff8b08ba
+              type = Int
+              value = 0
+            )
+            chosen = BString(
+              hash = 1e1c0b706a66964d2af072b61122f728afb591ebfeacaec9ef1b846e00a16676
+              type = String
+              value = "7"
+            )
           )
           handlers = BCombine(
             hash = 2a737302c93c91e983667dfe73b2f73f278d17ea8a8c954ff18b8001a68fc595

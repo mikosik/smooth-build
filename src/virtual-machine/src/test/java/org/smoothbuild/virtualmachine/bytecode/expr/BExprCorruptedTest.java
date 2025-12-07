@@ -33,6 +33,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoice;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoice.Components;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoose;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
@@ -429,8 +430,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var chosen = bString("abc");
       var dataHash = hash(hash(index), hash(chosen));
       var hash = hash(hash(choiceType), dataHash);
-      assertThat(((BChoice) dbGet(hash)).components())
-          .isEqualTo(new BChoice.BSubExprs(index, chosen));
+      assertThat(((BChoice) dbGet(hash)).components()).isEqualTo(new Components(index, chosen));
     }
 
     @Test

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoice.Components;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BChoiceTest extends VmTestContext {
@@ -43,7 +44,7 @@ public class BChoiceTest extends VmTestContext {
   @Test
   void components_contains_object_passed_to_builder() throws Exception {
     var choice = bChoice();
-    assertThat(choice.components()).isEqualTo(new BChoice.BSubExprs(bInt(0), bString("7")));
+    assertThat(choice.components()).isEqualTo(new Components(bInt(0), bString("7")));
   }
 
   @Nested
@@ -89,21 +90,19 @@ public class BChoiceTest extends VmTestContext {
     assertThat(bChoice().toString())
         .isEqualTo(
             """
-        BChoice(
-          hash = 656815d265879fc6dbd78bdc187affd260d2b6af8bcfad10dc9b32f5c5ae9d4b
-          type = {String|Int}
-          members = [
-            BInt(
-              hash = 7188b43d5debd8d65201a289a38515321a8419bc78b29e75675211deff8b08ba
-              type = Int
-              value = 0
-            )
-            BString(
-              hash = 1e1c0b706a66964d2af072b61122f728afb591ebfeacaec9ef1b846e00a16676
-              type = String
-              value = "7"
-            )
-          ]
-        )""");
+                BChoice(
+                  hash = 656815d265879fc6dbd78bdc187affd260d2b6af8bcfad10dc9b32f5c5ae9d4b
+                  type = {String|Int}
+                  index = BInt(
+                    hash = 7188b43d5debd8d65201a289a38515321a8419bc78b29e75675211deff8b08ba
+                    type = Int
+                    value = 0
+                  )
+                  chosen = BString(
+                    hash = 1e1c0b706a66964d2af072b61122f728afb591ebfeacaec9ef1b846e00a16676
+                    type = String
+                    value = "7"
+                  )
+                )""");
   }
 }

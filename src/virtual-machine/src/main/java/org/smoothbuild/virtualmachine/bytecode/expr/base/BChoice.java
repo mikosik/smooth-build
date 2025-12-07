@@ -34,7 +34,7 @@ public final class BChoice extends BValue {
     return (BChoiceType) super.kind();
   }
 
-  public BSubExprs components() throws BytecodeException {
+  public Components components() throws BytecodeException {
     var members = members("index", "chosen");
     var index = members.get(INDEX_INDEX).asInstanceOf(BInt.class);
 
@@ -51,7 +51,7 @@ public final class BChoice extends BValue {
     if (!itemType.equals(expectedExprType)) {
       throw new MemberHasWrongTypeException(hash(), kind(), "chosen", expectedExprType, itemType);
     }
-    return new BSubExprs(index, value);
+    return new Components(index, value);
   }
 
   @Override
@@ -59,12 +59,12 @@ public final class BChoice extends BValue {
     return new ToStringBuilder(getClass().getSimpleName())
         .addField("hash", hash())
         .addField("type", type())
-        .addListField("members", components().toList().map(BExpr::exprToString))
+        .addField("index", components().index())
+        .addField("chosen", components().chosen())
         .toString();
   }
 
-  public static record BSubExprs(BInt index, BValue chosen) implements BExprs {
-    @Override
+  public static record Components(BInt index, BValue chosen) {
     public List<BExpr> toList() {
       return list(index, chosen);
     }
