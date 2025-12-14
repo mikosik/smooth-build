@@ -56,7 +56,8 @@ subprojects { subproject ->
         }
         tasks.withType(JavaCompile).configureEach {
             options.errorprone {
-                disableWarningsInGeneratedCode.set(true)
+                error('NullAway')
+                excludedPaths = '.*/build/generated/.*'
                 option('NullAway:AnnotatedPackages', 'org.smoothbuild')
                 // Avoid errors when field is injected by picocli.
                 // In some cases, when picocli does not always inject some field
