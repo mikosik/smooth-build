@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
-public class NodeClassIsWrongExceptionTest extends VmTestContext {
+public class NodeHasWrongClassExceptionTest extends VmTestContext {
   @Test
   void message_without_index() throws Exception {
-    var exception = new NodeClassIsWrongException(
+    var exception = new NodeHasWrongClassException(
         Hash.of(123), bIntType(), "node-path", Integer.class, Double.class);
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode `Int` expression at "
@@ -21,7 +21,7 @@ public class NodeClassIsWrongExceptionTest extends VmTestContext {
 
   @Test
   void message_with_index() throws Exception {
-    var exception = new NodeClassIsWrongException(
+    var exception = new NodeHasWrongClassException(
         Hash.of(123), bIntType(), "node-path", 7, Integer.class, Double.class);
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode `Int` expression at "

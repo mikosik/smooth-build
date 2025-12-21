@@ -18,7 +18,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.exc.BExprDbException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprNodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberHasWrongEvaluationTypeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberHasWrongTypeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.MembersSizeIsWrongException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberListHasWrongSizeException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
@@ -84,7 +84,8 @@ public abstract sealed class BExpr permits BOperation, BValue {
   private List<Hash> readDataAsHashChain(int membersCount) throws BExprDbException {
     List<Hash> chain = readDataAsHashChain();
     if (membersCount != -1 && chain.size() != membersCount) {
-      throw new MembersSizeIsWrongException(hash(), kind(), DATA_PATH, membersCount, chain.size());
+      throw new MemberListHasWrongSizeException(
+          hash(), kind(), DATA_PATH, membersCount, chain.size());
     }
     return chain;
   }
@@ -111,7 +112,7 @@ public abstract sealed class BExpr permits BOperation, BValue {
     var chain = readDataAsHashChain();
     expectedCount.ifPresent(expected -> {
       if (chain.size() != expected) {
-        throw new MembersSizeIsWrongException(hash(), kind(), name, expected, chain.size());
+        throw new MemberListHasWrongSizeException(hash(), kind(), name, expected, chain.size());
       }
     });
     var exprs = readDataAsExprChain(chain, name);

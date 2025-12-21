@@ -5,8 +5,8 @@ import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.common.base.Strings.q;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.virtualmachine.bytecode.expr.Helpers.invokeAndChainHashedDbException;
-import static org.smoothbuild.virtualmachine.bytecode.expr.exc.RootHashChainSizeIsWrongException.cannotReadRootException;
-import static org.smoothbuild.virtualmachine.bytecode.expr.exc.RootHashChainSizeIsWrongException.wrongSizeOfRootChainException;
+import static org.smoothbuild.virtualmachine.bytecode.expr.exc.RootHashChainHasWrongSizeException.cannotReadRootException;
+import static org.smoothbuild.virtualmachine.bytecode.expr.exc.RootHashChainHasWrongSizeException.wrongSizeOfRootChainException;
 
 import jakarta.inject.Inject;
 import java.math.BigInteger;

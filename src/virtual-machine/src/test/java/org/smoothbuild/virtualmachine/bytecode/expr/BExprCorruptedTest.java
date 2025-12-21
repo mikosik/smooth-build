@@ -6,8 +6,8 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.testing.TestingString.illegalString;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr.DATA_PATH;
-import static org.smoothbuild.virtualmachine.bytecode.expr.exc.RootHashChainSizeIsWrongException.cannotReadRootException;
-import static org.smoothbuild.virtualmachine.bytecode.expr.exc.RootHashChainSizeIsWrongException.wrongSizeOfRootChainException;
+import static org.smoothbuild.virtualmachine.bytecode.expr.exc.RootHashChainHasWrongSizeException.cannotReadRootException;
+import static org.smoothbuild.virtualmachine.bytecode.expr.exc.RootHashChainHasWrongSizeException.wrongSizeOfRootChainException;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -57,7 +57,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprKindException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprNodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberHasWrongEvaluationTypeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberHasWrongTypeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.MembersSizeIsWrongException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberListHasWrongSizeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.NoSuchExprException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.SelectHasIndexOutOfBoundException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.SelectHasWrongEvaluationTypeException;
@@ -338,7 +338,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var kind = bCallKind(bIntType());
       var hash = hash(hash(kind), dataHash);
       assertCall(() -> ((BCall) dbGet(hash)).lambda())
-          .throwsException(new MembersSizeIsWrongException(hash, kind, DATA_PATH, 2, 1));
+          .throwsException(new MemberListHasWrongSizeException(hash, kind, DATA_PATH, 2, 1));
     }
 
     @Test
@@ -350,7 +350,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var kind = bCallKind(bIntType());
       var hash = hash(hash(kind), dataHash);
       assertCall(() -> ((BCall) dbGet(hash)).lambda())
-          .throwsException(new MembersSizeIsWrongException(hash, kind, DATA_PATH, 2, 3));
+          .throwsException(new MemberListHasWrongSizeException(hash, kind, DATA_PATH, 2, 3));
     }
 
     @Test
@@ -465,7 +465,8 @@ public class BExprCorruptedTest extends VmTestContext {
       var dataHash = hash(hash(index));
       var hash = hash(hash(choiceType), dataHash);
       assertCall(() -> ((BChoice) dbGet(hash)).index())
-          .throwsException(new MembersSizeIsWrongException(hash, bChoiceType(), DATA_PATH, 2, 1));
+          .throwsException(
+              new MemberListHasWrongSizeException(hash, bChoiceType(), DATA_PATH, 2, 1));
     }
 
     @Test
@@ -476,7 +477,8 @@ public class BExprCorruptedTest extends VmTestContext {
       var dataHash = hash(hash(index), hash(chosen), hash(chosen));
       var hash = hash(hash(choiceType), dataHash);
       assertCall(() -> ((BChoice) dbGet(hash)).index())
-          .throwsException(new MembersSizeIsWrongException(hash, bChoiceType(), DATA_PATH, 2, 3));
+          .throwsException(
+              new MemberListHasWrongSizeException(hash, bChoiceType(), DATA_PATH, 2, 3));
     }
 
     @Test
@@ -580,7 +582,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var dataHash = hash(hash(index));
       var hash = hash(hash(chooseKind), dataHash);
       assertCall(() -> ((BChoose) dbGet(hash)).index())
-          .throwsException(new MembersSizeIsWrongException(hash, chooseKind, DATA_PATH, 2, 1));
+          .throwsException(new MemberListHasWrongSizeException(hash, chooseKind, DATA_PATH, 2, 1));
     }
 
     @Test
@@ -592,7 +594,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var dataHash = hash(hash(index), hash(chosen), hash(chosen));
       var hash = hash(hash(chooseKind), dataHash);
       assertCall(() -> ((BChoose) dbGet(hash)).index())
-          .throwsException(new MembersSizeIsWrongException(hash, chooseKind, DATA_PATH, 2, 3));
+          .throwsException(new MemberListHasWrongSizeException(hash, chooseKind, DATA_PATH, 2, 3));
     }
 
     @Test
@@ -683,7 +685,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var dataHash = hash(hash(choice));
       var hash = hash(hash(switchKind), dataHash);
       assertCall(() -> ((BSwitch) dbGet(hash)).choice())
-          .throwsException(new MembersSizeIsWrongException(hash, switchKind, DATA_PATH, 2, 1));
+          .throwsException(new MemberListHasWrongSizeException(hash, switchKind, DATA_PATH, 2, 1));
     }
 
     @Test
@@ -696,7 +698,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var hash = hash(hash(switchKind), dataHash);
 
       assertCall(() -> ((BSwitch) dbGet(hash)).choice())
-          .throwsException(new MembersSizeIsWrongException(hash, switchKind, DATA_PATH, 2, 3));
+          .throwsException(new MemberListHasWrongSizeException(hash, switchKind, DATA_PATH, 2, 3));
     }
 
     @Test
@@ -939,7 +941,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var dataHash = hash(hash(condition));
       var hash = hash(hash(bIfKind()), dataHash);
       assertCall(() -> ((BIf) dbGet(hash)).condition())
-          .throwsException(new MembersSizeIsWrongException(hash, bIfKind(), DATA_PATH, 3, 1));
+          .throwsException(new MemberListHasWrongSizeException(hash, bIfKind(), DATA_PATH, 3, 1));
     }
 
     @Test
@@ -949,7 +951,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var dataHash = hash(hash(condition), hash(then_));
       var hash = hash(hash(bIfKind()), dataHash);
       assertCall(() -> ((BIf) dbGet(hash)).condition())
-          .throwsException(new MembersSizeIsWrongException(hash, bIfKind(), DATA_PATH, 3, 2));
+          .throwsException(new MemberListHasWrongSizeException(hash, bIfKind(), DATA_PATH, 3, 2));
     }
 
     @Test
@@ -960,7 +962,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var dataHash = hash(hash(condition), hash(then_), hash(else_), hash(else_));
       var hash = hash(hash(bIfKind()), dataHash);
       assertCall(() -> ((BIf) dbGet(hash)).condition())
-          .throwsException(new MembersSizeIsWrongException(hash, bIfKind(), DATA_PATH, 3, 4));
+          .throwsException(new MemberListHasWrongSizeException(hash, bIfKind(), DATA_PATH, 3, 4));
     }
 
     @Test
@@ -1085,7 +1087,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var kind = bMapKind(bIntArrayType());
       var hash = hash(hash(kind), dataHash);
       assertCall(() -> ((BMap) dbGet(hash)).array())
-          .throwsException(new MembersSizeIsWrongException(hash, bMapKind(), DATA_PATH, 2, 1));
+          .throwsException(new MemberListHasWrongSizeException(hash, bMapKind(), DATA_PATH, 2, 1));
     }
 
     @Test
@@ -1096,7 +1098,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var kind = bMapKind(bIntArrayType());
       var hash = hash(hash(kind), dataHash);
       assertCall(() -> ((BMap) dbGet(hash)).array())
-          .throwsException(new MembersSizeIsWrongException(hash, bMapKind(), DATA_PATH, 2, 3));
+          .throwsException(new MemberListHasWrongSizeException(hash, bMapKind(), DATA_PATH, 2, 3));
     }
 
     @Test
@@ -1217,7 +1219,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var kind = bFoldKind(bIntType());
       var hash = hash(hash(kind), dataHash);
       assertCall(() -> ((BFold) dbGet(hash)).array())
-          .throwsException(new MembersSizeIsWrongException(hash, kind, DATA_PATH, 3, 1));
+          .throwsException(new MemberListHasWrongSizeException(hash, kind, DATA_PATH, 3, 1));
     }
 
     @Test
@@ -1228,7 +1230,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var kind = bFoldKind(bIntType());
       var hash = hash(hash(kind), dataHash);
       assertCall(() -> ((BFold) dbGet(hash)).array())
-          .throwsException(new MembersSizeIsWrongException(hash, kind, DATA_PATH, 3, 2));
+          .throwsException(new MemberListHasWrongSizeException(hash, kind, DATA_PATH, 3, 2));
     }
 
     @Test
@@ -1240,7 +1242,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var kind = bFoldKind(bIntType());
       var hash = hash(hash(kind), dataHash);
       assertCall(() -> ((BFold) dbGet(hash)).array())
-          .throwsException(new MembersSizeIsWrongException(hash, kind, DATA_PATH, 3, 4));
+          .throwsException(new MemberListHasWrongSizeException(hash, kind, DATA_PATH, 3, 4));
     }
 
     @Test
@@ -1384,7 +1386,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var hash = hash(hash(kind), dataHash);
 
       assertCall(() -> ((BInvoke) dbGet(hash)).method())
-          .throwsException(new MembersSizeIsWrongException(hash, kind, DATA_PATH, 3, 1));
+          .throwsException(new MemberListHasWrongSizeException(hash, kind, DATA_PATH, 3, 1));
     }
 
     @Test
@@ -1396,7 +1398,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var hash = hash(hash(kind), dataHash);
 
       assertCall(() -> ((BInvoke) dbGet(hash)).method())
-          .throwsException(new MembersSizeIsWrongException(hash, kind, DATA_PATH, 3, 2));
+          .throwsException(new MemberListHasWrongSizeException(hash, kind, DATA_PATH, 3, 2));
     }
 
     @Test
@@ -1409,7 +1411,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var hash = hash(hash(type), dataHash);
 
       assertCall(() -> ((BInvoke) dbGet(hash)).method())
-          .throwsException(new MembersSizeIsWrongException(hash, type, DATA_PATH, 3, 4));
+          .throwsException(new MemberListHasWrongSizeException(hash, type, DATA_PATH, 3, 4));
     }
 
     @Test
@@ -1563,7 +1565,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var dataHash = hash(hash(expr));
       var hash = hash(hash(bPickKind()), dataHash);
       assertCall(() -> ((BPick) dbGet(hash)).pickable())
-          .throwsException(new MembersSizeIsWrongException(hash, bPickKind(), DATA_PATH, 2, 1));
+          .throwsException(new MemberListHasWrongSizeException(hash, bPickKind(), DATA_PATH, 2, 1));
     }
 
     @Test
@@ -1573,7 +1575,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var dataHash = hash(hash(expr), hash(index), hash(index));
       var hash = hash(hash(bPickKind()), dataHash);
       assertCall(() -> ((BPick) dbGet(hash)).pickable())
-          .throwsException(new MembersSizeIsWrongException(hash, bPickKind(), DATA_PATH, 2, 3));
+          .throwsException(new MemberListHasWrongSizeException(hash, bPickKind(), DATA_PATH, 2, 3));
     }
 
     @Test
@@ -1729,7 +1731,8 @@ public class BExprCorruptedTest extends VmTestContext {
       var dataHash = hash(hash(expr));
       var hash = hash(hash(bSelectKind()), dataHash);
       assertCall(() -> ((BSelect) dbGet(hash)).selectable())
-          .throwsException(new MembersSizeIsWrongException(hash, bSelectKind(), DATA_PATH, 2, 1));
+          .throwsException(
+              new MemberListHasWrongSizeException(hash, bSelectKind(), DATA_PATH, 2, 1));
     }
 
     @Test
@@ -1739,7 +1742,8 @@ public class BExprCorruptedTest extends VmTestContext {
       var dataHash = hash(hash(expr), hash(index), hash(index));
       var hash = hash(hash(bSelectKind()), dataHash);
       assertCall(() -> ((BSelect) dbGet(hash)).selectable())
-          .throwsException(new MembersSizeIsWrongException(hash, bSelectKind(), DATA_PATH, 2, 3));
+          .throwsException(
+              new MemberListHasWrongSizeException(hash, bSelectKind(), DATA_PATH, 2, 3));
     }
 
     @Test
@@ -1887,7 +1891,8 @@ public class BExprCorruptedTest extends VmTestContext {
       var hash = hash(hash(bPersonType()), dataHash);
       BTuple tuple = (BTuple) dbGet(hash);
       assertCall(() -> tuple.get(0))
-          .throwsException(new MembersSizeIsWrongException(hash, bPersonType(), "elements", 2, 1));
+          .throwsException(
+              new MemberListHasWrongSizeException(hash, bPersonType(), "elements", 2, 1));
     }
 
     @Test
@@ -1896,7 +1901,8 @@ public class BExprCorruptedTest extends VmTestContext {
       var hash = hash(hash(bPersonType()), dataHash);
       var tuple = (BTuple) dbGet(hash);
       assertCall(() -> tuple.get(0))
-          .throwsException(new MembersSizeIsWrongException(hash, bPersonType(), "elements", 2, 3));
+          .throwsException(
+              new MemberListHasWrongSizeException(hash, bPersonType(), "elements", 2, 3));
     }
 
     @Test
