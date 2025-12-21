@@ -14,7 +14,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.plugin.BOutput;
 import org.smoothbuild.virtualmachine.evaluate.plugin.Container;
 
-public final class BSelectEvaluator extends OperationEvaluator<BSelect> {
+public final class BSelectEvaluator extends BOperationEvaluator<BSelect> {
   public BSelectEvaluator(BSelect select, Trace trace) {
     super(select, trace);
   }

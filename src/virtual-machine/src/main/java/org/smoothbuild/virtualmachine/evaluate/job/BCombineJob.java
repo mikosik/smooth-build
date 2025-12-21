@@ -4,7 +4,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BCombineEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.OperationEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BOperationEvaluator;
 
 public final class BCombineJob extends BOperationJob {
   private final BCombine combine;
@@ -15,7 +15,7 @@ public final class BCombineJob extends BOperationJob {
   }
 
   @Override
-  protected OperationEvaluator<BCombine> createEvaluator() {
+  protected BOperationEvaluator<BCombine> createEvaluator() {
     return new BCombineEvaluator(combine, trace());
   }
 }

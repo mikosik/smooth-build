@@ -10,7 +10,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.evaluate.plugin.BOutput;
 import org.smoothbuild.virtualmachine.evaluate.plugin.Container;
 
-public final class BOrderEvaluator extends OperationEvaluator<BOrder> {
+public final class BOrderEvaluator extends BOperationEvaluator<BOrder> {
   public BOrderEvaluator(BOrder order, Trace trace) {
     super(order, trace);
   }

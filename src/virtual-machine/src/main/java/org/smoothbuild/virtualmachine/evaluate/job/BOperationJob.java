@@ -8,7 +8,7 @@ import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOperation;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.OperationEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BOperationEvaluator;
 
 public abstract sealed class BOperationJob extends SchedulingJob
     permits BChooseJob, BCombineJob, BInvokeJob, BOrderJob, BPickJob, BSelectJob {
@@ -30,5 +30,5 @@ public abstract sealed class BOperationJob extends SchedulingJob
     return cachingOperatorEvaluator().evaluate(createEvaluator(), bValues);
   }
 
-  protected abstract OperationEvaluator<?> createEvaluator();
+  protected abstract BOperationEvaluator<?> createEvaluator();
 }

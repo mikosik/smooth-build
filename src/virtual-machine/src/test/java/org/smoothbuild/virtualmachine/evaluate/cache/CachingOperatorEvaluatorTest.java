@@ -29,7 +29,7 @@ import org.smoothbuild.virtualmachine.evaluate.evaluator.BInvokeEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BOrderEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BPickEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BSelectEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.OperationEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BOperationEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.plugin.BOutput;
 
 public class CachingOperatorEvaluatorTest extends VmTestContext {
@@ -294,7 +294,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
   }
 
   private void assertComputationResult(
-      OperationEvaluator<?> evaluator,
+      BOperationEvaluator<?> evaluator,
       BTuple subExprValues,
       @Nullable BValue memoryValue,
       @Nullable BValue diskValue,
@@ -334,7 +334,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
 
   private void assertComputationResult(
       CachingOperatorEvaluator cachingOperatorEvaluator,
-      OperationEvaluator<?> evaluator,
+      BOperationEvaluator<?> evaluator,
       BTuple subExprValues,
       BOutput expectedOutput,
       Origin expectedOrigin)
@@ -352,7 +352,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
   }
 
   private void assertCachesState(
-      OperationEvaluator<?> evaluator,
+      BOperationEvaluator<?> evaluator,
       BTuple subExprValues,
       @Nullable BOutput memoryValue,
       @Nullable BValue diskValue)

@@ -4,7 +4,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BPickEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.OperationEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BOperationEvaluator;
 
 public final class BPickJob extends BOperationJob {
   private final BPick pick;
@@ -15,7 +15,7 @@ public final class BPickJob extends BOperationJob {
   }
 
   @Override
-  protected OperationEvaluator<BPick> createEvaluator() {
+  protected BOperationEvaluator<BPick> createEvaluator() {
     return new BPickEvaluator(pick, trace());
   }
 }

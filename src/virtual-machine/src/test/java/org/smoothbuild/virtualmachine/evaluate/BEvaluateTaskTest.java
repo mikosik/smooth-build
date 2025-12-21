@@ -58,7 +58,7 @@ import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 import org.smoothbuild.virtualmachine.evaluate.base.BExprAttributes;
 import org.smoothbuild.virtualmachine.evaluate.base.BParamRefInliner;
 import org.smoothbuild.virtualmachine.evaluate.cache.CachingOperatorEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.OperationEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BOperationEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.job.Job;
 import org.smoothbuild.virtualmachine.evaluate.job.JobContext;
 import org.smoothbuild.virtualmachine.evaluate.plugin.Container;
@@ -550,7 +550,7 @@ public class BEvaluateTaskTest extends VmTestContext {
                 mock(), mock(), mock(), scheduler, provide().bytecodeFactory()) {
               @Override
               public Output<BValue> evaluate(
-                  OperationEvaluator<?> evaluator, BTuple subExprValues) {
+                  BOperationEvaluator<?> evaluator, BTuple subExprValues) {
                 throw runtimeException;
               }
             };
