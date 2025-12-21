@@ -78,19 +78,16 @@ public class BuildCommandTest {
                 """);
       var output = runSmooth(buildCommand("--filter-tasks=ILLEGAL", "result"));
       output.assertFinishedWithError();
-      output.assertSystemErrContains(
-          """
+      output.assertSystemErrContains("""
           Invalid value for option '--filter-tasks': Unknown matcher 'ILLEGAL'.
 
           Usage:""");
     }
 
-    private static final String NATIVE_FUNCTION_CALL =
-        """
+    private static final String NATIVE_FUNCTION_CALL = """
         result = concat([["a"], ["b"]]);
         """;
-    private static final String NATIVE_CALL_TASK_HEADER =
-        """
+    private static final String NATIVE_CALL_TASK_HEADER = """
         :vm:evaluate:invoke
         """;
 
@@ -110,8 +107,7 @@ public class BuildCommandTest {
       output.assertSystemOutDoesNotContain(NATIVE_CALL_TASK_HEADER);
     }
 
-    private static final String ORDER =
-        """
+    private static final String ORDER = """
         result = [
           123,
           456,
@@ -143,13 +139,11 @@ public class BuildCommandTest {
     @Test
     void matches() throws IOException {
       createNativeJar(ReportError.class);
-      createUserModule(format(
-          """
+      createUserModule(format("""
               @Native("%s")
               A reportError<A>(String message);
               Int result = reportError("my-error-message");
-              """,
-          ReportError.class.getCanonicalName()));
+              """, ReportError.class.getCanonicalName()));
       var output = runSmooth(buildCommand("--filter-stack-traces=all", "result"));
       output.assertFinishedWithError();
       output.assertSystemOutContains("@ {project}/build.smooth:3 reportError");
@@ -158,13 +152,11 @@ public class BuildCommandTest {
     @Test
     void not_matches() throws IOException {
       createNativeJar(ReportError.class);
-      createUserModule(format(
-          """
+      createUserModule(format("""
               @Native("%s")
               A reportError(String message);
               Int result = reportError("my-error-message");
-              """,
-          ReportError.class.getCanonicalName()));
+              """, ReportError.class.getCanonicalName()));
       var output = runSmooth(buildCommand("--filter-stack-traces=none", "result"));
       output.assertFinishedWithError();
       output.assertSystemOutDoesNotContain("@ {project}/build.smooth:3 reportError");
@@ -178,13 +170,11 @@ public class BuildCommandTest {
       @Test
       void then_error_log_is_not_shown() throws IOException {
         createNativeJar(ReportError.class);
-        createUserModule(format(
-            """
+        createUserModule(format("""
                 @Native("%s")
                 A reportError(String message);
                 Int result = reportError("my-error-message");
-                """,
-            ReportError.class.getCanonicalName()));
+                """, ReportError.class.getCanonicalName()));
         var output = runSmooth(buildCommand("--filter-logs=fatal", "result"));
         output.assertFinishedWithError();
         output.assertSystemOutDoesNotContain("my-error-message");
@@ -193,13 +183,11 @@ public class BuildCommandTest {
       @Test
       void then_warning_log_is_not_shown() throws IOException {
         createNativeJar(ReportWarning.class);
-        createUserModule(format(
-            """
+        createUserModule(format("""
             @Native("%s")
             String reportWarning(String message);
             result = reportWarning("my-warning-message");
-            """,
-            ReportWarning.class.getCanonicalName()));
+            """, ReportWarning.class.getCanonicalName()));
         var output = runSmooth(buildCommand("--filter-logs=fatal", "result"));
         output.assertFinishedWithSuccess();
         output.assertSystemOutDoesNotContain("[WARNING] my-warning-message");
@@ -208,13 +196,11 @@ public class BuildCommandTest {
       @Test
       void then_info_log_is_not_shown() throws IOException {
         createNativeJar(ReportInfo.class);
-        createUserModule(format(
-            """
+        createUserModule(format("""
             @Native("%s")
             String reportInfo(String message);
             result = reportInfo("my-info-message");
-            """,
-            ReportInfo.class.getCanonicalName()));
+            """, ReportInfo.class.getCanonicalName()));
         var output = runSmooth(buildCommand("--filter-logs=fatal", "result"));
         output.assertFinishedWithSuccess();
         output.assertSystemOutDoesNotContain("[INFO] my-info-message");
@@ -226,13 +212,11 @@ public class BuildCommandTest {
       @Test
       void then_error_log_is_shown() throws IOException {
         createNativeJar(ReportError.class);
-        createUserModule(format(
-            """
+        createUserModule(format("""
             @Native("%s")
             A reportError<A>(String message);
             Int result = reportError("my-error-message");
-            """,
-            ReportError.class.getCanonicalName()));
+            """, ReportError.class.getCanonicalName()));
         var output = runSmooth(buildCommand("--filter-logs=error", "result"));
         output.assertFinishedWithError();
         output.assertSystemOutContains("[ERROR] my-error-message");
@@ -241,13 +225,11 @@ public class BuildCommandTest {
       @Test
       void then_warning_log_is_not_shown() throws IOException {
         createNativeJar(ReportWarning.class);
-        createUserModule(format(
-            """
+        createUserModule(format("""
             @Native("%s")
             String reportWarning(String message);
             result = reportWarning("my-warning-message");
-            """,
-            ReportWarning.class.getCanonicalName()));
+            """, ReportWarning.class.getCanonicalName()));
         var output = runSmooth(buildCommand("--filter-logs=error", "result"));
         output.assertFinishedWithSuccess();
         output.assertSystemOutDoesNotContain("my-warning-message");
@@ -256,13 +238,11 @@ public class BuildCommandTest {
       @Test
       void then_info_log_is_not_shown() throws IOException {
         createNativeJar(ReportInfo.class);
-        createUserModule(format(
-            """
+        createUserModule(format("""
             @Native("%s")
             String reportInfo(String message);
             result = reportInfo("my-info-message");
-            """,
-            ReportInfo.class.getCanonicalName()));
+            """, ReportInfo.class.getCanonicalName()));
         var output = runSmooth(buildCommand("--filter-logs=error", "result"));
         output.assertFinishedWithSuccess();
         output.assertSystemOutDoesNotContain("my-info-message");
@@ -274,13 +254,11 @@ public class BuildCommandTest {
       @Test
       void then_error_log_is_shown() throws IOException {
         createNativeJar(ReportError.class);
-        createUserModule(format(
-            """
+        createUserModule(format("""
             @Native("%s")
             A reportError<A>(String message);
             Int result = reportError("my-error-message");
-            """,
-            ReportError.class.getCanonicalName()));
+            """, ReportError.class.getCanonicalName()));
         var output = runSmooth(buildCommand("--filter-logs=warning", "result"));
         output.assertFinishedWithError();
         output.assertSystemOutContains("[ERROR] my-error-message");
@@ -289,13 +267,11 @@ public class BuildCommandTest {
       @Test
       void then_warning_log_is_shown() throws IOException {
         createNativeJar(ReportWarning.class);
-        createUserModule(format(
-            """
+        createUserModule(format("""
             @Native("%s")
             String reportWarning(String message);
             result = reportWarning("my-warning-message");
-            """,
-            ReportWarning.class.getCanonicalName()));
+            """, ReportWarning.class.getCanonicalName()));
         var output = runSmooth(buildCommand("--filter-logs=warning", "result"));
         output.assertFinishedWithSuccess();
         output.assertSystemOutContains("[WARNING] my-warning-message");
@@ -304,13 +280,11 @@ public class BuildCommandTest {
       @Test
       void then_info_log_is_not_shown() throws IOException {
         createNativeJar(ReportInfo.class);
-        createUserModule(format(
-            """
+        createUserModule(format("""
             @Native("%s")
             String reportInfo(String message);
             result = reportInfo("my-info-message");
-            """,
-            ReportInfo.class.getCanonicalName()));
+            """, ReportInfo.class.getCanonicalName()));
         var output = runSmooth(buildCommand("--filter-logs=warning", "result"));
         output.assertFinishedWithSuccess();
         output.assertSystemOutDoesNotContain("my-info-message");
@@ -322,13 +296,11 @@ public class BuildCommandTest {
       @Test
       void then_error_log_is_shown() throws IOException {
         createNativeJar(ReportError.class);
-        createUserModule(format(
-            """
+        createUserModule(format("""
             @Native("%s")
             A reportError<A>(String message);
             Int result = reportError("my-error-message");
-            """,
-            ReportError.class.getCanonicalName()));
+            """, ReportError.class.getCanonicalName()));
         var output = runSmooth(buildCommand("--filter-logs=info", "result"));
         output.assertFinishedWithError();
         output.assertSystemOutContains("[ERROR] my-error-message");
@@ -337,13 +309,11 @@ public class BuildCommandTest {
       @Test
       void then_warning_log_is_shown() throws IOException {
         createNativeJar(ReportWarning.class);
-        createUserModule(format(
-            """
+        createUserModule(format("""
             @Native("%s")
             String reportWarning(String message);
             result = reportWarning("my-warning-message");
-            """,
-            ReportWarning.class.getCanonicalName()));
+            """, ReportWarning.class.getCanonicalName()));
         var output = runSmooth(buildCommand("--filter-logs=info", "result"));
         output.assertFinishedWithSuccess();
         output.assertSystemOutContains("[WARNING] my-warning-message");
@@ -352,13 +322,11 @@ public class BuildCommandTest {
       @Test
       void then_info_log_is_shown() throws IOException {
         createNativeJar(ReportInfo.class);
-        createUserModule(format(
-            """
+        createUserModule(format("""
             @Native("%s")
             String reportInfo(String message);
             result = reportInfo("my-info-message");
-            """,
-            ReportInfo.class.getCanonicalName()));
+            """, ReportInfo.class.getCanonicalName()));
         var output = runSmooth(buildCommand("--filter-logs=info", "result"));
         output.assertFinishedWithSuccess();
         output.assertSystemOutContains("[INFO] my-info-message");
@@ -371,13 +339,11 @@ public class BuildCommandTest {
     @Test
     void native_call() throws IOException {
       createNativeJar(ReturnAbc.class);
-      createUserModule(format(
-          """
+      createUserModule(format("""
           @Native("%s")
           String myFunc();
           result = myFunc();
-          """,
-          ReturnAbc.class.getCanonicalName()));
+          """, ReturnAbc.class.getCanonicalName()));
       var output = runSmooth(buildCommand("--filter-tasks=all", "result"));
       output.assertFinishedWithSuccess();
       output.assertSystemOutContains("""
@@ -399,8 +365,7 @@ public class BuildCommandTest {
 
     @Test
     void select() throws IOException {
-      createUserModule(
-          """
+      createUserModule("""
           MyStruct {
             String myField
           }

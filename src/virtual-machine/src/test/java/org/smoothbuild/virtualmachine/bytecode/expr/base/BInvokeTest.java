@@ -147,9 +147,7 @@ public class BInvokeTest extends VmTestContext {
     var arguments = bTuple(bInt(1));
     var evaluationType = bIntType();
     var invoke = bInvoke(evaluationType, bMethodTuple(jar, classBinaryName), isPure, arguments);
-    assertThat(invoke.toString())
-        .isEqualTo(
-            """
+    assertThat(invoke.toString()).isEqualTo("""
         BInvoke(
           hash = 98cf30d3344c13cbe1fcc256ec209994c4a265dce1ab035c94c3576202ad4d55
           evaluationType = Int

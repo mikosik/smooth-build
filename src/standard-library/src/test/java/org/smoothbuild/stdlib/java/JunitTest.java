@@ -20,8 +20,7 @@ public class JunitTest extends StandardLibraryTestContext {
   void junit_fails_when_deps_doesnt_contain_junit_jar() throws Exception {
     createJunitLibs();
     createProjectFile("src/" + SUCCESSFUL_TEST_CLASS + ".java", successfulTestSourceCode());
-    createUserModule(
-        """
+    createUserModule("""
             junitJars = files("junit");
             srcJar = files("src") > javac(libs=junitJars) > jar() > File("test.jar");
             result = junit(tests=srcJar, deps=[]);
@@ -35,8 +34,7 @@ public class JunitTest extends StandardLibraryTestContext {
   void junit_func_succeeds_when_all_junit_tests_succeed() throws Exception {
     createJunitLibs();
     createProjectFile("src/" + SUCCESSFUL_TEST_CLASS + ".java", successfulTestSourceCode());
-    createUserModule(
-        """
+    createUserModule("""
             junitJars = files("junit");
             srcJar = files("src") > javac(libs=junitJars) > jar() > File("src.jar");
             result = junit(tests=srcJar, deps=junitJars);
@@ -49,8 +47,7 @@ public class JunitTest extends StandardLibraryTestContext {
   void junit_func_fails_when_junit_test_fails() throws Exception {
     createJunitLibs();
     createProjectFile("src/" + FAILING_TEST_CLASS + ".java", failingTestSourceCode());
-    createUserModule(
-        """
+    createUserModule("""
             junitJars = files("junit");
             srcJar = files("src") > javac(libs=junitJars) > jar() > File("src.jar");
             result = junit(tests=srcJar, deps=junitJars);
@@ -65,8 +62,7 @@ public class JunitTest extends StandardLibraryTestContext {
   void warning_is_logged_when_no_test_is_found() throws Exception {
     createJunitLibs();
     createProjectFile("src/empty", "");
-    createUserModule(
-        """
+    createUserModule("""
             junitJars = files("junit");
             srcJar = [] > jar() > File("src.jar");
             result = junit(tests=srcJar, deps=junitJars);
@@ -80,40 +76,34 @@ public class JunitTest extends StandardLibraryTestContext {
     createJunitLibs();
     createProjectFile("src/" + SUCCESSFUL_TEST_CLASS + ".java", successfulTestSourceCode());
     createProjectFile("src/" + FAILING_TEST_CLASS + ".java", failingTestSourceCode());
-    createUserModule(format(
-        """
+    createUserModule(format("""
             junitJars = files("junit");
             srcJar = files("src") > javac(libs=junitJars) > jar() > File("src.jar");
             result = junit(include="%s", tests=srcJar, deps=junitJars);
-            """,
-        SUCCESSFUL_TEST_CLASS));
+            """, SUCCESSFUL_TEST_CLASS));
     evaluate("result");
     assertThat(artifact()).isNotNull();
   }
 
   private static String successfulTestSourceCode() {
-    return format(
-        """
+    return format("""
         public class %s {
           @org.junit.Test
           public void testMyMethod() {
           }
         }
-        """,
-        SUCCESSFUL_TEST_CLASS);
+        """, SUCCESSFUL_TEST_CLASS);
   }
 
   private static String failingTestSourceCode() {
-    return format(
-        """
+    return format("""
         public class %s {
           @org.junit.Test
           public void testMyMethod() {
             throw new AssertionError();
           }
         }
-        """,
-        FAILING_TEST_CLASS);
+        """, FAILING_TEST_CLASS);
   }
 
   private void createJunitLibs() throws IOException {

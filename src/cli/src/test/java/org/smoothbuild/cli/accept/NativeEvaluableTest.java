@@ -35,12 +35,10 @@ public class NativeEvaluableTest extends EvaluatorTestContext {
   class _value {
     @Test
     void without_body_is_not_legal() throws Exception {
-      var userModule = format(
-          """
+      var userModule = format("""
               @Native("%s")
               String illegalValue;
-              """,
-          ReturnAbc.class.getCanonicalName());
+              """, ReturnAbc.class.getCanonicalName());
       createUserModule(userModule, ReturnAbc.class);
       evaluate("result");
       assertThat(logs()).contains(userError(1, "Value cannot have @Native annotation."));
@@ -48,12 +46,10 @@ public class NativeEvaluableTest extends EvaluatorTestContext {
 
     @Test
     void with_body_is_not_legal() throws Exception {
-      var userModule = format(
-          """
+      var userModule = format("""
               @Native("%s")
               String illegalValue = "abc";
-              """,
-          ReturnAbc.class.getCanonicalName());
+              """, ReturnAbc.class.getCanonicalName());
       createUserModule(userModule, ReturnAbc.class);
       evaluate("result");
       assertThat(logs()).contains(userError(1, "Value cannot have @Native annotation."));
@@ -64,13 +60,11 @@ public class NativeEvaluableTest extends EvaluatorTestContext {
   class _func {
     @Test
     void can_return_passed_arg() throws Exception {
-      var userModule = format(
-          """
+      var userModule = format("""
               @Native("%s")
               String stringIdentity(String string);
               result = stringIdentity("abc");
-              """,
-          StringIdentity.class.getCanonicalName());
+              """, StringIdentity.class.getCanonicalName());
       createUserModule(userModule, StringIdentity.class);
       evaluate("result");
       assertThat(artifact()).isEqualTo(bString("abc"));
@@ -78,8 +72,7 @@ public class NativeEvaluableTest extends EvaluatorTestContext {
 
     @Test
     void without_native_jar_file_causes_fatal() throws Exception {
-      createUserModule(
-          """
+      createUserModule("""
           @Native("MissingClass")
           String myFunc();
           result = myFunc();
@@ -95,13 +88,11 @@ public class NativeEvaluableTest extends EvaluatorTestContext {
 
     @Test
     void exception_from_native_is_reported_as_fatal() throws Exception {
-      var userModule = format(
-          """
+      var userModule = format("""
               @Native("%s")
               A throwException<A>();
               Int result = throwException();
-              """,
-          ThrowException.class.getCanonicalName());
+              """, ThrowException.class.getCanonicalName());
       createUserModule(userModule, ThrowException.class);
       evaluate("result");
       assertThat(logs().size()).isEqualTo(1);
@@ -114,13 +105,11 @@ public class NativeEvaluableTest extends EvaluatorTestContext {
 
     @Test
     void fatal_wrapping_exception_from_native_is_not_cached_on_disk() throws Exception {
-      var userModule = format(
-          """
+      var userModule = format("""
               @Native("%s")
               String throwRandomException();
               result = throwRandomException();
-              """,
-          ThrowRandomException.class.getCanonicalName());
+              """, ThrowRandomException.class.getCanonicalName());
       createUserModule(userModule, ThrowRandomException.class);
 
       evaluate("result");
@@ -137,13 +126,11 @@ public class NativeEvaluableTest extends EvaluatorTestContext {
 
     @Test
     void error_reported_is_logged() throws Exception {
-      var userModule = format(
-          """
+      var userModule = format("""
               @Native("%s")
               Int reportError(String message);
               result = reportError("ERROR MESSAGE");
-              """,
-          ReportError.class.getCanonicalName());
+              """, ReportError.class.getCanonicalName());
       createUserModule(userModule, ReportError.class);
 
       evaluate("result");
@@ -158,13 +145,11 @@ public class NativeEvaluableTest extends EvaluatorTestContext {
     @Test
     void func_with_illegal_impl_causes_error() throws Exception {
       String className = MissingMethod.class.getCanonicalName();
-      var userModule = format(
-          """
+      var userModule = format("""
               @Native("%s")
               String wrongMethodName();
               result = wrongMethodName();
-              """,
-          className);
+              """, className);
       createUserModule(userModule, MissingMethod.class);
       evaluate("result");
       assertThat(logs())
@@ -177,13 +162,11 @@ public class NativeEvaluableTest extends EvaluatorTestContext {
       @Test
       void null_without_logging_error() throws Exception {
         String className = ReturnNull.class.getCanonicalName();
-        var userModule = format(
-            """
+        var userModule = format("""
                 @Native("%s")
                 String returnNull();
                 result = returnNull();
-                """,
-            className);
+                """, className);
         createUserModule(userModule, ReturnNull.class);
         evaluate("result");
         assertThat(logs()).containsExactly(faultyNullReturnedFatal());
@@ -191,13 +174,11 @@ public class NativeEvaluableTest extends EvaluatorTestContext {
 
       @Test
       void null_and_logs_only_warning() throws Exception {
-        var userModule = format(
-            """
+        var userModule = format("""
                 @Native("%s")
                 String reportWarning();
                 result = reportWarning();
-                """,
-            ReportWarningAndReturnNull.class.getCanonicalName());
+                """, ReportWarningAndReturnNull.class.getCanonicalName());
         createUserModule(userModule, ReportWarningAndReturnNull.class);
         evaluate("result");
         assertThat(logs()).contains(faultyNullReturnedFatal());
@@ -205,13 +186,11 @@ public class NativeEvaluableTest extends EvaluatorTestContext {
 
       @Test
       void non_null_and_logs_error() throws Exception {
-        var userModule = format(
-            """
+        var userModule = format("""
                 @Native("%s")
                 String reportErrorAndReturnValue();
                 result = reportErrorAndReturnValue();
-                """,
-            ReportErrorAndReturnNonNull.class.getCanonicalName());
+                """, ReportErrorAndReturnNonNull.class.getCanonicalName());
         createUserModule(userModule, ReportErrorAndReturnNonNull.class);
         evaluate("result");
         assertThat(logs()).contains(nonNullValueAndError());
@@ -219,13 +198,11 @@ public class NativeEvaluableTest extends EvaluatorTestContext {
 
       @Test
       void object_of_wrong_type() throws Exception {
-        var userModule = format(
-            """
+        var userModule = format("""
                 @Native("%s")
                 A brokenIdentity<A>(A value);
                 Int result = brokenIdentity(7);
-                """,
-            BrokenIdentity.class.getCanonicalName());
+                """, BrokenIdentity.class.getCanonicalName());
         createUserModule(userModule, BrokenIdentity.class);
         evaluate("result");
         assertThat(logs()).containsExactly(faultyTypeOfReturnedObject("Int", "String"));
@@ -233,8 +210,7 @@ public class NativeEvaluableTest extends EvaluatorTestContext {
 
       @Test
       void struct_of_wrong_type() throws Exception {
-        var userModule = format(
-            """
+        var userModule = format("""
                 Person {
                   String firstName,
                   String lastName,
@@ -242,8 +218,7 @@ public class NativeEvaluableTest extends EvaluatorTestContext {
                 @Native("%s")
                 Person returnStringStruct();
                 result = returnStringStruct();
-                """,
-            ReturnStringStruct.class.getCanonicalName());
+                """, ReturnStringStruct.class.getCanonicalName());
         createUserModule(userModule, ReturnStringStruct.class);
         evaluate("result");
         assertThat(logs())
@@ -252,13 +227,11 @@ public class NativeEvaluableTest extends EvaluatorTestContext {
 
       @Test
       void array_of_wrong_type() throws Exception {
-        var userModule = format(
-            """
+        var userModule = format("""
                 @Native("%s")
                 [Blob] emptyStringArray();
                 result = emptyStringArray();
-                """,
-            EmptyStringArray.class.getCanonicalName());
+                """, EmptyStringArray.class.getCanonicalName());
         createUserModule(userModule, EmptyStringArray.class);
         evaluate("result");
         assertThat(logs()).containsExactly(faultyTypeOfReturnedObject("[Blob]", "[String]"));
@@ -266,13 +239,11 @@ public class NativeEvaluableTest extends EvaluatorTestContext {
 
       @Test
       void array_with_added_elem_of_wrong_type() throws Exception {
-        var userModule = format(
-            """
+        var userModule = format("""
                 @Native("%s")
                 [Blob] addElementOfWrongTypeToArray();
                 result = addElementOfWrongTypeToArray();
-                """,
-            AddElementOfWrongTypeToArray.class.getCanonicalName());
+                """, AddElementOfWrongTypeToArray.class.getCanonicalName());
         createUserModule(userModule, AddElementOfWrongTypeToArray.class);
         evaluate("result");
         String message = logs().get(0).message();

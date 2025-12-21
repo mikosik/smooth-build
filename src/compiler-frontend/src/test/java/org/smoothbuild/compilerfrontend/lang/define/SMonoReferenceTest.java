@@ -16,9 +16,7 @@ public class SMonoReferenceTest extends FrontendCompilerTestContext {
   @Test
   void to_string() {
     var refS = new SMonoReference(sIntType(), fqn("referenced"), location(7));
-    assertThat(refS.toString())
-        .isEqualTo(
-            """
+    assertThat(refS.toString()).isEqualTo("""
             SMonoReference(
               type = Int
               referencedName = referenced

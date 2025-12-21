@@ -10,8 +10,7 @@ import picocli.CommandLine.HelpCommand;
 
 @Command(
     name = "smooth",
-    description =
-        """
+    description = """
         smooth-build is a build tool with strongly and statically typed, \
         purely functional language. It features fine-grained, aggressive caching \
         that will make sure no computation happens twice on the same machine, \

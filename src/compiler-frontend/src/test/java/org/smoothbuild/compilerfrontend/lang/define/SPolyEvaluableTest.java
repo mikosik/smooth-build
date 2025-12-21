@@ -20,9 +20,7 @@ public class SPolyEvaluableTest extends FrontendCompilerTestContext {
       var annotation = sNativeAnnotation("path");
       var func = new SAnnotatedFunc(annotation, resultType, fqn("myFunc"), params, location(1));
       var poly = sPoly(typeParams, func);
-      assertThat(poly.toSourceCode())
-          .isEqualTo(
-              """
+      assertThat(poly.toSourceCode()).isEqualTo("""
           @Native("path")
           String myFunc<A>(A p1, Int p2 = default:value);""");
     }
@@ -33,8 +31,7 @@ public class SPolyEvaluableTest extends FrontendCompilerTestContext {
       var sAnnotatedValue =
           new SAnnotatedValue(sAnnotation, varA(), fqn("module:myValue"), location(7));
       var poly = sPoly(list(varA()), sAnnotatedValue);
-      assertThat(poly.toSourceCode())
-          .isEqualTo("""
+      assertThat(poly.toSourceCode()).isEqualTo("""
           @MyAnnotation("myPath")
           A myValue<A>;""");
     }
@@ -46,8 +43,7 @@ public class SPolyEvaluableTest extends FrontendCompilerTestContext {
       var func =
           new SNamedExprFunc(resultType, fqn("module:myFunc"), params, sInt(17), location(1));
       var poly = sPoly(list(varA()), func);
-      assertThat(poly.toSourceCode())
-          .isEqualTo("""
+      assertThat(poly.toSourceCode()).isEqualTo("""
         String myFunc<A>(A p1, Int p2 = default:value)
           = 17;""");
     }

@@ -50,13 +50,11 @@ public class OrTest extends StandardLibraryTestContext {
 
   @Test
   void second_value_should_not_be_evaluated_when_first_is_true() throws Exception {
-    var userModule = format(
-        """
+    var userModule = format("""
             @Native("%s")
             A throwException<A>();
             result = or(true, throwException());
-            """,
-        ThrowException.class.getCanonicalName());
+            """, ThrowException.class.getCanonicalName());
     createUserModule(userModule, ThrowException.class);
     evaluate("result");
     assertThat(artifact()).isEqualTo(bBool(true));

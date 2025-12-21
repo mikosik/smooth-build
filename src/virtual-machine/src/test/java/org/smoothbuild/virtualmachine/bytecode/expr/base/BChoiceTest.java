@@ -101,9 +101,7 @@ public class BChoiceTest extends VmTestContext {
 
   @Test
   void to_string() throws Exception {
-    assertThat(bChoice().toString())
-        .isEqualTo(
-            """
+    assertThat(bChoice().toString()).isEqualTo("""
                 BChoice(
                   hash = 656815d265879fc6dbd78bdc187affd260d2b6af8bcfad10dc9b32f5c5ae9d4b
                   type = {String|Int}

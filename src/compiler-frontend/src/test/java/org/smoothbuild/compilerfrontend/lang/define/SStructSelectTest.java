@@ -14,9 +14,7 @@ public class SStructSelectTest extends FrontendCompilerTestContext {
 
   @Test
   void to_string() {
-    assertThat(createSStructSelect().toString())
-        .isEqualTo(
-            """
+    assertThat(createSStructSelect().toString()).isEqualTo("""
             SStructSelect(
               selectable = SInstantiate(
                 typeArgs = <>

@@ -138,9 +138,7 @@ public class BArrayTest extends VmTestContext {
     var string1 = bString("abc");
     var string2 = bString("def");
     var array = newBArrayBuilder(bArrayType()).add(string1).add(string2).build();
-    assertThat(array.toString())
-        .isEqualTo(
-            """
+    assertThat(array.toString()).isEqualTo("""
         BArray(
           hash = b948a36694c34568a77d7fdd23cadd7a7d8d5c62c26fe5585bbf19fabfa5647e
           type = [String]

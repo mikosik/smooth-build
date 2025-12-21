@@ -10,11 +10,7 @@ public class ParseErrorsTest extends EvaluatorTestContext {
   void syntax_error_is_reported() throws Exception {
     createUserModule("result =");
     evaluate("result");
-    assertThat(logs())
-        .containsExactly(
-            userError(
-                1,
-                """
+    assertThat(logs()).containsExactly(userError(1, """
                 mismatched input '<EOF>' expecting {'{', '(', '[', NAME, INT, BLOB, STRING}
                 result =
                         ^"""));
@@ -24,11 +20,7 @@ public class ParseErrorsTest extends EvaluatorTestContext {
   void syntax_error_contains_code_with_problematic_part_marked() throws Exception {
     createUserModule("result =");
     evaluate("result");
-    assertThat(logs())
-        .containsExactly(
-            userError(
-                1,
-                """
+    assertThat(logs()).containsExactly(userError(1, """
                 mismatched input '<EOF>' expecting {'{', '(', '[', NAME, INT, BLOB, STRING}
                 result =
                         ^"""));
@@ -41,11 +33,7 @@ public class ParseErrorsTest extends EvaluatorTestContext {
             result = "abc";
             """);
     evaluate("result");
-    assertThat(logs())
-        .containsExactly(
-            userError(
-                1,
-                """
+    assertThat(logs()).containsExactly(userError(1, """
             token recognition error at: '*'
             func* = "abc";
                 ^"""));

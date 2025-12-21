@@ -55,9 +55,7 @@ public class BStringTest extends VmTestContext {
   @Test
   void to_string_contains_string_value() throws Exception {
     var string = bString(this.string);
-    assertThat(string.toString())
-        .isEqualTo(
-            """
+    assertThat(string.toString()).isEqualTo("""
         BString(
           hash = 379067128c589bc435ecef2c681b1304f2b1dc1178aaf14b0cad64f106a530d8
           type = String
@@ -68,9 +66,7 @@ public class BStringTest extends VmTestContext {
   @Test
   void to_string_contains_shortened_string_value_for_long_strings() throws Exception {
     var string = bString("123456789012345678901234567890");
-    assertThat(string.toString())
-        .isEqualTo(
-            """
+    assertThat(string.toString()).isEqualTo("""
             BString(
               hash = 5f251f596780439f80762ea535ec451732453d353dba40585b96179dd72a35c5
               type = String
@@ -81,9 +77,7 @@ public class BStringTest extends VmTestContext {
   @Test
   void to_string_contains_properly_escaped_special_characters() throws Exception {
     var string = bString("\t \b \n \r \f \" \\");
-    assertThat(string.toString())
-        .isEqualTo(
-            """
+    assertThat(string.toString()).isEqualTo("""
             BString(
               hash = c1e55a8bf36d2593479401421e0f26ee2ad378886f8c256c091cafb96c0ae83d
               type = String

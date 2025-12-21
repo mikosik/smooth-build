@@ -9,8 +9,7 @@ import org.smoothbuild.stdlib.StandardLibraryTestContext;
 public class FilterByMaskTest extends StandardLibraryTestContext {
   @Test
   void returns_filtered_list() throws Exception {
-    var userModule =
-        """
+    var userModule = """
         result = filterByMask([1, 2, 3, 4, 5, 6], [true, false, true, false, true, false]);
         """;
     createUserModule(userModule);
@@ -20,8 +19,7 @@ public class FilterByMaskTest extends StandardLibraryTestContext {
 
   @Test
   void returns_whole_list_when_all_masks_are_true() throws Exception {
-    var userModule =
-        """
+    var userModule = """
         result = filterByMask([1, 2, 3, 4, 5, 6], [true, true, true, true, true, true]);
         """;
     createUserModule(userModule);

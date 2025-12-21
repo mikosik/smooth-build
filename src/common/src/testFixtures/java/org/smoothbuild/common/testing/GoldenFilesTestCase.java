@@ -59,8 +59,7 @@ public class GoldenFilesTestCase {
         ==== test dir ====
         %s
         %s
-        """
-        .formatted(testName, fetchedContent.toString());
+        """.formatted(testName, fetchedContent.toString());
     for (Entry<String, String> entry : actualFiles.entrySet()) {
       var fileName = entry.getKey();
       var actualContent = entry.getValue();

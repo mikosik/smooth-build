@@ -13,9 +13,7 @@ public class SStringTest extends FrontendCompilerTestContext {
 
   @Test
   void to_string() {
-    assertThat(sString(7, "abc").toString())
-        .isEqualTo(
-            """
+    assertThat(sString(7, "abc").toString()).isEqualTo("""
             SString(
               type = String
               string = abc

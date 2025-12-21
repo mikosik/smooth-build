@@ -183,11 +183,7 @@ public class SaveArtifactsTest extends CliTestContext {
     var path = path("dir1/file1");
     var bValue = bArray(bFileType(), bFile(path, content1), bFile(path, content2));
 
-    assertThat(saveArtifacts(sType, bValue).report().logs())
-        .isEqualTo(
-            list(
-                error(
-                    """
+    assertThat(saveArtifacts(sType, bValue).report().logs()).isEqualTo(list(error("""
                 Can't store array of Files as it contains files with duplicated paths:
                   'dir1/file1'""")));
   }

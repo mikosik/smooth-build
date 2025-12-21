@@ -25,8 +25,7 @@ public class BuildCommand extends ProjectCommand {
       defaultValue = "default",
       paramLabel = "<filter>",
       converter = FilterTasksConverter.class,
-      description =
-          """
+      description = """
           Print executed tasks that match filter. Amount of information provided \
           for each task is specified by --filter-stack-traces and --filter-logs.
 
@@ -63,8 +62,7 @@ public class BuildCommand extends ProjectCommand {
       defaultValue = "error",
       paramLabel = "<filter>",
       converter = FilterTasksConverter.class,
-      description =
-          """
+      description = """
           Print stack trace for task execution reports that match filter.
           Default value is 'error'.
 

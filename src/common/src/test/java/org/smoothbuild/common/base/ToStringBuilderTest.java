@@ -32,8 +32,7 @@ public class ToStringBuilderTest {
   public void testAddListField() {
     var toStringBuilder = new ToStringBuilder("Test");
     toStringBuilder.addListField("field1", list("value1", "value2"));
-    var expected =
-        """
+    var expected = """
         Test(
           field1 = [
             value1
@@ -69,8 +68,7 @@ public class ToStringBuilderTest {
     var toStringBuilder = new ToStringBuilder("Test");
     toStringBuilder.addField("field1", "value1");
     toStringBuilder.addField("field2", "value2");
-    var expected =
-        """
+    var expected = """
         Test(
           field1 = value1
           field2 = value2
@@ -83,8 +81,7 @@ public class ToStringBuilderTest {
     var toStringBuilder = new ToStringBuilder("Test");
     toStringBuilder.addListField("field1", list("value1", "value2"));
     toStringBuilder.addListField("field2", list("value3", "value4"));
-    var expected =
-        """
+    var expected = """
             Test(
               field1 = [
                 value1

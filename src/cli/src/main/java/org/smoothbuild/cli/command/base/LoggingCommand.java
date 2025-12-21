@@ -11,8 +11,7 @@ public class LoggingCommand extends ACommand {
       defaultValue = "info",
       paramLabel = "<level>",
       converter = FilterLogsConverter.class,
-      description =
-          """
+      description = """
               Print logs with specified level or above.
               Defaults value is 'info'.
 

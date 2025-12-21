@@ -19,9 +19,7 @@ public class LogTest {
         new StackTraceElement[] {new StackTraceElement("MyClass", "myMethod", "MyClass.java", 10)};
     throwable.setStackTrace(stackTrace);
     var fatal = fatal("Detailed message:", throwable);
-    assertThat(convertOsLineSeparatorsToNewLine(fatal.message()))
-        .isEqualTo(
-            """
+    assertThat(convertOsLineSeparatorsToNewLine(fatal.message())).isEqualTo("""
             Detailed message:
             java.lang.RuntimeException
             \tat MyClass.myMethod(MyClass.java:10)\

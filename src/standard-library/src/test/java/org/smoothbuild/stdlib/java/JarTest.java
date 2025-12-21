@@ -9,8 +9,7 @@ import org.smoothbuild.stdlib.StandardLibraryTestContext;
 public class JarTest extends StandardLibraryTestContext {
   @Test
   void jar_unjar() throws Exception {
-    var userModule =
-        """
+    var userModule = """
         result = [File(0x41, "dir/file1.txt"), File(0x42, "file2.txt")]
           > jar() > unjar();
         """;
@@ -21,8 +20,7 @@ public class JarTest extends StandardLibraryTestContext {
 
   @Test
   void corrupted_archive_causes_error() throws Exception {
-    var userModule =
-        """
+    var userModule = """
         randomJunk = 0x123456;
         result =  unjar(randomJunk);
         """;

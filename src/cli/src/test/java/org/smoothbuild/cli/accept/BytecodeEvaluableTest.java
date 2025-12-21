@@ -12,13 +12,11 @@ import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnIdFunc;
 public class BytecodeEvaluableTest extends EvaluatorTestContext {
   @Test
   void func_call_can_be_evaluated() throws Exception {
-    var userModule = format(
-        """
+    var userModule = format("""
             @Bytecode("%s")
             A myId<A>(A a);
             result = myId(77);
-            """,
-        ReturnIdFunc.class.getCanonicalName());
+            """, ReturnIdFunc.class.getCanonicalName());
     createUserModule(userModule, ReturnIdFunc.class);
     evaluate("result");
     assertThat(artifact()).isEqualTo(bInt(77));
@@ -26,8 +24,7 @@ public class BytecodeEvaluableTest extends EvaluatorTestContext {
 
   @Test
   void without_native_jar_file_causes_fatal() throws Exception {
-    createUserModule(
-        """
+    createUserModule("""
         @Bytecode("MissingClass")
         String myFunc();
         result = myFunc();
@@ -43,13 +40,11 @@ public class BytecodeEvaluableTest extends EvaluatorTestContext {
 
   @Test
   void func_with_illegal_impl_causes_fatal() throws Exception {
-    var userModule = format(
-        """
+    var userModule = format("""
             @Bytecode("%s")
             Int brokenFunc();
             result = brokenFunc();
-            """,
-        NonPublicMethod.class.getCanonicalName());
+            """, NonPublicMethod.class.getCanonicalName());
     createUserModule(userModule, NonPublicMethod.class);
     evaluate("result");
     assertThat(logs())
@@ -62,12 +57,10 @@ public class BytecodeEvaluableTest extends EvaluatorTestContext {
 
   @Test
   void value_can_be_evaluated() throws Exception {
-    var userModule = format(
-        """
+    var userModule = format("""
             @Bytecode("%s")
             String result;
-            """,
-        ReturnAbc.class.getCanonicalName());
+            """, ReturnAbc.class.getCanonicalName());
     createUserModule(userModule, ReturnAbc.class);
     evaluate("result");
     assertThat(artifact()).isEqualTo(bString("abc"));
@@ -75,12 +68,10 @@ public class BytecodeEvaluableTest extends EvaluatorTestContext {
 
   @Test
   void value_with_illegal_impl_causes_fatal() throws Exception {
-    var userModule = format(
-        """
+    var userModule = format("""
             @Bytecode("%s")
             Int result;
-            """,
-        NonPublicMethod.class.getCanonicalName());
+            """, NonPublicMethod.class.getCanonicalName());
     createUserModule(userModule, NonPublicMethod.class);
     evaluate("result");
     assertThat(logs())

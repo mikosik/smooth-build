@@ -43,8 +43,7 @@ public class FilterFilesTest extends StandardLibraryTestContext {
 
   @Test
   void double_star_matches_file_inside_dir() throws Exception {
-    var userModule =
-        """
+    var userModule = """
         result = [File(0x41, "dir/file.txt")] > filterFiles("**");
         """;
     createUserModule(userModule);
@@ -54,8 +53,7 @@ public class FilterFilesTest extends StandardLibraryTestContext {
 
   @Test
   void double_star_matches_file_inside_dir_tree() throws Exception {
-    createUserModule(
-        """
+    createUserModule("""
             result = [File(0x41, "dir/subdir/file.txt")] > filterFiles("**");
             """);
     evaluate("result");
@@ -64,8 +62,7 @@ public class FilterFilesTest extends StandardLibraryTestContext {
 
   @Test
   void double_star_after_dir_matches_path_with_dir_prefix() throws Exception {
-    var userModule =
-        """
+    var userModule = """
         result = [File(0x41, "dir/file.txt")] > filterFiles("dir/**");
         """;
     createUserModule(userModule);
@@ -75,8 +72,7 @@ public class FilterFilesTest extends StandardLibraryTestContext {
 
   @Test
   void double_star_after_dir_matches_file_inside_this_dir() throws Exception {
-    var userModule =
-        """
+    var userModule = """
         result = [File(0x41, "dir/file.txt")] > filterFiles("dir/**");
         """;
     createUserModule(userModule);
@@ -86,8 +82,7 @@ public class FilterFilesTest extends StandardLibraryTestContext {
 
   @Test
   void double_star_after_dir_matches_file_inside_this_dir_subdir() throws Exception {
-    var userModule =
-        """
+    var userModule = """
         result = [File(0x41, "dir/def/file.txt")] > filterFiles("dir/**");
         """;
     createUserModule(userModule);
@@ -97,8 +92,7 @@ public class FilterFilesTest extends StandardLibraryTestContext {
 
   @Test
   void double_star_after_dir_not_matches_file_inside_different_dir() throws Exception {
-    var userModule =
-        """
+    var userModule = """
         result = [File(0x41, "different/file.txt")] > filterFiles("dir/**");
         """;
     createUserModule(userModule);
@@ -118,8 +112,7 @@ public class FilterFilesTest extends StandardLibraryTestContext {
 
   @Test
   void leading_double_star_with_file_matches_that_file() throws Exception {
-    var userModule =
-        """
+    var userModule = """
         result = [File(0x41, "file.txt")] > filterFiles("**file.txt");
         """;
     createUserModule(userModule);
@@ -129,8 +122,7 @@ public class FilterFilesTest extends StandardLibraryTestContext {
 
   @Test
   void leading_double_star_with_file_matches_that_file_inside_dir() throws Exception {
-    var userModule =
-        """
+    var userModule = """
         result = [File(0x41, "dir/file.txt")] > filterFiles("**/file.txt");
         """;
     createUserModule(userModule);
@@ -140,8 +132,7 @@ public class FilterFilesTest extends StandardLibraryTestContext {
 
   @Test
   void leading_double_star_with_file_matches_that_file_inside_dir_tree() throws Exception {
-    var userModule =
-        """
+    var userModule = """
         result = [File(0x41, "dir/subdir/file.txt")] > filterFiles("**/file.txt");
         """;
     createUserModule(userModule);
@@ -151,8 +142,7 @@ public class FilterFilesTest extends StandardLibraryTestContext {
 
   @Test
   void leading_double_star_with_file_not_matches_different_file() throws Exception {
-    var userModule =
-        """
+    var userModule = """
         result = [File(0x41, "file2.txt")] > filterFiles("**/file1.txt");
         """;
     createUserModule(userModule);
@@ -162,8 +152,7 @@ public class FilterFilesTest extends StandardLibraryTestContext {
 
   @Test
   void leading_double_star_with_file_inside_dir_matches_such_file_inside_dir() throws Exception {
-    var userModule =
-        """
+    var userModule = """
         result = [File(0x41, "dir/file.txt")] > filterFiles("**dir/file.txt");
         """;
     createUserModule(userModule);
@@ -174,8 +163,7 @@ public class FilterFilesTest extends StandardLibraryTestContext {
   @Test
   void leading_double_star_with_file_inside_dir_matches_such_file_inside_dir_tree()
       throws Exception {
-    var userModule =
-        """
+    var userModule = """
         result = [File(0x41, "dir/subdir/file.txt")]
           > filterFiles("**/subdir/file.txt");
         """;
@@ -196,8 +184,7 @@ public class FilterFilesTest extends StandardLibraryTestContext {
 
   @Test
   void single_star_not_matches_file_inside_dir() throws Exception {
-    var userModule =
-        """
+    var userModule = """
         result = [File(0x41, "dir/file.txt")] > filterFiles("*");
         """;
     createUserModule(userModule);
@@ -207,8 +194,7 @@ public class FilterFilesTest extends StandardLibraryTestContext {
 
   @Test
   void star_slash_file_matches_that_file_inside_dir() throws Exception {
-    var userModule =
-        """
+    var userModule = """
         result = [File(0x41, "dir/file.txt")] > filterFiles("*/file.txt");
         """;
     createUserModule(userModule);
@@ -218,8 +204,7 @@ public class FilterFilesTest extends StandardLibraryTestContext {
 
   @Test
   void star_slash_file_not_matches_file_without_dir() throws Exception {
-    var userModule =
-        """
+    var userModule = """
         result = [File(0x41, "file.txt")] > filterFiles("*/file.txt");
         """;
     createUserModule(userModule);
@@ -229,8 +214,7 @@ public class FilterFilesTest extends StandardLibraryTestContext {
 
   @Test
   void star_slash_dir_file_matches_that_file_inside_dir_tree() throws Exception {
-    var userModule =
-        """
+    var userModule = """
         result = [File(0x41, "dir/subdir/file.txt")]
           > filterFiles("*/subdir/file.txt");
         """;
@@ -241,8 +225,7 @@ public class FilterFilesTest extends StandardLibraryTestContext {
 
   @Test
   void dir_slash_star_matches_file_inside_dir() throws Exception {
-    var userModule =
-        """
+    var userModule = """
         result = [File(0x41, "dir/file.txt")] > filterFiles("dir/**");
         """;
     createUserModule(userModule);
@@ -252,8 +235,7 @@ public class FilterFilesTest extends StandardLibraryTestContext {
 
   @Test
   void dir_slash_star_not_matches_file_without_dir() throws Exception {
-    var userModule =
-        """
+    var userModule = """
         result = [File(0x41, "file.txt")] > filterFiles("dir/*");
         """;
     createUserModule(userModule);
@@ -263,8 +245,7 @@ public class FilterFilesTest extends StandardLibraryTestContext {
 
   @Test
   void star_slash_star_matches_file_inside_dir() throws Exception {
-    var userModule =
-        """
+    var userModule = """
         result = [File(0x41, "dir/file.txt")] > filterFiles("*/*");
         """;
     createUserModule(userModule);
@@ -274,8 +255,7 @@ public class FilterFilesTest extends StandardLibraryTestContext {
 
   @Test
   void star_slash_star_not_matches_file_without_dir() throws Exception {
-    var userModule =
-        """
+    var userModule = """
         result = [File(0x41, "file.txt")] > filterFiles("*/*");
         """;
     createUserModule(userModule);
@@ -285,8 +265,7 @@ public class FilterFilesTest extends StandardLibraryTestContext {
 
   @Test
   void star_slash_star_not_matches_file_inside_two_dirs() throws Exception {
-    var userModule =
-        """
+    var userModule = """
         result = [File(0x41, "dir/subdir/file.txt")] > filterFiles("*/*");
         """;
     createUserModule(userModule);
@@ -296,8 +275,7 @@ public class FilterFilesTest extends StandardLibraryTestContext {
 
   @Test
   void all_java_files_in_src_dir() throws Exception {
-    var userModule =
-        """
+    var userModule = """
         result = [File(0x41, "src/com/comp/Main.java")]
           > filterFiles("src/**/*.java");
         """;

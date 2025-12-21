@@ -17,9 +17,7 @@ public class SPolyReferenceTest extends FrontendCompilerTestContext {
   @Test
   void to_string() {
     var reference = new SPolyReference(sScheme(sIntType()), fqn("referenced"), location(7));
-    assertThat(reference.toString())
-        .isEqualTo(
-            """
+    assertThat(reference.toString()).isEqualTo("""
             SPolyReference(
               typeScheme = <>Int
               referencedName = referenced

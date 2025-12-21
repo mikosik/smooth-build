@@ -13,9 +13,7 @@ public class STypeDefinitionTest extends FrontendCompilerTestContext {
     var type = sStructType(fqn.parts().last().toString(), sIntType(), sBoolType());
     var structTypeDefinition = new STypeDefinition(type, fqn, location());
 
-    assertThat(structTypeDefinition.toSourceCode())
-        .isEqualTo(
-            """
+    assertThat(structTypeDefinition.toSourceCode()).isEqualTo("""
         MyStruct {
           Int param0,
           Bool param1,

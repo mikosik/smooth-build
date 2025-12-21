@@ -20,9 +20,7 @@ public class SCallTest extends FrontendCompilerTestContext {
   void to_string() {
     var funcS = sInstantiate(4, idSFunc(), list(sIntType()));
     var callS = sCall(3, funcS, sInt(3, 7));
-    assertThat(callS.toString())
-        .isEqualTo(
-            """
+    assertThat(callS.toString()).isEqualTo("""
             SCall(
               callee = SInstantiate(
                 typeArgs = <Int>

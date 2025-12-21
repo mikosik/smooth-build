@@ -106,9 +106,7 @@ public class BCallTest extends VmTestContext {
   void to_string() throws Exception {
     var lambda = bLambda(list(bStringType()), bInt());
     var call = bCall(lambda, bString());
-    assertThat(call.toString())
-        .isEqualTo(
-            """
+    assertThat(call.toString()).isEqualTo("""
         BCall(
           hash = 3b252948eca848beff114959af5f9fe1e39fbf0a01279dd66b52d5f008f2fcc9
           evaluationType = Int

@@ -38,9 +38,7 @@ public class TraceTest extends CommonTestContext {
     @Test
     void with_3_trace_points() {
       var trace = trace(line("first", line("second", line("third", null))));
-      assertThat(trace.toString())
-          .isEqualTo(
-              """
+      assertThat(trace.toString()).isEqualTo("""
               @ {t-alias}/path:17 first
               @ {t-alias}/path:17 second
               @ {t-alias}/path:17 third""");

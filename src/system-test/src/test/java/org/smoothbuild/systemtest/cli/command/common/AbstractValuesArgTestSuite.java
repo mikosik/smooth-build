@@ -22,8 +22,7 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestContext {
             """);
     var output = runSmooth(new CommandWithArgs(commandName(), "unknownValue"));
     output.assertFinishedWithError();
-    output.assertSystemOutContains(
-        """
+    output.assertSystemOutContains("""
             :evaluator:findValues
               [ERROR] Unknown value `unknownValue`.
               Try 'smooth list' to see all available values that can be calculated.\
@@ -65,14 +64,12 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestContext {
 
   @Test
   void func_that_requires_args_prints_error() throws Exception {
-    createUserModule(
-        """
+    createUserModule("""
             String testStringIdentity(String value) = value;
             """);
     var output = runSmooth(new CommandWithArgs(commandName(), "testStringIdentity"));
     output.assertFinishedWithError();
-    output.assertSystemOutContains(
-        """
+    output.assertSystemOutContains("""
         :evaluator:findValues
           [ERROR] `testStringIdentity` cannot be calculated as it is not a value but a function.
         """);
@@ -80,14 +77,12 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestContext {
 
   @Test
   void func_which_all_params_are_optional_prints_error() throws Exception {
-    createUserModule(
-        """
+    createUserModule("""
             String testStringIdentity(String value = "default") = value;
             """);
     var output = runSmooth(new CommandWithArgs(commandName(), "testStringIdentity"));
     output.assertFinishedWithError();
-    output.assertSystemOutContains(
-        """
+    output.assertSystemOutContains("""
         :evaluator:findValues
           [ERROR] `testStringIdentity` cannot be calculated as it is not a value but a function.
         """);

@@ -13,8 +13,7 @@ public abstract class AbstractLogLevelOptionTestSuite extends SystemTestContext 
             """);
     var output = whenSmoothCommandWithOption("--filter-logs=wrong_value");
     output.assertFinishedWithError();
-    output.assertSystemErrContains(
-        """
+    output.assertSystemErrContains("""
         Invalid value for option '--filter-logs': expected one of {f,fatal,e,error,w,warning,i,info} (case-sensitive) but was 'wrong_value'
 
         Usage:""");

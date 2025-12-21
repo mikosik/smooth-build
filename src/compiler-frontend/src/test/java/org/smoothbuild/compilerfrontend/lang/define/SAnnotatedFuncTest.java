@@ -14,9 +14,7 @@ public class SAnnotatedFuncTest extends FrontendCompilerTestContext {
     var resultType = sStringType();
     var annotation = sNativeAnnotation("path");
     var func = new SAnnotatedFunc(annotation, resultType, fqn("myFunc"), params, location(1));
-    assertThat(func.toSourceCode())
-        .isEqualTo(
-            """
+    assertThat(func.toSourceCode()).isEqualTo("""
         @Native("path")
         String myFunc(A p1, Int p2 = default:value);""");
   }
@@ -27,9 +25,7 @@ public class SAnnotatedFuncTest extends FrontendCompilerTestContext {
     var resultType = sStringType();
     var func =
         new SAnnotatedFunc(sNativeAnnotation(), resultType, fqn("myFunc"), params, location(1));
-    assertThat(func.toString())
-        .isEqualTo(
-            """
+    assertThat(func.toString()).isEqualTo("""
                 SAnnotatedFunc(
                   annotation = SAnnotation(
                     name = Native

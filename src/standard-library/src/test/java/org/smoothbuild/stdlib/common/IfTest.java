@@ -21,8 +21,7 @@ public class IfTest extends StandardLibraryTestContext {
 
   @Test
   void if_returns_second_value_when_condition_is_false() throws Exception {
-    createUserModule(
-        """
+    createUserModule("""
             result = if(false, "then clause", "else clause");
             """);
     evaluate("result");
@@ -31,13 +30,11 @@ public class IfTest extends StandardLibraryTestContext {
 
   @Test
   void first_value_should_not_be_evaluated_when_condition_is_false() throws Exception {
-    var userModule = format(
-        """
+    var userModule = format("""
             @Native("%s")
             A throwException<A>();
             result = if(false, throwException(), "else clause");
-            """,
-        ThrowException.class.getCanonicalName());
+            """, ThrowException.class.getCanonicalName());
     createUserModule(userModule, ThrowException.class);
     evaluate("result");
     assertThat(artifact()).isEqualTo(bString("else clause"));
@@ -45,13 +42,11 @@ public class IfTest extends StandardLibraryTestContext {
 
   @Test
   void second_value_should_not_be_evaluated_when_condition_is_true() throws Exception {
-    var userModule = format(
-        """
+    var userModule = format("""
             @Native("%s")
             A throwException<A>();
             result = if(true, "then clause", throwException());
-            """,
-        ThrowException.class.getCanonicalName());
+            """, ThrowException.class.getCanonicalName());
     createUserModule(userModule, ThrowException.class);
     evaluate("result");
     assertThat(artifact()).isEqualTo(bString("then clause"));
@@ -61,13 +56,11 @@ public class IfTest extends StandardLibraryTestContext {
   class in_if_nested_inside_other_if {
     @Test
     void first_value_should_not_be_evaluated_when_condition_is_false() throws Exception {
-      var userModule = format(
-          """
+      var userModule = format("""
               @Native("%s")
               A throwException<A>();
               result = if(true, if(false, throwException(), "else clause"), "ignored");
-              """,
-          ThrowException.class.getCanonicalName());
+              """, ThrowException.class.getCanonicalName());
       createUserModule(userModule, ThrowException.class);
       evaluate("result");
       assertThat(artifact()).isEqualTo(bString("else clause"));
@@ -75,13 +68,11 @@ public class IfTest extends StandardLibraryTestContext {
 
     @Test
     void second_value_should_not_be_evaluated_when_condition_is_true() throws Exception {
-      var userModule = format(
-          """
+      var userModule = format("""
               @Native("%s")
               A throwException<A>();
               result = if(true, if(true, "then clause", throwException()), "ignored");
-              """,
-          ThrowException.class.getCanonicalName());
+              """, ThrowException.class.getCanonicalName());
       createUserModule(userModule, ThrowException.class);
       evaluate("result");
       assertThat(artifact()).isEqualTo(bString("then clause"));

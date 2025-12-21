@@ -50,9 +50,7 @@ public class BIntTest extends VmTestContext {
   @Test
   void to_string_contains_int_value() throws Exception {
     var i = bInt(123);
-    assertThat(i.toString())
-        .isEqualTo(
-            """
+    assertThat(i.toString()).isEqualTo("""
         BInt(
           hash = 93732fe5fe66367d4161983150001f77efefc7b98a4d965769e20ee7abb1fa46
           type = Int

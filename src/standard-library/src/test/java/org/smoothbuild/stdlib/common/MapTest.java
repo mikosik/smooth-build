@@ -18,8 +18,7 @@ public class MapTest extends StandardLibraryTestContext {
 
   @Test
   void mapping_files_to_path() throws Exception {
-    var code =
-        """
+    var code = """
         files = [File(0x01, "test01.txt"), File(0x02, "test02.txt")];
         pathOf(File file) = file.path;
         result = map(files, pathOf);

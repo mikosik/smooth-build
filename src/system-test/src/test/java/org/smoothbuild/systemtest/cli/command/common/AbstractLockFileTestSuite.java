@@ -15,13 +15,11 @@ public abstract class AbstractLockFileTestSuite extends SystemTestContext {
   @Test
   void command_fails_when_lock_file_is_already_acquired() throws Exception {
     createNativeJar(Sleep3s.class);
-    createUserModule(format(
-        """
+    createUserModule(format("""
             @Native("%s")
             String sleep3s();
             result = sleep3s();
-            """,
-        Sleep3s.class.getCanonicalName()));
+            """, Sleep3s.class.getCanonicalName()));
 
     SystemTestContext otherTest = new SystemTestContext() {};
     otherTest.init(projectDirAbsolutePath());

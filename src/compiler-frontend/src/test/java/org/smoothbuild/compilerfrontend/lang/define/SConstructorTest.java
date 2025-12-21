@@ -11,9 +11,7 @@ public class SConstructorTest extends FrontendCompilerTestContext {
   void to_string() {
     var structTS = sStructType("MyStruct", nlist(sSig(sIntType(), "field")));
     var constructorS = sConstructor(17, structTS, "constructorName");
-    assertThat(constructorS.toString())
-        .isEqualTo(
-            """
+    assertThat(constructorS.toString()).isEqualTo("""
             SConstructor(
               fqn = constructorName
               type = (Int)->MyStruct

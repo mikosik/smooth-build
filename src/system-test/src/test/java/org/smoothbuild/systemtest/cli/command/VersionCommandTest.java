@@ -25,9 +25,7 @@ public class VersionCommandTest {
       var output = runSmoothVersion();
       output.assertFinishedWithSuccess();
       var systemOutWithReplacedHashes = output.systemOut().replaceAll("[0-9a-f]{64}", "HASH");
-      assertThat(systemOutWithReplacedHashes)
-          .contains(
-              """
+      assertThat(systemOutWithReplacedHashes).contains("""
           installation HASH
             smooth.jar HASH
             standard libraries HASH

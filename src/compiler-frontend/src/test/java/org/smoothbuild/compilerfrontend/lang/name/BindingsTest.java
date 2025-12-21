@@ -46,9 +46,7 @@ public class BindingsTest {
       var empty = Bindings.<Element>bindings();
       var outer = newBindings(empty, element("valueA", 7), element("valueB", 8));
       var inner = newBindings(outer, element("valueC", 9));
-      assertThat(inner.toString())
-          .isEqualTo(
-              """
+      assertThat(inner.toString()).isEqualTo("""
               <empty bindings>
                 valueA -> Element[name=valueA, value=7]
                 valueB -> Element[name=valueB, value=8]

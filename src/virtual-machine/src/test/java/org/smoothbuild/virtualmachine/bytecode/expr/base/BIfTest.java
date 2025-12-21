@@ -88,9 +88,7 @@ public class BIfTest extends VmTestContext {
   @Test
   void to_string() throws Exception {
     var bIf = bIf(bBool(true), bInt(1), bInt(2));
-    assertThat(bIf.toString())
-        .isEqualTo(
-            """
+    assertThat(bIf.toString()).isEqualTo("""
         BIf(
           hash = ae2abb3bad2420d56b3777571d60d2b9086d8153d22d332e7da71918e7f830de
           evaluationType = Int

@@ -18,9 +18,7 @@ public class SNamedExprValueTest extends FrontendCompilerTestContext {
   @Test
   void to_string() {
     var value = new SNamedExprValue(sStringType(), fqn("myVal"), sInt(9), location(7));
-    assertThat(value.toString())
-        .isEqualTo(
-            """
+    assertThat(value.toString()).isEqualTo("""
             SNamedExprValue(
               type = String
               fqn = myVal

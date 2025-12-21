@@ -94,9 +94,7 @@ public class BPickTest extends VmTestContext {
   @Test
   void to_string() throws Exception {
     var pick = bPick(bArray(bInt(17)), bInt(0));
-    assertThat(pick.toString())
-        .isEqualTo(
-            """
+    assertThat(pick.toString()).isEqualTo("""
         BPick(
           hash = 2a3ee0490047c831fed1b6bade199fc3c9f79d10b33e705a945a5eb171b0b385
           evaluationType = Int

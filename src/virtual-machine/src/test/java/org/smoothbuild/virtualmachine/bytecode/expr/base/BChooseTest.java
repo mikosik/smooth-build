@@ -107,9 +107,7 @@ public class BChooseTest extends VmTestContext {
   @Test
   void to_string() throws Exception {
     var choose = bChoose();
-    assertThat(choose.toString())
-        .isEqualTo(
-            """
+    assertThat(choose.toString()).isEqualTo("""
         BChoose(
           hash = caec4416a98ec12639f2b26ee748efcb87b40207d1061ad0487eee1a1398b3f5
           evaluationType = {String|Int}

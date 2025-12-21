@@ -31,8 +31,7 @@ public class MavenArtifactFunc {
     try {
       var response = httpClient.send(httpRequest(coordinate.url()), ofInputStream());
       if (response.statusCode() != 200) {
-        var template =
-            """
+        var template = """
             Failed to download Maven artifact %s
             from %s
             Status code: %d""";

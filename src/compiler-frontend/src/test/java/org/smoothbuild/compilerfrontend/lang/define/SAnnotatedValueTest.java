@@ -12,8 +12,7 @@ public class SAnnotatedValueTest extends FrontendCompilerTestContext {
     var annotationS = new SAnnotation("MyAnnotation", sString(7, "myPath"), location(17));
     var annotatedValueS =
         new SAnnotatedValue(annotationS, varA(), fqn("module:myValue"), location(7));
-    assertThat(annotatedValueS.toSourceCode())
-        .isEqualTo("""
+    assertThat(annotatedValueS.toSourceCode()).isEqualTo("""
           @MyAnnotation("myPath")
           A myValue;""");
   }
@@ -23,9 +22,7 @@ public class SAnnotatedValueTest extends FrontendCompilerTestContext {
     var annotationS = new SAnnotation("myAnnotation", sString(7, "myPath"), location(17));
     var annotatedValueS =
         new SAnnotatedValue(annotationS, sStringType(), fqn("myVal"), location(7));
-    assertThat(annotatedValueS.toString())
-        .isEqualTo(
-            """
+    assertThat(annotatedValueS.toString()).isEqualTo("""
             SAnnotatedValue(
               annotation = SAnnotation(
                 name = myAnnotation

@@ -13,9 +13,7 @@ public class SIntTest extends FrontendCompilerTestContext {
 
   @Test
   void to_string() {
-    assertThat(sInt(7, 16).toString())
-        .isEqualTo(
-            """
+    assertThat(sInt(7, 16).toString()).isEqualTo("""
         SInt(
           type = Int
           bigInteger = 16

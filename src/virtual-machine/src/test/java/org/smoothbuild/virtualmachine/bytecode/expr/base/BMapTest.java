@@ -94,9 +94,7 @@ public class BMapTest extends VmTestContext {
   @Test
   void to_string() throws Exception {
     var map = bMap(bArray(bInt()), bIntIdLambda());
-    assertThat(map.toString())
-        .isEqualTo(
-            """
+    assertThat(map.toString()).isEqualTo("""
         BMap(
           hash = 03dfaa1ba8fb539e33af03360e83237a69d3152fd8c4181eefd3166280c25574
           evaluationType = [Int]

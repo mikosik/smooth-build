@@ -21,8 +21,7 @@ import org.smoothbuild.virtualmachine.bytecode.helper.FileStruct;
 public class JavacTest extends StandardLibraryTestContext {
   @Test
   void error_is_logged_when_compilation_error_occurs() throws Exception {
-    var userModule =
-        """
+    var userModule = """
         result = [File(toBlob("public private class MyClass {}"), "MyClass.java")]
           > javac();
         """;
@@ -43,8 +42,7 @@ public class JavacTest extends StandardLibraryTestContext {
 
   @Test
   void one_file_can_be_compiled() throws Exception {
-    var userModule =
-        """
+    var userModule = """
         javaSource = "public class MyClass { public static String myMethod() {return \\"test-string\\";}}";
         result = [File(toBlob(javaSource), "MyClass.java")] > javac();
         """;
@@ -59,15 +57,12 @@ public class JavacTest extends StandardLibraryTestContext {
 
   @Test
   void one_file_with_library_dependency_can_be_compiled() throws Exception {
-    var userModule =
-        """
+    var userModule = """
         libraryJar = files("srclib") > javac() > jar() > File("library.jar");
         result = concat([(files("src") > javac(libs = [libraryJar])), javac(files("srclib"))]);
         """;
     createUserModule(userModule);
-    createProjectFile(
-        "src/MyClass.java",
-        """
+    createProjectFile("src/MyClass.java", """
         import library.LibraryClass;
         public class MyClass {
           public static String myMethod() {
@@ -75,9 +70,7 @@ public class JavacTest extends StandardLibraryTestContext {
           }
         }
         """);
-    createProjectFile(
-        "srclib/library/LibraryClass.java",
-        """
+    createProjectFile("srclib/library/LibraryClass.java", """
         package library;
         public class LibraryClass {
           public static int add(int a, int b) {
@@ -96,8 +89,7 @@ public class JavacTest extends StandardLibraryTestContext {
 
   @Test
   void duplicate_java_files_cause_error() throws Exception {
-    var userModule =
-        """
+    var userModule = """
         classFile = File(toBlob("public class MyClass {}"), "MyClass.java");
         result = [classFile, classFile] > javac();
         """;

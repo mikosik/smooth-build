@@ -65,9 +65,7 @@ public class BCombineTest extends VmTestContext {
   @Test
   void to_string() throws Exception {
     var combine = bCombine(bInt(1));
-    assertThat(combine.toString())
-        .isEqualTo(
-            """
+    assertThat(combine.toString()).isEqualTo("""
         BCombine(
           hash = 06a264a951d27e6953fa12a624922cea7cbfd03ff7af071c9b7464990b20dc3b
           evaluationType = {Int}

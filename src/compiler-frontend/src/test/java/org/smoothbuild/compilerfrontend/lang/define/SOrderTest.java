@@ -15,9 +15,7 @@ public class SOrderTest extends FrontendCompilerTestContext {
   @Test
   void to_string() {
     var orderS = sOrder(3, sInt(4, 44), sInt(5, 55));
-    assertThat(orderS.toString())
-        .isEqualTo(
-            """
+    assertThat(orderS.toString()).isEqualTo("""
             SOrder(
               evaluationType = [Int]
               elements = [

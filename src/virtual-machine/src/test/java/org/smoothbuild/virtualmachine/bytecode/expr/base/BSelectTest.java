@@ -102,9 +102,7 @@ public class BSelectTest extends VmTestContext {
   @Test
   void to_string() throws Exception {
     var select = bSelect(bAnimal(), bInt(0));
-    assertThat(select.toString())
-        .isEqualTo(
-            """
+    assertThat(select.toString()).isEqualTo("""
         BSelect(
           hash = b4c6333d5e5eddbaf6cc10f5f2ea298d7b7c163f71632dc7842c306f5f896d66
           evaluationType = String

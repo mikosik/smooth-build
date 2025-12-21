@@ -124,9 +124,7 @@ public class BSwitchTest extends VmTestContext {
   @Test
   void to_string() throws Exception {
     var switch_ = bSwitch(bChoice(), bCombine(bs2iLambda(), bi2iLambda()));
-    assertThat(switch_.toString())
-        .isEqualTo(
-            """
+    assertThat(switch_.toString()).isEqualTo("""
         BSwitch(
           hash = f614d35874aeaf5899d6fe657b35e5845e530ee0cda1d35a6c33ba0416e2bf64
           evaluationType = Int

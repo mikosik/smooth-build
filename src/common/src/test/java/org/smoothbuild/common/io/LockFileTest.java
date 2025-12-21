@@ -43,10 +43,7 @@ public class LockFileTest {
     void when_it_is_already_acquired_by_our_jvm(@TempDir Path tempDir) {
       Path lockFile = tempDir.resolve("lockFile");
       assertThat(lockFile(writer, lockFile)).isInstanceOf(Result.Ok.class);
-      assertThat(lockFile(writer, lockFile))
-          .isEqualTo(
-              Result.err(
-                  """
+      assertThat(lockFile(writer, lockFile)).isEqualTo(Result.err("""
           Another instance of smooth is running for this project.
           And it is running in the same JVM.
           OverlappingFileLockException: null"""));

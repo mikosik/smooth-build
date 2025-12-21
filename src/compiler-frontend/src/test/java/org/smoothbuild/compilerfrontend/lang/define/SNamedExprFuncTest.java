@@ -13,8 +13,7 @@ public class SNamedExprFuncTest extends FrontendCompilerTestContext {
     var params = nlist(sItem(varA(), "p1"), sItem(sIntType(), "p2", "default:value"));
     var resultType = sStringType();
     var func = new SNamedExprFunc(resultType, fqn("module:myFunc"), params, sInt(17), location(1));
-    assertThat(func.toSourceCode())
-        .isEqualTo("""
+    assertThat(func.toSourceCode()).isEqualTo("""
         String myFunc(A p1, Int p2 = default:value)
           = 17;""");
   }
@@ -24,9 +23,7 @@ public class SNamedExprFuncTest extends FrontendCompilerTestContext {
     var params = nlist(sItem(sIntType(), "myParam"));
     var resultType = sStringType();
     var func = new SNamedExprFunc(resultType, fqn("myFunc"), params, sInt(17), location(1));
-    assertThat(func.toString())
-        .isEqualTo(
-            """
+    assertThat(func.toString()).isEqualTo("""
             SNamedExprFunc(
               fqn = myFunc
               type = (Int)->String

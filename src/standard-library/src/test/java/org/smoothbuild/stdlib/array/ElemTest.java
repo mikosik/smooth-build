@@ -39,8 +39,7 @@ public class ElemTest extends StandardLibraryTestContext {
 
   @Test
   void negative_index_causes_exception() throws Exception {
-    createUserModule(
-        """
+    createUserModule("""
             result = elem(["first", "second", "third"], -1);
             """);
     evaluate("result");

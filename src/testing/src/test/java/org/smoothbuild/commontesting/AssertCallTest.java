@@ -15,9 +15,7 @@ public class AssertCallTest {
       try {
         assertCall(() -> {}).throwsException(IllegalStateException.class);
       } catch (AssertionError e) {
-        assertThat(e.getMessage())
-            .isEqualTo(
-                """
+        assertThat(e.getMessage()).isEqualTo("""
                 expected call to throw: java.lang.IllegalStateException
                 but was               : nothing thrown""");
         return;
@@ -33,9 +31,7 @@ public class AssertCallTest {
             })
             .throwsException(IllegalStateException.class);
       } catch (AssertionError e) {
-        assertThat(e.getMessage())
-            .isEqualTo(
-                """
+        assertThat(e.getMessage()).isEqualTo("""
                 expected call to throw: java.lang.IllegalStateException
                 but was               : java.lang.RuntimeException""");
         return;
@@ -63,9 +59,7 @@ public class AssertCallTest {
       try {
         assertCall(() -> {}).throwsException(new IllegalStateException("desired message"));
       } catch (AssertionError e) {
-        assertThat(e.getMessage())
-            .isEqualTo(
-                """
+        assertThat(e.getMessage()).isEqualTo("""
                 expected call to throw: java.lang.IllegalStateException
                 but was               : nothing thrown""");
         return;
@@ -81,9 +75,7 @@ public class AssertCallTest {
             })
             .throwsException(new IllegalStateException("desired message"));
       } catch (AssertionError e) {
-        assertThat(e.getMessage())
-            .isEqualTo(
-                """
+        assertThat(e.getMessage()).isEqualTo("""
                     expected call to throw: java.lang.IllegalStateException
                     but was               : java.lang.RuntimeException""");
         return;
@@ -99,9 +91,7 @@ public class AssertCallTest {
             })
             .throwsException(new IllegalStateException("desired message"));
       } catch (AssertionError e) {
-        assertThat(e.getMessage())
-            .isEqualTo(
-                """
+        assertThat(e.getMessage()).isEqualTo("""
                 expected call to throw: java.lang.IllegalStateException
                 with message          : desired message
                 but was message       : real message""");
@@ -134,9 +124,7 @@ public class AssertCallTest {
             .throwsException(IllegalStateException.class)
             .withCause(IllegalArgumentException.class);
       } catch (AssertionError e) {
-        assertThat(e.getMessage())
-            .isEqualTo(
-                """
+        assertThat(e.getMessage()).isEqualTo("""
                 expected call to throw: java.lang.IllegalStateException
                 with cause            : java.lang.IllegalArgumentException
                 but was exception without cause""");
@@ -155,9 +143,7 @@ public class AssertCallTest {
             .throwsException(IllegalStateException.class)
             .withCause(IllegalArgumentException.class);
       } catch (AssertionError e) {
-        assertThat(e.getMessage())
-            .isEqualTo(
-                """
+        assertThat(e.getMessage()).isEqualTo("""
                 expected call to throw: java.lang.IllegalStateException
                 with cause            : java.lang.IllegalArgumentException
                 but was cause         : java.lang.ArithmeticException""");
@@ -192,9 +178,7 @@ public class AssertCallTest {
             .throwsException(new IllegalStateException("main message"))
             .withCause(IllegalArgumentException.class);
       } catch (AssertionError e) {
-        assertThat(e.getMessage())
-            .isEqualTo(
-                """
+        assertThat(e.getMessage()).isEqualTo("""
                 expected call to throw: java.lang.IllegalStateException
                 with message          : main message
                 with cause            : java.lang.IllegalArgumentException
@@ -214,9 +198,7 @@ public class AssertCallTest {
             .throwsException(new IllegalStateException("main message"))
             .withCause(IllegalArgumentException.class);
       } catch (AssertionError e) {
-        assertThat(e.getMessage())
-            .isEqualTo(
-                """
+        assertThat(e.getMessage()).isEqualTo("""
                 expected call to throw: java.lang.IllegalStateException
                 with message          : main message
                 with cause            : java.lang.IllegalArgumentException
@@ -252,9 +234,7 @@ public class AssertCallTest {
             .throwsException(IllegalStateException.class)
             .withCause(new IllegalArgumentException("cause message"));
       } catch (AssertionError e) {
-        assertThat(e.getMessage())
-            .isEqualTo(
-                """
+        assertThat(e.getMessage()).isEqualTo("""
                 expected call to throw: java.lang.IllegalStateException
                 with cause            : java.lang.IllegalArgumentException
                 but was exception without cause""");
@@ -273,9 +253,7 @@ public class AssertCallTest {
             .throwsException(IllegalStateException.class)
             .withCause(new IllegalArgumentException("cause message"));
       } catch (AssertionError e) {
-        assertThat(e.getMessage())
-            .isEqualTo(
-                """
+        assertThat(e.getMessage()).isEqualTo("""
                 expected call to throw: java.lang.IllegalStateException
                 with cause            : java.lang.IllegalArgumentException
                 but was cause         : java.lang.ArithmeticException""");
@@ -294,9 +272,7 @@ public class AssertCallTest {
             .throwsException(IllegalStateException.class)
             .withCause(new IllegalArgumentException("cause message"));
       } catch (AssertionError e) {
-        assertThat(e.getMessage())
-            .isEqualTo(
-                """
+        assertThat(e.getMessage()).isEqualTo("""
                 expected call to throw: java.lang.IllegalStateException
                 with cause            : java.lang.IllegalArgumentException
                 with message          : cause message
@@ -332,9 +308,7 @@ public class AssertCallTest {
             .throwsException(new IllegalStateException("main message"))
             .withCause(new IllegalArgumentException("cause message"));
       } catch (AssertionError e) {
-        assertThat(e.getMessage())
-            .isEqualTo(
-                """
+        assertThat(e.getMessage()).isEqualTo("""
                 expected call to throw: java.lang.IllegalStateException
                 with message          : main message
                 with cause            : java.lang.IllegalArgumentException
@@ -354,9 +328,7 @@ public class AssertCallTest {
             .throwsException(new IllegalStateException("main message"))
             .withCause(new IllegalArgumentException("cause message"));
       } catch (AssertionError e) {
-        assertThat(e.getMessage())
-            .isEqualTo(
-                """
+        assertThat(e.getMessage()).isEqualTo("""
                 expected call to throw: java.lang.IllegalStateException
                 with message          : main message
                 with cause            : java.lang.IllegalArgumentException
@@ -376,9 +348,7 @@ public class AssertCallTest {
             .throwsException(new IllegalStateException("main message"))
             .withCause(new IllegalArgumentException("cause message"));
       } catch (AssertionError e) {
-        assertThat(e.getMessage())
-            .isEqualTo(
-                """
+        assertThat(e.getMessage()).isEqualTo("""
                 expected call to throw: java.lang.IllegalStateException
                 with message          : main message
                 with cause            : java.lang.IllegalArgumentException

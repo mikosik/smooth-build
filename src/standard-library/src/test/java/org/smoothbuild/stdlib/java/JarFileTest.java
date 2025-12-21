@@ -8,8 +8,7 @@ import org.smoothbuild.stdlib.StandardLibraryTestContext;
 public class JarFileTest extends StandardLibraryTestContext {
   @Test
   void jar_unjar() throws Exception {
-    var userModule =
-        """
+    var userModule = """
         aFile =
             [File(0x41, "dir/file1.txt"), File(0x42, "file2.txt")]
           > jarFile("file.jar");

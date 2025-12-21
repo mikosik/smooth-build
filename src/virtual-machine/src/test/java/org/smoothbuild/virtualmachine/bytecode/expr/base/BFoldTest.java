@@ -127,9 +127,7 @@ public class BFoldTest extends VmTestContext {
   @Test
   void to_string() throws Exception {
     var fold = bFold(bArray(bInt(17)), bInt(0), bii2iLambda());
-    assertThat(fold.toString())
-        .isEqualTo(
-            """
+    assertThat(fold.toString()).isEqualTo("""
         BFold(
           hash = e18ebb2da7e69fc73952e5676a8aa07176c8117607a46071eebdc21c1e27d72b
           evaluationType = Int

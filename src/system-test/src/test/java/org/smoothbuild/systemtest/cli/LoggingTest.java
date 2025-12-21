@@ -47,35 +47,29 @@ public class LoggingTest extends SystemTestContext {
 
   private static void createModuleWithError(SystemTestContext testCase) throws IOException {
     testCase.createNativeJar(ReportError.class);
-    testCase.createUserModule(format(
-        """
+    testCase.createUserModule(format("""
             @Native("%s")
             A reportError<A>(String message);
             Int result = reportError("%s");
-            """,
-        ReportError.class.getCanonicalName(), LOG_MESSAGE));
+            """, ReportError.class.getCanonicalName(), LOG_MESSAGE));
   }
 
   private static void createModuleWithWarning(SystemTestContext testCase) throws IOException {
     testCase.createNativeJar(ReportWarning.class);
-    testCase.createUserModule(format(
-        """
+    testCase.createUserModule(format("""
             @Native("%s")
             String reportWarning(String message);
             result = reportWarning("%s");
-            """,
-        ReportWarning.class.getCanonicalName(), LOG_MESSAGE));
+            """, ReportWarning.class.getCanonicalName(), LOG_MESSAGE));
   }
 
   private static void createModuleWithInfo(SystemTestContext testCase) throws IOException {
     testCase.createNativeJar(ReportInfo.class);
-    testCase.createUserModule(format(
-        """
+    testCase.createUserModule(format("""
             @Native("%s")
             String reportInfo(String message);
             result = reportInfo("%s");
-            """,
-        ReportInfo.class.getCanonicalName(), LOG_MESSAGE));
+            """, ReportInfo.class.getCanonicalName(), LOG_MESSAGE));
   }
 
   @FunctionalInterface

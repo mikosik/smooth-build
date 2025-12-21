@@ -15,9 +15,7 @@ public class SCombineTest extends FrontendCompilerTestContext {
   @Test
   void to_string() {
     var sCombine = sCombine(sInt(7), sString("abc"));
-    assertThat(sCombine.toString())
-        .isEqualTo(
-            """
+    assertThat(sCombine.toString()).isEqualTo("""
         SCombine(
           evaluationType = {Int,String}
           elements = [

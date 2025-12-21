@@ -52,11 +52,7 @@ public class MavenArtifactFuncTest extends VmTestContext {
         httpClient);
 
     assertThat(result).isNull();
-    assertThat(nativeApi.messages())
-        .isEqualTo(
-            bArray(
-                bFatalLog(
-                    """
+    assertThat(nativeApi.messages()).isEqualTo(bArray(bFatalLog("""
                 Failed to download Maven artifact com.example:library:1.0.0
                 from https://repo1.maven.org/maven2/com/example/library/1.0.0/library-1.0.0.jar
                 Status code: 404""")));

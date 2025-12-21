@@ -40,9 +40,7 @@ public class SItemTest extends FrontendCompilerTestContext {
   @Test
   void to_string() {
     var param = new SItem(sStringType(), name, none(), location());
-    assertThat(param.toString())
-        .isEqualTo(
-            """
+    assertThat(param.toString()).isEqualTo("""
             SItem(
               type = String
               fqn = myFunc:name

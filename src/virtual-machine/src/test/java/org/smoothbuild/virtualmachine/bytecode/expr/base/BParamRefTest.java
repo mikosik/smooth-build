@@ -55,9 +55,7 @@ public class BParamRefTest extends VmTestContext {
   @Test
   void to_string() throws Exception {
     var paramRef = bParamRef(bIntType(), 123);
-    assertThat(paramRef.toString())
-        .isEqualTo(
-            """
+    assertThat(paramRef.toString()).isEqualTo("""
         BParamRef(
           hash = 835fd9277c4aa2efb281e2e777cc65e74be8d939758e7454a4a6041c47aa4887
           evaluationType = Int

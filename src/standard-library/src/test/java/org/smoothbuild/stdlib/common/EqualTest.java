@@ -120,8 +120,7 @@ public class EqualTest extends StandardLibraryTestContext {
   class _struct {
     @Test
     void struct_is_equal_to_itself() throws Exception {
-      var userModule =
-          """
+      var userModule = """
           Person {
             String firstName,
             String secondName,
@@ -135,8 +134,7 @@ public class EqualTest extends StandardLibraryTestContext {
 
     @Test
     void struct_is_not_equal_to_the_same_struct_with_different_field_value() throws Exception {
-      var userModule =
-          """
+      var userModule = """
           Person {
             String firstName,
             String secondName,

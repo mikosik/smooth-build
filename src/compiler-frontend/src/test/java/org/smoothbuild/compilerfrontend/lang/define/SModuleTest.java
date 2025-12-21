@@ -18,9 +18,7 @@ public class SModuleTest extends FrontendCompilerTestContext {
     var scope = new SScope(bindings(), bindings());
     var types = map(struct, structDefinition);
     var evaluables = map(func, idSFunc());
-    assertThat(new SModule(types, evaluables, scope).toSourceCode())
-        .isEqualTo(
-            """
+    assertThat(new SModule(types, evaluables, scope).toSourceCode()).isEqualTo("""
             MyStruct {
               Int param0,
             }

@@ -24,9 +24,7 @@ public class ReportPrinterTest extends CommonTestContext {
         DISK,
         logsWithAllLevels());
 
-    assertThat(stringWriter.toString())
-        .isEqualTo(
-            """
+    assertThat(stringWriter.toString()).isEqualTo("""
             :labelName                                                              d-cache
               @ {t-alias}/path:17 called
               [FATAL] fatal message
@@ -43,9 +41,7 @@ public class ReportPrinterTest extends CommonTestContext {
 
     printWriterReporter.print(label(":labelName"), none(), DISK, logsWithAllLevels());
 
-    assertThat(stringWriter.toString())
-        .isEqualTo(
-            """
+    assertThat(stringWriter.toString()).isEqualTo("""
             :labelName                                                              d-cache
               [FATAL] fatal message
               [ERROR] error message
@@ -62,9 +58,7 @@ public class ReportPrinterTest extends CommonTestContext {
     printWriterReporter.print(label(":labelA"), none(), DISK, logsWithAllLevels());
     printWriterReporter.print(label(":labelB"), none(), DISK, logsWithAllLevels());
 
-    assertThat(stringWriter.toString())
-        .isEqualTo(
-            """
+    assertThat(stringWriter.toString()).isEqualTo("""
             :labelA                                                                 d-cache
               [FATAL] fatal message
               [ERROR] error message

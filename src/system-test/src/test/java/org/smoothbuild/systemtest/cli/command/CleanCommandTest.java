@@ -58,8 +58,7 @@ public class CleanCommandTest {
       var output = runSmoothClean("some", "arguments");
       output.assertFinishedWithError();
       output.assertSystemErrContains("Unmatched arguments from index");
-      output.assertSystemErrContains(
-          """
+      output.assertSystemErrContains("""
           Usage:
           smooth clean [-l=<level>]
           Try 'smooth help clean' for more information.

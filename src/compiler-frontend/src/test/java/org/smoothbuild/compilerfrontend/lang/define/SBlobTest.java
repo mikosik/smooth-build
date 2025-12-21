@@ -13,9 +13,7 @@ public class SBlobTest extends FrontendCompilerTestContext {
 
   @Test
   void to_string() {
-    assertThat(sBlob(7, 16).toString())
-        .isEqualTo(
-            """
+    assertThat(sBlob(7, 16).toString()).isEqualTo("""
         SBlob(
           type = Blob
           byteString = 0x10

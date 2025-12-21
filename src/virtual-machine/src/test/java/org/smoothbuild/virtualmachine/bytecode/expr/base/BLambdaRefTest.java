@@ -64,9 +64,7 @@ public class BLambdaRefTest extends VmTestContext {
   @Test
   void to_string() throws Exception {
     var reference = bLambdaRef(bLambdaType(bIntType()), bInt(1));
-    assertThat(reference.toString())
-        .isEqualTo(
-            """
+    assertThat(reference.toString()).isEqualTo("""
                 BLambdaRef(
                   hash = 7a6256a4193cb69b3b3016f0fe5ccf5723d557ee2f9a18e1cf00a818683f5b6c
                   evaluationType = ()->Int
