@@ -1,8 +1,10 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.base.ToStringBuilder;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
@@ -18,6 +20,8 @@ public final class BIf extends BOperation {
   private static final int THEN_INDEX = 1;
   private static final int ELSE_INDEX = 2;
 
+  private static final List<String> MEMBER_NAMES = list("condition", "then", "else");
+
   private final Function0<BSubExprs, BytecodeException> subExprs =
       Function0.memoizer(this::fetchAndValidateSubExprs);
 
@@ -27,7 +31,7 @@ public final class BIf extends BOperation {
   }
 
   private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
-    var members = members("condition", "then", "else");
+    var members = members(MEMBER_NAMES);
     var condition = members.get(CONDITION_INDEX).asExpr(kindDb().bool());
     var then_ = members.get(THEN_INDEX).asExpr(evaluationType());
     var else_ = members.get(ELSE_INDEX).asExpr(evaluationType());

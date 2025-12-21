@@ -1,8 +1,10 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.base.ToStringBuilder;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
@@ -15,6 +17,8 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BPickKind;
 public final class BPick extends BOperation {
   public static final int PICKABLE_INDEX = 0;
   public static final int INDEX_INDEX = 1;
+
+  private static final List<String> MEMBER_NAMES = list("pickable", "index");
 
   private final Function0<BSubExprs, BytecodeException> subExprs =
       Function0.memoizer(this::fetchAndValidateSubExprs);
@@ -30,7 +34,7 @@ public final class BPick extends BOperation {
   }
 
   private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
-    var members = members("pickable", "index");
+    var members = members(MEMBER_NAMES);
     var pickable = members.get(PICKABLE_INDEX).asExpr(kindDb().array(evaluationType()));
     var index = members.get(INDEX_INDEX).asExpr(kindDb().int_());
     return new BSubExprs(pickable, index);

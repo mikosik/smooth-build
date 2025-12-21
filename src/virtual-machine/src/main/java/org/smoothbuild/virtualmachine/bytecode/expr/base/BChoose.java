@@ -1,8 +1,10 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.base.ToStringBuilder;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
@@ -17,6 +19,8 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BChooseKind;
 public final class BChoose extends BOperation {
   public static final int INDEX_INDEX = 0;
   public static final int CHOSEN_INDEX = 1;
+
+  private static final List<String> MEMBER_NAMES = list("index", "chosen");
 
   private final Function0<BSubExprs, BytecodeException> subExprs =
       Function0.memoizer(this::fetchAndValidateSubExprs);
@@ -37,7 +41,7 @@ public final class BChoose extends BOperation {
   }
 
   private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
-    var members = members("index", "chosen");
+    var members = members(MEMBER_NAMES);
     var index = members.get(INDEX_INDEX).asInstanceOf(BInt.class);
 
     int i = index.toJavaBigInteger().intValue();

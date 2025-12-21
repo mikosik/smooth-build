@@ -1,8 +1,10 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.base.ToStringBuilder;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
@@ -16,6 +18,8 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 public final class BCall extends BOperation {
   private static final int LAMBDA_INDEX = 0;
   private static final int ARGUMENTS_INDEX = 1;
+
+  private static final List<String> MEMBER_NAMES = list("lambda", "arguments");
 
   private final Function0<BSubExprs, BytecodeException> subExprs =
       Function0.memoizer(this::fetchAndValidateSubExprs);
@@ -31,7 +35,7 @@ public final class BCall extends BOperation {
   }
 
   private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
-    var members = members("lambda", "arguments");
+    var members = members(MEMBER_NAMES);
     var lambda = members.get(LAMBDA_INDEX).asExpr(BLambdaType.class);
     var lambdaType = (BLambdaType) lambda.evaluationType();
     checkMemberEvaluationType("lambda.resultType", lambdaType.result(), evaluationType());

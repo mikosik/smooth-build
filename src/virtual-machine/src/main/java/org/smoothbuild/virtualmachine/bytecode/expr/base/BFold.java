@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.base.ToStringBuilder;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
@@ -20,6 +21,8 @@ public final class BFold extends BOperation {
   private static final int ARRAY_INDEX = 0;
   private static final int INITIAL_INDEX = 1;
   private static final int FOLDER_INDEX = 2;
+
+  private static final List<String> MEMBER_NAMES = list("array", "initial", "folder");
 
   private final Function0<BSubExprs, BytecodeException> subExprs =
       Function0.memoizer(this::fetchAndValidateSubExprs);
@@ -40,7 +43,7 @@ public final class BFold extends BOperation {
   }
 
   private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
-    var members = members("array", "initial", "folder");
+    var members = members(MEMBER_NAMES);
     var array = members.get(ARRAY_INDEX).asExpr(BArrayType.class);
     var arrayType = (BArrayType) array.evaluationType();
     var initial = members.get(INITIAL_INDEX).asExpr();

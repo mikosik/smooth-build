@@ -1,8 +1,10 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.base.ToStringBuilder;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
@@ -19,6 +21,8 @@ public final class BInvoke extends BOperation {
   public static final int IS_PURE_INDEX = 1;
   public static final int ARGUMENTS_INDEX = 2;
 
+  private static final List<String> MEMBER_NAMES = list("method", "isPure", "arguments");
+
   private final Function0<BSubExprs, BytecodeException> subExprs =
       Function0.memoizer(this::fetchAndValidateSubExprs);
 
@@ -28,7 +32,7 @@ public final class BInvoke extends BOperation {
   }
 
   private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
-    var members = members("method", "isPure", "arguments");
+    var members = members(MEMBER_NAMES);
     var method = members.get(METHOD_INDEX).asExpr(kindDb().method());
     var isPure = members.get(IS_PURE_INDEX).asExpr(kindDb().bool());
     var arguments = members.get(ARGUMENTS_INDEX).asExpr(BTupleType.class);

@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.base.ToStringBuilder;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
@@ -19,6 +20,8 @@ public final class BSwitch extends BOperation {
   private static final int CHOICE_INDEX = 0;
   private static final int HANDLERS_INDEX = 1;
 
+  private static final List<String> MEMBER_NAMES = list("choice", "handlers");
+
   private final Function0<BSubExprs, BytecodeException> subExprs =
       Function0.memoizer(this::fetchAndValidateSubExprs);
 
@@ -33,7 +36,7 @@ public final class BSwitch extends BOperation {
   }
 
   private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
-    var members = members("choice", "handlers");
+    var members = members(MEMBER_NAMES);
     var choice = members.get(CHOICE_INDEX).asExpr(BChoiceType.class);
     var choiceType = ((BChoiceType) choice.evaluationType());
     var expectedHandlersType = choiceType

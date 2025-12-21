@@ -1,6 +1,5 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.base;
 
-import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.virtualmachine.bytecode.expr.Helpers.invokeAndChainBytecodeException;
@@ -72,13 +71,9 @@ public abstract sealed class BExpr permits BOperation, BValue {
 
   public abstract String exprToString() throws BytecodeException;
 
-  protected List<Member> members(String... names) throws BytecodeException {
-    var chain = readDataAsHashChain(names.length);
-    Member[] array = new Member[names.length];
-    for (var i = 0; i < array.length; i++) {
-      array[i] = member(names[i], chain.get(i));
-    }
-    return list(array);
+  protected List<Member> members(List<String> list) throws BytecodeException {
+    var hashChain = readDataAsHashChain(list.size());
+    return list.zip(hashChain, this::member);
   }
 
   private List<Hash> readDataAsHashChain(int membersCount) throws BExprDbException {
