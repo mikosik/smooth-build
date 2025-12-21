@@ -52,7 +52,7 @@ subprojects { subproject ->
         dependencies {
             errorprone "com.google.errorprone:error_prone_core:2.45.0"
             api libs.jspecify
-            errorprone 'com.uber.nullaway:nullaway:0.12.12'
+            errorprone 'com.uber.nullaway:nullaway:0.12.15'
         }
         tasks.withType(JavaCompile).configureEach {
             options.errorprone {
