@@ -20,8 +20,8 @@ public final class BSelectEvaluator extends OperationEvaluator<BSelect> {
   }
 
   @Override
-  public BOutput evaluate(BTuple subExprValues, Container container) throws BytecodeException {
-    var components = subExprValues.elements();
+  public BOutput evaluate(BTuple evaluatedSubExprs, Container container) throws BytecodeException {
+    var components = evaluatedSubExprs.elements();
     var selectable = selectable(components);
     var index = index(components);
     return bOutput(selectable.get(index.toJavaBigInteger().intValue()), container.messages());

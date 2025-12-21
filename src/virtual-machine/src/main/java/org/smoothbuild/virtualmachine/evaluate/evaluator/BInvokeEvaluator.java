@@ -29,17 +29,17 @@ public final class BInvokeEvaluator extends OperationEvaluator<BInvoke> {
   }
 
   @Override
-  public Purity purity(BTuple subExprValues) throws BytecodeException {
-    var isPure = ((BBool) subExprValues.get(IS_PURE_INDEX)).toJavaBoolean();
+  public Purity purity(BTuple evaluatedSubExprs) throws BytecodeException {
+    var isPure = ((BBool) evaluatedSubExprs.get(IS_PURE_INDEX)).toJavaBoolean();
     return isPure ? PURE : IMPURE;
   }
 
   @Override
-  public BOutput evaluate(BTuple subExprValues, Container container) throws IOException {
+  public BOutput evaluate(BTuple evaluatedSubExprs, Container container) throws IOException {
     return container
         .nativeMethodLoader()
-        .load(new BMethod((BTuple) subExprValues.get(METHOD_INDEX)))
-        .mapOk(m -> invokeMethod(m, subExprValues.get(ARGUMENTS_INDEX), container))
+        .load(new BMethod((BTuple) evaluatedSubExprs.get(METHOD_INDEX)))
+        .mapOk(m -> invokeMethod(m, evaluatedSubExprs.get(ARGUMENTS_INDEX), container))
         .ifErr(e -> container.log().fatal(e))
         .okOrGet(() -> bOutput(container.messages()));
   }

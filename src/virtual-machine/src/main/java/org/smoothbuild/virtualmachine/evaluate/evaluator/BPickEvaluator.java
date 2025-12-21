@@ -21,8 +21,8 @@ public final class BPickEvaluator extends OperationEvaluator<BPick> {
   }
 
   @Override
-  public BOutput evaluate(BTuple subExprValues, Container container) throws BytecodeException {
-    var elements = subExprValues.elements();
+  public BOutput evaluate(BTuple evaluatedSubExprs, Container container) throws BytecodeException {
+    var elements = evaluatedSubExprs.elements();
     int index = index(elements).toJavaBigInteger().intValue();
     var pickable = pickable(elements).elements(BValue.class);
     if (index < 0 || pickable.size() <= index) {

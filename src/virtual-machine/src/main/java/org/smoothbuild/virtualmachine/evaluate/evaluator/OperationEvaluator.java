@@ -41,9 +41,10 @@ public abstract sealed class OperationEvaluator<T extends BOperation>
     return trace;
   }
 
-  public Purity purity(BTuple subExprValues) throws BytecodeException {
+  public Purity purity(BTuple evaluatedSubExprs) throws BytecodeException {
     return PURE;
   }
 
-  public abstract BOutput evaluate(BTuple subExprValues, Container container) throws IOException;
+  public abstract BOutput evaluate(BTuple evaluatedSubExprs, Container container)
+      throws IOException;
 }

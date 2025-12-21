@@ -20,8 +20,8 @@ public final class BChooseEvaluator extends OperationEvaluator<BChoose> {
   }
 
   @Override
-  public BOutput evaluate(BTuple subExprValues, Container container) throws BytecodeException {
-    var components = subExprValues.elements();
+  public BOutput evaluate(BTuple evaluatedSubExprs, Container container) throws BytecodeException {
+    var components = evaluatedSubExprs.elements();
     var index = index(components);
     var chosen = chosen(components);
     var choice = container.factory().choice(operation().evaluationType(), index, chosen);

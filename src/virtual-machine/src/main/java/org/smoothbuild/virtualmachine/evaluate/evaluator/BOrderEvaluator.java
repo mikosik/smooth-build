@@ -16,11 +16,11 @@ public final class BOrderEvaluator extends OperationEvaluator<BOrder> {
   }
 
   @Override
-  public BOutput evaluate(BTuple subExprValues, Container container) throws BytecodeException {
+  public BOutput evaluate(BTuple evaluatedSubExprs, Container container) throws BytecodeException {
     BArray array = container
         .factory()
         .arrayBuilder(operation().evaluationType())
-        .addAll(subExprValues.elements())
+        .addAll(evaluatedSubExprs.elements())
         .build();
     return bOutput(array, container.messages());
   }
