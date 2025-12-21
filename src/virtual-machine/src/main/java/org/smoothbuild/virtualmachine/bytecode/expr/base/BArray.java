@@ -34,7 +34,7 @@ public final class BArray extends BValue {
   }
 
   public long size() throws BytecodeException {
-    return hashCoundInDataNode();
+    return hashCountInDataNode();
   }
 
   public <T extends BValue> List<T> elements(Class<T> clazz) throws BytecodeException {

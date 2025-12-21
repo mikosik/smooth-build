@@ -119,7 +119,7 @@ public abstract sealed class BExpr permits BOperation, BValue {
         reader, e -> new DecodeExprNodeException(hash(), kind(), DATA_PATH, e));
   }
 
-  protected long hashCoundInDataNode() throws BytecodeException {
+  protected long hashCountInDataNode() throws BytecodeException {
     return invokeAndChainHashedDbException(
         () -> exprDb.hashedDb().readHashChainSize(dataHash()),
         e -> new DecodeExprNodeException(hash(), kind(), DATA_PATH, e));
