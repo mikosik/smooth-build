@@ -31,11 +31,10 @@ public class MavenArtifactFunc {
     try {
       var response = httpClient.send(httpRequest(coordinate.url()), ofInputStream());
       if (response.statusCode() != 200) {
-        var template = """
+        var message = """
             Failed to download Maven artifact %s
             from %s
-            Status code: %d""";
-        var message = template.formatted(coordinate, coordinate.url(), response.statusCode());
+            Status code: %d""".formatted(coordinate, coordinate.url(), response.statusCode());
         nativeApi.log().fatal(message);
         return null;
       }

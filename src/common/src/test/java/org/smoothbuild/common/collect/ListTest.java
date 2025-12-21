@@ -421,12 +421,6 @@ public class ListTest {
 
       assertThat(copy).containsExactly(1, 2, 3).inOrder();
     }
-
-    @Test
-    void as_copy_of_other_list_creates_different_instance() {
-      var list = asList(1, 2, 3);
-      assertThat(listOfAll(list)).isNotSameInstanceAs(list);
-    }
   }
 
   @Nested

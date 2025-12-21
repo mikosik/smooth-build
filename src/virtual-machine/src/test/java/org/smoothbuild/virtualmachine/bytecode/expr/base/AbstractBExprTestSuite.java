@@ -40,7 +40,7 @@ public abstract class AbstractBExprTestSuite<T extends BExpr> extends VmTestCont
       for (int j = i + 1; j < values.size(); j++) {
         T valueI = values.get(i);
         T valueJ = values.get(j);
-        assertWithMessage("Comparing hashes of:\n" + i + ": " + valueI + "\n" + j + ": " + valueJ)
+        assertWithMessage("Comparing hashes of:\n%s: %s\n%s: %s", i, valueI, j, valueJ)
             .that(valueI.hash())
             .isNotEqualTo(valueJ.hash());
       }

@@ -29,7 +29,7 @@ public final class MemoryDir implements MemoryElement {
 
   @Override
   public MemoryDir parent() {
-    return Preconditions.checkNotNull(parent, "Dir " + name.q() + " does not have parent.");
+    return Preconditions.checkNotNull(parent, "Dir `%s` does not have parent.", name);
   }
 
   @Override
