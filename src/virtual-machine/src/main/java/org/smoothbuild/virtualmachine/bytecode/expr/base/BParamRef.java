@@ -1,10 +1,8 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.base.ToStringBuilder;
-import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
@@ -18,13 +16,8 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BParamRefKind;
  */
 public final class BParamRef extends BOperation {
   public BParamRef(MerkleRoot merkleRoot, BExprDb exprDb) {
-    super(merkleRoot, exprDb);
+    super(merkleRoot, exprDb, 1);
     checkArgument(merkleRoot.kind() instanceof BParamRefKind);
-  }
-
-  @Override
-  public BSubExprs subExprs() {
-    return new BSubExprs();
   }
 
   public BInt index() throws BytecodeException {
@@ -38,12 +31,5 @@ public final class BParamRef extends BOperation {
         .addField("evaluationType", evaluationType())
         .addField("index", index().toJavaBigInteger())
         .toString();
-  }
-
-  public static record BSubExprs() implements BExprs {
-    @Override
-    public List<BExpr> toList() {
-      return list();
-    }
   }
 }

@@ -162,9 +162,8 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
     }
 
     private BTuple argumentsForInvokeEvaluator(BInvoke invoke) throws BytecodeException {
-      var subExprs = invoke.subExprs();
       return bTuple(
-          (BValue) subExprs.method(), (BValue) subExprs.isPure(), (BValue) subExprs.arguments());
+          (BValue) invoke.method(), (BValue) invoke.isPure(), (BValue) invoke.arguments());
     }
   }
 

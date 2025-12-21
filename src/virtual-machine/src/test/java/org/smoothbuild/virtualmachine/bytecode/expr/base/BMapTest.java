@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap.BSubExprs;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BMapTest extends VmTestContext {
@@ -75,8 +74,21 @@ public class BMapTest extends VmTestContext {
     var array = bArray(bInt());
     var mapper = bIntIdLambda();
     var map = bMap(array, mapper);
-    assertThat(((BMap) exprDbOther().get(map.hash())).subExprs())
-        .isEqualTo(new BSubExprs(array, mapper));
+    var mapRead = (BMap) exprDbOther().get(map.hash());
+    assertThat(mapRead.array()).isEqualTo(array);
+    assertThat(mapRead.mapper()).isEqualTo(mapper);
+  }
+
+  @Test
+  void array_is_cached() throws BytecodeException {
+    var map = bMap(bArray(bInt()), bIntIdLambda());
+    assertThat(map.array()).isSameInstanceAs(map.array());
+  }
+
+  @Test
+  void mapper_is_cached() throws BytecodeException {
+    var map = bMap(bArray(bInt()), bIntIdLambda());
+    assertThat(map.mapper()).isSameInstanceAs(map.mapper());
   }
 
   @Test

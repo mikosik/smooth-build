@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick.BSubExprs;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BPickTest extends VmTestContext {
@@ -39,7 +38,21 @@ public class BPickTest extends VmTestContext {
   void data_returns_array_and_index() throws Exception {
     var pickable = bArray(bInt(7));
     var index = bInt(0);
-    assertThat(bPick(pickable, index).subExprs()).isEqualTo(new BSubExprs(pickable, index));
+    var pick = bPick(pickable, index);
+    assertThat(pick.pickable()).isEqualTo(pickable);
+    assertThat(pick.index()).isEqualTo(index);
+  }
+
+  @Test
+  void pickable_is_cached() throws BytecodeException {
+    var pick = bPick(bArray(bInt(7)), bInt(0));
+    assertThat(pick.pickable()).isSameInstanceAs(pick.pickable());
+  }
+
+  @Test
+  void index_is_cached() throws BytecodeException {
+    var pick = bPick(bArray(bInt(7)), bInt(0));
+    assertThat(pick.index()).isSameInstanceAs(pick.index());
   }
 
   @Nested
@@ -73,8 +86,9 @@ public class BPickTest extends VmTestContext {
     var array = bArray(bInt(17), bInt(18));
     var index = bInt(0);
     var pick = bPick(array, index);
-    assertThat(((BPick) exprDbOther().get(pick.hash())).subExprs())
-        .isEqualTo(new BSubExprs(array, index));
+    var pickRead = (BPick) exprDbOther().get(pick.hash());
+    assertThat(pickRead.pickable()).isEqualTo(array);
+    assertThat(pickRead.index()).isEqualTo(index);
   }
 
   @Test

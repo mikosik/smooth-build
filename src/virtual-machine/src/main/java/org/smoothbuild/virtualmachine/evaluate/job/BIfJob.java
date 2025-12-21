@@ -23,17 +23,16 @@ public final class BIfJob extends SchedulingJob {
 
   @Override
   public Promise<Maybe<BValue>> schedule() throws BytecodeException {
-    var subExprs = if_.subExprs();
     var schedulingTask = (Task1<BValue, BValue>) (conditionValue) -> {
       try {
         var condition = ((BBool) conditionValue).toJavaBoolean();
         return successOutput(
-            evaluate(condition ? subExprs.then_() : subExprs.else_()), executeLabel(), trace());
+            evaluate(condition ? if_.then_() : if_.else_()), executeLabel(), trace());
       } catch (BytecodeException e) {
         return failedSchedulingOutput(executeLabel(), trace(), e);
       }
     };
-    var conditionPromise = evaluate(subExprs.condition());
+    var conditionPromise = evaluate(if_.condition());
     return scheduler().submit(schedulingTask, conditionPromise);
   }
 

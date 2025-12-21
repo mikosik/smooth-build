@@ -73,15 +73,20 @@ public abstract sealed class BExpr permits BOperation, BValue {
   public abstract String exprToString() throws BytecodeException;
 
   protected List<Member> members(String... names) throws BytecodeException {
-    List<Hash> chain = readDataAsHashChain();
-    if (chain.size() != names.length) {
-      throw new MembersSizeIsWrongException(hash(), kind(), DATA_PATH, names.length, chain.size());
-    }
+    var chain = readDataAsHashChain(names.length);
     Member[] array = new Member[names.length];
     for (var i = 0; i < array.length; i++) {
       array[i] = member(names[i], chain.get(i));
     }
     return list(array);
+  }
+
+  private List<Hash> readDataAsHashChain(int membersCount) throws BExprDbException {
+    List<Hash> chain = readDataAsHashChain();
+    if (membersCount != -1 && chain.size() != membersCount) {
+      throw new MembersSizeIsWrongException(hash(), kind(), DATA_PATH, membersCount, chain.size());
+    }
+    return chain;
   }
 
   protected Member loneMember(String name) throws BytecodeException {
@@ -124,10 +129,15 @@ public abstract sealed class BExpr permits BOperation, BValue {
         e -> new DecodeExprNodeException(hash(), kind(), DATA_PATH, e));
   }
 
+  protected List<BExpr> readDataAsExprChain(int membersCount) throws BytecodeException {
+    var hashes = readDataAsHashChain(membersCount);
+    return readDataAsExprChain(hashes, DATA_PATH);
+  }
+
   private List<BExpr> readDataAsExprChain(List<Hash> chain, String name) throws BytecodeException {
     return chain
         .zipWithIndex()
-        .map(tuple -> readNode(name + "[" + tuple.element2() + "]", chain.get(tuple.element2())));
+        .map(tuple -> readNode(name + "[" + tuple.element2() + "]", tuple.element1()));
   }
 
   private List<Hash> readDataAsHashChain() throws BExprDbException {

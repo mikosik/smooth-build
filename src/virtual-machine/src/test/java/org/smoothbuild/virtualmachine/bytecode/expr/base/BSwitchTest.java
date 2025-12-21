@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch.BSubExprs;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BSwitchTest extends VmTestContext {
@@ -69,7 +68,20 @@ public class BSwitchTest extends VmTestContext {
   void sub_expressions_contains_choice_and_handlers() throws Exception {
     var handlers = bCombine(bs2iLambda(), bi2iLambda());
     var switch_ = bSwitch(bChoice(), handlers);
-    assertThat(switch_.subExprs()).isEqualTo(new BSubExprs(bChoice(), handlers));
+    assertThat(switch_.choice()).isEqualTo(bChoice());
+    assertThat(switch_.handlers()).isEqualTo(handlers);
+  }
+
+  @Test
+  void choice_is_cached() throws BytecodeException {
+    var switch_ = bSwitch(bChoice(), bCombine(bs2iLambda(), bi2iLambda()));
+    assertThat(switch_.choice()).isSameInstanceAs(switch_.choice());
+  }
+
+  @Test
+  void handlers_is_cached() throws BytecodeException {
+    var switch_ = bSwitch(bChoice(), bCombine(bs2iLambda(), bi2iLambda()));
+    assertThat(switch_.handlers()).isSameInstanceAs(switch_.handlers());
   }
 
   @Nested
@@ -104,8 +116,9 @@ public class BSwitchTest extends VmTestContext {
     var choice = bChoice();
     var handlers = bCombine(bs2iLambda(), bi2iLambda());
     var switch_ = bSwitch(choice, handlers);
-    assertThat(((BSwitch) exprDbOther().get(switch_.hash())).subExprs())
-        .isEqualTo(new BSubExprs(choice, handlers));
+    var switchRead = (BSwitch) exprDbOther().get(switch_.hash());
+    assertThat(switchRead.choice()).isEqualTo(choice);
+    assertThat(switchRead.handlers()).isEqualTo(handlers);
   }
 
   @Test

@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.base.ToStringBuilder;
-import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
@@ -19,8 +19,11 @@ public final class BMap extends BOperation {
   private static final int ARRAY_INDEX = 0;
   private static final int MAPPER_INDEX = 1;
 
+  private final Function0<BSubExprs, BytecodeException> subExprs =
+      Function0.memoizer(this::fetchAndValidateSubExprs);
+
   public BMap(MerkleRoot merkleRoot, BExprDb exprDb) {
-    super(merkleRoot, exprDb);
+    super(merkleRoot, exprDb, 2);
     checkArgument(merkleRoot.kind() instanceof BMapKind);
   }
 
@@ -34,8 +37,7 @@ public final class BMap extends BOperation {
     return kind().evaluationType();
   }
 
-  @Override
-  public BSubExprs subExprs() throws BytecodeException {
+  private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
     var members = members("array", "mapper");
     var array = members.get(ARRAY_INDEX).asExpr(BArrayType.class);
     var arrayType = (BArrayType) array.evaluationType();
@@ -45,9 +47,17 @@ public final class BMap extends BOperation {
     return new BSubExprs(array, mapper);
   }
 
+  public BExpr array() throws BytecodeException {
+    return subExprs.apply().array();
+  }
+
+  public BExpr mapper() throws BytecodeException {
+    return subExprs.apply().mapper();
+  }
+
   @Override
   public String exprToString() throws BytecodeException {
-    var subExprs = subExprs();
+    var subExprs = this.subExprs.apply();
     return new ToStringBuilder(getClass().getSimpleName())
         .addField("hash", hash())
         .addField("evaluationType", evaluationType())
@@ -56,10 +66,5 @@ public final class BMap extends BOperation {
         .toString();
   }
 
-  public static record BSubExprs(BExpr array, BExpr mapper) implements BExprs {
-    @Override
-    public List<BExpr> toList() {
-      return list(array, mapper);
-    }
-  }
+  private record BSubExprs(BExpr array, BExpr mapper) {}
 }

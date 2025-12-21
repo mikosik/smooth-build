@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
@@ -14,8 +15,11 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BOrderKind;
  * This class is thread-safe.
  */
 public final class BOrder extends BOperation {
+  private final Function0<List<BExpr>, BytecodeException> elements =
+      Function0.memoizer(this::fetchElements);
+
   public BOrder(MerkleRoot merkleRoot, BExprDb exprDb) {
-    super(merkleRoot, exprDb);
+    super(merkleRoot, exprDb, -1);
     checkArgument(merkleRoot.kind() instanceof BOrderKind);
   }
 
@@ -29,12 +33,11 @@ public final class BOrder extends BOperation {
     return kind().evaluationType();
   }
 
-  @Override
-  public BSubExprs subExprs() throws BytecodeException {
-    return new BSubExprs(elements());
+  public List<BExpr> elements() throws BytecodeException {
+    return elements.apply();
   }
 
-  public List<BExpr> elements() throws BytecodeException {
+  private List<BExpr> fetchElements() throws BytecodeException {
     var member = loneElementsMember("elements");
     var elements = member.elements();
     member.checkElementTypes(evaluationType().element());
@@ -43,18 +46,10 @@ public final class BOrder extends BOperation {
 
   @Override
   public String exprToString() throws BytecodeException {
-    var subExprs = subExprs();
     return new ToStringBuilder(getClass().getSimpleName())
         .addField("hash", hash())
         .addField("evaluationType", evaluationType())
-        .addListField("elements", subExprs.elements())
+        .addListField("elements", elements.apply())
         .toString();
-  }
-
-  public static record BSubExprs(List<BExpr> elements) implements BExprs {
-    @Override
-    public List<BExpr> toList() {
-      return elements;
-    }
   }
 }

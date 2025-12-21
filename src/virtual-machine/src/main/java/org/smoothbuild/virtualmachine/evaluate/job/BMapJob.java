@@ -12,7 +12,6 @@ import org.smoothbuild.common.schedule.Task1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap.BSubExprs;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 
@@ -26,18 +25,17 @@ public final class BMapJob extends SchedulingJob {
 
   @Override
   public Promise<Maybe<BValue>> schedule() throws BytecodeException {
-    var subExprs = map.subExprs();
-    var arrayArg = subExprs.array();
-    var schedulingTask = newMapSchedulingTask(subExprs);
+    var arrayArg = map.array();
+    var schedulingTask = newMapSchedulingTask();
     var arrayPromise = evaluate(arrayArg);
     return scheduler().submit(schedulingTask, arrayPromise);
   }
 
-  private Task1<BValue, BValue> newMapSchedulingTask(BSubExprs subExprs) {
+  private Task1<BValue, BValue> newMapSchedulingTask() {
     return (arrayValue) -> {
       try {
         var array = ((BArray) arrayValue);
-        var mapperArg = subExprs.mapper();
+        var mapperArg = map.mapper();
         var calls = array.elements(BValue.class).map(e -> call(mapperArg, list(e)));
         var mappingLambdaResultType = ((BLambdaType) mapperArg.evaluationType()).result();
         var arrayType = bytecodeFactory().arrayType(mappingLambdaResultType);

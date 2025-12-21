@@ -41,6 +41,12 @@ public class BOrderTest extends VmTestContext {
     assertThat(bOrder(bInt(2)).elements()).isEqualTo(list(bInt(2)));
   }
 
+  @Test
+  void elements_is_cached() throws BytecodeException {
+    var order = bOrder(bInt(2));
+    assertThat(order.elements()).isSameInstanceAs(order.elements());
+  }
+
   @Nested
   class _equals_hash_hashcode extends AbstractBExprTestSuite<BOrder> {
     @Override

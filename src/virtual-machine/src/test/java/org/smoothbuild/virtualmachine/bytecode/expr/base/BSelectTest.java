@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect.BSubExprs;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BSelectTest extends VmTestContext {
@@ -44,7 +43,22 @@ public class BSelectTest extends VmTestContext {
   void sub_expressions_contains_tuple_and_index() throws Exception {
     var selectable = bTuple(bInt(7));
     var index = bInt(0);
-    assertThat(bSelect(selectable, index).subExprs()).isEqualTo(new BSubExprs(selectable, index));
+    var select = bSelect(selectable, index);
+    assertThat(select.selectable()).isEqualTo(selectable);
+    assertThat(select.index()).isEqualTo(index);
+  }
+
+  @Test
+  void selectable_is_cached() throws BytecodeException {
+    var selectable = bTuple(bString("abc"));
+    var select = bSelect(selectable, bInt(0));
+    assertThat(select.index()).isSameInstanceAs(select.index());
+  }
+
+  @Test
+  void index_is_cached() throws BytecodeException {
+    var select = bSelect(bTuple(bString("abc")), bInt(0));
+    assertThat(select.index()).isSameInstanceAs(select.index());
   }
 
   @Nested
@@ -80,8 +94,9 @@ public class BSelectTest extends VmTestContext {
     var selectable = bAnimal();
     var index = bInt(0);
     var select = bSelect(selectable, index);
-    assertThat(((BSelect) exprDbOther().get(select.hash())).subExprs())
-        .isEqualTo(new BSubExprs(selectable, index));
+    var selectRead = (BSelect) exprDbOther().get(select.hash());
+    assertThat(selectRead.selectable()).isEqualTo(selectable);
+    assertThat(selectRead.index()).isEqualTo(index);
   }
 
   @Test

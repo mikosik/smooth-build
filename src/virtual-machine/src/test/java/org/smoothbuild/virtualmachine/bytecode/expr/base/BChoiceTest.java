@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoice.Components;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BChoiceTest extends VmTestContext {
@@ -43,8 +42,10 @@ public class BChoiceTest extends VmTestContext {
 
   @Test
   void components_contains_object_passed_to_builder() throws Exception {
-    var choice = bChoice();
-    assertThat(choice.components()).isEqualTo(new Components(bInt(0), bString("7")));
+    var type = bChoiceType(bStringType(), bIntType());
+    var choice = bChoice(type, bInt(0), bString("7"));
+    assertThat(choice.index()).isEqualTo(bInt(0));
+    assertThat(choice.chosen()).isEqualTo(bString("7"));
   }
 
   @Nested
@@ -82,7 +83,20 @@ public class BChoiceTest extends VmTestContext {
   void choice_read_by_hash_have_equal_components() throws Exception {
     var choice = bChoice();
     var choiceRead = (BChoice) exprDbOther().get(choice.hash());
-    assertThat(choiceRead.components()).isEqualTo(choice.components());
+    assertThat(choiceRead.index()).isEqualTo(choice.index());
+    assertThat(choiceRead.chosen()).isEqualTo(choice.chosen());
+  }
+
+  @Test
+  void index_is_cached() throws BytecodeException {
+    var choice = bChoice();
+    assertThat(choice.index()).isSameInstanceAs(choice.index());
+  }
+
+  @Test
+  void chosen_is_cached() throws BytecodeException {
+    var choice = bChoice();
+    assertThat(choice.chosen()).isSameInstanceAs(choice.chosen());
   }
 
   @Test

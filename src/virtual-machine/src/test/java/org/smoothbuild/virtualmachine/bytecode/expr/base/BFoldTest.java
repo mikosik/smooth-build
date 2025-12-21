@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BFold.BSubExprs;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BFoldTest extends VmTestContext {
@@ -101,8 +100,28 @@ public class BFoldTest extends VmTestContext {
     var initial = bInt();
     var folder = bii2iLambda();
     var fold = bFold(array, initial, folder);
-    assertThat(((BFold) exprDbOther().get(fold.hash())).subExprs())
-        .isEqualTo(new BSubExprs(array, initial, folder));
+    var foldRead = (BFold) exprDbOther().get(fold.hash());
+    assertThat(foldRead.array()).isEqualTo(array);
+    assertThat(foldRead.initial()).isEqualTo(initial);
+    assertThat(foldRead.folder()).isEqualTo(folder);
+  }
+
+  @Test
+  void array_is_cached() throws BytecodeException {
+    var fold = bFold(bArray(bInt()), bInt(), bii2iLambda());
+    assertThat(fold.array()).isSameInstanceAs(fold.array());
+  }
+
+  @Test
+  void initial_is_cached() throws BytecodeException {
+    var fold = bFold(bArray(bInt()), bInt(), bii2iLambda());
+    assertThat(fold.initial()).isSameInstanceAs(fold.initial());
+  }
+
+  @Test
+  void folder_is_cached() throws BytecodeException {
+    var fold = bFold(bArray(bInt()), bInt(), bii2iLambda());
+    assertThat(fold.folder()).isSameInstanceAs(fold.folder());
   }
 
   @Test

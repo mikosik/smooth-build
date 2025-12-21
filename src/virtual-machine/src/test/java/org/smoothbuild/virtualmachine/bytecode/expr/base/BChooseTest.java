@@ -47,8 +47,22 @@ public class BChooseTest extends VmTestContext {
 
   @Test
   void subExprs_contains_object_passed_to_builder() throws Exception {
+    var type = bChoiceType(bStringType(), bIntType());
+    var choice = bChoose(type, bInt(0), bString("7"));
+    assertThat(choice.index()).isEqualTo(bInt(0));
+    assertThat(choice.chosen()).isEqualTo(bString("7"));
+  }
+
+  @Test
+  void index_is_cached() throws BytecodeException {
     var choice = bChoose();
-    assertThat(choice.subExprs()).isEqualTo(new BChoose.BSubExprs(bInt(0), bString("7")));
+    assertThat(choice.index()).isSameInstanceAs(choice.index());
+  }
+
+  @Test
+  void chosen_is_cached() throws BytecodeException {
+    var choice = bChoose();
+    assertThat(choice.chosen()).isSameInstanceAs(choice.chosen());
   }
 
   @Nested
@@ -86,7 +100,8 @@ public class BChooseTest extends VmTestContext {
   void choose_read_by_hash_have_equal_nodes() throws Exception {
     var choose = bChoose();
     var ChooseRead = (BChoose) exprDbOther().get(choose.hash());
-    assertThat(ChooseRead.subExprs()).isEqualTo(choose.subExprs());
+    assertThat(ChooseRead.index()).isEqualTo(choose.index());
+    assertThat(ChooseRead.chosen()).isEqualTo(choose.chosen());
   }
 
   @Test

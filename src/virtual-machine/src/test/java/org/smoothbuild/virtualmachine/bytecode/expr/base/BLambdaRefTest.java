@@ -27,6 +27,12 @@ public class BLambdaRefTest extends VmTestContext {
     assertThat(bLambdaRef(bLambdaType(), bInt(7)).lambdaName()).isEqualTo(bInt(7));
   }
 
+  @Test
+  void lambda_name_is_cached() throws BytecodeException {
+    var bLambdaRef = bLambdaRef(bLambdaType(), bInt(7));
+    assertThat(bLambdaRef.lambdaName()).isSameInstanceAs(bLambdaRef.lambdaName());
+  }
+
   @Nested
   class _equals_hash_hashcode extends AbstractBExprTestSuite<BLambdaRef> {
     @Override

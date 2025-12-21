@@ -80,11 +80,12 @@ public class BParamRefInliner {
 
   private BExpr rewriteCall(BCall call, Resolver resolver)
       throws BytecodeException, ParamRefIndexOutOfBoundsException {
-    var subExprs = call.subExprs();
-    var lambda = subExprs.lambda();
-    var arguments = subExprs.arguments();
+    var lambda = call.lambda();
+    var arguments = call.arguments();
+
     var inlinedLambda = rewriteExpr(lambda, resolver);
     var inlinedArgs = rewriteExpr(arguments, resolver);
+
     if (lambda.equals(inlinedLambda) && arguments.equals(inlinedArgs)) {
       return call;
     } else {
@@ -94,11 +95,12 @@ public class BParamRefInliner {
 
   private BSwitch rewriteSwitch(BSwitch switch_, Resolver resolver)
       throws BytecodeException, ParamRefIndexOutOfBoundsException {
-    var subExprs = switch_.subExprs();
-    var choice = subExprs.choice();
-    var handlers = subExprs.handlers();
+    var choice = switch_.choice();
+    var handlers = switch_.handlers();
+
     var rewrittenChoice = rewriteExpr(choice, resolver);
     var rewrittenHandlers = rewriteCombine(handlers, resolver);
+
     if (choice.equals(rewrittenChoice) && handlers.equals(rewrittenHandlers)) {
       return switch_;
     } else {
@@ -108,7 +110,7 @@ public class BParamRefInliner {
 
   private BCombine rewriteCombine(BCombine combine, Resolver resolver)
       throws BytecodeException, ParamRefIndexOutOfBoundsException {
-    var items = combine.subExprs().toList();
+    var items = combine.subExprs();
     var rewrittenItems = rewriteExprs(items, resolver);
     if (items.equals(rewrittenItems)) {
       return combine;
@@ -119,11 +121,12 @@ public class BParamRefInliner {
 
   private BChoose rewriteChoose(BChoose choose, Resolver resolver)
       throws BytecodeException, ParamRefIndexOutOfBoundsException {
-    var subExprs = choose.subExprs();
-    var index = subExprs.index();
-    var chosen = subExprs.chosen();
+    var index = choose.index();
+    var chosen = choose.chosen();
+
     // Only chosen has to be rewritten as index is BValue
     var rewrittenChosen = rewriteExpr(chosen, resolver);
+
     if (rewrittenChosen.equals(chosen)) {
       return choose;
     } else {
@@ -133,13 +136,14 @@ public class BParamRefInliner {
 
   private BExpr rewriteIf(BIf if_, Resolver resolver)
       throws BytecodeException, ParamRefIndexOutOfBoundsException {
-    var subExprs = if_.subExprs();
-    var condition = subExprs.condition();
-    var then_ = subExprs.then_();
-    var else_ = subExprs.else_();
+    var condition = if_.condition();
+    var then_ = if_.then_();
+    var else_ = if_.else_();
+
     var rewrittenCondition = rewriteExpr(condition, resolver);
     var rewrittenThen = rewriteExpr(then_, resolver);
     var rewrittenElse = rewriteExpr(else_, resolver);
+
     if (condition.equals(rewrittenCondition)
         && then_.equals(rewrittenThen)
         && else_.equals(rewrittenElse)) {
@@ -151,10 +155,9 @@ public class BParamRefInliner {
 
   private BExpr rewriteInvoke(BInvoke invoke, Resolver resolver)
       throws BytecodeException, ParamRefIndexOutOfBoundsException {
-    var subExprs = invoke.subExprs();
-    var method = subExprs.method();
-    var isPure = subExprs.isPure();
-    var arguments = subExprs.arguments();
+    var method = invoke.method();
+    var isPure = invoke.isPure();
+    var arguments = invoke.arguments();
 
     var rewrittenMethod = rewriteExpr(method, resolver);
     var rewrittenIsPure = rewriteExpr(isPure, resolver);
@@ -185,12 +188,12 @@ public class BParamRefInliner {
 
   private BExpr rewriteMap(BMap map, Resolver resolver)
       throws BytecodeException, ParamRefIndexOutOfBoundsException {
-    var subExprs = map.subExprs();
-    var array = subExprs.array();
-    var mapper = subExprs.mapper();
+    var array = map.array();
+    var mapper = map.mapper();
 
     var rewrittenArray = rewriteExpr(array, resolver);
     var rewrittenMapper = rewriteExpr(mapper, resolver);
+
     if (array.equals(rewrittenArray) && mapper.equals(rewrittenMapper)) {
       return map;
     } else {
@@ -200,10 +203,9 @@ public class BParamRefInliner {
 
   private BExpr rewriteFold(BFold fold, Resolver resolver)
       throws BytecodeException, ParamRefIndexOutOfBoundsException {
-    var subExprs = fold.subExprs();
-    var array = subExprs.array();
-    var initial = subExprs.initial();
-    var folder = subExprs.folder();
+    var array = fold.array();
+    var initial = fold.initial();
+    var folder = fold.folder();
 
     var rewrittenArray = rewriteExpr(array, resolver);
     var rewrittenInitial = rewriteExpr(initial, resolver);
@@ -231,11 +233,12 @@ public class BParamRefInliner {
 
   private BExpr rewritePick(BPick pick, Resolver resolver)
       throws BytecodeException, ParamRefIndexOutOfBoundsException {
-    var subExprs = pick.subExprs();
-    var pickable = subExprs.pickable();
-    var index = subExprs.index();
+    var pickable = pick.pickable();
+    var index = pick.index();
+
     var rewrittenPickable = rewriteExpr(pickable, resolver);
     var rewrittenIndex = rewriteExpr(index, resolver);
+
     if (pickable.equals(rewrittenPickable) && index.equals(rewrittenIndex)) {
       return pick;
     } else {
@@ -245,13 +248,12 @@ public class BParamRefInliner {
 
   private BExpr rewriteSelect(BSelect select, Resolver resolver)
       throws BytecodeException, ParamRefIndexOutOfBoundsException {
-    var subExprs = select.subExprs();
-    var selectable = subExprs.selectable();
+    var selectable = select.selectable();
     var rewrittenSelectable = rewriteExpr(selectable, resolver);
     if (selectable.equals(rewrittenSelectable)) {
       return select;
     } else {
-      return bytecodeFactory.select(rewrittenSelectable, subExprs.index());
+      return bytecodeFactory.select(rewrittenSelectable, select.index());
     }
   }
 

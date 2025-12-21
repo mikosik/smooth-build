@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
@@ -15,8 +16,11 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
  * This class is thread-safe.
  */
 public final class BCombine extends BOperation {
+  private final Function0<List<BExpr>, BytecodeException> items =
+      Function0.memoizer(this::itemsValidated);
+
   public BCombine(MerkleRoot merkleRoot, BExprDb exprDb) {
-    super(merkleRoot, exprDb);
+    super(merkleRoot, exprDb, -1);
     checkArgument(merkleRoot.kind() instanceof BCombineKind);
   }
 
@@ -30,12 +34,11 @@ public final class BCombine extends BOperation {
     return kind().evaluationType();
   }
 
-  @Override
-  public BSubExprs subExprs() throws BytecodeException {
-    return new BSubExprs(items());
+  public List<BExpr> items() throws BytecodeException {
+    return items.apply();
   }
 
-  public List<BExpr> items() throws BytecodeException {
+  private List<BExpr> itemsValidated() throws BytecodeException {
     var items = loneElementsMember("items").elements();
     var actualType = kindDb().tuple(items.map(BExpr::evaluationType));
     if (!actualType.equals(evaluationType())) {
@@ -46,18 +49,10 @@ public final class BCombine extends BOperation {
 
   @Override
   public String exprToString() throws BytecodeException {
-    var subExprs = subExprs();
     return new ToStringBuilder(getClass().getSimpleName())
         .addField("hash", hash())
         .addField("evaluationType", evaluationType())
-        .addListField("items", subExprs.items())
+        .addListField("items", items.apply())
         .toString();
-  }
-
-  public static record BSubExprs(List<BExpr> items) implements BExprs {
-    @Override
-    public List<BExpr> toList() {
-      return items;
-    }
   }
 }

@@ -68,6 +68,12 @@ public class BLambdaTest extends VmTestContext {
   }
 
   @Test
+  void body_is_cached() throws BytecodeException {
+    var lambda = bLambda();
+    assertThat(lambda.body()).isSameInstanceAs(lambda.body());
+  }
+
+  @Test
   void to_string() throws Exception {
     var lambdaType = bLambdaType(bStringType(), bIntType());
     var lambda = bLambda(lambdaType, bInt());

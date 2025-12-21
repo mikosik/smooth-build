@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.base.ToStringBuilder;
-import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
@@ -19,8 +19,11 @@ public final class BSwitch extends BOperation {
   private static final int CHOICE_INDEX = 0;
   private static final int HANDLERS_INDEX = 1;
 
+  private final Function0<BSubExprs, BytecodeException> subExprs =
+      Function0.memoizer(this::fetchAndValidateSubExprs);
+
   public BSwitch(MerkleRoot merkleRoot, BExprDb exprDb) {
-    super(merkleRoot, exprDb);
+    super(merkleRoot, exprDb, 2);
     checkArgument(merkleRoot.kind() instanceof BSwitchKind);
   }
 
@@ -29,8 +32,7 @@ public final class BSwitch extends BOperation {
     return (BSwitchKind) super.kind();
   }
 
-  @Override
-  public BSubExprs subExprs() throws BytecodeException {
+  private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
     var members = members("choice", "handlers");
     var choice = members.get(CHOICE_INDEX).asExpr(BChoiceType.class);
     var choiceType = ((BChoiceType) choice.evaluationType());
@@ -46,9 +48,17 @@ public final class BSwitch extends BOperation {
     return new BSubExprs(choice, handlers);
   }
 
+  public BExpr choice() throws BytecodeException {
+    return subExprs.apply().choice();
+  }
+
+  public BCombine handlers() throws BytecodeException {
+    return subExprs.apply().handlers();
+  }
+
   @Override
   public String exprToString() throws BytecodeException {
-    var subExprs = subExprs();
+    var subExprs = this.subExprs.apply();
     return new ToStringBuilder(getClass().getSimpleName())
         .addField("hash", hash())
         .addField("evaluationType", evaluationType())
@@ -57,10 +67,5 @@ public final class BSwitch extends BOperation {
         .toString();
   }
 
-  public static record BSubExprs(BExpr choice, BCombine handlers) implements BExprs {
-    @Override
-    public List<BExpr> toList() {
-      return list(choice, handlers);
-    }
-  }
+  private record BSubExprs(BExpr choice, BCombine handlers) {}
 }

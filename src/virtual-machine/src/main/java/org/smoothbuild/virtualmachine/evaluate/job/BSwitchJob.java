@@ -12,7 +12,6 @@ import org.smoothbuild.common.schedule.Task1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoice;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch.BSubExprs;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 
 public final class BSwitchJob extends SchedulingJob {
@@ -25,19 +24,18 @@ public final class BSwitchJob extends SchedulingJob {
 
   @Override
   public Promise<Maybe<BValue>> schedule() throws BytecodeException {
-    var subExprs = switch_.subExprs();
-    var choicePromise = evaluate(subExprs.choice());
-    var schedulingTask = newSwitchSchedulingTask(subExprs);
+    var choicePromise = evaluate(switch_.choice());
+    var schedulingTask = newSwitchSchedulingTask();
     return scheduler().submit(schedulingTask, choicePromise);
   }
 
-  private Task1<BValue, BValue> newSwitchSchedulingTask(BSubExprs subExprs) {
+  private Task1<BValue, BValue> newSwitchSchedulingTask() {
     return (choiceValue) -> {
       try {
-        var members = ((BChoice) choiceValue).components();
-        var index = members.index().toJavaBigInteger();
-        var handler = subExprs.handlers().items().get(index.intValue());
-        var call = call(handler, list(members.chosen()));
+        var choice = (BChoice) choiceValue;
+        var index = choice.index().toJavaBigInteger();
+        var handler = switch_.handlers().items().get(index.intValue());
+        var call = call(handler, list(choice.chosen()));
         var result = evaluate(call);
         return successOutput(result, executeLabel(), trace());
       } catch (BytecodeException e) {

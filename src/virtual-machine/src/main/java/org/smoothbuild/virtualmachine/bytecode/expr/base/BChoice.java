@@ -1,10 +1,9 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.base.ToStringBuilder;
-import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
@@ -18,6 +17,9 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
 public final class BChoice extends BValue {
   private static final int INDEX_INDEX = 0;
   private static final int CHOSEN_INDEX = 1;
+
+  private final Function0<Components, BytecodeException> components =
+      Function0.memoizer(this::fetchAndValidateComponents);
 
   public BChoice(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
@@ -34,7 +36,7 @@ public final class BChoice extends BValue {
     return (BChoiceType) super.kind();
   }
 
-  public Components components() throws BytecodeException {
+  private Components fetchAndValidateComponents() throws BytecodeException {
     var members = members("index", "chosen");
     var index = members.get(INDEX_INDEX).asInstanceOf(BInt.class);
 
@@ -54,19 +56,24 @@ public final class BChoice extends BValue {
     return new Components(index, value);
   }
 
+  public BInt index() throws BytecodeException {
+    return components.apply().index();
+  }
+
+  public BValue chosen() throws BytecodeException {
+    return components.apply().chosen();
+  }
+
   @Override
   public String exprToString() throws BytecodeException {
+    var components = this.components.apply();
     return new ToStringBuilder(getClass().getSimpleName())
         .addField("hash", hash())
         .addField("type", type())
-        .addField("index", components().index())
-        .addField("chosen", components().chosen())
+        .addField("index", components.index())
+        .addField("chosen", components.chosen())
         .toString();
   }
 
-  public static record Components(BInt index, BValue chosen) {
-    public List<BExpr> toList() {
-      return list(index, chosen);
-    }
-  }
+  private static record Components(BInt index, BValue chosen) {}
 }

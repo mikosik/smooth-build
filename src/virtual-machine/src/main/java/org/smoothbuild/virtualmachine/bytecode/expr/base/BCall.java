@@ -1,10 +1,9 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.base.ToStringBuilder;
-import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
@@ -18,8 +17,11 @@ public final class BCall extends BOperation {
   private static final int LAMBDA_INDEX = 0;
   private static final int ARGUMENTS_INDEX = 1;
 
+  private final Function0<BSubExprs, BytecodeException> subExprs =
+      Function0.memoizer(this::fetchAndValidateSubExprs);
+
   public BCall(MerkleRoot merkleRoot, BExprDb exprDb) {
-    super(merkleRoot, exprDb);
+    super(merkleRoot, exprDb, 2);
     checkArgument(merkleRoot.kind() instanceof BCallKind);
   }
 
@@ -28,8 +30,7 @@ public final class BCall extends BOperation {
     return (BCallKind) super.kind();
   }
 
-  @Override
-  public BSubExprs subExprs() throws BytecodeException {
+  private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
     var members = members("lambda", "arguments");
     var lambda = members.get(LAMBDA_INDEX).asExpr(BLambdaType.class);
     var lambdaType = (BLambdaType) lambda.evaluationType();
@@ -38,9 +39,17 @@ public final class BCall extends BOperation {
     return new BSubExprs(lambda, args);
   }
 
+  public BExpr lambda() throws BytecodeException {
+    return subExprs.apply().lambda();
+  }
+
+  public BExpr arguments() throws BytecodeException {
+    return subExprs.apply().arguments();
+  }
+
   @Override
   public String exprToString() throws BytecodeException {
-    var subExprs = subExprs();
+    var subExprs = this.subExprs.apply();
     return new ToStringBuilder(getClass().getSimpleName())
         .addField("hash", hash())
         .addField("evaluationType", evaluationType())
@@ -49,10 +58,5 @@ public final class BCall extends BOperation {
         .toString();
   }
 
-  public static record BSubExprs(BExpr lambda, BExpr arguments) implements BExprs {
-    @Override
-    public List<BExpr> toList() {
-      return list(lambda, arguments);
-    }
-  }
+  private record BSubExprs(BExpr lambda, BExpr arguments) {}
 }

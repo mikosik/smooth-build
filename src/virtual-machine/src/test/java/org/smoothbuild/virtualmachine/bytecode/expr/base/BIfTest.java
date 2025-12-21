@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf.BSubExprs;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BIfTest extends VmTestContext {
@@ -62,8 +61,28 @@ public class BIfTest extends VmTestContext {
     var then_ = bInt(1);
     var else_ = bInt(2);
     var bIf = bIf(condition, then_, else_);
-    assertThat(((BIf) exprDbOther().get(bIf.hash())).subExprs())
-        .isEqualTo(new BSubExprs(condition, then_, else_));
+    var ifRead = (BIf) exprDbOther().get(bIf.hash());
+    assertThat(ifRead.condition()).isEqualTo(condition);
+    assertThat(ifRead.then_()).isEqualTo(then_);
+    assertThat(ifRead.else_()).isEqualTo(else_);
+  }
+
+  @Test
+  void condition_is_cached() throws BytecodeException {
+    var bIf = bIf(bBool(true), bInt(1), bInt(2));
+    assertThat(bIf.condition()).isSameInstanceAs(bIf.condition());
+  }
+
+  @Test
+  void then_is_cached() throws BytecodeException {
+    var bIf = bIf(bBool(true), bInt(1), bInt(2));
+    assertThat(bIf.then_()).isSameInstanceAs(bIf.then_());
+  }
+
+  @Test
+  void else_is_cached() throws BytecodeException {
+    var bIf = bIf(bBool(true), bInt(1), bInt(2));
+    assertThat(bIf.else_()).isSameInstanceAs(bIf.else_());
   }
 
   @Test

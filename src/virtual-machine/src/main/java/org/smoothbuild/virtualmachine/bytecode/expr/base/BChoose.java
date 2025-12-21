@@ -1,10 +1,9 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.base.ToStringBuilder;
-import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
@@ -19,8 +18,11 @@ public final class BChoose extends BOperation {
   public static final int INDEX_INDEX = 0;
   public static final int CHOSEN_INDEX = 1;
 
+  private final Function0<BSubExprs, BytecodeException> subExprs =
+      Function0.memoizer(this::fetchAndValidateSubExprs);
+
   public BChoose(MerkleRoot merkleRoot, BExprDb exprDb) {
-    super(merkleRoot, exprDb);
+    super(merkleRoot, exprDb, 2);
     checkArgument(merkleRoot.kind() instanceof BChooseKind);
   }
 
@@ -34,8 +36,7 @@ public final class BChoose extends BOperation {
     return (BChooseKind) super.kind();
   }
 
-  @Override
-  public BSubExprs subExprs() throws BytecodeException {
+  private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
     var members = members("index", "chosen");
     var index = members.get(INDEX_INDEX).asInstanceOf(BInt.class);
 
@@ -52,9 +53,17 @@ public final class BChoose extends BOperation {
     return new BChoose.BSubExprs(index, chosen);
   }
 
+  public BInt index() throws BytecodeException {
+    return subExprs.apply().index();
+  }
+
+  public BExpr chosen() throws BytecodeException {
+    return subExprs.apply().chosen();
+  }
+
   @Override
   public String exprToString() throws BytecodeException {
-    var subExprs = subExprs();
+    var subExprs = this.subExprs.apply();
     return new ToStringBuilder(getClass().getSimpleName())
         .addField("hash", hash())
         .addField("evaluationType", evaluationType())
@@ -63,10 +72,5 @@ public final class BChoose extends BOperation {
         .toString();
   }
 
-  public static record BSubExprs(BInt index, BExpr chosen) implements BExprs {
-    @Override
-    public List<BExpr> toList() {
-      return list(index, chosen);
-    }
-  }
+  private record BSubExprs(BInt index, BExpr chosen) {}
 }

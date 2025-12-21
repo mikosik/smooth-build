@@ -8,7 +8,6 @@ import java.io.IOException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke.BSubExprs;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BInvokeTest extends VmTestContext {
@@ -116,8 +115,28 @@ public class BInvokeTest extends VmTestContext {
     var arguments = bTuple(bInt(1));
     var evaluationType = bIntType();
     var invoke = bInvoke(evaluationType, method, isPure, arguments);
-    assertThat(((BInvoke) exprDbOther().get(invoke.hash())).subExprs())
-        .isEqualTo(new BSubExprs(method, isPure, arguments));
+    var invokeRead = (BInvoke) exprDbOther().get(invoke.hash());
+    assertThat(invokeRead.method()).isEqualTo(method);
+    assertThat(invokeRead.isPure()).isEqualTo(isPure);
+    assertThat(invokeRead.arguments()).isEqualTo(arguments);
+  }
+
+  @Test
+  void method_is_cached() throws Exception {
+    var invoke = bInvoke(bIntType(), bMethodTuple(), bBool(), bTuple());
+    assertThat(invoke.method()).isSameInstanceAs(invoke.method());
+  }
+
+  @Test
+  void is_pure_is_cached() throws Exception {
+    var invoke = bInvoke(bIntType(), bMethodTuple(), bBool(), bTuple());
+    assertThat(invoke.isPure()).isSameInstanceAs(invoke.isPure());
+  }
+
+  @Test
+  void arguments_is_cached() throws Exception {
+    var invoke = bInvoke(bIntType(), bMethodTuple(), bBool(), bTuple());
+    assertThat(invoke.arguments()).isSameInstanceAs(invoke.arguments());
   }
 
   @Test

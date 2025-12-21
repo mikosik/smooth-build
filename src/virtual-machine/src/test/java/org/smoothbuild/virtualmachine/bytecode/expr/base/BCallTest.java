@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall.BSubExprs;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BCallTest extends VmTestContext {
@@ -49,11 +48,24 @@ public class BCallTest extends VmTestContext {
   }
 
   @Test
-  void sub_exprs_returns_sub_exprs() throws Exception {
+  void member_getters_returns_members() throws Exception {
     var lambda = bLambda(list(bStringType()), bInt());
     var argument = bString();
-    assertThat(bCall(lambda, argument).subExprs())
-        .isEqualTo(new BSubExprs(lambda, bCombine(argument)));
+    var call = bCall(lambda, argument);
+    assertThat(call.lambda()).isEqualTo(lambda);
+    assertThat(call.arguments()).isEqualTo(bCombine(argument));
+  }
+
+  @Test
+  void lambda_is_cached() throws BytecodeException {
+    var call = bCall(bLambda(list(bStringType()), bInt()), bString());
+    assertThat(call.lambda()).isSameInstanceAs(call.lambda());
+  }
+
+  @Test
+  void arguments_is_cached() throws BytecodeException {
+    var call = bCall(bLambda(list(bStringType()), bInt()), bString());
+    assertThat(call.arguments()).isSameInstanceAs(call.arguments());
   }
 
   @Nested
@@ -85,8 +97,9 @@ public class BCallTest extends VmTestContext {
     var lambda = bLambda(list(bStringType()), bInt());
     var argument = bString();
     var call = bCall(lambda, argument);
-    assertThat(((BCall) exprDbOther().get(call.hash())).subExprs())
-        .isEqualTo(new BSubExprs(lambda, bCombine(argument)));
+    var callRead = (BCall) exprDbOther().get(call.hash());
+    assertThat(callRead.lambda()).isEqualTo(lambda);
+    assertThat(callRead.arguments()).isEqualTo(bCombine(argument));
   }
 
   @Test

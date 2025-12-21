@@ -4,6 +4,7 @@ import static com.google.common.base.CaseFormat.LOWER_CAMEL;
 import static com.google.common.base.CaseFormat.UPPER_CAMEL;
 import static com.google.common.base.Preconditions.checkArgument;
 
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
@@ -29,10 +30,12 @@ public abstract sealed class BOperation extends BExpr
         BSelect,
         BSwitch {
   private final String name;
+  private final int subExprsCount;
 
-  public BOperation(MerkleRoot merkleRoot, BExprDb exprDb) {
+  public BOperation(MerkleRoot merkleRoot, BExprDb exprDb, int subExprsCount) {
     checkArgument(merkleRoot.kind() instanceof BOperationKind);
     super(merkleRoot, exprDb);
+    this.subExprsCount = subExprsCount;
     this.name = UPPER_CAMEL.to(LOWER_CAMEL, getClass().getSimpleName().substring(1));
   }
 
@@ -50,5 +53,7 @@ public abstract sealed class BOperation extends BExpr
     return kind().evaluationType();
   }
 
-  public abstract BExprs subExprs() throws BytecodeException;
+  public List<BExpr> subExprs() throws BytecodeException {
+    return readDataAsExprChain(subExprsCount);
+  }
 }

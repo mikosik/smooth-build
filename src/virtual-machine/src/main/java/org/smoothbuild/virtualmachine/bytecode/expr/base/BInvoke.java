@@ -1,10 +1,9 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.base.ToStringBuilder;
-import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
@@ -20,31 +19,37 @@ public final class BInvoke extends BOperation {
   public static final int IS_PURE_INDEX = 1;
   public static final int ARGUMENTS_INDEX = 2;
 
+  private final Function0<BSubExprs, BytecodeException> subExprs =
+      Function0.memoizer(this::fetchAndValidateSubExprs);
+
   public BInvoke(MerkleRoot merkleRoot, BExprDb exprDb) {
-    super(merkleRoot, exprDb);
+    super(merkleRoot, exprDb, 3);
     checkArgument(merkleRoot.kind() instanceof BInvokeKind);
   }
 
-  @Override
-  public BSubExprs subExprs() throws BytecodeException {
-    var members = fetchMembers();
+  private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
+    var members = members("method", "isPure", "arguments");
     var method = members.get(METHOD_INDEX).asExpr(kindDb().method());
     var isPure = members.get(IS_PURE_INDEX).asExpr(kindDb().bool());
     var arguments = members.get(ARGUMENTS_INDEX).asExpr(BTupleType.class);
     return new BSubExprs(method, isPure, arguments);
   }
 
-  public BBool isPure() throws BytecodeException {
-    return fetchMembers().get(IS_PURE_INDEX).asInstanceOf(BBool.class);
+  public BExpr method() throws BytecodeException {
+    return subExprs.apply().method();
   }
 
-  private List<Member> fetchMembers() throws BytecodeException {
-    return members("method", "isPure", "arguments");
+  public BExpr isPure() throws BytecodeException {
+    return subExprs.apply().isPure();
+  }
+
+  public BExpr arguments() throws BytecodeException {
+    return subExprs.apply().arguments();
   }
 
   @Override
   public String exprToString() throws BytecodeException {
-    var subExprs = subExprs();
+    var subExprs = this.subExprs.apply();
     return new ToStringBuilder(getClass().getSimpleName())
         .addField("hash", hash())
         .addField("evaluationType", evaluationType())
@@ -54,10 +59,5 @@ public final class BInvoke extends BOperation {
         .toString();
   }
 
-  public static record BSubExprs(BExpr method, BExpr isPure, BExpr arguments) implements BExprs {
-    @Override
-    public List<BExpr> toList() {
-      return list(method, isPure, arguments);
-    }
-  }
+  private record BSubExprs(BExpr method, BExpr isPure, BExpr arguments) {}
 }

@@ -13,7 +13,6 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BFold;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BFold.BSubExprs;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 
 public final class BFoldJob extends SchedulingJob {
@@ -26,20 +25,19 @@ public final class BFoldJob extends SchedulingJob {
 
   @Override
   public Promise<Maybe<BValue>> schedule() throws BytecodeException {
-    var subExprs = fold.subExprs();
-    var arrayArg = subExprs.array();
-    var initialArg = subExprs.initial();
-    var schedulingTask = newFoldSchedulingTask(subExprs);
+    var arrayArg = fold.array();
+    var initialArg = fold.initial();
+    var schedulingTask = newFoldSchedulingTask();
     var arrayPromise = evaluate(arrayArg);
     var initialPromise = evaluate(initialArg);
     return scheduler().submit(schedulingTask, arrayPromise, initialPromise);
   }
 
-  private Task2<BValue, BValue, BValue> newFoldSchedulingTask(BSubExprs subExprs) {
+  private Task2<BValue, BValue, BValue> newFoldSchedulingTask() {
     return (arrayValue, initialValue) -> {
       try {
         var array = ((BArray) arrayValue);
-        var folderArg = subExprs.folder();
+        var folderArg = fold.folder();
         BExpr result = initialValue;
         for (BValue element : array.elements(BValue.class)) {
           result =

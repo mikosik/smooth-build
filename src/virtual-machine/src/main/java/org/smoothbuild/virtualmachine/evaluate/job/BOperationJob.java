@@ -22,7 +22,7 @@ public abstract sealed class BOperationJob extends SchedulingJob
 
   @Override
   public Promise<Maybe<BValue>> schedule() throws BytecodeException {
-    var subExprResults = operation.subExprs().toList().map(this::job).map(Job::evaluate);
+    var subExprResults = operation.subExprs().map(this::job).map(Job::evaluate);
     return scheduler().submit(this::evaluate, subExprResults);
   }
 

@@ -26,6 +26,12 @@ public class BCombineTest extends VmTestContext {
     assertThat(bCombine(bInt(1), bString("abc")).items()).isEqualTo(list(bInt(1), bString("abc")));
   }
 
+  @Test
+  void items_is_cached() throws BytecodeException {
+    var combine = bCombine(bInt(1), bString("abc"));
+    assertThat(combine.items()).isSameInstanceAs(combine.items());
+  }
+
   @Nested
   class _equals_hash_hashcode extends AbstractBExprTestSuite<BCombine> {
     @Override

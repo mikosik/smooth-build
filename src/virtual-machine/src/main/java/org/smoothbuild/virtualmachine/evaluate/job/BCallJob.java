@@ -30,9 +30,8 @@ public final class BCallJob extends SchedulingJob {
 
   @Override
   public Promise<Maybe<BValue>> schedule() throws BytecodeException {
-    var subExprs = call.subExprs();
-    var lambda = subExprs.lambda();
-    var lambdaArgs = subExprs.arguments();
+    var lambda = call.lambda();
+    var lambdaArgs = call.arguments();
     if (lambdaArgs instanceof BCombine combine) {
       return scheduleCallWithCombineArgs(call, lambda, combine);
     } else if (lambdaArgs instanceof BTuple tuple) {
@@ -53,7 +52,7 @@ public final class BCallJob extends SchedulingJob {
     return (lambdaValue) -> {
       var bLambda = (BLambda) lambdaValue;
       try {
-        var argJobs = combine.subExprs().items().map(this::job);
+        var argJobs = combine.items().map(this::job);
         var bodyEnvironmentJobs = argJobs.addAll(environment());
         var bodyTrace = newTrace(call, bLambda, trace());
         var schedule = job(bLambda.body(), bodyEnvironmentJobs, bodyTrace).evaluate();
