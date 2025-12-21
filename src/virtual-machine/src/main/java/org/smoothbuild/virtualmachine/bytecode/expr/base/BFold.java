@@ -28,7 +28,7 @@ public final class BFold extends BOperation {
       Function0.memoizer(this::fetchAndValidateSubExprs);
 
   public BFold(MerkleRoot merkleRoot, BExprDb exprDb) {
-    super(merkleRoot, exprDb, 3);
+    super(merkleRoot, exprDb, MEMBER_NAMES.size());
     checkArgument(merkleRoot.kind() instanceof BFoldKind);
   }
 

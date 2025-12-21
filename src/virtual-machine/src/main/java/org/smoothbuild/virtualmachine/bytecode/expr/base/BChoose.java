@@ -26,7 +26,7 @@ public final class BChoose extends BOperation {
       Function0.memoizer(this::fetchAndValidateSubExprs);
 
   public BChoose(MerkleRoot merkleRoot, BExprDb exprDb) {
-    super(merkleRoot, exprDb, 2);
+    super(merkleRoot, exprDb, MEMBER_NAMES.size());
     checkArgument(merkleRoot.kind() instanceof BChooseKind);
   }
 

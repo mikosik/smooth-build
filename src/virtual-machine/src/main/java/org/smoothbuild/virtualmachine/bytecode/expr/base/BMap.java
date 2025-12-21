@@ -26,7 +26,7 @@ public final class BMap extends BOperation {
       Function0.memoizer(this::fetchAndValidateSubExprs);
 
   public BMap(MerkleRoot merkleRoot, BExprDb exprDb) {
-    super(merkleRoot, exprDb, 2);
+    super(merkleRoot, exprDb, MEMBER_NAMES.size());
     checkArgument(merkleRoot.kind() instanceof BMapKind);
   }
 

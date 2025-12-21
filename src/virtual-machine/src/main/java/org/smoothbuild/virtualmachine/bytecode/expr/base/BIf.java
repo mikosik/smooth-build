@@ -26,7 +26,7 @@ public final class BIf extends BOperation {
       Function0.memoizer(this::fetchAndValidateSubExprs);
 
   public BIf(MerkleRoot merkleRoot, BExprDb exprDb) {
-    super(merkleRoot, exprDb, 3);
+    super(merkleRoot, exprDb, MEMBER_NAMES.size());
     checkArgument(merkleRoot.kind() instanceof BIfKind);
   }
 

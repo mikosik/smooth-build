@@ -24,7 +24,7 @@ public final class BPick extends BOperation {
       Function0.memoizer(this::fetchAndValidateSubExprs);
 
   public BPick(MerkleRoot merkleRoot, BExprDb exprDb) {
-    super(merkleRoot, exprDb, 2);
+    super(merkleRoot, exprDb, MEMBER_NAMES.size());
     checkArgument(merkleRoot.kind() instanceof BPickKind);
   }
 

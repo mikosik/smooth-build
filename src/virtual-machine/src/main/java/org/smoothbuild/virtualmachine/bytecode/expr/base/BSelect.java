@@ -27,7 +27,7 @@ public final class BSelect extends BOperation {
       Function0.memoizer(this::fetchAndValidateSubExprs);
 
   public BSelect(MerkleRoot merkleRoot, BExprDb exprDb) {
-    super(merkleRoot, exprDb, 2);
+    super(merkleRoot, exprDb, MEMBER_NAMES.size());
     checkArgument(merkleRoot.kind() instanceof BSelectKind);
   }
 

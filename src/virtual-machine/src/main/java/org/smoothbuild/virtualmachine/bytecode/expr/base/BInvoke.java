@@ -27,7 +27,7 @@ public final class BInvoke extends BOperation {
       Function0.memoizer(this::fetchAndValidateSubExprs);
 
   public BInvoke(MerkleRoot merkleRoot, BExprDb exprDb) {
-    super(merkleRoot, exprDb, 3);
+    super(merkleRoot, exprDb, MEMBER_NAMES.size());
     checkArgument(merkleRoot.kind() instanceof BInvokeKind);
   }
 
