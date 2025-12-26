@@ -19,21 +19,13 @@ public class Member {
   }
 
   public BExpr asExpr(BType expectedEvaluationType) throws BExprDbException {
-    assertEvaluationType(expectedEvaluationType);
+    owner.checkMemberEvaluationType(name, expr.evaluationType(), expectedEvaluationType);
     return expr;
   }
 
   public BExpr asExpr(Class<?> expectedEvaluationType) throws BExprDbException {
-    assertEvaluationType(expectedEvaluationType);
+    owner.checkMemberEvaluationType(name, expr.evaluationType(), expectedEvaluationType);
     return expr;
-  }
-
-  public void assertEvaluationType(BType expectedEvaluationType) throws BExprDbException {
-    owner.checkMemberEvaluationType(name, expr.evaluationType(), expectedEvaluationType);
-  }
-
-  public void assertEvaluationType(Class<?> expectedEvaluationType) throws BExprDbException {
-    owner.checkMemberEvaluationType(name, expr.evaluationType(), expectedEvaluationType);
   }
 
   public <T extends BExpr> T asInstanceOf(Class<T> clazz) throws BExprDbException {
