@@ -90,7 +90,7 @@ public abstract sealed class BExpr permits BOperation, BValue {
   }
 
   private Member member(String name, Hash hash) throws BytecodeException {
-    return new Member(this, readNode(name, hash), name);
+    return new MemberImpl(this, readNode(name, hash), name);
   }
 
   protected ElementsMember loneElementsMember(String name) throws BytecodeException {
