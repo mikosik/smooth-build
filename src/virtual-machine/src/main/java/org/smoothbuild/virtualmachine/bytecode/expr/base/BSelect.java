@@ -43,7 +43,7 @@ public final class BSelect extends BOperation {
     int i = index.toJavaBigInteger().intValue();
     var tupleType = (BTupleType) selectable.evaluationType();
     int size = tupleType.elements().size();
-    if (i < SELECTABLE_INDEX || size <= i) {
+    if (i < 0 || size <= i) {
       throw new SelectHasIndexOutOfBoundException(hash(), kind(), i, size);
     }
     var fieldType = tupleType.elements().get(i);
