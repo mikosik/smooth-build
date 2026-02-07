@@ -1,0 +1,35 @@
+[versions]
+spotless = "8.2.0"
+errorprone-plugin = "5.0.0"
+errorprone-core = "2.46.0"
+nullaway = "0.12.15"
+palantir = "2.83.0"
+
+[libraries]
+errorprone-core = { group = "com.google.errorprone", name = "error_prone_core", version.ref = "errorprone-core" }
+nullaway = { group = "com.uber.nullaway", name = "nullaway", version.ref = "nullaway" }
+antlr4 = "org.antlr:antlr4:4.13.2"
+antlr4-runtime = "org.antlr:antlr4-runtime:4.13.2"
+guava = "com.google.guava:guava:33.5.0-jre"
+jspecify = "org.jspecify:jspecify:1.0.0"
+dagger = "com.google.dagger:dagger:2.59"
+dagger-compiler = "com.google.dagger:dagger-compiler:2.59"
+okio = "com.squareup.okio:okio:3.16.4"
+picocli = "info.picocli:picocli:4.7.7"
+zip4j = "net.lingala.zip4j:zip4j:2.11.5"
+awaitility = "org.awaitility:awaitility:4.3.0"
+guava-testlib = "com.google.guava:guava-testlib:33.5.0-jre"
+jakarta-inject = "jakarta.inject:jakarta.inject-api:2.0.1"
+junit-jupiter-engine = "org.junit.jupiter:junit-jupiter-engine:6.0.2"
+junit-jupiter-api = "org.junit.jupiter:junit-jupiter-api:6.0.2"
+junit-jupiter-params = "org.junit.jupiter:junit-jupiter-params:6.0.2"
+mockito = "org.mockito:mockito-core:5.21.0"
+truth = "com.google.truth:truth:1.4.5"
+junit4 = "junit:junit:4.13.2"
+
+[bundles]
+testingFrameworks = ["junit-jupiter-api", "junit-jupiter-params", "mockito", "truth", "guava-testlib", "awaitility"]
+
+[plugins]
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+errorprone = { id = "net.ltgt.errorprone", version.ref = "errorprone-plugin" }
