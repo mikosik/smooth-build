@@ -7,7 +7,6 @@ import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.filePath
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.Scanner;
 import javax.tools.SimpleJavaFileObject;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
@@ -22,13 +21,8 @@ public class InputSourceFile extends SimpleJavaFileObject {
 
   @Override
   public CharSequence getCharContent(boolean ignoreEncodingErrors) throws IOException {
-    try (Scanner scanner = scanner()) {
-      scanner.useDelimiter("\\A");
-      return scanner.hasNext() ? scanner.next() : "";
+    try (var buffered = buffer(fileContent(file).source())) {
+      return buffered.readString(CHARSET);
     }
-  }
-
-  private Scanner scanner() throws BytecodeException {
-    return new Scanner(buffer(fileContent(file).source()).inputStream(), CHARSET);
   }
 }
