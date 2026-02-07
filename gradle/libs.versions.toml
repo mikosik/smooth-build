@@ -1,5 +1,5 @@
 [versions]
-spotless = "8.2.0"
+spotless = "8.2.1"
 errorprone-plugin = "5.0.0"
 errorprone-core = "2.46.0"
 nullaway = "0.13.1"
