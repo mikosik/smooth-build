@@ -14,6 +14,7 @@ import java.math.BigInteger;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import okio.ByteString;
+import org.jspecify.annotations.NullMarked;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -1954,6 +1955,7 @@ public class BExprCorruptedTest extends VmTestContext {
 
   // helper methods
 
+  @NullMarked
   private static class AllByteValuesExceptZeroAndOneProvider implements ArgumentsProvider {
     @Override
     public Stream<? extends Arguments> provideArguments(
