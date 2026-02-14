@@ -22,7 +22,7 @@ public final class BSwitch extends BOperation {
 
   private static final List<String> SUB_EXPR_NAMES = list("choice", "handlers");
 
-  private final Function0<BSubExprs, BytecodeException> subExprs =
+  private final Function0<SubExprs, BytecodeException> subExprs =
       Function0.memoizer(this::fetchAndValidateSubExprs);
 
   public BSwitch(MerkleRoot merkleRoot, BExprDb exprDb) {
@@ -35,7 +35,7 @@ public final class BSwitch extends BOperation {
     return (BSwitchKind) super.kind();
   }
 
-  private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
+  private SubExprs fetchAndValidateSubExprs() throws BytecodeException {
     var subExprs = createSubExprList(SUB_EXPR_NAMES);
     var choice = subExprs.get(CHOICE_INDEX).asExpr(BChoiceType.class);
     var choiceType = ((BChoiceType) choice.evaluationType());
@@ -48,20 +48,20 @@ public final class BSwitch extends BOperation {
       throw new SubExprHasWrongEvaluationTypeException(
           this, "handlers", expectedHandlersType, handlers.evaluationType());
     }
-    return new BSubExprs(choice, handlers);
+    return new SubExprs(choice, handlers);
   }
 
   public BExpr choice() throws BytecodeException {
-    return subExprs.apply().choice();
+    return subExprs().choice();
   }
 
   public BCombine handlers() throws BytecodeException {
-    return subExprs.apply().handlers();
+    return subExprs().handlers();
   }
 
   @Override
   public String exprToString() throws BytecodeException {
-    var subExprs = this.subExprs.apply();
+    var subExprs = subExprs();
     return new ToStringBuilder(getClass().getSimpleName())
         .addField("hash", hash())
         .addField("evaluationType", evaluationType())
@@ -70,5 +70,9 @@ public final class BSwitch extends BOperation {
         .toString();
   }
 
-  private record BSubExprs(BExpr choice, BCombine handlers) {}
+  private SubExprs subExprs() throws BytecodeException {
+    return subExprs.apply();
+  }
+
+  private record SubExprs(BExpr choice, BCombine handlers) {}
 }

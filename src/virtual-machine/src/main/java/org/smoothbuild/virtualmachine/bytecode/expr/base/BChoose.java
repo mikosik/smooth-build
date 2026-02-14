@@ -22,7 +22,7 @@ public final class BChoose extends BOperation {
 
   private static final List<String> SUB_EXPR_NAMES = list("index", "chosen");
 
-  private final Function0<BSubExprs, BytecodeException> subExprs =
+  private final Function0<SubExprs, BytecodeException> subExprs =
       Function0.memoizer(this::fetchAndValidateSubExprs);
 
   public BChoose(MerkleRoot merkleRoot, BExprDb exprDb) {
@@ -40,7 +40,7 @@ public final class BChoose extends BOperation {
     return (BChooseKind) super.kind();
   }
 
-  private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
+  private SubExprs fetchAndValidateSubExprs() throws BytecodeException {
     var subExprs = createSubExprList(SUB_EXPR_NAMES);
     var index = subExprs.get(INDEX_INDEX).asInstanceOf(BInt.class);
 
@@ -54,20 +54,20 @@ public final class BChoose extends BOperation {
 
     var expectedEvaluationType = alternatives.get(i);
     var chosen = subExprs.get(CHOSEN_INDEX).asExpr(expectedEvaluationType);
-    return new BChoose.BSubExprs(index, chosen);
+    return new SubExprs(index, chosen);
   }
 
   public BInt index() throws BytecodeException {
-    return subExprs.apply().index();
+    return subExprs().index();
   }
 
   public BExpr chosen() throws BytecodeException {
-    return subExprs.apply().chosen();
+    return subExprs().chosen();
   }
 
   @Override
   public String exprToString() throws BytecodeException {
-    var subExprs = this.subExprs.apply();
+    var subExprs = subExprs();
     return new ToStringBuilder(getClass().getSimpleName())
         .addField("hash", hash())
         .addField("evaluationType", evaluationType())
@@ -76,5 +76,9 @@ public final class BChoose extends BOperation {
         .toString();
   }
 
-  private record BSubExprs(BInt index, BExpr chosen) {}
+  private SubExprs subExprs() throws BytecodeException {
+    return subExprs.apply();
+  }
+
+  private record SubExprs(BInt index, BExpr chosen) {}
 }

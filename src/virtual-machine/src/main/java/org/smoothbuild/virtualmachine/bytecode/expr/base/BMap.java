@@ -22,7 +22,7 @@ public final class BMap extends BOperation {
 
   private static final List<String> SUB_EXPR_NAMES = list("array", "mapper");
 
-  private final Function0<BSubExprs, BytecodeException> subExprs =
+  private final Function0<SubExprs, BytecodeException> subExprs =
       Function0.memoizer(this::fetchAndValidateSubExprs);
 
   public BMap(MerkleRoot merkleRoot, BExprDb exprDb) {
@@ -40,27 +40,27 @@ public final class BMap extends BOperation {
     return kind().evaluationType();
   }
 
-  private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
+  private SubExprs fetchAndValidateSubExprs() throws BytecodeException {
     var subExprs = createSubExprList(SUB_EXPR_NAMES);
     var array = subExprs.get(ARRAY_INDEX).asExpr(BArrayType.class);
     var arrayType = (BArrayType) array.evaluationType();
     var expectedMapperEvaluationType =
         kindDb().lambda(list(arrayType.element()), evaluationType().element());
     var mapper = subExprs.get(MAPPER_INDEX).asExpr(expectedMapperEvaluationType);
-    return new BSubExprs(array, mapper);
+    return new SubExprs(array, mapper);
   }
 
   public BExpr array() throws BytecodeException {
-    return subExprs.apply().array();
+    return subExprs().array();
   }
 
   public BExpr mapper() throws BytecodeException {
-    return subExprs.apply().mapper();
+    return subExprs().mapper();
   }
 
   @Override
   public String exprToString() throws BytecodeException {
-    var subExprs = this.subExprs.apply();
+    var subExprs = subExprs();
     return new ToStringBuilder(getClass().getSimpleName())
         .addField("hash", hash())
         .addField("evaluationType", evaluationType())
@@ -69,5 +69,9 @@ public final class BMap extends BOperation {
         .toString();
   }
 
-  private record BSubExprs(BExpr array, BExpr mapper) {}
+  private SubExprs subExprs() throws BytecodeException {
+    return subExprs.apply();
+  }
+
+  private record SubExprs(BExpr array, BExpr mapper) {}
 }

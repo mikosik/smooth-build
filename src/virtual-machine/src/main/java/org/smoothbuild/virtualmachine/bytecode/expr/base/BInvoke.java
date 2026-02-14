@@ -23,7 +23,7 @@ public final class BInvoke extends BOperation {
 
   private static final List<String> SUB_EXPR_NAMES = list("method", "isPure", "arguments");
 
-  private final Function0<BSubExprs, BytecodeException> subExprs =
+  private final Function0<SubExprs, BytecodeException> subExprs =
       Function0.memoizer(this::fetchAndValidateSubExprs);
 
   public BInvoke(MerkleRoot merkleRoot, BExprDb exprDb) {
@@ -31,29 +31,29 @@ public final class BInvoke extends BOperation {
     checkArgument(merkleRoot.kind() instanceof BInvokeKind);
   }
 
-  private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
+  private SubExprs fetchAndValidateSubExprs() throws BytecodeException {
     var subExprs = createSubExprList(SUB_EXPR_NAMES);
     var method = subExprs.get(METHOD_INDEX).asExpr(kindDb().method());
     var isPure = subExprs.get(IS_PURE_INDEX).asExpr(kindDb().bool());
     var arguments = subExprs.get(ARGUMENTS_INDEX).asExpr(BTupleType.class);
-    return new BSubExprs(method, isPure, arguments);
+    return new SubExprs(method, isPure, arguments);
   }
 
   public BExpr method() throws BytecodeException {
-    return subExprs.apply().method();
+    return subExprs().method();
   }
 
   public BExpr isPure() throws BytecodeException {
-    return subExprs.apply().isPure();
+    return subExprs().isPure();
   }
 
   public BExpr arguments() throws BytecodeException {
-    return subExprs.apply().arguments();
+    return subExprs().arguments();
   }
 
   @Override
   public String exprToString() throws BytecodeException {
-    var subExprs = this.subExprs.apply();
+    var subExprs = subExprs();
     return new ToStringBuilder(getClass().getSimpleName())
         .addField("hash", hash())
         .addField("evaluationType", evaluationType())
@@ -63,5 +63,9 @@ public final class BInvoke extends BOperation {
         .toString();
   }
 
-  private record BSubExprs(BExpr method, BExpr isPure, BExpr arguments) {}
+  private SubExprs subExprs() throws BytecodeException {
+    return subExprs.apply();
+  }
+
+  private record SubExprs(BExpr method, BExpr isPure, BExpr arguments) {}
 }

@@ -23,7 +23,7 @@ public final class BSelect extends BOperation {
 
   private static final List<String> SUB_EXPR_NAMES = list("selectable", "index");
 
-  private final Function0<BSubExprs, BytecodeException> subExprs =
+  private final Function0<SubExprs, BytecodeException> subExprs =
       Function0.memoizer(this::fetchAndValidateSubExprs);
 
   public BSelect(MerkleRoot merkleRoot, BExprDb exprDb) {
@@ -36,7 +36,7 @@ public final class BSelect extends BOperation {
     return (BSelectKind) super.kind();
   }
 
-  private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
+  private SubExprs fetchAndValidateSubExprs() throws BytecodeException {
     var subExprs = createSubExprList(SUB_EXPR_NAMES);
     var selectable = subExprs.get(SELECTABLE_INDEX).asExpr(BTupleType.class);
     var index = subExprs.get(INDEX_INDEX).asInstanceOf(BInt.class);
@@ -50,20 +50,20 @@ public final class BSelect extends BOperation {
     if (!evaluationType().equals(fieldType)) {
       throw new SelectHasWrongEvaluationTypeException(hash(), kind(), fieldType);
     }
-    return new BSubExprs(selectable, index);
+    return new SubExprs(selectable, index);
   }
 
   public BExpr selectable() throws BytecodeException {
-    return subExprs.apply().selectable();
+    return subExprs().selectable();
   }
 
   public BInt index() throws BytecodeException {
-    return subExprs.apply().index();
+    return subExprs().index();
   }
 
   @Override
   public String exprToString() throws BytecodeException {
-    var subExprs = this.subExprs.apply();
+    var subExprs = subExprs();
     return new ToStringBuilder(getClass().getSimpleName())
         .addField("hash", hash())
         .addField("evaluationType", evaluationType())
@@ -72,5 +72,9 @@ public final class BSelect extends BOperation {
         .toString();
   }
 
-  private record BSubExprs(BExpr selectable, BInt index) {}
+  private SubExprs subExprs() throws BytecodeException {
+    return subExprs.apply();
+  }
+
+  private record SubExprs(BExpr selectable, BInt index) {}
 }

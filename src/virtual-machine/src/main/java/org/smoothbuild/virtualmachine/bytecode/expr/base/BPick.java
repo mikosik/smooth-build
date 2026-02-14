@@ -20,7 +20,7 @@ public final class BPick extends BOperation {
 
   private static final List<String> SUB_EXPR_NAMES = list("pickable", "index");
 
-  private final Function0<BSubExprs, BytecodeException> subExprs =
+  private final Function0<SubExprs, BytecodeException> subExprs =
       Function0.memoizer(this::fetchAndValidateSubExprs);
 
   public BPick(MerkleRoot merkleRoot, BExprDb exprDb) {
@@ -33,24 +33,24 @@ public final class BPick extends BOperation {
     return (BPickKind) super.kind();
   }
 
-  private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
+  private SubExprs fetchAndValidateSubExprs() throws BytecodeException {
     var subExprs = createSubExprList(SUB_EXPR_NAMES);
     var pickable = subExprs.get(PICKABLE_INDEX).asExpr(kindDb().array(evaluationType()));
     var index = subExprs.get(INDEX_INDEX).asExpr(kindDb().int_());
-    return new BSubExprs(pickable, index);
+    return new SubExprs(pickable, index);
   }
 
   public BExpr pickable() throws BytecodeException {
-    return subExprs.apply().pickable();
+    return subExprs().pickable();
   }
 
   public BExpr index() throws BytecodeException {
-    return subExprs.apply().index();
+    return subExprs().index();
   }
 
   @Override
   public String exprToString() throws BytecodeException {
-    var subExprs = this.subExprs.apply();
+    var subExprs = subExprs();
     return new ToStringBuilder(getClass().getSimpleName())
         .addField("hash", hash())
         .addField("evaluationType", evaluationType())
@@ -59,5 +59,9 @@ public final class BPick extends BOperation {
         .toString();
   }
 
-  private record BSubExprs(BExpr pickable, BExpr index) {}
+  private SubExprs subExprs() throws BytecodeException {
+    return subExprs.apply();
+  }
+
+  private record SubExprs(BExpr pickable, BExpr index) {}
 }

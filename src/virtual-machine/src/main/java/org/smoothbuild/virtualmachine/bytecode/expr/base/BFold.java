@@ -24,7 +24,7 @@ public final class BFold extends BOperation {
 
   private static final List<String> SUB_EXPR_NAMES = list("array", "initial", "folder");
 
-  private final Function0<BSubExprs, BytecodeException> subExprs =
+  private final Function0<SubExprs, BytecodeException> subExprs =
       Function0.memoizer(this::fetchAndValidateSubExprs);
 
   public BFold(MerkleRoot merkleRoot, BExprDb exprDb) {
@@ -42,7 +42,7 @@ public final class BFold extends BOperation {
     return kind().evaluationType();
   }
 
-  private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
+  private SubExprs fetchAndValidateSubExprs() throws BytecodeException {
     var subExprs = createSubExprList(SUB_EXPR_NAMES);
     var array = subExprs.get(ARRAY_INDEX).asExpr(BArrayType.class);
     var arrayType = (BArrayType) array.evaluationType();
@@ -51,24 +51,24 @@ public final class BFold extends BOperation {
     var expectedFolderEvaluationType =
         kindDb().lambda(list(initialEvaluationType, arrayType.element()), initialEvaluationType);
     var folder = subExprs.get(FOLDER_INDEX).asExpr(expectedFolderEvaluationType);
-    return new BSubExprs(array, initial, folder);
+    return new SubExprs(array, initial, folder);
   }
 
   public BExpr array() throws BytecodeException {
-    return subExprs.apply().array();
+    return subExprs().array();
   }
 
   public BExpr initial() throws BytecodeException {
-    return subExprs.apply().initial();
+    return subExprs().initial();
   }
 
   public BExpr folder() throws BytecodeException {
-    return subExprs.apply().folder();
+    return subExprs().folder();
   }
 
   @Override
   public String exprToString() throws BytecodeException {
-    var subExprs = this.subExprs.apply();
+    var subExprs = subExprs();
     return new ToStringBuilder(getClass().getSimpleName())
         .addField("hash", hash())
         .addField("evaluationType", evaluationType())
@@ -78,5 +78,9 @@ public final class BFold extends BOperation {
         .toString();
   }
 
-  private record BSubExprs(BExpr array, BExpr initial, BExpr folder) {}
+  private SubExprs subExprs() throws BytecodeException {
+    return subExprs.apply();
+  }
+
+  private record SubExprs(BExpr array, BExpr initial, BExpr folder) {}
 }

@@ -21,7 +21,7 @@ public final class BCall extends BOperation {
 
   private static final List<String> SUB_EXPR_NAMES = list("lambda", "arguments");
 
-  private final Function0<BSubExprs, BytecodeException> subExprs =
+  private final Function0<SubExprs, BytecodeException> subExprs =
       Function0.memoizer(this::fetchAndValidateSubExprs);
 
   public BCall(MerkleRoot merkleRoot, BExprDb exprDb) {
@@ -34,26 +34,26 @@ public final class BCall extends BOperation {
     return (BCallKind) super.kind();
   }
 
-  private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
+  private SubExprs fetchAndValidateSubExprs() throws BytecodeException {
     var subExprs = createSubExprList(SUB_EXPR_NAMES);
     var lambda = subExprs.get(LAMBDA_INDEX).asExpr(BLambdaType.class);
     var lambdaType = (BLambdaType) lambda.evaluationType();
     checkSubExprEvaluationType("lambda.resultType", lambdaType.result(), evaluationType());
     var args = subExprs.get(ARGUMENTS_INDEX).asExpr(lambdaType.params());
-    return new BSubExprs(lambda, args);
+    return new SubExprs(lambda, args);
   }
 
   public BExpr lambda() throws BytecodeException {
-    return subExprs.apply().lambda();
+    return subExprs().lambda();
   }
 
   public BExpr arguments() throws BytecodeException {
-    return subExprs.apply().arguments();
+    return subExprs().arguments();
   }
 
   @Override
   public String exprToString() throws BytecodeException {
-    var subExprs = this.subExprs.apply();
+    var subExprs = subExprs();
     return new ToStringBuilder(getClass().getSimpleName())
         .addField("hash", hash())
         .addField("evaluationType", evaluationType())
@@ -62,5 +62,9 @@ public final class BCall extends BOperation {
         .toString();
   }
 
-  private record BSubExprs(BExpr lambda, BExpr arguments) {}
+  private SubExprs subExprs() throws BytecodeException {
+    return subExprs.apply();
+  }
+
+  private record SubExprs(BExpr lambda, BExpr arguments) {}
 }

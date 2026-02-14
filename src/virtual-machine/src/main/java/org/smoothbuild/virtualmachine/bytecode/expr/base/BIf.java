@@ -22,7 +22,7 @@ public final class BIf extends BOperation {
 
   private static final List<String> SUB_EXPR_NAMES = list("condition", "then", "else");
 
-  private final Function0<BSubExprs, BytecodeException> subExprs =
+  private final Function0<SubExprs, BytecodeException> subExprs =
       Function0.memoizer(this::fetchAndValidateSubExprs);
 
   public BIf(MerkleRoot merkleRoot, BExprDb exprDb) {
@@ -30,29 +30,29 @@ public final class BIf extends BOperation {
     checkArgument(merkleRoot.kind() instanceof BIfKind);
   }
 
-  private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
+  private SubExprs fetchAndValidateSubExprs() throws BytecodeException {
     var subExprs = createSubExprList(SUB_EXPR_NAMES);
     var condition = subExprs.get(CONDITION_INDEX).asExpr(kindDb().bool());
     var then_ = subExprs.get(THEN_INDEX).asExpr(evaluationType());
     var else_ = subExprs.get(ELSE_INDEX).asExpr(evaluationType());
-    return new BSubExprs(condition, then_, else_);
+    return new SubExprs(condition, then_, else_);
   }
 
   public BExpr condition() throws BytecodeException {
-    return subExprs.apply().condition();
+    return subExprs().condition();
   }
 
   public BExpr then_() throws BytecodeException {
-    return subExprs.apply().then_();
+    return subExprs().then_();
   }
 
   public BExpr else_() throws BytecodeException {
-    return subExprs.apply().else_();
+    return subExprs().else_();
   }
 
   @Override
   public String exprToString() throws BytecodeException {
-    var subExprs = this.subExprs.apply();
+    var subExprs = subExprs();
     return new ToStringBuilder(getClass().getSimpleName())
         .addField("hash", hash())
         .addField("evaluationType", evaluationType())
@@ -62,5 +62,9 @@ public final class BIf extends BOperation {
         .toString();
   }
 
-  private record BSubExprs(BExpr condition, BExpr then_, BExpr else_) {}
+  private SubExprs subExprs() throws BytecodeException {
+    return subExprs.apply();
+  }
+
+  private record SubExprs(BExpr condition, BExpr then_, BExpr else_) {}
 }
