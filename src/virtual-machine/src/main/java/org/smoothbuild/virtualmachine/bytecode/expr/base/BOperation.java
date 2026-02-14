@@ -53,7 +53,12 @@ public abstract sealed class BOperation extends BExpr
     return kind().evaluationType();
   }
 
-  public List<BExpr> subExprs() throws BytecodeException {
+  /**
+   * Returns the list of sub expressions without validating whether list size matches the expected
+   * count of subexpressions for this operation kind nor whether their types matches type expected
+   * by this operation kind.
+   */
+  public List<BExpr> unvalidatedSubExprs() throws BytecodeException {
     return readDataAsExprChain(subExprsCount);
   }
 }

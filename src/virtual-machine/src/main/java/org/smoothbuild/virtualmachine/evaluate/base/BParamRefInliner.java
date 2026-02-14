@@ -110,7 +110,7 @@ public class BParamRefInliner {
 
   private BCombine rewriteCombine(BCombine combine, Resolver resolver)
       throws BytecodeException, ParamRefIndexOutOfBoundsException {
-    var items = combine.subExprs();
+    var items = combine.unvalidatedSubExprs();
     var rewrittenItems = rewriteExprs(items, resolver);
     if (items.equals(rewrittenItems)) {
       return combine;
