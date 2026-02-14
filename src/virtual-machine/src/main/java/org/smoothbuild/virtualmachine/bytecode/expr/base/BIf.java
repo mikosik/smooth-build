@@ -31,7 +31,7 @@ public final class BIf extends BOperation {
   }
 
   private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
-    var members = members(MEMBER_NAMES);
+    var members = createMemberList(MEMBER_NAMES);
     var condition = members.get(CONDITION_INDEX).asExpr(kindDb().bool());
     var then_ = members.get(THEN_INDEX).asExpr(evaluationType());
     var else_ = members.get(ELSE_INDEX).asExpr(evaluationType());

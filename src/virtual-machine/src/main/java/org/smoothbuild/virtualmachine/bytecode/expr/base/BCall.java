@@ -35,7 +35,7 @@ public final class BCall extends BOperation {
   }
 
   private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
-    var members = members(MEMBER_NAMES);
+    var members = createMemberList(MEMBER_NAMES);
     var lambda = members.get(LAMBDA_INDEX).asExpr(BLambdaType.class);
     var lambdaType = (BLambdaType) lambda.evaluationType();
     checkMemberEvaluationType("lambda.resultType", lambdaType.result(), evaluationType());

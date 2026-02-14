@@ -41,7 +41,7 @@ public final class BMap extends BOperation {
   }
 
   private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
-    var members = members(MEMBER_NAMES);
+    var members = createMemberList(MEMBER_NAMES);
     var array = members.get(ARRAY_INDEX).asExpr(BArrayType.class);
     var arrayType = (BArrayType) array.evaluationType();
     var expectedMapperEvaluationType =

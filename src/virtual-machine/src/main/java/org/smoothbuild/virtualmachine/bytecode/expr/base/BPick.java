@@ -34,7 +34,7 @@ public final class BPick extends BOperation {
   }
 
   private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
-    var members = members(MEMBER_NAMES);
+    var members = createMemberList(MEMBER_NAMES);
     var pickable = members.get(PICKABLE_INDEX).asExpr(kindDb().array(evaluationType()));
     var index = members.get(INDEX_INDEX).asExpr(kindDb().int_());
     return new BSubExprs(pickable, index);

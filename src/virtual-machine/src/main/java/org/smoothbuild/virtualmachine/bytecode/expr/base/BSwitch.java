@@ -36,7 +36,7 @@ public final class BSwitch extends BOperation {
   }
 
   private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
-    var members = members(MEMBER_NAMES);
+    var members = createMemberList(MEMBER_NAMES);
     var choice = members.get(CHOICE_INDEX).asExpr(BChoiceType.class);
     var choiceType = ((BChoiceType) choice.evaluationType());
     var expectedHandlersType = choiceType

@@ -39,7 +39,7 @@ public final class BCombine extends BOperation {
   }
 
   private List<BExpr> itemsValidated() throws BytecodeException {
-    var items = loneElementsMember("items").elements();
+    var items = createLoneElementsMember("items").elements();
     var actualType = kindDb().tuple(items.map(BExpr::evaluationType));
     if (!actualType.equals(evaluationType())) {
       throw new MemberHasWrongTypeException(hash(), kind(), "items", evaluationType(), actualType);

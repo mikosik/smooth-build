@@ -38,7 +38,7 @@ public final class BOrder extends BOperation {
   }
 
   private List<BExpr> fetchElements() throws BytecodeException {
-    var member = loneElementsMember("elements");
+    var member = createLoneElementsMember("elements");
     var elements = member.elements();
     member.checkElementTypes(evaluationType().element());
     return elements;

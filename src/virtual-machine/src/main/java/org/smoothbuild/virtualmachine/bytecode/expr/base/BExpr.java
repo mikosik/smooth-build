@@ -63,7 +63,7 @@ public abstract sealed class BExpr permits BOperation, BValue {
 
   public abstract String exprToString() throws BytecodeException;
 
-  protected List<Member> members(List<String> list) throws BytecodeException {
+  protected List<Member> createMemberList(List<String> list) throws BytecodeException {
     var hashChain = readDataAsHashChain(list.size());
     return list.zip(hashChain, this::member);
   }
@@ -76,7 +76,7 @@ public abstract sealed class BExpr permits BOperation, BValue {
     return chain;
   }
 
-  protected Member loneMember(String name) throws BytecodeException {
+  protected Member createLoneMember(String name) throws BytecodeException {
     return member(name, dataHash());
   }
 
@@ -84,16 +84,16 @@ public abstract sealed class BExpr permits BOperation, BValue {
     return new MemberImpl(this, readNode(name, hash), name);
   }
 
-  protected ElementsMember loneElementsMember(String name) throws BytecodeException {
-    return loneElementsMember(name, none());
+  protected ElementsMember createLoneElementsMember(String name) throws BytecodeException {
+    return createLoneElementsMember(name, none());
   }
 
-  protected ElementsMember loneElementsMember(String name, int expectedCount)
+  protected ElementsMember createLoneElementsMember(String name, int expectedCount)
       throws BytecodeException {
-    return this.loneElementsMember(name, some(expectedCount));
+    return this.createLoneElementsMember(name, some(expectedCount));
   }
 
-  private ElementsMember loneElementsMember(String name, Maybe<Integer> expectedCount)
+  private ElementsMember createLoneElementsMember(String name, Maybe<Integer> expectedCount)
       throws BytecodeException {
     var chain = readDataAsHashChain();
     expectedCount.ifPresent(expected -> {

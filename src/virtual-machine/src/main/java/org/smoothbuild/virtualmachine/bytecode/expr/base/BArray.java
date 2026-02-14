@@ -54,7 +54,7 @@ public final class BArray extends BValue {
 
   private List<BValue> instantiateElements() throws BytecodeException {
     var elementType = type().element().javaType();
-    return loneElementsMember("elements").asListOfInstancesOf(elementType);
+    return createLoneElementsMember("elements").asListOfInstancesOf(elementType);
   }
 
   @Override

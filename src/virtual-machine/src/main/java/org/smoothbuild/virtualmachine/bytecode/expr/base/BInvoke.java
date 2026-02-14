@@ -32,7 +32,7 @@ public final class BInvoke extends BOperation {
   }
 
   private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
-    var members = members(MEMBER_NAMES);
+    var members = createMemberList(MEMBER_NAMES);
     var method = members.get(METHOD_INDEX).asExpr(kindDb().method());
     var isPure = members.get(IS_PURE_INDEX).asExpr(kindDb().bool());
     var arguments = members.get(ARGUMENTS_INDEX).asExpr(BTupleType.class);
