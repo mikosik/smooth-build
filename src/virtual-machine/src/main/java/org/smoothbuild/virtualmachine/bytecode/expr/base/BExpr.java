@@ -39,14 +39,6 @@ public abstract sealed class BExpr permits BOperation, BValue {
     this.exprDb = exprDb;
   }
 
-  protected MerkleRoot merkleRoot() {
-    return merkleRoot;
-  }
-
-  protected BExprDb exprDb() {
-    return exprDb;
-  }
-
   protected BKindDb kindDb() {
     return exprDb.kindDb();
   }
