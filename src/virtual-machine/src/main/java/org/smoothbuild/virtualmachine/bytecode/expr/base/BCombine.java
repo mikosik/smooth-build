@@ -8,7 +8,7 @@ import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberHasWrongTypeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.SubExprHasWrongTypeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BCombineKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 
@@ -39,10 +39,10 @@ public final class BCombine extends BOperation {
   }
 
   private List<BExpr> itemsValidated() throws BytecodeException {
-    var items = createLoneElementsMember("items").elements();
+    var items = createLoneElements("items").asList();
     var actualType = kindDb().tuple(items.map(BExpr::evaluationType));
     if (!actualType.equals(evaluationType())) {
-      throw new MemberHasWrongTypeException(hash(), kind(), "items", evaluationType(), actualType);
+      throw new SubExprHasWrongTypeException(hash(), kind(), "items", evaluationType(), actualType);
     }
     return items;
   }

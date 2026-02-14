@@ -18,13 +18,13 @@ public final class BPick extends BOperation {
   public static final int PICKABLE_INDEX = 0;
   public static final int INDEX_INDEX = 1;
 
-  private static final List<String> MEMBER_NAMES = list("pickable", "index");
+  private static final List<String> SUB_EXPR_NAMES = list("pickable", "index");
 
   private final Function0<BSubExprs, BytecodeException> subExprs =
       Function0.memoizer(this::fetchAndValidateSubExprs);
 
   public BPick(MerkleRoot merkleRoot, BExprDb exprDb) {
-    super(merkleRoot, exprDb, MEMBER_NAMES.size());
+    super(merkleRoot, exprDb, SUB_EXPR_NAMES.size());
     checkArgument(merkleRoot.kind() instanceof BPickKind);
   }
 
@@ -34,9 +34,9 @@ public final class BPick extends BOperation {
   }
 
   private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
-    var members = createMemberList(MEMBER_NAMES);
-    var pickable = members.get(PICKABLE_INDEX).asExpr(kindDb().array(evaluationType()));
-    var index = members.get(INDEX_INDEX).asExpr(kindDb().int_());
+    var subExprs = createSubExprList(SUB_EXPR_NAMES);
+    var pickable = subExprs.get(PICKABLE_INDEX).asExpr(kindDb().array(evaluationType()));
+    var index = subExprs.get(INDEX_INDEX).asExpr(kindDb().int_());
     return new BSubExprs(pickable, index);
   }
 

@@ -37,7 +37,7 @@ public final class BLambdaRef extends BOperation {
   }
 
   private BValue fetchLambdaName() throws BytecodeException {
-    return createLoneMember("name").asInstanceOf(BValue.class);
+    return createLoneSubExpr("name").asInstanceOf(BValue.class);
   }
 
   @Override

@@ -20,21 +20,21 @@ public final class BIf extends BOperation {
   private static final int THEN_INDEX = 1;
   private static final int ELSE_INDEX = 2;
 
-  private static final List<String> MEMBER_NAMES = list("condition", "then", "else");
+  private static final List<String> SUB_EXPR_NAMES = list("condition", "then", "else");
 
   private final Function0<BSubExprs, BytecodeException> subExprs =
       Function0.memoizer(this::fetchAndValidateSubExprs);
 
   public BIf(MerkleRoot merkleRoot, BExprDb exprDb) {
-    super(merkleRoot, exprDb, MEMBER_NAMES.size());
+    super(merkleRoot, exprDb, SUB_EXPR_NAMES.size());
     checkArgument(merkleRoot.kind() instanceof BIfKind);
   }
 
   private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
-    var members = createMemberList(MEMBER_NAMES);
-    var condition = members.get(CONDITION_INDEX).asExpr(kindDb().bool());
-    var then_ = members.get(THEN_INDEX).asExpr(evaluationType());
-    var else_ = members.get(ELSE_INDEX).asExpr(evaluationType());
+    var subExprs = createSubExprList(SUB_EXPR_NAMES);
+    var condition = subExprs.get(CONDITION_INDEX).asExpr(kindDb().bool());
+    var then_ = subExprs.get(THEN_INDEX).asExpr(evaluationType());
+    var else_ = subExprs.get(ELSE_INDEX).asExpr(evaluationType());
     return new BSubExprs(condition, then_, else_);
   }
 

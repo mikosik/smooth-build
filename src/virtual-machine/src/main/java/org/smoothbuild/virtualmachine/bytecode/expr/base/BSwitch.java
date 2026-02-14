@@ -9,7 +9,7 @@ import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberHasWrongEvaluationTypeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.SubExprHasWrongEvaluationTypeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BSwitchKind;
 
@@ -20,13 +20,13 @@ public final class BSwitch extends BOperation {
   private static final int CHOICE_INDEX = 0;
   private static final int HANDLERS_INDEX = 1;
 
-  private static final List<String> MEMBER_NAMES = list("choice", "handlers");
+  private static final List<String> SUB_EXPR_NAMES = list("choice", "handlers");
 
   private final Function0<BSubExprs, BytecodeException> subExprs =
       Function0.memoizer(this::fetchAndValidateSubExprs);
 
   public BSwitch(MerkleRoot merkleRoot, BExprDb exprDb) {
-    super(merkleRoot, exprDb, MEMBER_NAMES.size());
+    super(merkleRoot, exprDb, SUB_EXPR_NAMES.size());
     checkArgument(merkleRoot.kind() instanceof BSwitchKind);
   }
 
@@ -36,16 +36,16 @@ public final class BSwitch extends BOperation {
   }
 
   private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
-    var members = createMemberList(MEMBER_NAMES);
-    var choice = members.get(CHOICE_INDEX).asExpr(BChoiceType.class);
+    var subExprs = createSubExprList(SUB_EXPR_NAMES);
+    var choice = subExprs.get(CHOICE_INDEX).asExpr(BChoiceType.class);
     var choiceType = ((BChoiceType) choice.evaluationType());
     var expectedHandlersType = choiceType
         .alternatives()
         .map(a -> kindDb().lambda(list(a), evaluationType()))
         .construct(l -> kindDb().tuple(l));
-    var handlers = members.get(HANDLERS_INDEX).asInstanceOf(BCombine.class);
+    var handlers = subExprs.get(HANDLERS_INDEX).asInstanceOf(BCombine.class);
     if (!handlers.evaluationType().equals(expectedHandlersType)) {
-      throw new MemberHasWrongEvaluationTypeException(
+      throw new SubExprHasWrongEvaluationTypeException(
           this, "handlers", expectedHandlersType, handlers.evaluationType());
     }
     return new BSubExprs(choice, handlers);

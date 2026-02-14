@@ -4,12 +4,12 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.BExprDbException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 
-public class ElementsMember {
+public class BElements {
   private final BExpr owner;
   private final List<BExpr> exprs;
   private final String name;
 
-  public ElementsMember(BExpr owner, List<BExpr> exprs, String name) {
+  public BElements(BExpr owner, List<BExpr> exprs, String name) {
     this.owner = owner;
     this.exprs = exprs;
     this.name = name;
@@ -25,18 +25,18 @@ public class ElementsMember {
 
   public <T extends BExpr> void checkElementTypes(Class<T> elementType) throws BExprDbException {
     for (int i = 0; i < exprs.size(); i++) {
-      owner.castMember(exprs.get(i), name + "[" + i + "]", elementType);
+      owner.castSubExpr(exprs.get(i), name + "[" + i + "]", elementType);
     }
   }
 
   public void checkElementTypes(BType expectedEvaluationType) throws BExprDbException {
     for (int i = 0; i < exprs.size(); i++) {
-      owner.checkMemberEvaluationType(
+      owner.checkSubExprEvaluationType(
           name + "[" + i + "]", exprs.get(i).evaluationType(), expectedEvaluationType);
     }
   }
 
-  public List<BExpr> elements() {
+  public List<BExpr> asList() {
     return exprs;
   }
 }

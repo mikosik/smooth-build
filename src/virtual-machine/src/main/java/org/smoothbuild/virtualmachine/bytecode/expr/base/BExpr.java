@@ -15,9 +15,9 @@ import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.BExprDbException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprNodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberHasWrongEvaluationTypeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberHasWrongTypeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.MembersCountIsWrongException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.SubExprHasWrongEvaluationTypeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.SubExprHasWrongTypeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.SubExprsCountIsWrongException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
@@ -63,46 +63,45 @@ public abstract sealed class BExpr permits BOperation, BValue {
 
   public abstract String exprToString() throws BytecodeException;
 
-  protected List<Member> createMemberList(List<String> list) throws BytecodeException {
+  protected List<BSubExpr> createSubExprList(List<String> list) throws BytecodeException {
     var hashChain = readDataAsHashChain(list.size());
-    return list.zip(hashChain, this::member);
+    return list.zip(hashChain, this::subExpr);
   }
 
-  private List<Hash> readDataAsHashChain(int membersCount) throws BExprDbException {
+  private List<Hash> readDataAsHashChain(int count) throws BExprDbException {
     List<Hash> chain = readDataAsHashChain();
-    if (membersCount != -1 && chain.size() != membersCount) {
-      throw new MembersCountIsWrongException(hash(), kind(), DATA_PATH, membersCount, chain.size());
+    if (count != -1 && chain.size() != count) {
+      throw new SubExprsCountIsWrongException(hash(), kind(), DATA_PATH, count, chain.size());
     }
     return chain;
   }
 
-  protected Member createLoneMember(String name) throws BytecodeException {
-    return member(name, dataHash());
+  protected BSubExpr createLoneSubExpr(String name) throws BytecodeException {
+    return subExpr(name, dataHash());
   }
 
-  private Member member(String name, Hash hash) throws BytecodeException {
-    return new MemberImpl(this, readNode(name, hash), name);
+  private BSubExpr subExpr(String name, Hash hash) throws BytecodeException {
+    return new BSubExprImpl(this, readNode(name, hash), name);
   }
 
-  protected ElementsMember createLoneElementsMember(String name) throws BytecodeException {
-    return createLoneElementsMember(name, none());
+  protected BElements createLoneElements(String name) throws BytecodeException {
+    return createLoneElements(name, none());
   }
 
-  protected ElementsMember createLoneElementsMember(String name, int expectedCount)
-      throws BytecodeException {
-    return this.createLoneElementsMember(name, some(expectedCount));
+  protected BElements createLoneElements(String name, int expectedCount) throws BytecodeException {
+    return this.createLoneElements(name, some(expectedCount));
   }
 
-  private ElementsMember createLoneElementsMember(String name, Maybe<Integer> expectedCount)
+  private BElements createLoneElements(String name, Maybe<Integer> expectedCount)
       throws BytecodeException {
     var chain = readDataAsHashChain();
     expectedCount.ifPresent(expected -> {
       if (chain.size() != expected) {
-        throw new MembersCountIsWrongException(hash(), kind(), name, expected, chain.size());
+        throw new SubExprsCountIsWrongException(hash(), kind(), name, expected, chain.size());
       }
     });
     var exprs = readDataAsExprChain(chain, name);
-    return new ElementsMember(this, exprs, name);
+    return new BElements(this, exprs, name);
   }
 
   protected <T> T readData(Function0<T, HashedDbException> reader) throws BytecodeException {
@@ -116,8 +115,8 @@ public abstract sealed class BExpr permits BOperation, BValue {
         e -> new DecodeExprNodeException(hash(), kind(), DATA_PATH, e));
   }
 
-  protected List<BExpr> readDataAsExprChain(int membersCount) throws BytecodeException {
-    var hashes = readDataAsHashChain(membersCount);
+  protected List<BExpr> readDataAsExprChain(int count) throws BytecodeException {
+    var hashes = readDataAsHashChain(count);
     return readDataAsExprChain(hashes, DATA_PATH);
   }
 
@@ -138,27 +137,27 @@ public abstract sealed class BExpr permits BOperation, BValue {
         () -> exprDb.get(nodeHash), e -> new DecodeExprNodeException(hash(), kind(), nodePath, e));
   }
 
-  protected void checkMemberEvaluationType(String name, BType actual, BType expected)
-      throws MemberHasWrongEvaluationTypeException {
+  protected void checkSubExprEvaluationType(String name, BType actual, BType expected)
+      throws SubExprHasWrongEvaluationTypeException {
     if (!actual.equals(expected)) {
-      throw new MemberHasWrongEvaluationTypeException(this, name, expected, actual);
+      throw new SubExprHasWrongEvaluationTypeException(this, name, expected, actual);
     }
   }
 
-  protected void checkMemberEvaluationType(String name, BType actual, Class<?> expected)
-      throws MemberHasWrongEvaluationTypeException {
+  protected void checkSubExprEvaluationType(String name, BType actual, Class<?> expected)
+      throws SubExprHasWrongEvaluationTypeException {
     if (!expected.isInstance(actual)) {
-      throw new MemberHasWrongEvaluationTypeException(this, name, expected, actual);
+      throw new SubExprHasWrongEvaluationTypeException(this, name, expected, actual);
     }
   }
 
-  protected <T> T castMember(BExpr member, String name, Class<T> clazz) throws BExprDbException {
-    if (clazz.isInstance(member)) {
+  protected <T> T castSubExpr(BExpr subExpr, String name, Class<T> clazz) throws BExprDbException {
+    if (clazz.isInstance(subExpr)) {
       @SuppressWarnings("unchecked")
-      T result = (T) member;
+      T result = (T) subExpr;
       return result;
     } else {
-      throw new MemberHasWrongTypeException(hash(), kind(), name, clazz, member.getClass());
+      throw new SubExprHasWrongTypeException(hash(), kind(), name, clazz, subExpr.getClass());
     }
   }
 

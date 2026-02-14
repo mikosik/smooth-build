@@ -20,13 +20,13 @@ public final class BMap extends BOperation {
   private static final int ARRAY_INDEX = 0;
   private static final int MAPPER_INDEX = 1;
 
-  private static final List<String> MEMBER_NAMES = list("array", "mapper");
+  private static final List<String> SUB_EXPR_NAMES = list("array", "mapper");
 
   private final Function0<BSubExprs, BytecodeException> subExprs =
       Function0.memoizer(this::fetchAndValidateSubExprs);
 
   public BMap(MerkleRoot merkleRoot, BExprDb exprDb) {
-    super(merkleRoot, exprDb, MEMBER_NAMES.size());
+    super(merkleRoot, exprDb, SUB_EXPR_NAMES.size());
     checkArgument(merkleRoot.kind() instanceof BMapKind);
   }
 
@@ -41,12 +41,12 @@ public final class BMap extends BOperation {
   }
 
   private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
-    var members = createMemberList(MEMBER_NAMES);
-    var array = members.get(ARRAY_INDEX).asExpr(BArrayType.class);
+    var subExprs = createSubExprList(SUB_EXPR_NAMES);
+    var array = subExprs.get(ARRAY_INDEX).asExpr(BArrayType.class);
     var arrayType = (BArrayType) array.evaluationType();
     var expectedMapperEvaluationType =
         kindDb().lambda(list(arrayType.element()), evaluationType().element());
-    var mapper = members.get(MAPPER_INDEX).asExpr(expectedMapperEvaluationType);
+    var mapper = subExprs.get(MAPPER_INDEX).asExpr(expectedMapperEvaluationType);
     return new BSubExprs(array, mapper);
   }
 

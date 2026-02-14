@@ -22,13 +22,13 @@ public final class BFold extends BOperation {
   private static final int INITIAL_INDEX = 1;
   private static final int FOLDER_INDEX = 2;
 
-  private static final List<String> MEMBER_NAMES = list("array", "initial", "folder");
+  private static final List<String> SUB_EXPR_NAMES = list("array", "initial", "folder");
 
   private final Function0<BSubExprs, BytecodeException> subExprs =
       Function0.memoizer(this::fetchAndValidateSubExprs);
 
   public BFold(MerkleRoot merkleRoot, BExprDb exprDb) {
-    super(merkleRoot, exprDb, MEMBER_NAMES.size());
+    super(merkleRoot, exprDb, SUB_EXPR_NAMES.size());
     checkArgument(merkleRoot.kind() instanceof BFoldKind);
   }
 
@@ -43,14 +43,14 @@ public final class BFold extends BOperation {
   }
 
   private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
-    var members = createMemberList(MEMBER_NAMES);
-    var array = members.get(ARRAY_INDEX).asExpr(BArrayType.class);
+    var subExprs = createSubExprList(SUB_EXPR_NAMES);
+    var array = subExprs.get(ARRAY_INDEX).asExpr(BArrayType.class);
     var arrayType = (BArrayType) array.evaluationType();
-    var initial = members.get(INITIAL_INDEX).asExpr();
+    var initial = subExprs.get(INITIAL_INDEX).asExpr();
     var initialEvaluationType = initial.evaluationType();
     var expectedFolderEvaluationType =
         kindDb().lambda(list(initialEvaluationType, arrayType.element()), initialEvaluationType);
-    var folder = members.get(FOLDER_INDEX).asExpr(expectedFolderEvaluationType);
+    var folder = subExprs.get(FOLDER_INDEX).asExpr(expectedFolderEvaluationType);
     return new BSubExprs(array, initial, folder);
   }
 

@@ -10,7 +10,7 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.ChoiceHasIndexOutOfBoundException;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberHasWrongTypeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.SubExprHasWrongTypeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
 
 /**
@@ -20,7 +20,7 @@ public final class BChoice extends BValue {
   private static final int INDEX_INDEX = 0;
   private static final int CHOSEN_INDEX = 1;
 
-  private static final List<String> MEMBER_NAMES = list("index", "chosen");
+  private static final List<String> SUB_EXPR_NAMES = list("index", "chosen");
 
   private final Function0<Components, BytecodeException> components =
       Function0.memoizer(this::fetchAndValidateComponents);
@@ -41,8 +41,8 @@ public final class BChoice extends BValue {
   }
 
   private Components fetchAndValidateComponents() throws BytecodeException {
-    var members = createMemberList(MEMBER_NAMES);
-    var index = members.get(INDEX_INDEX).asInstanceOf(BInt.class);
+    var subExprs = createSubExprList(SUB_EXPR_NAMES);
+    var index = subExprs.get(INDEX_INDEX).asInstanceOf(BInt.class);
 
     int i = index.toJavaBigInteger().intValue();
     var alternatives = type().alternatives();
@@ -52,10 +52,10 @@ public final class BChoice extends BValue {
     }
 
     var expectedExprType = alternatives.get(i);
-    var value = members.get(CHOSEN_INDEX).asInstanceOf(BValue.class);
+    var value = subExprs.get(CHOSEN_INDEX).asInstanceOf(BValue.class);
     var itemType = value.evaluationType();
     if (!itemType.equals(expectedExprType)) {
-      throw new MemberHasWrongTypeException(hash(), kind(), "chosen", expectedExprType, itemType);
+      throw new SubExprHasWrongTypeException(hash(), kind(), "chosen", expectedExprType, itemType);
     }
     return new Components(index, value);
   }

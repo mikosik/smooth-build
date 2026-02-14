@@ -36,7 +36,7 @@ public final class BLambda extends BValue {
   }
 
   private BExpr fetchBody() throws BytecodeException {
-    return createLoneMember("body").asExpr(type().result());
+    return createLoneSubExpr("body").asExpr(type().result());
   }
 
   @Override

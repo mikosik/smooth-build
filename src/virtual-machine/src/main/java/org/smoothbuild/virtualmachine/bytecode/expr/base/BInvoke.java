@@ -21,21 +21,21 @@ public final class BInvoke extends BOperation {
   public static final int IS_PURE_INDEX = 1;
   public static final int ARGUMENTS_INDEX = 2;
 
-  private static final List<String> MEMBER_NAMES = list("method", "isPure", "arguments");
+  private static final List<String> SUB_EXPR_NAMES = list("method", "isPure", "arguments");
 
   private final Function0<BSubExprs, BytecodeException> subExprs =
       Function0.memoizer(this::fetchAndValidateSubExprs);
 
   public BInvoke(MerkleRoot merkleRoot, BExprDb exprDb) {
-    super(merkleRoot, exprDb, MEMBER_NAMES.size());
+    super(merkleRoot, exprDb, SUB_EXPR_NAMES.size());
     checkArgument(merkleRoot.kind() instanceof BInvokeKind);
   }
 
   private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
-    var members = createMemberList(MEMBER_NAMES);
-    var method = members.get(METHOD_INDEX).asExpr(kindDb().method());
-    var isPure = members.get(IS_PURE_INDEX).asExpr(kindDb().bool());
-    var arguments = members.get(ARGUMENTS_INDEX).asExpr(BTupleType.class);
+    var subExprs = createSubExprList(SUB_EXPR_NAMES);
+    var method = subExprs.get(METHOD_INDEX).asExpr(kindDb().method());
+    var isPure = subExprs.get(IS_PURE_INDEX).asExpr(kindDb().bool());
+    var arguments = subExprs.get(ARGUMENTS_INDEX).asExpr(BTupleType.class);
     return new BSubExprs(method, isPure, arguments);
   }
 

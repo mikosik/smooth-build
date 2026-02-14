@@ -10,7 +10,7 @@ import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberHasWrongTypeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.SubExprHasWrongTypeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 import org.smoothbuild.virtualmachine.bytecode.kind.exc.BKindDbException;
@@ -50,17 +50,17 @@ public final class BTuple extends BValue {
   private List<BValue> instantiateItems() throws BytecodeException {
     var type = type();
     var expectedElementTs = type.elements();
-    var members = createLoneElementsMember("elements", expectedElementTs.size());
-    var elements = members.asListOfInstancesOf(BValue.class);
+    var elementsSubExprs = createLoneElements("elements", expectedElementTs.size());
+    var elements = elementsSubExprs.asListOfInstancesOf(BValue.class);
     validateTuple(type, elements.map(BValue::type));
     return elements;
   }
 
   private void validateTuple(BTupleType type, List<BType> elementTypes)
-      throws BKindDbException, MemberHasWrongTypeException {
+      throws BKindDbException, SubExprHasWrongTypeException {
     var actualType = kindDb().tuple(elementTypes);
     if (!actualType.equals(type)) {
-      throw new MemberHasWrongTypeException(hash(), kind(), "elements", type, actualType);
+      throw new SubExprHasWrongTypeException(hash(), kind(), "elements", type, actualType);
     }
   }
 

@@ -21,13 +21,13 @@ public final class BSelect extends BOperation {
   public static final int SELECTABLE_INDEX = 0;
   public static final int INDEX_INDEX = 1;
 
-  private static final List<String> MEMBER_NAMES = list("selectable", "index");
+  private static final List<String> SUB_EXPR_NAMES = list("selectable", "index");
 
   private final Function0<BSubExprs, BytecodeException> subExprs =
       Function0.memoizer(this::fetchAndValidateSubExprs);
 
   public BSelect(MerkleRoot merkleRoot, BExprDb exprDb) {
-    super(merkleRoot, exprDb, MEMBER_NAMES.size());
+    super(merkleRoot, exprDb, SUB_EXPR_NAMES.size());
     checkArgument(merkleRoot.kind() instanceof BSelectKind);
   }
 
@@ -37,9 +37,9 @@ public final class BSelect extends BOperation {
   }
 
   private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
-    var members = createMemberList(MEMBER_NAMES);
-    var selectable = members.get(SELECTABLE_INDEX).asExpr(BTupleType.class);
-    var index = members.get(INDEX_INDEX).asInstanceOf(BInt.class);
+    var subExprs = createSubExprList(SUB_EXPR_NAMES);
+    var selectable = subExprs.get(SELECTABLE_INDEX).asExpr(BTupleType.class);
+    var index = subExprs.get(INDEX_INDEX).asInstanceOf(BInt.class);
     int i = index.toJavaBigInteger().intValue();
     var tupleType = (BTupleType) selectable.evaluationType();
     int size = tupleType.elements().size();

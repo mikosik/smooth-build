@@ -19,13 +19,13 @@ public final class BCall extends BOperation {
   private static final int LAMBDA_INDEX = 0;
   private static final int ARGUMENTS_INDEX = 1;
 
-  private static final List<String> MEMBER_NAMES = list("lambda", "arguments");
+  private static final List<String> SUB_EXPR_NAMES = list("lambda", "arguments");
 
   private final Function0<BSubExprs, BytecodeException> subExprs =
       Function0.memoizer(this::fetchAndValidateSubExprs);
 
   public BCall(MerkleRoot merkleRoot, BExprDb exprDb) {
-    super(merkleRoot, exprDb, MEMBER_NAMES.size());
+    super(merkleRoot, exprDb, SUB_EXPR_NAMES.size());
     checkArgument(merkleRoot.kind() instanceof BCallKind);
   }
 
@@ -35,11 +35,11 @@ public final class BCall extends BOperation {
   }
 
   private BSubExprs fetchAndValidateSubExprs() throws BytecodeException {
-    var members = createMemberList(MEMBER_NAMES);
-    var lambda = members.get(LAMBDA_INDEX).asExpr(BLambdaType.class);
+    var subExprs = createSubExprList(SUB_EXPR_NAMES);
+    var lambda = subExprs.get(LAMBDA_INDEX).asExpr(BLambdaType.class);
     var lambdaType = (BLambdaType) lambda.evaluationType();
-    checkMemberEvaluationType("lambda.resultType", lambdaType.result(), evaluationType());
-    var args = members.get(ARGUMENTS_INDEX).asExpr(lambdaType.params());
+    checkSubExprEvaluationType("lambda.resultType", lambdaType.result(), evaluationType());
+    var args = subExprs.get(ARGUMENTS_INDEX).asExpr(lambdaType.params());
     return new BSubExprs(lambda, args);
   }
 

@@ -21,7 +21,7 @@ public final class BParamRef extends BOperation {
   }
 
   public BInt index() throws BytecodeException {
-    return createLoneMember("index").asInstanceOf(BInt.class);
+    return createLoneSubExpr("index").asInstanceOf(BInt.class);
   }
 
   @Override
