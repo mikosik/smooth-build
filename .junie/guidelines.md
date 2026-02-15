@@ -72,12 +72,12 @@ Distribution packaging.
 Shared testing utilities.
 
 ## Tech Stack
-- **Java 24** - Primary programming language
+- **Java 25** - Primary programming language
 - **Gradle** - Build system
 - **ANTLR4** - Parser generator for the language
 - **Dagger** - Dependency injection
 - **Guava** - Utility libraries
-- **JUnit 5** - Testing framework
+- **JUnit 6** - Testing framework
 - **Mockito & Truth** - Testing utilities
 
 ## Building and Testing
@@ -92,7 +92,7 @@ Shared testing utilities.
 # Run all tests
 ./gradlew test
 
-# Run tests for a specific module
+# Run tests for a specific module (for example src/virtual-machine)
 ./gradlew :src:virtual-machine:test
 
 # Run a specific test class
