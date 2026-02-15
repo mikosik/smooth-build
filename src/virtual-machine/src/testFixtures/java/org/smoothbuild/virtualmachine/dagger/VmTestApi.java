@@ -31,7 +31,6 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambdaRef;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
@@ -53,7 +52,6 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BFoldKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIfKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BInvokeKind;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaRefKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BMapKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BOrderKind;
@@ -323,11 +321,6 @@ public interface VmTestApi extends CommonTestApi {
 
   public default BParamRefKind bParamRefKind(BType evaluationType) throws BytecodeException {
     return provide().kindDb().paramRef(evaluationType);
-  }
-
-  public default BLambdaRefKind bLambdaRefKind(BLambdaType evaluationType)
-      throws BytecodeException {
-    return provide().kindDb().lambdaRef(evaluationType);
   }
 
   public default BSelectKind bSelectKind() throws BytecodeException {
@@ -775,11 +768,6 @@ public interface VmTestApi extends CommonTestApi {
 
   public default BParamRef bParamRef(BType evaluationType, int index) throws BytecodeException {
     return provide().bytecodeFactory().paramRef(evaluationType, bInt(index));
-  }
-
-  public default BLambdaRef bLambdaRef(BLambdaType evaluationType, BValue value)
-      throws BytecodeException {
-    return provide().bytecodeFactory().lambdaRef(evaluationType, value);
   }
 
   public default BSelect bSelect() throws BytecodeException {

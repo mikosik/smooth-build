@@ -80,8 +80,6 @@ public class TestingBKind {
         CONTEXT.bPickKind(CONTEXT.bStringType()),
         CONTEXT.bParamRefKind(CONTEXT.bBlobType()),
         CONTEXT.bParamRefKind(CONTEXT.bStringType()),
-        CONTEXT.bLambdaRefKind(CONTEXT.bLambdaType(CONTEXT.bIntType())),
-        CONTEXT.bLambdaRefKind(CONTEXT.bLambdaType(CONTEXT.bStringType())),
         CONTEXT.bSelectKind(CONTEXT.bBlobType()),
         CONTEXT.bSelectKind(CONTEXT.bStringType()),
         CONTEXT.bIfKind(CONTEXT.bBlobType()),

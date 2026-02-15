@@ -26,7 +26,6 @@ public enum KindId {
   CHOICE,
   SWITCH,
   FOLD,
-  LAMBDA_REF,
   ;
 
   @SuppressWarnings("EnumOrdinal")

@@ -90,8 +90,7 @@ public class BKindTest extends VmTestContext {
         args(f -> f.pick(f.int_()), "PICK"),
         args(f -> f.select(f.int_()), "SELECT"),
         args(f -> f.switch_(f.int_()), "SWITCH"),
-        args(f -> f.paramRef(f.int_()), "PARAM_REF"),
-        args(f -> f.lambdaRef(f.lambda(list(), f.int_())), "LAMBDA_REF"));
+        args(f -> f.paramRef(f.int_()), "PARAM_REF"));
   }
 
   @Nested

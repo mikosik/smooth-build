@@ -42,7 +42,6 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambdaRef;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BParamRef;
@@ -1645,44 +1644,6 @@ public class BExprCorruptedTest extends VmTestContext {
     void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_expr_but_nowhere(
           bParamRefKind(bIntType()), (Hash hash) -> ((BParamRef) dbGet(hash)).index(), "index");
-    }
-  }
-
-  @Nested
-  class _lambda_ref {
-    @Test
-    void learning_test() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme to save lambda-ref
-       * in HashedDb.
-       */
-      var name = bInt(34);
-      var hash = hash(hash(bLambdaRefKind(bLambdaType())), hash(name));
-
-      var lambdaRef = (BLambdaRef) dbGet(hash);
-      assertThat(lambdaRef.lambdaName()).isEqualTo(name);
-    }
-
-    @Test
-    void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(bLambdaRefKind(bLambdaType()));
-    }
-
-    @Test
-    void root_with_two_data_hashes() throws Exception {
-      var index = bInt(0);
-      var dataHash = hash(index);
-      obj_root_with_two_data_hashes(
-          bLambdaRefKind(bLambdaType()), dataHash, (Hash hash) -> ((BLambdaRef) dbGet(hash))
-              .lambdaName());
-    }
-
-    @Test
-    void root_with_data_hash_pointing_nowhere() throws Exception {
-      obj_root_with_data_hash_not_pointing_to_expr_but_nowhere(
-          bLambdaRefKind(bLambdaType()),
-          (Hash hash) -> ((BLambdaRef) dbGet(hash)).lambdaName(),
-          "name");
     }
   }
 

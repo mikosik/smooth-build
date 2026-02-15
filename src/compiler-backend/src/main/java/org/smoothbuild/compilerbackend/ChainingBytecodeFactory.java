@@ -16,7 +16,6 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambdaRef;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BParamRef;
@@ -101,11 +100,6 @@ class ChainingBytecodeFactory {
   public BParamRef paramRef(BType evaluationType, BigInteger index) throws SbTranslatorException {
     return invokeTranslatingIOException(
         () -> bytecodeFactory.paramRef(evaluationType, bytecodeFactory.int_(index)));
-  }
-
-  public BLambdaRef lambdaRef(BLambdaType evaluationType, BValue value)
-      throws SbTranslatorException {
-    return invokeTranslatingIOException(() -> bytecodeFactory.lambdaRef(evaluationType, value));
   }
 
   // types

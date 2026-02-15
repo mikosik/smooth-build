@@ -19,7 +19,6 @@ import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.IF;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.INT;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.INVOKE;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.LAMBDA;
-import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.LAMBDA_REF;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.MAP;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.ORDER;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.PARAM_REF;
@@ -52,7 +51,6 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BIfKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BInvokeKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaRefKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BMapKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BOperationKind;
@@ -205,10 +203,6 @@ public class BKindDb {
     return newOperation(PARAM_REF, evaluationType, BParamRefKind::new);
   }
 
-  public BLambdaRefKind lambdaRef(BLambdaType evaluationType) throws BKindDbException {
-    return newOperation(LAMBDA_REF, evaluationType, BLambdaRefKind::new);
-  }
-
   public BSelectKind select(BType evaluationType) throws BKindDbException {
     return newOperation(SELECT, evaluationType, BSelectKind::new);
   }
@@ -240,8 +234,6 @@ public class BKindDb {
       case ORDER -> readOperationKind(hash, children, id, BArrayType.class, BOrderKind::new);
       case PICK -> readOperationKind(hash, children, id, BType.class, BPickKind::new);
       case PARAM_REF -> readOperationKind(hash, children, id, BType.class, BParamRefKind::new);
-      case LAMBDA_REF ->
-        readOperationKind(hash, children, id, BLambdaType.class, BLambdaRefKind::new);
       case SELECT -> readOperationKind(hash, children, id, BType.class, BSelectKind::new);
       case SWITCH -> readOperationKind(hash, children, id, BType.class, BSwitchKind::new);
       case TUPLE -> readTupleType(hash, children);
