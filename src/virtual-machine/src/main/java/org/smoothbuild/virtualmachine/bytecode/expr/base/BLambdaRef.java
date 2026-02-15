@@ -14,8 +14,8 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
  * This class is thread-safe.
  */
 public final class BLambdaRef extends BOperation {
-  private final Function0<BValue, BytecodeException> tag =
-      Function0.memoizer(this::fetchLambdaName);
+  private final Function0<BValue, BytecodeException> referencedName =
+      Function0.memoizer(this::fetchReferencedName);
 
   public BLambdaRef(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb, 1);
@@ -32,12 +32,12 @@ public final class BLambdaRef extends BOperation {
     return kind().evaluationType();
   }
 
-  public BValue lambdaName() throws BytecodeException {
-    return tag.apply();
+  public BValue referencedName() throws BytecodeException {
+    return referencedName.apply();
   }
 
-  private BValue fetchLambdaName() throws BytecodeException {
-    return createLoneSubExpr("name").asInstanceOf(BValue.class);
+  private BValue fetchReferencedName() throws BytecodeException {
+    return createLoneSubExpr("referencedName").asInstanceOf(BValue.class);
   }
 
   @Override
@@ -45,7 +45,7 @@ public final class BLambdaRef extends BOperation {
     return new ToStringBuilder(getClass().getSimpleName())
         .addField("hash", hash())
         .addField("evaluationType", evaluationType())
-        .addField("lambdaName", tag.apply())
+        .addField("referencedName", referencedName())
         .toString();
   }
 }
