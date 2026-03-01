@@ -19,9 +19,9 @@ public class IfFunc {
     var conditionParamType = f.boolType();
     var parameterTypes = f.tupleType(conditionParamType, resultType, resultType);
 
-    var conditionParamReference = f.paramRef(conditionParamType, f.int_(BigInteger.ZERO));
-    var thenParamReference = f.paramRef(resultType, f.int_(BigInteger.ONE));
-    var elseParamReference = f.paramRef(resultType, f.int_(BigInteger.TWO));
+    var conditionParamReference = f.paramRef(conditionParamType, f.int_(BigInteger.ONE));
+    var thenParamReference = f.paramRef(resultType, f.int_(BigInteger.TWO));
+    var elseParamReference = f.paramRef(resultType, f.int_(BigInteger.valueOf(3)));
 
     var funcType = f.lambdaType(parameterTypes, resultType);
     var body = f.if_(conditionParamReference, thenParamReference, elseParamReference);

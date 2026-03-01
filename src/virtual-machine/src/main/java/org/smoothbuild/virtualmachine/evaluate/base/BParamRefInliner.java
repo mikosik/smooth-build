@@ -176,7 +176,7 @@ public class BParamRefInliner {
     var lambdaType = lambda.type();
     int paramsSize = lambdaType.params().size();
     var body = lambda.body();
-    var rewrittenBody = rewriteExpr(body, resolver.withIncreasedParamCount(paramsSize));
+    var rewrittenBody = rewriteExpr(body, resolver.withIncreasedParamCount(paramsSize + 1));
     if (body.equals(rewrittenBody)) {
       return lambda;
     } else {

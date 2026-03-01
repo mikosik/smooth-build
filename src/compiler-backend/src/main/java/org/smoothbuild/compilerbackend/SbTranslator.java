@@ -6,8 +6,7 @@ import static org.smoothbuild.common.collect.Map.mapOfAll;
 import static org.smoothbuild.common.collect.Map.zipToMap;
 import static org.smoothbuild.common.collect.Maps.computeIfAbsent;
 import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileErrorMessage;
-import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
-import static org.smoothbuild.compilerfrontend.lang.name.NList.nlistWithShadowing;
+import static org.smoothbuild.compilerfrontend.lang.name.Bindings.bindings;
 import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.BYTECODE;
 import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.NATIVE_PURE;
@@ -55,7 +54,6 @@ import org.smoothbuild.compilerfrontend.lang.define.SStructSelect;
 import org.smoothbuild.compilerfrontend.lang.define.STupleSelect;
 import org.smoothbuild.compilerfrontend.lang.name.Bindings;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
-import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
@@ -81,7 +79,9 @@ public class SbTranslator {
   private final FileContentReader fileContentReader;
   private final BytecodeLoader bytecodeLoader;
   private final Bindings<SPolyEvaluable> evaluables;
-  private final NList<SItem> lexicalEnvironment;
+  private final Bindings<BoundElement> bindings;
+  private final int environmentSize;
+
   private final java.util.Map<CacheKey, BExpr> cache;
   private final java.util.Map<Hash, String> names;
   private final java.util.Map<Hash, Location> locations;
@@ -98,7 +98,8 @@ public class SbTranslator {
         fileContentReader,
         bytecodeLoader,
         evaluables,
-        nlist(),
+        bindings(),
+        0,
         new HashMap<>(),
         new HashMap<>(),
         new HashMap<>());
@@ -110,7 +111,8 @@ public class SbTranslator {
       FileContentReader fileContentReader,
       BytecodeLoader bytecodeLoader,
       Bindings<SPolyEvaluable> evaluables,
-      NList<SItem> lexicalEnvironment,
+      Bindings<BoundElement> bindings,
+      int environmentSize,
       java.util.Map<CacheKey, BExpr> cache,
       java.util.Map<Hash, String> names,
       java.util.Map<Hash, Location> locations) {
@@ -119,7 +121,8 @@ public class SbTranslator {
     this.fileContentReader = fileContentReader;
     this.bytecodeLoader = bytecodeLoader;
     this.evaluables = evaluables;
-    this.lexicalEnvironment = lexicalEnvironment;
+    this.bindings = bindings;
+    this.environmentSize = environmentSize;
     this.cache = cache;
     this.names = names;
     this.locations = locations;
@@ -182,7 +185,8 @@ public class SbTranslator {
         fileContentReader,
         bytecodeLoader,
         evaluables,
-        lexicalEnvironment,
+        bindings,
+        environmentSize,
         cache,
         names,
         locations);
@@ -199,10 +203,12 @@ public class SbTranslator {
     var parts = id.parts();
     if (parts.size() == 1) {
       var name = parts.get(0);
-      var itemS = lexicalEnvironment.get(name);
-      if (itemS != null) {
-        var evaluationType = typeTranslator.translate(itemS.type());
-        var index = BigInteger.valueOf(lexicalEnvironment.indexOf(name));
+      var result = bindings.find(name);
+      if (result.isOk()) {
+        var boundElement = result.ok();
+        var evaluationType = typeTranslator.translate(boundElement.item().type());
+        var index =
+            BigInteger.valueOf(boundElement.index + environmentSize - boundElement.environmentSize);
         var bParamRef = bytecodeF.paramRef(evaluationType, index);
         return saveNalAndReturn(name.toString(), sMonoReference, bParamRef);
       }
@@ -238,14 +244,22 @@ public class SbTranslator {
   }
 
   private SbTranslator funcBodySbTranslator(SFunc sFunc) {
-    var newEnvironment = nlistWithShadowing(sFunc.params().list().addAll(lexicalEnvironment));
+    var params = sFunc.params().list();
+    var newEnvironmentSize = environmentSize + 1 + params.size();
+    var map = params
+        .zipWithIndex()
+        .toMap(
+            t -> t.element1().name(),
+            t -> new BoundElement(t.element1(), t.element2() + 1, newEnvironmentSize));
+    var newBindings = bindings(bindings, map);
     return new SbTranslator(
         bytecodeF,
         typeTranslator,
         fileContentReader,
         bytecodeLoader,
         evaluables,
-        newEnvironment,
+        newBindings,
+        newEnvironmentSize,
         cache,
         names,
         locations);
@@ -296,7 +310,7 @@ public class SbTranslator {
         .params()
         .elements()
         .zipWithIndex()
-        .map(t -> bytecodeF.paramRef(t.element1(), BigInteger.valueOf(t.element2())));
+        .map(t -> bytecodeF.paramRef(t.element1(), BigInteger.valueOf(t.element2() + 1)));
     return bytecodeF.combine(argumentReferences);
   }
 
@@ -311,7 +325,8 @@ public class SbTranslator {
     return sParamTypes
         .elements()
         .zipWithIndex()
-        .map(tuple -> bytecodeF.paramRef(tuple.element1(), BigInteger.valueOf(tuple.element2())));
+        .map(tuple ->
+            bytecodeF.paramRef(tuple.element1(), BigInteger.valueOf(tuple.element2() + 1)));
   }
 
   private BOrder translateOrder(SOrder sOrder) throws SbTranslatorException {
@@ -467,4 +482,6 @@ public class SbTranslator {
   }
 
   private static record CacheKey(Id id, Map<STypeVar, BType> varMap) {}
+
+  private record BoundElement(SItem item, int index, int environmentSize) {}
 }

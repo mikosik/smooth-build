@@ -96,7 +96,7 @@ public class BMapTest extends VmTestContext {
     var map = bMap(bArray(bInt()), bIntIdLambda());
     assertThat(map.toString()).isEqualTo("""
         BMap(
-          hash = 03dfaa1ba8fb539e33af03360e83237a69d3152fd8c4181eefd3166280c25574
+          hash = 2022d8e45d15a43dabc2e89e0defe020ecc200f765e3cff9b55d947737e69c42
           evaluationType = [Int]
           array = BArray(
             hash = 0bb233bbb42989f27846b6a121ff2570f12136aeababcf0d6fe1c57195bcc2a9
@@ -110,12 +110,12 @@ public class BMapTest extends VmTestContext {
             ]
           )
           mapper = BLambda(
-            hash = b7124902c60202d0f9cce59779a96f961dbaa61e11a55eab02e850173e0bae1b
+            hash = d7d0a5f6e57fdfafa74f1354c4b252514164daf8911ef9c7f1db2d84f691f350
             type = (Int)->Int
             body = BParamRef(
-              hash = ddeb39ceb0da343b6e43e79988a72b9022c6326834faa98bc6386a63f6250b47
+              hash = c6002edfb18e99dc95cd152fb6ade7c5a765e9544aa4ad5fc8df6844dd408caa
               evaluationType = Int
-              index = 0
+              index = 1
             )
           )
         )""");

@@ -483,11 +483,11 @@ public interface VmTestApi extends CommonTestApi {
   }
 
   public default BLambda bIntIdLambda() throws BytecodeException {
-    return bLambda(list(bIntType()), bParamRef(bIntType(), 0));
+    return bLambda(list(bIntType()), bParamRef(bIntType(), 1));
   }
 
   public default BLambda bStringIdLambda() throws BytecodeException {
-    return bLambda(list(bStringType()), bParamRef(bStringType(), 0));
+    return bLambda(list(bStringType()), bParamRef(bStringType(), 1));
   }
 
   public default BLambda bs2iLambda() throws BytecodeException {

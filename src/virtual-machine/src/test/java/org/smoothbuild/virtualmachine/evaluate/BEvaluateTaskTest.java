@@ -24,10 +24,12 @@ import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.schedule.Scheduler.LABEL;
 import static org.smoothbuild.common.schedule.Tasks.argument;
 import static org.smoothbuild.common.testing.AwaitHelper.await;
+import static org.smoothbuild.virtualmachine.VmConstants.CALL_DEPTH_LIMIT;
 import static org.smoothbuild.virtualmachine.VmConstants.VM_EVALUATE;
 import static org.smoothbuild.virtualmachine.VmConstants.VM_LABEL;
 
 import com.google.common.base.Splitter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
@@ -49,10 +51,12 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 import org.smoothbuild.virtualmachine.evaluate.base.BExprAttributes;
@@ -63,7 +67,9 @@ import org.smoothbuild.virtualmachine.evaluate.job.Job;
 import org.smoothbuild.virtualmachine.evaluate.job.JobContext;
 import org.smoothbuild.virtualmachine.evaluate.plugin.Container;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
+import org.smoothbuild.virtualmachine.testing.func.nativ.AddInts;
 import org.smoothbuild.virtualmachine.testing.func.nativ.ConcatStrings;
+import org.smoothbuild.virtualmachine.testing.func.nativ.Equals;
 
 public class BEvaluateTaskTest extends VmTestContext {
   public static final ConcurrentHashMap<String, AtomicInteger> COUNTERS = new ConcurrentHashMap<>();
@@ -107,7 +113,7 @@ public class BEvaluateTaskTest extends VmTestContext {
         var invoke = bInvoke(bStringType(), bMethodTuple(), bTuple(bString(testName)));
         var innerLambda = bLambda(list(bStringType()), bInt(7));
         var outerLambda =
-            bLambda(list(bStringType()), bCall(innerLambda, bParamRef(bStringType(), 0)));
+            bLambda(list(bStringType()), bCall(innerLambda, bParamRef(bStringType(), 1)));
         var call = bCall(outerLambda, invoke);
 
         evaluate(bEvaluate(nativeMethodLoader), call);
@@ -121,7 +127,7 @@ public class BEvaluateTaskTest extends VmTestContext {
         var nativeMethodLoader = nativeMethodLoaderThatAlwaysLoadsMemoizeString();
         var invoke = bInvoke(bStringType(), bMethodTuple(), bTuple(bString(testName)));
         var type = bStringType();
-        var lambda = bLambda(list(type), bCombine(bParamRef(type, 0), bParamRef(type, 0)));
+        var lambda = bLambda(list(type), bCombine(bParamRef(type, 1), bParamRef(type, 1)));
         var call = bCall(lambda, invoke);
 
         evaluate(bEvaluate(nativeMethodLoader), call);
@@ -280,7 +286,7 @@ public class BEvaluateTaskTest extends VmTestContext {
         void lambda_passed_as_argument() throws Exception {
           var paramLambda = bLambda(bInt(7));
           var paramLambdaType = paramLambda.evaluationType();
-          var outerLambda = bLambda(list(paramLambdaType), bCall(bParamRef(paramLambdaType, 0)));
+          var outerLambda = bLambda(list(paramLambdaType), bCall(bParamRef(paramLambdaType, 1)));
           var call = bCall(outerLambda, paramLambda);
           assertThat(evaluate(call)).isEqualTo(bInt(7));
         }
@@ -295,7 +301,7 @@ public class BEvaluateTaskTest extends VmTestContext {
 
         @Test
         void lambda_returning_param_of_enclosing_lambda() throws Exception {
-          var innerLambda = bLambda(bParamRef(bIntType(), 0));
+          var innerLambda = bLambda(bParamRef(bIntType(), 2));
           var outerLambda = bLambda(list(bIntType()), innerLambda);
           var callToOuter = bCall(outerLambda, bInt(17));
           var callToInnerReturnedByOuter = bCall(callToOuter);
@@ -305,12 +311,68 @@ public class BEvaluateTaskTest extends VmTestContext {
         @Test
         void lambda_returning_value_from_environment_that_references_another_environment()
             throws Exception {
-          var innerLambda = bLambda(bParamRef(bIntType(), 0));
+          var innerLambda = bLambda(bParamRef(bIntType(), 2));
           var middleLambda = bLambda(list(bIntType()), innerLambda);
           var outerLambda =
-              bLambda(list(bIntType()), bCall(middleLambda, bParamRef(bIntType(), 0)));
+              bLambda(list(bIntType()), bCall(middleLambda, bParamRef(bIntType(), 1)));
           var middleReturnedByOuter = bCall(outerLambda, bInt(17));
           assertThat(evaluate(bCall(middleReturnedByOuter))).isEqualTo(bInt(17));
+        }
+
+        @Test
+        void recursive_call_calculating_fibonacci_number() throws Exception {
+          /*
+           * fibonacci(int n1, int n2, int index)
+           * if (index == 1) {
+           *   return n1;
+           * } else {
+           *   return fibonacci(n2, n1 + n2, index - 1);
+           * }
+           */
+          List<BType> paramTypes = list(bIntType(), bIntType(), bIntType());
+          var fibonacci = bLambda(
+              paramTypes,
+              bIf(
+                  bCall(equalIntsBLambda(), bParamRef(3), bInt(1)),
+                  bParamRef(1),
+                  bCall(
+                      bParamRef(bLambdaType(paramTypes, bIntType()), 0),
+                      bParamRef(2),
+                      bCall(addIntsBLambda(), bParamRef(1), bParamRef(2)),
+                      bCall(addIntsBLambda(), bParamRef(3), bInt(-1)))));
+
+          var fibonacci7 = bCall(fibonacci, bInt(1), bInt(2), bInt(7));
+          assertThat(evaluate(fibonacci7)).isEqualTo(bInt(21));
+        }
+
+        @Nested
+        class _call_depth {
+          @Test
+          void infinite_recursion_is_detected() throws Exception {
+            var lambdaType = bLambdaType(list(bIntType()), bIntType());
+            var recursiveCall = bCall(bParamRef(lambdaType, 0), bParamRef(bIntType(), 1));
+            var lambda = bLambda(list(bIntType()), recursiveCall);
+            var call = bCall(lambda, bInt(1));
+
+            evaluate(bEvaluateTask(), call);
+
+            assertReportsContains(
+                provide().reporter().reports(),
+                FATAL,
+                "Call depth limit (" + CALL_DEPTH_LIMIT + ") exceeded.");
+          }
+        }
+
+        private BLambda addIntsBLambda() throws IOException {
+          var arguments = bCombine(bParamRef(bIntType(), 1), bParamRef(bIntType(), 2));
+          var body = bInvoke(bIntType(), AddInts.class, true, arguments);
+          return bLambda(list(bIntType(), bIntType()), body);
+        }
+
+        private BLambda equalIntsBLambda() throws IOException {
+          var arguments = bCombine(bParamRef(bIntType(), 1), bParamRef(bIntType(), 2));
+          var body = bInvoke(bBoolType(), Equals.class, true, arguments);
+          return bLambda(list(bIntType(), bIntType()), body);
         }
       }
 
@@ -331,7 +393,7 @@ public class BEvaluateTaskTest extends VmTestContext {
       void switch_() throws Exception {
         var type = bChoiceType(bStringType(), bIntType());
         var choice = bChoice(type, bInt(0), bString("7"));
-        var tupelizeString = bLambda(list(bStringType()), bCombine(bParamRef(bStringType(), 0)));
+        var tupelizeString = bLambda(list(bStringType()), bCombine(bParamRef(bStringType(), 1)));
         var intToTuple = bLambda(list(bIntType()), bTuple(bString("x")));
         var switch_ = bSwitch(choice, bCombine(tupelizeString, intToTuple));
         assertThat(evaluate(switch_)).isEqualTo(bTuple(bString("7")));
@@ -363,7 +425,7 @@ public class BEvaluateTaskTest extends VmTestContext {
       @Test
       void map() throws Exception {
         var array = bArray(bInt(1), bInt(4));
-        var mapper = bLambda(list(bIntType()), bCombine(bParamRef(bIntType(), 0)));
+        var mapper = bLambda(list(bIntType()), bCombine(bParamRef(bIntType(), 1)));
         var map = bMap(array, mapper);
         assertThat(evaluate(map)).isEqualTo(bArray(bTuple(bInt(1)), bTuple(bInt(4))));
       }
@@ -376,7 +438,7 @@ public class BEvaluateTaskTest extends VmTestContext {
 
       @Test
       void fold() throws Exception {
-        var arguments = bCombine(bParamRef(bStringType(), 0), bParamRef(bStringType(), 1));
+        var arguments = bCombine(bParamRef(bStringType(), 1), bParamRef(bStringType(), 2));
         var body = bInvoke(bStringType(), ConcatStrings.class, true, arguments);
         var folder = bLambda(list(bStringType(), bStringType()), body);
 
@@ -389,7 +451,7 @@ public class BEvaluateTaskTest extends VmTestContext {
 
       @Test
       void fold_empty_array() throws Exception {
-        var arguments = bCombine(bParamRef(0), bParamRef(1));
+        var arguments = bCombine(bParamRef(1), bParamRef(2));
         var body = bInvoke(bStringType(), ConcatStrings.class, true, arguments);
         var folder = bLambda(list(bStringType(), bStringType()), body);
 
@@ -448,7 +510,7 @@ public class BEvaluateTaskTest extends VmTestContext {
       class _reference {
         @Test
         void var_referencing_lambda_param() throws Exception {
-          var lambda = bLambda(list(bIntType()), bParamRef(bIntType(), 0));
+          var lambda = bLambda(list(bIntType()), bParamRef(bIntType(), 1));
           var callB = bCall(lambda, bInt(7));
           assertThat(evaluate(callB)).isEqualTo(bInt(7));
         }
@@ -456,14 +518,14 @@ public class BEvaluateTaskTest extends VmTestContext {
         @Test
         void var_inside_call_to_inner_lambda_referencing_param_of_enclosing_lambda()
             throws Exception {
-          var innerLambda = bLambda(list(), bParamRef(bIntType(), 0));
+          var innerLambda = bLambda(list(), bParamRef(bIntType(), 2));
           var outerLambda = bLambda(list(bIntType()), bCall(innerLambda));
           assertThat(evaluate(bCall(outerLambda, bInt(7)))).isEqualTo(bInt(7));
         }
 
         @Test
         void var_inside_inner_lambda_referencing_param_of_enclosing_lambda() throws Exception {
-          var innerLambda = bLambda(list(bIntType()), bParamRef(bIntType(), 1));
+          var innerLambda = bLambda(list(bIntType()), bParamRef(bIntType(), 3));
           var outerLambda = bLambda(list(bIntType()), innerLambda);
           var callOuter = bCall(outerLambda, bInt(7));
           var callInner = bCall(callOuter, bInt(8));
@@ -482,18 +544,18 @@ public class BEvaluateTaskTest extends VmTestContext {
               FATAL,
               "Vm inline Task failed with exception:\n"
                   + "org.smoothbuild.virtualmachine.evaluate.job.ParamRefIndexOutOfBoundsException:"
-                  + " ParamRef index = 2 is out of bounds. Bound variables size = 1.");
+                  + " ParamRef index = 2 is out of bounds. Bound variables size = 2.");
         }
 
         @Test
         void
             reference_with_eval_type_different_than_actual_environment_value_eval_type_causes_fatal()
                 throws Exception {
-          var lambda = bLambda(list(bBlobType()), bParamRef(bIntType(), 0));
+          var lambda = bLambda(list(bBlobType()), bParamRef(bIntType(), 1));
           var call = bCall(lambda, bBlob());
           evaluate(bEvaluateTask(), call);
           var trace = trace("???", unknownLocation());
-          var fatal = fatal("environment(0) evaluationType is `Blob` but expected `Int`.");
+          var fatal = fatal("environment(1) evaluationType is `Blob` but expected `Int`.");
           var expected = report(VM_LABEL.append(":schedule:paramRef"), trace, list(fatal));
           assertThat(provide().reporter().reports()).contains(expected);
         }

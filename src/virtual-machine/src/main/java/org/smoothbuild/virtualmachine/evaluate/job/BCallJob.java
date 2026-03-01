@@ -3,6 +3,7 @@ package org.smoothbuild.virtualmachine.evaluate.job;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.location.Locations.unknownLocation;
 import static org.smoothbuild.common.schedule.Output.successOutput;
+import static org.smoothbuild.virtualmachine.VmConstants.CALL_DEPTH_LIMIT;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
@@ -29,7 +30,10 @@ public final class BCallJob extends SchedulingJob {
   }
 
   @Override
-  public Promise<Maybe<BValue>> schedule() throws BytecodeException {
+  public Promise<Maybe<BValue>> schedule() throws JobException, BytecodeException {
+    if (trace().depth() >= CALL_DEPTH_LIMIT) {
+      throw new JobException("Call depth limit (%d) exceeded.".formatted(CALL_DEPTH_LIMIT));
+    }
     var lambda = call.lambda();
     var lambdaArgs = call.arguments();
     if (lambdaArgs instanceof BCombine combine) {
@@ -53,7 +57,7 @@ public final class BCallJob extends SchedulingJob {
       var bLambda = (BLambda) lambdaValue;
       try {
         var argJobs = combine.items().map(this::job);
-        var bodyEnvironmentJobs = argJobs.addAll(environment());
+        var bodyEnvironmentJobs = bodyEnvironmentJobs(bLambda, argJobs);
         var bodyTrace = newTrace(call, bLambda, trace());
         var schedule = job(bLambda.body(), bodyEnvironmentJobs, bodyTrace).evaluate();
         return successOutput(schedule, executeLabel(), trace());
@@ -114,9 +118,15 @@ public final class BCallJob extends SchedulingJob {
   private Promise<Maybe<BValue>> scheduleCallBodyWithTupleArguments(
       BTuple tuple, BLambda bLambda, Trace trace) throws BytecodeException {
     var argumentJobs = tuple.elements().map(j -> job(j, list(), new Trace()));
-    var bodyEnvironmentJobs = argumentJobs.addAll(environment());
+    var bodyEnvironmentJobs = bodyEnvironmentJobs(bLambda, argumentJobs);
     var bodyJob = job(bLambda.body(), bodyEnvironmentJobs, trace);
     return bodyJob.evaluate();
+  }
+
+  private List<Job> bodyEnvironmentJobs(BLambda bLambda, List<Job> argumentJobs)
+      throws BytecodeException {
+    var lambdaJob = job(bLambda, list(), new Trace());
+    return list(lambdaJob).addAll(argumentJobs).addAll(environment());
   }
 
   private Label executeLabel() {

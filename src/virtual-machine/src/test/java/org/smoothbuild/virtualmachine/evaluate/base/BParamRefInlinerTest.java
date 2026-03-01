@@ -133,17 +133,22 @@ public class BParamRefInlinerTest extends VmTestContext {
 
     @Test
     void lambda_body_with_var_referencing_param_of_this_lambda() throws Exception {
+      assertReferenceInliningDoesNotChangeExpression(1, r -> bLambda(list(bIntType()), r));
+    }
+
+    @Test
+    void lambda_body_with_var_referencing_this_lambda() throws Exception {
       assertReferenceInliningDoesNotChangeExpression(0, r -> bLambda(list(bIntType()), r));
     }
 
     @Test
     void lambda_body_with_var_referencing_param_of_enclosing_lambda() throws Exception {
-      assertReferenceInliningDoesNotChangeExpression(1, r -> lambdaInsideLambda(r));
+      assertReferenceInliningDoesNotChangeExpression(3, r -> lambdaInsideLambda(r));
     }
 
     @Test
     void lambda_body_with_var_referencing_unbound_param() throws Exception {
-      assertReferenceInliningReplacesReference(2, bInt(1), r -> lambdaInsideLambda(r));
+      assertReferenceInliningReplacesReference(5, bInt(1), r -> lambdaInsideLambda(r));
     }
 
     private BLambda lambdaInsideLambda(BExpr r) throws BytecodeException {
@@ -158,7 +163,7 @@ public class BParamRefInlinerTest extends VmTestContext {
 
     @Test
     void call_lambda() throws Exception {
-      assertReferenceInliningReplacesReference(r -> bCall(bLambda(r)));
+      assertReferenceInliningReplacesReference(3, bInt(2), r -> bCall(bLambda(r)));
     }
 
     @Test
@@ -225,7 +230,7 @@ public class BParamRefInlinerTest extends VmTestContext {
     @Test
     void map_mapper() throws Exception {
       assertReferenceInliningReplacesReference(
-          2, bInt(2), r -> bMap(bArray(bInt()), bLambda(list(bIntType()), r)));
+          2, bInt(0), r -> bMap(bArray(bInt()), bLambda(list(bIntType()), r)));
     }
 
     @Test
@@ -240,7 +245,7 @@ public class BParamRefInlinerTest extends VmTestContext {
 
     @Test
     void fold_folder() throws Exception {
-      assertReferenceInliningReplacesReference(2, bInt(1), r -> provide()
+      assertReferenceInliningReplacesReference(3, bInt(0), r -> provide()
           .bytecodeFactory()
           .fold(bArray(bInt()), bInt(), bLambda(list(bIntType(), bIntType()), r)));
     }
@@ -277,7 +282,7 @@ public class BParamRefInlinerTest extends VmTestContext {
 
     @Test
     void switch_handlers() throws Exception {
-      assertReferenceInliningReplacesReference(1, bInt(1), r -> {
+      assertReferenceInliningReplacesReference(2, bInt(0), r -> {
         var choice = bChoice();
         var handlers = bCombine(bLambda(list(bStringType()), r), bLambda(list(bIntType()), r));
         return bSwitch(choice, handlers);
@@ -305,13 +310,13 @@ public class BParamRefInlinerTest extends VmTestContext {
 
   private void assertReferenceInliningReplacesReference(
       Function1<BExpr, BExpr, IOException> factory) throws Exception {
-    assertReferenceInliningReplacesReference(2, bInt(3), factory);
+    assertReferenceInliningReplacesReference(3, bInt(3), factory);
   }
 
   private void assertReferenceInliningReplacesReference(
       int referencedIndex, BInt expectedReplacement, Function1<BExpr, BExpr, IOException> factory)
       throws Exception {
-    List<BExpr> environment = list(bInt(1), bInt(2), bInt(3));
+    List<BExpr> environment = list(bInt(0), bInt(1), bInt(2), bInt(3), bInt(4), bInt(5));
     assertReferenceInliningReplacesReference(
         referencedIndex, expectedReplacement, environment, factory);
   }

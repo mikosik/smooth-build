@@ -209,7 +209,7 @@ public class EvaluatorTest extends EvaluatorTestContext {
           var constructorS =
               sPoly(sConstructor(sStructType("MyStruct", nlist(sSig(sIntType(), "myField")))));
           assertEvaluation(
-              constructorS, bLambda(list(bIntType()), bCombine(bParamRef(bIntType(), 0))));
+              constructorS, bLambda(list(bIntType()), bCombine(bParamRef(bIntType(), 1))));
         }
       }
 
@@ -238,7 +238,7 @@ public class EvaluatorTest extends EvaluatorTestContext {
               sPoly(sConstructor(sStructType("MyStruct", nlist(sSig(sIntType(), "field"))))),
               bLambda(
                   bLambdaType(bIntType(), bTupleType(bIntType())),
-                  bCombine(bParamRef(bIntType(), 0))));
+                  bCombine(bParamRef(bIntType(), 1))));
         }
       }
     }

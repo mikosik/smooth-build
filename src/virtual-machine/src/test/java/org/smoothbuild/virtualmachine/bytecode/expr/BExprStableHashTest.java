@@ -333,7 +333,7 @@ public class BExprStableHashTest extends VmTestContext {
     void map_operation() throws Exception {
       assertThat(bMap(bArray(bInt()), bIntIdLambda()).hash())
           .isEqualTo(
-              Hash.decode("03dfaa1ba8fb539e33af03360e83237a69d3152fd8c4181eefd3166280c25574"));
+              Hash.decode("2022d8e45d15a43dabc2e89e0defe020ecc200f765e3cff9b55d947737e69c42"));
     }
   }
 

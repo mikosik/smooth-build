@@ -141,7 +141,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
         void poly_expression_function() throws Exception {
           var sFunc = idSFunc();
           var sInstantiate = sInstantiate(sFunc, list(sIntType()));
-          var bLambda = bLambda(bIntIntLambdaType(), bParamRef(bIntType(), 0));
+          var bLambda = bLambda(bIntIntLambdaType(), bParamRef(bIntType(), 1));
           assertTranslation(bindings(sFunc), sInstantiate, bLambda);
         }
 
@@ -157,9 +157,9 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
           var sWrapFunc = sPoly(list(b), sFunc(b, "wrap", nlist(sItem(b, "p")), sBody));
           var sWrapMonoFunc = sInstantiate(sWrapFunc, list(sIntType()));
 
-          var bIdLambda = bLambda(bIntIntLambdaType(), bParamRef(bIntType(), 0));
+          var bIdLambda = bLambda(bIntIntLambdaType(), bParamRef(bIntType(), 1));
           var bWrapLambda =
-              bLambda(bIntIntLambdaType(), bCall(bIdLambda, bParamRef(bIntType(), 0)));
+              bLambda(bIntIntLambdaType(), bCall(bIdLambda, bParamRef(bIntType(), 1)));
           assertTranslation(bindings(sIdFunc, sWrapFunc), sWrapMonoFunc, bWrapLambda);
         }
 
@@ -176,7 +176,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
               bIntType(),
               bMethodTuple(jar, bString(classBinaryName)),
               bBool(true),
-              bCombine(bParamRef(bBlobType(), 0)));
+              bCombine(bParamRef(bBlobType(), 1)));
           var bLambda = bLambda(list(bBlobType()), bInvoke);
 
           var fileContentReader = fileContentReaderMock(path.withExtension("jar"), jar);
@@ -198,7 +198,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
               bIntType(),
               bMethodTuple(jar, bString(classBinaryName)),
               bBool(true),
-              bCombine(bParamRef(bIntType(), 0)));
+              bCombine(bParamRef(bIntType(), 1)));
           var bLambda = bLambda(list(bIntType()), bInvoke);
 
           var fileContentReader = fileContentReaderMock(path.withExtension("jar"), jar);
@@ -267,7 +267,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
       @Test
       void lambda() throws Exception {
         var lambda = sLambda(nlist(sItem(sIntType(), "p")), sParamRef(sIntType(), "p"));
-        assertTranslation(lambda, bLambda(list(bIntType()), bParamRef(bIntType(), 0)));
+        assertTranslation(lambda, bLambda(list(bIntType()), bParamRef(bIntType(), 1)));
       }
 
       @Test
@@ -275,7 +275,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
         var sLambda = sLambda(sParamRef(sIntType(), "p"));
         var sFunc = sPoly(sFunc("myFunc", nlist(sItem(sIntType(), "p")), sLambda));
 
-        var bBody = bLambda(bParamRef(bIntType(), 0));
+        var bBody = bLambda(bParamRef(bIntType(), 2));
         var bLambda = bLambda(bLambdaType(bIntType(), bIntLambdaType()), bBody);
 
         assertTranslation(sFunc, bLambda);
@@ -287,7 +287,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
         var sLambda = sLambda(nlist(sItem(sBlobType(), "b")), sParamRef(sIntType(), "i"));
         var sFunc = sPoly(sFunc("myFunc", nlist(sItem(sIntType(), "i")), sLambda));
 
-        var bBody = bLambda(list(bBlobType()), bParamRef(bIntType(), 1));
+        var bBody = bLambda(list(bBlobType()), bParamRef(bIntType(), 3));
         var bLambda = bLambda(list(bIntType()), bBody);
 
         assertTranslation(sFunc, bLambda);
@@ -333,7 +333,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
         var sCall = sCall(sInstantiate(sConstructor), sString("abc"));
         var sSelect = sStructSelect(sCall, "field");
 
-        var bConstructor = bLambda(list(bStringType()), bCombine(bParamRef(bStringType(), 0)));
+        var bConstructor = bLambda(list(bStringType()), bCombine(bParamRef(bStringType(), 1)));
         var bCall = bCall(bConstructor, bString("abc"));
         assertTranslation(bindings(sConstructor), sSelect, bSelect(bCall, bInt(0)));
       }
@@ -346,7 +346,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
         var sFunc = sPoly(list(varA()), sFunc("myFunc", nlist(sItem(varA(), "a")), sLambda));
         var sInstantiate = sInstantiate(sFunc, list(sIntType()));
 
-        var bBody = bLambda(bParamRef(bIntType(), 0));
+        var bBody = bLambda(bParamRef(bIntType(), 2));
         var bLambda = bLambda(bLambdaType(bIntType(), bIntLambdaType()), bBody);
 
         assertTranslation(bindings(sFunc), sInstantiate, bLambda);
