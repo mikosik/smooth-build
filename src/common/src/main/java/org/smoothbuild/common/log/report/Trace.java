@@ -27,6 +27,10 @@ public class Trace {
     return topLine == null;
   }
 
+  public int depth() {
+    return topLine == null ? 0 : topLine.depth();
+  }
+
   @Override
   public boolean equals(Object obj) {
     return this == obj || (obj instanceof Trace that && Objects.equals(this.topLine, that.topLine));

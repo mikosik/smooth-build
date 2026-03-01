@@ -45,6 +45,25 @@ public class TraceTest extends CommonTestContext {
     }
   }
 
+  @Nested
+  class _depth {
+    @Test
+    void with_empty_trace_is_0() {
+      assertThat(trace(null).depth()).isEqualTo(0);
+    }
+
+    @Test
+    void with_1_line_is_1() {
+      assertThat(trace(line("first", null)).depth()).isEqualTo(1);
+    }
+
+    @Test
+    void with_3_lines_is_3() {
+      assertThat(trace(line("first", line("second", line("third", null)))).depth())
+          .isEqualTo(3);
+    }
+  }
+
   public static Trace trace(@Nullable TraceLine topLine) {
     return new Trace(topLine);
   }
