@@ -229,7 +229,7 @@ public class SbTranslator {
 
   private BExpr translateNamedFuncWithCache(SNamedFunc sNamedFunc) throws SbTranslatorException {
     var key = new CacheKey(sNamedFunc.fqn(), typeTranslator.typeVarMap());
-    return computeIfAbsent(cache, key, k -> translateNamedFunc(sNamedFunc));
+    return computeIfAbsent(cache, key, _ -> translateNamedFunc(sNamedFunc));
   }
 
   private BExpr translateNamedFunc(SNamedFunc sNamedFunc) throws SbTranslatorException {
@@ -344,7 +344,7 @@ public class SbTranslator {
 
   private BExpr translateNamedValueWithCache(SNamedValue sNamedValue) throws SbTranslatorException {
     var key = new CacheKey(sNamedValue.fqn(), typeTranslator.typeVarMap());
-    return computeIfAbsent(cache, key, k -> translateNamedValue(sNamedValue));
+    return computeIfAbsent(cache, key, _ -> translateNamedValue(sNamedValue));
   }
 
   private BExpr translateNamedValue(SNamedValue sNamedValue) throws SbTranslatorException {
