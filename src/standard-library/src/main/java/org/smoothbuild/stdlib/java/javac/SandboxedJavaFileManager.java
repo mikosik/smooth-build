@@ -40,7 +40,7 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
     HashMap<String, Set<JavaFileObject>> result = new HashMap<>();
     for (InputClassFile object : objects) {
       String packageName = object.aPackage();
-      Set<JavaFileObject> aPackage = result.computeIfAbsent(packageName, k -> new HashSet<>());
+      Set<JavaFileObject> aPackage = result.computeIfAbsent(packageName, _ -> new HashSet<>());
       aPackage.add(object);
     }
     return result;

@@ -893,7 +893,7 @@ public class BEvaluateTaskTest extends VmTestContext {
 
     @Override
     public Job newJob(BExpr expr, List<Job> environment, Trace trace) {
-      counters.computeIfAbsent(expr, k -> new AtomicInteger()).incrementAndGet();
+      counters.computeIfAbsent(expr, _ -> new AtomicInteger()).incrementAndGet();
       return super.newJob(expr, environment, trace);
     }
 

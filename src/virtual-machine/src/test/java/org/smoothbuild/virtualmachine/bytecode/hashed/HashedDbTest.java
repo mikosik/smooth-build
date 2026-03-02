@@ -74,7 +74,7 @@ public class HashedDbTest {
 
   @Test
   void written_zero_length_data_can_be_read_back() throws Exception {
-    var hash = hashedDb().writeData(bufferedSink -> {});
+    var hash = hashedDb().writeData(_ -> {});
     try (var source = buffer(hashedDb().source(hash))) {
       assertThat(source.readByteString()).isEqualTo(ByteString.of());
     }
