@@ -5,6 +5,16 @@ functional language with Hindley-Milner type inference, lazy
 evaluation, content-addressable caching, and automatic parallel
 execution.
 
+## Build Commands
+
+```bash
+./gradlew build                    # Full build (compile + test + checks)
+./gradlew test                     # Run all tests
+./gradlew :src:virtual-machine:test  # Run tests for one module
+./gradlew :src:virtual-machine:test --tests "org.smoothbuild.virtualmachine.SomeTest" # Single test class
+./gradlew spotlessApply            # Auto-format code
+```
+
 ## Module Architecture
 
 Multi-module Gradle project under `src/`. The compilation pipeline
