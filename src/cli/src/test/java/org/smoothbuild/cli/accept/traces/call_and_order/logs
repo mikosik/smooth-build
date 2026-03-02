@@ -40,15 +40,15 @@
 :vm:schedule:call:execute
   @ {t-project}/module.smooth:1 myfunc
 :vm:schedule:call
-:vm:schedule:paramRef
+:vm:schedule:ref
 :vm:inline
   @ {t-project}/module.smooth:1 myfunc
 :vm:schedule:call:execute
   @ {t-project}/module.smooth:2 apply
   @ {t-project}/module.smooth:1 myfunc
 :vm:schedule:order
-:vm:schedule:paramRef
-:vm:schedule:paramRef
+:vm:schedule:ref
+:vm:schedule:ref
 :vm:schedule:order
 :vm:evaluate:order
   @ {t-project}/module.smooth:1 myfunc

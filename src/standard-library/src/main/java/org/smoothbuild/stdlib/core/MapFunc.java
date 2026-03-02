@@ -23,8 +23,8 @@ public class MapFunc {
     var mapperParamType = f.lambdaType(f.tupleType(s), r);
     var parameterTypes = f.tupleType(arrayParamType, mapperParamType);
 
-    var arrayParamReference = f.paramRef(arrayParamType, f.int_(BigInteger.ONE));
-    var mapperParamReference = f.paramRef(mapperParamType, f.int_(BigInteger.TWO));
+    var arrayParamReference = f.ref(arrayParamType, f.int_(BigInteger.ONE));
+    var mapperParamReference = f.ref(mapperParamType, f.int_(BigInteger.TWO));
 
     var funcType = f.lambdaType(parameterTypes, resultType);
     var body = f.map(arrayParamReference, mapperParamReference);

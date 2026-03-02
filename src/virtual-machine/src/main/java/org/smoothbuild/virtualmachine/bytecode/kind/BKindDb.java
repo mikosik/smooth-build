@@ -21,8 +21,8 @@ import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.INVOKE;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.LAMBDA;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.MAP;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.ORDER;
-import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.PARAM_REF;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.PICK;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.REF;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.SELECT;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.STRING;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.SWITCH;
@@ -55,8 +55,8 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BMapKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BOperationKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BOrderKind;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BParamRefKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BPickKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BRefKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BSelectKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BStringType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BSwitchKind;
@@ -199,8 +199,8 @@ public class BKindDb {
     return newOperation(PICK, evaluationType, BPickKind::new);
   }
 
-  public BParamRefKind paramRef(BType evaluationType) throws BKindDbException {
-    return newOperation(PARAM_REF, evaluationType, BParamRefKind::new);
+  public BRefKind ref(BType evaluationType) throws BKindDbException {
+    return newOperation(REF, evaluationType, BRefKind::new);
   }
 
   public BSelectKind select(BType evaluationType) throws BKindDbException {
@@ -233,7 +233,7 @@ public class BKindDb {
       case FOLD -> readOperationKind(hash, children, id, BType.class, BFoldKind::new);
       case ORDER -> readOperationKind(hash, children, id, BArrayType.class, BOrderKind::new);
       case PICK -> readOperationKind(hash, children, id, BType.class, BPickKind::new);
-      case PARAM_REF -> readOperationKind(hash, children, id, BType.class, BParamRefKind::new);
+      case REF -> readOperationKind(hash, children, id, BType.class, BRefKind::new);
       case SELECT -> readOperationKind(hash, children, id, BType.class, BSelectKind::new);
       case SWITCH -> readOperationKind(hash, children, id, BType.class, BSwitchKind::new);
       case TUPLE -> readTupleType(hash, children);

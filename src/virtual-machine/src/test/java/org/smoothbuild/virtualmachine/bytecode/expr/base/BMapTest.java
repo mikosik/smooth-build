@@ -112,7 +112,7 @@ public class BMapTest extends VmTestContext {
           mapper = BLambda(
             hash = d7d0a5f6e57fdfafa74f1354c4b252514164daf8911ef9c7f1db2d84f691f350
             type = (Int)->Int
-            body = BParamRef(
+            body = BRef(
               hash = c6002edfb18e99dc95cd152fb6ade7c5a765e9544aa4ad5fc8df6844dd408caa
               evaluationType = Int
               index = 1

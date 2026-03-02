@@ -96,9 +96,9 @@ public class BExprCollisionTest extends VmTestContext {
         bPick(bArray(bInt(1)), bInt(0)),
         bPick(bArray(bInt(1)), bInt(1)),
         bPick(bArray(bInt(1), bInt(2)), bInt(0)),
-        bParamRef(bIntType(), 0),
-        bParamRef(bIntType(), 1),
-        bParamRef(bStringType(), 0),
+        bRef(bIntType(), 0),
+        bRef(bIntType(), 1),
+        bRef(bStringType(), 0),
         bSelect(bTuple(bInt(1), bString("a")), bInt(0)),
         bSelect(bTuple(bInt(1), bString("a")), bInt(1)),
         bSelect(bTuple(bInt(1), bString("b")), bInt(0)));

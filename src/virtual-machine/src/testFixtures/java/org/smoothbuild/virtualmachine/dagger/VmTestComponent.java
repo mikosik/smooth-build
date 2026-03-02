@@ -15,7 +15,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
 import org.smoothbuild.virtualmachine.bytecode.load.FileContentReader;
-import org.smoothbuild.virtualmachine.evaluate.base.BParamRefInliner;
+import org.smoothbuild.virtualmachine.evaluate.base.BRefInliner;
 import org.smoothbuild.virtualmachine.evaluate.cache.CachingOperatorEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.cache.ComputationCache;
 import org.smoothbuild.virtualmachine.evaluate.cache.ComputationHashFactory;
@@ -59,7 +59,7 @@ public interface VmTestComponent extends CommonTestComponent {
 
   FileSystem<FullPath> fileSystem();
 
-  BParamRefInliner bParamRefInliner();
+  BRefInliner bRefInliner();
 
   @BytecodeDb
   FullPath bytecodeDbPath();

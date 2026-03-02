@@ -45,7 +45,7 @@
 :vm:schedule:call:execute
   @ <empty trace>
 :vm:schedule:order
-:vm:schedule:paramRef
+:vm:schedule:ref
 :vm:evaluate:order
   @ {t-project}/module.smooth:2 ???
 :scheduler:join

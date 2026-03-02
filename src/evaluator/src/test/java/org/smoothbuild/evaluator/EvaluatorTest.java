@@ -208,8 +208,7 @@ public class EvaluatorTest extends EvaluatorTestContext {
         void constructor() throws BytecodeException {
           var constructorS =
               sPoly(sConstructor(sStructType("MyStruct", nlist(sSig(sIntType(), "myField")))));
-          assertEvaluation(
-              constructorS, bLambda(list(bIntType()), bCombine(bParamRef(bIntType(), 1))));
+          assertEvaluation(constructorS, bLambda(list(bIntType()), bCombine(bRef(bIntType(), 1))));
         }
       }
 
@@ -237,8 +236,7 @@ public class EvaluatorTest extends EvaluatorTestContext {
           assertEvaluation(
               sPoly(sConstructor(sStructType("MyStruct", nlist(sSig(sIntType(), "field"))))),
               bLambda(
-                  bLambdaType(bIntType(), bTupleType(bIntType())),
-                  bCombine(bParamRef(bIntType(), 1))));
+                  bLambdaType(bIntType(), bTupleType(bIntType())), bCombine(bRef(bIntType(), 1))));
         }
       }
     }

@@ -26,9 +26,9 @@ public final class BLambdaJob extends Job {
     var inlineTask = (Task0<BValue>) () -> {
       var label = VM_LABEL.append(":inline");
       try {
-        var inlined = (BValue) paramRefInliner().inline(this);
+        var inlined = (BValue) refInliner().inline(this);
         return output(inlined, report(label, trace(), list()));
-      } catch (BytecodeException | ParamRefIndexOutOfBoundsException e) {
+      } catch (BytecodeException | RefIndexOutOfBoundsException e) {
         return failedOutput(label, some(trace()), "Vm inline Task failed with exception:", e);
       }
     };

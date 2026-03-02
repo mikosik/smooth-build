@@ -25,7 +25,7 @@ public abstract sealed class BOperation extends BExpr
         BMap,
         BOrder,
         BPick,
-        BParamRef,
+        BRef,
         BSelect,
         BSwitch {
   private final String name;

@@ -27,8 +27,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BParamRef;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BRef;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
@@ -90,7 +90,7 @@ public class BKindTest extends VmTestContext {
         args(f -> f.pick(f.int_()), "PICK"),
         args(f -> f.select(f.int_()), "SELECT"),
         args(f -> f.switch_(f.int_()), "SWITCH"),
-        args(f -> f.paramRef(f.int_()), "PARAM_REF"));
+        args(f -> f.ref(f.int_()), "REF"));
   }
 
   @Nested
@@ -234,7 +234,7 @@ public class BKindTest extends VmTestContext {
         arguments(test.bOrderKind(), BOrder.class),
         arguments(test.bCombineKind(test.bIntType(), test.bStringType()), BCombine.class),
         arguments(test.bPickKind(), BPick.class),
-        arguments(test.bParamRefKind(test.bIntType()), BParamRef.class),
+        arguments(test.bRefKind(test.bIntType()), BRef.class),
         arguments(test.bSelectKind(test.bIntType()), BSelect.class));
   }
 
@@ -301,8 +301,8 @@ public class BKindTest extends VmTestContext {
 
     @ParameterizedTest
     @MethodSource("types")
-    public void paramRef(BType type) throws Exception {
-      assertThat(bParamRefKind(type).evaluationType()).isEqualTo(type);
+    public void ref(BType type) throws Exception {
+      assertThat(bRefKind(type).evaluationType()).isEqualTo(type);
     }
 
     @ParameterizedTest
@@ -361,7 +361,7 @@ public class BKindTest extends VmTestContext {
     tester.addEqualityGroup(bMapKind(), bMapKind());
     tester.addEqualityGroup(bOrderKind(), bOrderKind());
     tester.addEqualityGroup(bPickKind(), bPickKind());
-    tester.addEqualityGroup(bParamRefKind(bIntType()), bParamRefKind(bIntType()));
+    tester.addEqualityGroup(bRefKind(bIntType()), bRefKind(bIntType()));
     tester.addEqualityGroup(bSelectKind(bIntType()), bSelectKind(bIntType()));
 
     tester.testEquals();

@@ -6,7 +6,7 @@ import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BParamRefKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BRefKind;
 
 /**
  * References bound value using De Bruijn indexing with zero-based numbering.
@@ -20,10 +20,10 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BParamRefKind;
  * <p>
  * This class is thread-safe.
  */
-public final class BParamRef extends BOperation {
-  public BParamRef(MerkleRoot merkleRoot, BExprDb exprDb) {
+public final class BRef extends BOperation {
+  public BRef(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb, 1);
-    checkArgument(merkleRoot.kind() instanceof BParamRefKind);
+    checkArgument(merkleRoot.kind() instanceof BRefKind);
   }
 
   public BInt index() throws BytecodeException {

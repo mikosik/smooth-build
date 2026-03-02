@@ -44,8 +44,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BParamRef;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BRef;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch;
@@ -189,11 +189,10 @@ public class BExprCorruptedTest extends VmTestContext {
     @Test
     void with_one_elem_being_operation() throws Exception {
       var arrayType = bStringArrayType();
-      var hash =
-          hash(hash(arrayType), hash(hash(hash(bStringType()), hash("aaa")), hash(bParamRef(1))));
+      var hash = hash(hash(arrayType), hash(hash(hash(bStringType()), hash("aaa")), hash(bRef(1))));
       assertCall(() -> ((BArray) dbGet(hash)).elements(BString.class))
           .throwsException(new SubExprHasWrongTypeException(
-              hash, arrayType, "elements[1]", BString.class, BParamRef.class));
+              hash, arrayType, "elements[1]", BString.class, BRef.class));
     }
   }
 
@@ -505,12 +504,12 @@ public class BExprCorruptedTest extends VmTestContext {
     void value_is_not_value() throws Exception {
       var choiceType = bChoiceType(bStringType(), bIntType());
       var index = bInt(0);
-      var chosen = bParamRef(bStringType(), 0);
+      var chosen = bRef(bStringType(), 0);
       var dataHash = hash(hash(index), hash(chosen));
       var hash = hash(hash(choiceType), dataHash);
       assertCall(() -> ((BChoice) dbGet(hash)).index())
           .throwsException(new SubExprHasWrongTypeException(
-              hash, choiceType, "chosen", BValue.class, BParamRef.class));
+              hash, choiceType, "chosen", BValue.class, BRef.class));
     }
 
     @Test
@@ -1529,7 +1528,7 @@ public class BExprCorruptedTest extends VmTestContext {
        * pick in HashedDb.
        */
       var pickable = bOrder(bString("abc"));
-      var index = bParamRef(bIntType(), 7);
+      var index = bRef(bIntType(), 7);
       var hash = hash(hash(bPickKind(bStringType())), hash(hash(pickable), hash(index)));
 
       var pick = (BPick) dbGet(hash);
@@ -1592,7 +1591,7 @@ public class BExprCorruptedTest extends VmTestContext {
     void index_is_not_int_expr() throws Exception {
       var type = bPickKind(bStringType());
       var pickable = bArray(bString("abc"));
-      var index = bParamRef(bStringType(), 7);
+      var index = bRef(bStringType(), 7);
       var hash = hash(hash(type), hash(hash(pickable), hash(index)));
       assertCall(() -> ((BPick) dbGet(hash)).pickable())
           .throwsException(new SubExprHasWrongEvaluationTypeException(
@@ -1613,23 +1612,23 @@ public class BExprCorruptedTest extends VmTestContext {
   }
 
   @Nested
-  class _paramRef {
+  class _ref {
     @Test
     void learning_test() throws Exception {
       /*
-       * This test makes sure that other tests in this class use proper scheme to save param-ref
+       * This test makes sure that other tests in this class use the proper scheme to save BRef
        * in HashedDb.
        */
       var index = bInt(34);
-      var hash = hash(hash(bParamRefKind(bStringType())), hash(index));
+      var hash = hash(hash(bRefKind(bStringType())), hash(index));
 
-      var paramRef = (BParamRef) dbGet(hash);
-      assertThat(paramRef.index()).isEqualTo(index);
+      var ref = (BRef) dbGet(hash);
+      assertThat(ref.index()).isEqualTo(index);
     }
 
     @Test
     void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(bParamRefKind());
+      obj_root_without_data_hash(bRefKind());
     }
 
     @Test
@@ -1637,13 +1636,13 @@ public class BExprCorruptedTest extends VmTestContext {
       var index = bInt(0);
       var dataHash = hash(index);
       obj_root_with_two_data_hashes(
-          bParamRefKind(bIntType()), dataHash, (Hash hash) -> ((BParamRef) dbGet(hash)).index());
+          bRefKind(bIntType()), dataHash, (Hash hash) -> ((BRef) dbGet(hash)).index());
     }
 
     @Test
     void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_expr_but_nowhere(
-          bParamRefKind(bIntType()), (Hash hash) -> ((BParamRef) dbGet(hash)).index(), "index");
+          bRefKind(bIntType()), (Hash hash) -> ((BRef) dbGet(hash)).index(), "index");
     }
   }
 
@@ -1875,11 +1874,11 @@ public class BExprCorruptedTest extends VmTestContext {
 
     @Test
     void with_element_being_operation() throws Exception {
-      var hash = hash(hash(bPersonType()), hash(hash(bString("John")), hash(bParamRef(1))));
+      var hash = hash(hash(bPersonType()), hash(hash(bString("John")), hash(bRef(1))));
       var tuple = (BTuple) dbGet(hash);
       assertCall(() -> tuple.get(0))
           .throwsException(new SubExprHasWrongTypeException(
-              hash, bPersonType(), "elements[1]", BValue.class, BParamRef.class));
+              hash, bPersonType(), "elements[1]", BValue.class, BRef.class));
     }
   }
 

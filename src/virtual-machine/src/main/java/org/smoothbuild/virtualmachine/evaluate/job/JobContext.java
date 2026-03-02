@@ -15,19 +15,19 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BParamRef;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BRef;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.dagger.PerVm;
 import org.smoothbuild.virtualmachine.evaluate.base.BExprAttributes;
-import org.smoothbuild.virtualmachine.evaluate.base.BParamRefInliner;
+import org.smoothbuild.virtualmachine.evaluate.base.BRefInliner;
 import org.smoothbuild.virtualmachine.evaluate.cache.CachingOperatorEvaluator;
 
 @PerVm
 public class JobContext {
-  private final BParamRefInliner paramRefInliner;
+  private final BRefInliner bRefInliner;
   private final BytecodeFactory bytecodeFactory;
   private final CachingOperatorEvaluator cachingOperatorEvaluator;
   private final Scheduler scheduler;
@@ -39,8 +39,8 @@ public class JobContext {
       Scheduler scheduler,
       CachingOperatorEvaluator cachingOperatorEvaluator,
       BytecodeFactory bytecodeFactory,
-      BParamRefInliner paramRefInliner) {
-    this.paramRefInliner = paramRefInliner;
+      BRefInliner bRefInliner) {
+    this.bRefInliner = bRefInliner;
     this.bytecodeFactory = bytecodeFactory;
     this.cachingOperatorEvaluator = cachingOperatorEvaluator;
     this.scheduler = scheduler;
@@ -62,13 +62,13 @@ public class JobContext {
       case BMap map -> new BMapJob(this, map, environment, trace);
       case BFold fold -> new BFoldJob(this, fold, environment, trace);
       case BLambda lambda -> new BLambdaJob(this, lambda, environment, trace);
-      case BParamRef paramRef -> new BParamRefJob(this, paramRef, environment, trace);
+      case BRef ref -> new BRefJob(this, ref, environment, trace);
       case BValue value -> new BValueJob(this, value, environment, trace);
     };
   }
 
-  public BParamRefInliner paramRefInliner() {
-    return paramRefInliner;
+  public BRefInliner refInliner() {
+    return bRefInliner;
   }
 
   public BytecodeFactory bytecodeFactory() {

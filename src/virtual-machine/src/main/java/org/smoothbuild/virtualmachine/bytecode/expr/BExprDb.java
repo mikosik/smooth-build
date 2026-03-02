@@ -31,8 +31,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BParamRef;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BRef;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch;
@@ -51,7 +51,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BParamRefKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BRefKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 import org.smoothbuild.virtualmachine.bytecode.kind.exc.BKindDbException;
@@ -235,8 +235,8 @@ public class BExprDb {
     return kind.newExpr(root, this);
   }
 
-  public BParamRef newParamRef(BType evaluationType, BInt index) throws BytecodeException {
-    BParamRefKind type = kindDb.paramRef(evaluationType);
+  public BRef newRef(BType evaluationType, BInt index) throws BytecodeException {
+    BRefKind type = kindDb.ref(evaluationType);
     var root = newRoot(type, index.hash());
     return type.newExpr(root, this);
   }

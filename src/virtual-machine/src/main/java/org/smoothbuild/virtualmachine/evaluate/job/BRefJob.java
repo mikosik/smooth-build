@@ -5,28 +5,27 @@ import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BParamRef;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BRef;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 
-public final class BParamRefJob extends SchedulingJob {
-  private final BParamRef paramRef;
+public final class BRefJob extends SchedulingJob {
+  private final BRef ref;
 
-  public BParamRefJob(
-      JobContext jobContext, BParamRef paramRef, List<Job> environment, Trace trace) {
-    super(jobContext, paramRef, environment, trace);
-    this.paramRef = paramRef;
+  public BRefJob(JobContext jobContext, BRef ref, List<Job> environment, Trace trace) {
+    super(jobContext, ref, environment, trace);
+    this.ref = ref;
   }
 
   @Override
   public Promise<Maybe<BValue>> schedule() throws BytecodeException, JobException {
-    int index = paramRef.index().toJavaBigInteger().intValue();
+    int index = ref.index().toJavaBigInteger().intValue();
     var referencedJob = environment().get(index);
     var jobEvaluationType = referencedJob.expr().evaluationType();
-    if (jobEvaluationType.equals(paramRef.evaluationType())) {
+    if (jobEvaluationType.equals(ref.evaluationType())) {
       return referencedJob.evaluate();
     } else {
       throw new JobException("environment(%d) evaluationType is %s but expected %s."
-          .formatted(index, jobEvaluationType.q(), paramRef.evaluationType().q()));
+          .formatted(index, jobEvaluationType.q(), ref.evaluationType().q()));
     }
   }
 }

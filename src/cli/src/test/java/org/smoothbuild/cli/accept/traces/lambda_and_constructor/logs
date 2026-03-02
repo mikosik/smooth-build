@@ -35,7 +35,7 @@
 :vm:schedule:call:execute
   @ <empty trace>
 :vm:schedule:call
-:vm:schedule:paramRef
+:vm:schedule:ref
 :vm:inline
   @ <empty trace>
 :vm:schedule:call:execute
@@ -48,9 +48,9 @@
   @ {t-project}/module.smooth:5 result:lambda~1
   @ {t-project}/module.smooth:4 apply
 :vm:schedule:combine
-:vm:schedule:paramRef
-:vm:schedule:paramRef
-:vm:schedule:paramRef
+:vm:schedule:ref
+:vm:schedule:ref
+:vm:schedule:ref
 :vm:evaluate:combine
   @ {t-project}/module.smooth:4 MyStruct
   @ {t-project}/module.smooth:5 result:lambda~1

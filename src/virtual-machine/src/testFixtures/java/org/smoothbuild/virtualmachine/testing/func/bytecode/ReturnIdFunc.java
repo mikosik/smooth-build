@@ -15,6 +15,6 @@ public class ReturnIdFunc {
       throws BytecodeException {
     var a = requireNonNull(varMap.get("A"));
     var lambdaType = f.lambdaType(list(a), a);
-    return f.lambda(lambdaType, f.paramRef(a, f.int_(BigInteger.ONE)));
+    return f.lambda(lambdaType, f.ref(a, f.int_(BigInteger.ONE)));
   }
 }

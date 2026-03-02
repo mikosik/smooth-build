@@ -49,7 +49,7 @@ public class BKindCachingTest extends VmTestContext {
         kindDb -> kindDb.map(kindDb.array(kindDb.int_())),
         kindDb -> kindDb.order(kindDb.array(kindDb.int_())),
         kindDb -> kindDb.pick(kindDb.int_()),
-        kindDb -> kindDb.paramRef(kindDb.int_()),
+        kindDb -> kindDb.ref(kindDb.int_()),
         kindDb -> kindDb.select(kindDb.int_()),
         kindDb -> kindDb.fold(kindDb.int_()),
         kindDb -> kindDb.array(kindDb.blob()),

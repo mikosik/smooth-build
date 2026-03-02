@@ -15,7 +15,7 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.base.BExprAttributes;
-import org.smoothbuild.virtualmachine.evaluate.base.BParamRefInliner;
+import org.smoothbuild.virtualmachine.evaluate.base.BRefInliner;
 import org.smoothbuild.virtualmachine.evaluate.cache.CachingOperatorEvaluator;
 
 public abstract sealed class Job permits BLambdaJob, SchedulingJob, BValueJob {
@@ -73,8 +73,8 @@ public abstract sealed class Job permits BLambdaJob, SchedulingJob, BValueJob {
     return jobContext.bytecodeFactory();
   }
 
-  public BParamRefInliner paramRefInliner() {
-    return jobContext.paramRefInliner();
+  public BRefInliner refInliner() {
+    return jobContext.refInliner();
   }
 
   public CachingOperatorEvaluator cachingOperatorEvaluator() {

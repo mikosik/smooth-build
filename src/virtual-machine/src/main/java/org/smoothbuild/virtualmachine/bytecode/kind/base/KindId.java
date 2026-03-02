@@ -20,7 +20,7 @@ public enum KindId {
   CALL,
   PICK,
   IF,
-  PARAM_REF,
+  REF,
   MAP,
   CHOOSE,
   CHOICE,
