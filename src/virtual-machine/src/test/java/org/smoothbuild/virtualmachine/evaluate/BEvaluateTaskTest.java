@@ -343,22 +343,19 @@ public class BEvaluateTaskTest extends VmTestContext {
           assertThat(evaluate(fibonacci7)).isEqualTo(bInt(21));
         }
 
-        @Nested
-        class _call_depth {
-          @Test
-          void infinite_recursion_is_detected() throws Exception {
-            var lambdaType = bLambdaType(list(bIntType()), bIntType());
-            var recursiveCall = bCall(bRef(lambdaType, 0), bRef(bIntType(), 1));
-            var lambda = bLambda(list(bIntType()), recursiveCall);
-            var call = bCall(lambda, bInt(1));
+        @Test
+        void recursive_call_that_is_infinite_causes_fatal_error() throws Exception {
+          var lambdaType = bLambdaType(list(bIntType()), bIntType());
+          var recursiveCall = bCall(bRef(lambdaType, 0), bRef(bIntType(), 1));
+          var lambda = bLambda(list(bIntType()), recursiveCall);
+          var call = bCall(lambda, bInt(1));
 
-            evaluate(bEvaluateTask(), call);
+          evaluate(bEvaluateTask(), call);
 
-            assertReportsContains(
-                provide().reporter().reports(),
-                FATAL,
-                "Call depth limit (" + CALL_DEPTH_LIMIT + ") exceeded.");
-          }
+          assertReportsContains(
+              provide().reporter().reports(),
+              FATAL,
+              "Call depth limit (" + CALL_DEPTH_LIMIT + ") exceeded.");
         }
 
         private BLambda addIntsBLambda() throws IOException {
