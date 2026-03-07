@@ -21,7 +21,7 @@ public class ElemFunc {
     var paramTypes = f.tupleType(arrayParamType, indexParamType);
     var arrayParamReference = f.ref(arrayParamType, f.int_(BigInteger.ONE));
     var indexParamReference = f.ref(indexParamType, f.int_(BigInteger.TWO));
-    var body = f.pick(arrayParamReference, indexParamReference);
+    var body = f.arrayGet(arrayParamReference, indexParamReference);
     var funcType = f.lambdaType(paramTypes, varA);
     return f.lambda(funcType, body);
   }

@@ -8,10 +8,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BVariantType;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BKindCachingTest extends VmTestContext {
@@ -39,18 +39,18 @@ public class BKindCachingTest extends VmTestContext {
         BKindCachingTest::lambdaType,
         BKindDb::int_,
         BKindDb::string,
-        BKindCachingTest::choiceType,
+        BKindCachingTest::variantType,
         BKindCachingTest::tupleType,
         kindDb -> kindDb.call(kindDb.int_()),
-        kindDb -> kindDb.combine(kindDb.tuple()),
-        kindDb -> kindDb.combine(kindDb.tuple(kindDb.int_())),
+        kindDb -> kindDb.createTuple(kindDb.tuple()),
+        kindDb -> kindDb.createTuple(kindDb.tuple(kindDb.int_())),
         kindDb -> kindDb.lambda(list(), kindDb.int_()),
         kindDb -> kindDb.if_(kindDb.int_()),
         kindDb -> kindDb.map(kindDb.array(kindDb.int_())),
-        kindDb -> kindDb.order(kindDb.array(kindDb.int_())),
-        kindDb -> kindDb.pick(kindDb.int_()),
+        kindDb -> kindDb.createArray(kindDb.array(kindDb.int_())),
+        kindDb -> kindDb.arrayGet(kindDb.int_()),
         kindDb -> kindDb.ref(kindDb.int_()),
-        kindDb -> kindDb.select(kindDb.int_()),
+        kindDb -> kindDb.tupleGet(kindDb.int_()),
         kindDb -> kindDb.fold(kindDb.int_()),
         kindDb -> kindDb.array(kindDb.blob()),
         kindDb -> kindDb.array(kindDb.bool()),
@@ -66,8 +66,8 @@ public class BKindCachingTest extends VmTestContext {
         kindDb -> kindDb.array(kindDb.array(lambdaType(kindDb))));
   }
 
-  private static BChoiceType choiceType(BKindDb kindDb) throws BytecodeException {
-    return kindDb.choice(kindDb.blob(), kindDb.int_());
+  private static BVariantType variantType(BKindDb kindDb) throws BytecodeException {
+    return kindDb.variant(kindDb.blob(), kindDb.int_());
   }
 
   private static BTupleType tupleType(BKindDb kindDb) throws BytecodeException {

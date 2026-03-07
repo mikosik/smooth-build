@@ -106,50 +106,50 @@ public class BExprStableHashTest extends VmTestContext {
   }
 
   @Nested
-  class _choice {
+  class _variant {
     @Test
     void first_alternative() throws Exception {
-      assertThat(bChoice(bChoiceType(), bInt(0), bString("7")).hash())
+      assertThat(bVariant(bVariantType(), bInt(0), bString("7")).hash())
           .isEqualTo(
               Hash.decode("656815d265879fc6dbd78bdc187affd260d2b6af8bcfad10dc9b32f5c5ae9d4b"));
     }
 
     @Test
     void second_alternative() throws Exception {
-      assertThat(bChoice(bChoiceType(), bInt(1), bInt(7)).hash())
+      assertThat(bVariant(bVariantType(), bInt(1), bInt(7)).hash())
           .isEqualTo(
               Hash.decode("c3c3a47dc890634321beb35bc73b8a0cca86e6a43c8e37c98a0dbda734c89593"));
     }
 
     @Test
     void reversed_alternatives() throws Exception {
-      var type = bChoiceType(bIntType(), bStringType());
-      assertThat(bChoice(type, bInt(1), bString("7")).hash())
+      var type = bVariantType(bIntType(), bStringType());
+      assertThat(bVariant(type, bInt(1), bString("7")).hash())
           .isEqualTo(
               Hash.decode("85de78ee123ee1a99e1fbd63febd0a7207558ec672d6ab22df06599379de8d55"));
     }
   }
 
   @Nested
-  class _choose {
+  class _createVariant {
     @Test
     void first_alternative() throws Exception {
-      assertThat(bChoose(bChoiceType(), bInt(0), bString("7")).hash())
+      assertThat(bCreateVariant(bVariantType(), bInt(0), bString("7")).hash())
           .isEqualTo(
               Hash.decode("caec4416a98ec12639f2b26ee748efcb87b40207d1061ad0487eee1a1398b3f5"));
     }
 
     @Test
     void second_alternative() throws Exception {
-      assertThat(bChoose(bChoiceType(), bInt(1), bInt(7)).hash())
+      assertThat(bCreateVariant(bVariantType(), bInt(1), bInt(7)).hash())
           .isEqualTo(
               Hash.decode("fdc44a7228f7276d2f8a2c45b8e9c89cb79f4384082bcd541dc8e559bbe3ba02"));
     }
 
     @Test
     void reversed_alternatives() throws Exception {
-      var type = bChoiceType(bIntType(), bStringType());
-      assertThat(bChoose(type, bInt(1), bString("7")).hash())
+      var type = bVariantType(bIntType(), bStringType());
+      assertThat(bCreateVariant(type, bInt(1), bString("7")).hash())
           .isEqualTo(
               Hash.decode("a53c5ac6929698e9f9ab27b1d82d5ba6a04f86bd0f57cc0e01dabed5e873042b"));
     }
@@ -159,22 +159,22 @@ public class BExprStableHashTest extends VmTestContext {
   class _switch {
     @Test
     void first_alternative() throws Exception {
-      assertThat(bSwitch(bChoice(), bCombine(bs2iLambda(), bi2iLambda(1))).hash())
+      assertThat(bSwitch(bVariant(), bCreateTuple(bs2iLambda(), bi2iLambda(1))).hash())
           .isEqualTo(
               Hash.decode("760328d6f9b15735b0cc96955ddd970eb59652abdba390ab697efb5f6fa76c23"));
     }
 
     @Test
     void second_alternative() throws Exception {
-      assertThat(bSwitch(bChoice(), bCombine(bs2iLambda(), bi2iLambda(2))).hash())
+      assertThat(bSwitch(bVariant(), bCreateTuple(bs2iLambda(), bi2iLambda(2))).hash())
           .isEqualTo(
               Hash.decode("06945eb66514e8af9048f49967f09e91ce909f660bc363596f0a8349f85c8a72"));
     }
 
     @Test
     void reversed_alternatives() throws Exception {
-      var type = bChoiceType(bIntType(), bStringType());
-      assertThat(bChoice(type, bInt(1), bString("7")).hash())
+      var type = bVariantType(bIntType(), bStringType());
+      assertThat(bVariant(type, bInt(1), bString("7")).hash())
           .isEqualTo(
               Hash.decode("85de78ee123ee1a99e1fbd63febd0a7207558ec672d6ab22df06599379de8d55"));
     }
@@ -291,17 +291,17 @@ public class BExprStableHashTest extends VmTestContext {
   }
 
   @Nested
-  class _combine {
+  class _createTuple {
     @Test
-    void combine_with_one_arg() throws Exception {
-      assertThat(bCombine(bInt(1)).hash())
+    void createTuple_with_one_arg() throws Exception {
+      assertThat(bCreateTuple(bInt(1)).hash())
           .isEqualTo(
               Hash.decode("06a264a951d27e6953fa12a624922cea7cbfd03ff7af071c9b7464990b20dc3b"));
     }
 
     @Test
-    void combine_without_args() throws Exception {
-      assertThat(bCombine().hash())
+    void createTuple_without_args() throws Exception {
+      assertThat(bCreateTuple().hash())
           .isEqualTo(
               Hash.decode("1493f172bdb322c5b42eadc79333661a72295286e56f7107a1435e2e651e2a57"));
     }
@@ -338,27 +338,27 @@ public class BExprStableHashTest extends VmTestContext {
   }
 
   @Nested
-  class _order {
+  class _createArray {
     @Test
-    void empty_order() throws Exception {
-      assertThat(bOrder(bStringType()).hash())
+    void empty_createArray() throws Exception {
+      assertThat(bCreateArray(bStringType()).hash())
           .isEqualTo(
               Hash.decode("e1f4fed2bf56965e2f8f965835f8a01685736939c5b154f114e63c2f1fcf522f"));
     }
 
     @Test
-    void order() throws Exception {
-      assertThat(bOrder(bInt(1)).hash())
+    void createArray() throws Exception {
+      assertThat(bCreateArray(bInt(1)).hash())
           .isEqualTo(
               Hash.decode("32525892ab4d75f2b1f23293d34118c444fa06fe837ee9efaa2072032c879054"));
     }
   }
 
   @Nested
-  class _pick {
+  class _arrayGet {
     @Test
-    void pick() throws Exception {
-      assertThat(bPick(bArray(bInt(7)), bInt(0)).hash())
+    void arrayGet() throws Exception {
+      assertThat(bArrayGet(bArray(bInt(7)), bInt(0)).hash())
           .isEqualTo(
               Hash.decode("febe7ecdc696ca5264129f451b3ecd00948b10dbda13a6cd8e880538f3a719b6"));
     }
@@ -389,10 +389,10 @@ public class BExprStableHashTest extends VmTestContext {
   }
 
   @Nested
-  class _select {
+  class _tupleGet {
     @Test
-    void select() throws Exception {
-      assertThat(bSelect(bAnimal(), bInt(0)).hash())
+    void tupleGet() throws Exception {
+      assertThat(bTupleGet(bAnimal(), bInt(0)).hash())
           .isEqualTo(
               Hash.decode("b4c6333d5e5eddbaf6cc10f5f2ea298d7b7c163f71632dc7842c306f5f896d66"));
     }

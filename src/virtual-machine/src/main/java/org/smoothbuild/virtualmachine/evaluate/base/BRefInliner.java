@@ -7,20 +7,20 @@ import java.util.ArrayList;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BArrayGet;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoose;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateVariant;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BFold;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BRef;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BTupleGet;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.job.Job;
 import org.smoothbuild.virtualmachine.evaluate.job.RefIndexOutOfBoundsException;
@@ -59,17 +59,17 @@ public class BRefInliner {
       throws BytecodeException, RefIndexOutOfBoundsException {
     return switch (expr) {
       case BCall call -> rewriteCall(call, resolver);
-      case BCombine combine -> rewriteCombine(combine, resolver);
-      case BChoose choose -> rewriteChoose(choose, resolver);
+      case BCreateTuple createTuple -> rewriteCreateTuple(createTuple, resolver);
+      case BCreateVariant createVariant -> rewriteCreateVariant(createVariant, resolver);
       case BFold fold -> rewriteFold(fold, resolver);
       case BIf if_ -> rewriteIf(if_, resolver);
       case BInvoke invoke -> rewriteInvoke(invoke, resolver);
       case BLambda lambda -> rewriteLambda(lambda, resolver);
       case BMap map -> rewriteMap(map, resolver);
-      case BOrder order -> rewriteOrder(order, resolver);
-      case BPick pick -> rewritePick(pick, resolver);
+      case BCreateArray createArray -> rewriteCreateArray(createArray, resolver);
+      case BArrayGet arrayGet -> rewriteArrayGet(arrayGet, resolver);
       case BRef ref -> rewriteRef(ref, resolver);
-      case BSelect select -> rewriteSelect(select, resolver);
+      case BTupleGet tupleGet -> rewriteTupleGet(tupleGet, resolver);
       case BSwitch switch_ -> rewriteSwitch(switch_, resolver);
       case BValue value -> value;
     };
@@ -92,42 +92,42 @@ public class BRefInliner {
 
   private BSwitch rewriteSwitch(BSwitch switch_, Resolver resolver)
       throws BytecodeException, RefIndexOutOfBoundsException {
-    var choice = switch_.choice();
+    var variant = switch_.variant();
     var handlers = switch_.handlers();
 
-    var rewrittenChoice = rewriteExpr(choice, resolver);
-    var rewrittenHandlers = rewriteCombine(handlers, resolver);
+    var rewrittenVariant = rewriteExpr(variant, resolver);
+    var rewrittenHandlers = rewriteCreateTuple(handlers, resolver);
 
-    if (choice.equals(rewrittenChoice) && handlers.equals(rewrittenHandlers)) {
+    if (variant.equals(rewrittenVariant) && handlers.equals(rewrittenHandlers)) {
       return switch_;
     } else {
-      return bytecodeFactory.switch_(rewrittenChoice, rewrittenHandlers);
+      return bytecodeFactory.switch_(rewrittenVariant, rewrittenHandlers);
     }
   }
 
-  private BCombine rewriteCombine(BCombine combine, Resolver resolver)
+  private BCreateTuple rewriteCreateTuple(BCreateTuple createTuple, Resolver resolver)
       throws BytecodeException, RefIndexOutOfBoundsException {
-    var items = combine.unvalidatedSubExprs();
+    var items = createTuple.unvalidatedSubExprs();
     var rewrittenItems = rewriteExprs(items, resolver);
     if (items.equals(rewrittenItems)) {
-      return combine;
+      return createTuple;
     } else {
-      return bytecodeFactory.combine(rewrittenItems);
+      return bytecodeFactory.createTuple(rewrittenItems);
     }
   }
 
-  private BChoose rewriteChoose(BChoose choose, Resolver resolver)
+  private BCreateVariant rewriteCreateVariant(BCreateVariant createVariant, Resolver resolver)
       throws BytecodeException, RefIndexOutOfBoundsException {
-    var index = choose.index();
-    var chosen = choose.chosen();
+    var index = createVariant.index();
+    var choice = createVariant.choice();
 
-    // Only chosen has to be rewritten as index is BValue
-    var rewrittenChosen = rewriteExpr(chosen, resolver);
+    // Only choice has to be rewritten as index is BValue
+    var rewrittenChoice = rewriteExpr(choice, resolver);
 
-    if (rewrittenChosen.equals(chosen)) {
-      return choose;
+    if (rewrittenChoice.equals(choice)) {
+      return createVariant;
     } else {
-      return bytecodeFactory.choose(choose.evaluationType(), index, rewrittenChosen);
+      return bytecodeFactory.createVariant(createVariant.evaluationType(), index, rewrittenChoice);
     }
   }
 
@@ -217,40 +217,40 @@ public class BRefInliner {
     }
   }
 
-  private BExpr rewriteOrder(BOrder order, Resolver resolver)
+  private BExpr rewriteCreateArray(BCreateArray createArray, Resolver resolver)
       throws BytecodeException, RefIndexOutOfBoundsException {
-    var elements = order.elements();
+    var elements = createArray.elements();
     var rewrittenElements = rewriteExprs(elements, resolver);
     if (elements.equals(rewrittenElements)) {
-      return order;
+      return createArray;
     } else {
-      return bytecodeFactory.order(order.evaluationType(), rewrittenElements);
+      return bytecodeFactory.createArray(createArray.evaluationType(), rewrittenElements);
     }
   }
 
-  private BExpr rewritePick(BPick pick, Resolver resolver)
+  private BExpr rewriteArrayGet(BArrayGet arrayGet, Resolver resolver)
       throws BytecodeException, RefIndexOutOfBoundsException {
-    var pickable = pick.pickable();
-    var index = pick.index();
+    var array = arrayGet.array();
+    var index = arrayGet.index();
 
-    var rewrittenPickable = rewriteExpr(pickable, resolver);
+    var rewrittenArray = rewriteExpr(array, resolver);
     var rewrittenIndex = rewriteExpr(index, resolver);
 
-    if (pickable.equals(rewrittenPickable) && index.equals(rewrittenIndex)) {
-      return pick;
+    if (array.equals(rewrittenArray) && index.equals(rewrittenIndex)) {
+      return arrayGet;
     } else {
-      return bytecodeFactory.pick(rewrittenPickable, rewrittenIndex);
+      return bytecodeFactory.arrayGet(rewrittenArray, rewrittenIndex);
     }
   }
 
-  private BExpr rewriteSelect(BSelect select, Resolver resolver)
+  private BExpr rewriteTupleGet(BTupleGet tupleGet, Resolver resolver)
       throws BytecodeException, RefIndexOutOfBoundsException {
-    var selectable = select.selectable();
-    var rewrittenSelectable = rewriteExpr(selectable, resolver);
-    if (selectable.equals(rewrittenSelectable)) {
-      return select;
+    var tuple = tupleGet.tuple();
+    var rewrittenTuple = rewriteExpr(tuple, resolver);
+    if (tuple.equals(rewrittenTuple)) {
+      return tupleGet;
     } else {
-      return bytecodeFactory.select(rewrittenSelectable, select.index());
+      return bytecodeFactory.tupleGet(rewrittenTuple, tupleGet.index());
     }
   }
 

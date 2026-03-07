@@ -34,7 +34,7 @@ SModule(
             evaluationType = ()->Int
             location = {t-project}/module.smooth:2
           )
-          args = SCombine(
+          args = SCreateTuple(
             evaluationType = {}
             elements = [
             ]
@@ -105,7 +105,7 @@ SModule(
                   evaluationType = ()->Int
                   location = {t-project}/module.smooth:2
                 )
-                args = SCombine(
+                args = SCreateTuple(
                   evaluationType = {}
                   elements = [
                   ]

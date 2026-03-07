@@ -31,8 +31,9 @@ import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotation;
 import org.smoothbuild.compilerfrontend.lang.define.SBlob;
 import org.smoothbuild.compilerfrontend.lang.define.SCall;
-import org.smoothbuild.compilerfrontend.lang.define.SCombine;
 import org.smoothbuild.compilerfrontend.lang.define.SConstructor;
+import org.smoothbuild.compilerfrontend.lang.define.SCreateArray;
+import org.smoothbuild.compilerfrontend.lang.define.SCreateTuple;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SExprFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SFunc;
@@ -46,12 +47,11 @@ import org.smoothbuild.compilerfrontend.lang.define.SNamedExprFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedExprValue;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
-import org.smoothbuild.compilerfrontend.lang.define.SOrder;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyReference;
 import org.smoothbuild.compilerfrontend.lang.define.SString;
-import org.smoothbuild.compilerfrontend.lang.define.SStructSelect;
-import org.smoothbuild.compilerfrontend.lang.define.STupleSelect;
+import org.smoothbuild.compilerfrontend.lang.define.SStructGet;
+import org.smoothbuild.compilerfrontend.lang.define.STupleGet;
 import org.smoothbuild.compilerfrontend.lang.name.Bindings;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
@@ -59,13 +59,13 @@ import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BTupleGet;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
@@ -140,13 +140,13 @@ public class SbTranslator {
     return switch (sExpr) {
       case SBlob sBlob -> saveLocAndReturn(sBlob, translateBlob(sBlob));
       case SCall sCall -> saveLocAndReturn(sCall, translateCall(sCall));
-      case SCombine sCombine -> saveLocAndReturn(sCombine, translateCombine(sCombine));
+      case SCreateTuple sCreateTuple ->
+        saveLocAndReturn(sCreateTuple, translateCreateTuple(sCreateTuple));
       case SInt sInt -> saveLocAndReturn(sInt, translateInt(sInt));
-      case SOrder sOrder -> saveLocAndReturn(sOrder, translateOrder(sOrder));
-      case SStructSelect sStructSelect ->
-        saveLocAndReturn(sStructSelect, translateStructSelect(sStructSelect));
-      case STupleSelect sTupleSelect ->
-        saveLocAndReturn(sTupleSelect, translateTupleSelect(sTupleSelect));
+      case SCreateArray sCreateArray ->
+        saveLocAndReturn(sCreateArray, translateCreateArray(sCreateArray));
+      case SStructGet sStructGet -> saveLocAndReturn(sStructGet, translateStructGet(sStructGet));
+      case STupleGet sTupleGet -> saveLocAndReturn(sTupleGet, translateTupleGet(sTupleGet));
       case SString sString -> saveLocAndReturn(sString, translateString(sString));
       case SInstantiate sInstantiate -> translateInstantiate(sInstantiate);
       case SMonoReference sMonoReference -> translateMonoReference(sMonoReference);
@@ -164,9 +164,10 @@ public class SbTranslator {
     return bytecodeF.call(bFunction, bArguments);
   }
 
-  private BCombine translateCombine(SCombine sCombine) throws SbTranslatorException {
-    var bElements = translateExprs(sCombine.elements());
-    return bytecodeF.combine(bElements);
+  private BCreateTuple translateCreateTuple(SCreateTuple sCreateTuple)
+      throws SbTranslatorException {
+    var bElements = translateExprs(sCreateTuple.elements());
+    return bytecodeF.createTuple(bElements);
   }
 
   private BInt translateInt(SInt sInt) throws SbTranslatorException {
@@ -305,18 +306,19 @@ public class SbTranslator {
     return bLambda;
   }
 
-  private BCombine referencesToAllArguments(BLambdaType lambdaType) throws SbTranslatorException {
+  private BCreateTuple referencesToAllArguments(BLambdaType lambdaType)
+      throws SbTranslatorException {
     List<BExpr> argumentReferences = lambdaType
         .params()
         .elements()
         .zipWithIndex()
         .map(t -> bytecodeF.ref(t.element1(), BigInteger.valueOf(t.element2() + 1)));
-    return bytecodeF.combine(argumentReferences);
+    return bytecodeF.createTuple(argumentReferences);
   }
 
   private BLambda translateConstructor(SConstructor sConstructor) throws SbTranslatorException {
     var bFuncType = typeTranslator.translate(sConstructor.type());
-    var bBody = bytecodeF.combine(createReferenceB(bFuncType.params()));
+    var bBody = bytecodeF.createTuple(createReferenceB(bFuncType.params()));
     saveLoc(bBody, sConstructor);
     return bytecodeF.lambda(bFuncType, bBody);
   }
@@ -328,28 +330,29 @@ public class SbTranslator {
         .map(tuple -> bytecodeF.ref(tuple.element1(), BigInteger.valueOf(tuple.element2() + 1)));
   }
 
-  private BOrder translateOrder(SOrder sOrder) throws SbTranslatorException {
-    var bArrayType = typeTranslator.translate(sOrder.evaluationType());
-    var bElements = translateExprs(sOrder.elements());
-    return bytecodeF.order(bArrayType, bElements);
+  private BCreateArray translateCreateArray(SCreateArray sCreateArray)
+      throws SbTranslatorException {
+    var bArrayType = typeTranslator.translate(sCreateArray.evaluationType());
+    var bElements = translateExprs(sCreateArray.elements());
+    return bytecodeF.createArray(bArrayType, bElements);
   }
 
-  private BSelect translateStructSelect(SStructSelect sStructSelect) throws SbTranslatorException {
-    var bSelectable = translateExpr(sStructSelect.selectable());
-    var sStructType = (SStructType) sStructSelect.selectable().evaluationType();
-    var indexJ = sStructType.fields().indexOf(sStructSelect.field());
+  private BTupleGet translateStructGet(SStructGet sStructGet) throws SbTranslatorException {
+    var bTupleExpr = translateExpr(sStructGet.structExpr());
+    var sStructType = (SStructType) sStructGet.structExpr().evaluationType();
+    var indexJ = sStructType.fields().indexOf(sStructGet.field());
     var bigInteger = BigInteger.valueOf(indexJ);
     var bIndex = bytecodeF.int_(bigInteger);
-    saveLoc(bIndex, sStructSelect);
-    return bytecodeF.select(bSelectable, bIndex);
+    saveLoc(bIndex, sStructGet);
+    return bytecodeF.tupleGet(bTupleExpr, bIndex);
   }
 
-  private BSelect translateTupleSelect(STupleSelect sTupleSelect) throws SbTranslatorException {
-    var bSelectable = translateExpr(sTupleSelect.selectable());
-    var bigInteger = sTupleSelect.index();
+  private BTupleGet translateTupleGet(STupleGet sTupleGet) throws SbTranslatorException {
+    var bTupleExpr = translateExpr(sTupleGet.tupleExpr());
+    var bigInteger = sTupleGet.index();
     var bIndex = bytecodeF.int_(bigInteger);
-    saveLoc(bIndex, sTupleSelect);
-    return bytecodeF.select(bSelectable, bIndex);
+    saveLoc(bIndex, sTupleGet);
+    return bytecodeF.tupleGet(bTupleExpr, bIndex);
   }
 
   private BString translateString(SString sString) throws SbTranslatorException {

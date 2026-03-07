@@ -15,7 +15,7 @@ import org.smoothbuild.common.schedule.Task1;
 import org.smoothbuild.common.schedule.Task2;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
@@ -36,8 +36,8 @@ public final class BCallJob extends SchedulingJob {
     }
     var lambda = call.lambda();
     var lambdaArgs = call.arguments();
-    if (lambdaArgs instanceof BCombine combine) {
-      return scheduleCallWithCombineArgs(call, lambda, combine);
+    if (lambdaArgs instanceof BCreateTuple createTuple) {
+      return scheduleCallWithCreateTupleArgs(call, lambda, createTuple);
     } else if (lambdaArgs instanceof BTuple tuple) {
       return scheduleCallWithTupleArgs(call, lambda, tuple);
     } else { // BExpr that evaluates to BTuple
@@ -45,18 +45,19 @@ public final class BCallJob extends SchedulingJob {
     }
   }
 
-  private Promise<Maybe<BValue>> scheduleCallWithCombineArgs(
-      BCall call, BExpr lambdaExpr, BCombine combine) throws BytecodeException {
-    var schedulingTask = newCallWithCombineArgsSchedulingTask(call, combine);
+  private Promise<Maybe<BValue>> scheduleCallWithCreateTupleArgs(
+      BCall call, BExpr lambdaExpr, BCreateTuple createTuple) throws BytecodeException {
+    var schedulingTask = newCallWithCreateTupleAsArgsSchedulingTask(call, createTuple);
     var lambdaPromise = evaluate(lambdaExpr);
     return scheduler().submit(schedulingTask, lambdaPromise);
   }
 
-  private Task1<BValue, BValue> newCallWithCombineArgsSchedulingTask(BCall call, BCombine combine) {
+  private Task1<BValue, BValue> newCallWithCreateTupleAsArgsSchedulingTask(
+      BCall call, BCreateTuple createTuple) {
     return (lambdaValue) -> {
       var bLambda = (BLambda) lambdaValue;
       try {
-        var argJobs = combine.items().map(this::job);
+        var argJobs = createTuple.items().map(this::job);
         var bodyEnvironmentJobs = bodyEnvironmentJobs(bLambda, argJobs);
         var bodyTrace = newTrace(call, bLambda, trace());
         var schedule = job(bLambda.body(), bodyEnvironmentJobs, bodyTrace).evaluate();

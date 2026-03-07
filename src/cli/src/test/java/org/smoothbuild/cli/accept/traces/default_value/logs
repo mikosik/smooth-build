@@ -40,8 +40,8 @@
   @ <empty trace>
 :vm:schedule:call:execute
   @ <empty trace>
-:vm:schedule:order
-:vm:evaluate:order
+:vm:schedule:createArray
+:vm:evaluate:createArray
   @ {t-project}/module.smooth:3 returnArray
 :scheduler:join
 :evaluator:merge

@@ -8,7 +8,7 @@ SModule(
         type = [A]
         fqn = myValue
         location = {t-project}/module.smooth:1
-        body = SOrder(
+        body = SCreateArray(
           evaluationType = [A]
           elements = [
           ]
@@ -69,7 +69,7 @@ SModule(
               type = [A]
               fqn = myValue
               location = {t-project}/module.smooth:1
-              body = SOrder(
+              body = SCreateArray(
                 evaluationType = [A]
                 elements = [
                 ]

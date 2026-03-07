@@ -3,33 +3,33 @@ package org.smoothbuild.virtualmachine.evaluate.cache;
 import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoose;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BArrayGet;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateVariant;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOperation;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BTupleGet;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 
 public class OperationHashes {
   public static Hash operationHash(BOperation operation) {
     return switch (operation) {
-      case BCombine _ -> combineHash();
-      case BChoose _ -> chooseHash();
+      case BCreateTuple _ -> createTupleHash();
+      case BCreateVariant _ -> createVariantHash();
       case BInvoke _ -> invokeHash();
-      case BOrder order -> orderHash(order.evaluationType());
-      case BPick _ -> pickHash();
-      case BSelect _ -> selectHash();
+      case BCreateArray createArray -> createArrayHash(createArray.evaluationType());
+      case BArrayGet _ -> arrayGetHash();
+      case BTupleGet _ -> tupleGetHash();
       default -> throw new IllegalStateException("Unexpected value: " + operation);
     };
   }
 
-  private static Hash pickHash() {
+  private static Hash arrayGetHash() {
     return hash(0);
   }
 
-  private static Hash combineHash() {
+  private static Hash createTupleHash() {
     return hash(1);
   }
 
@@ -37,15 +37,15 @@ public class OperationHashes {
     return hash(2);
   }
 
-  private static Hash orderHash(BType type) {
+  private static Hash createArrayHash(BType type) {
     return hash(3, type.hash());
   }
 
-  private static Hash selectHash() {
+  private static Hash tupleGetHash() {
     return hash(4);
   }
 
-  private static Hash chooseHash() {
+  private static Hash createVariantHash() {
     return hash(5);
   }
 

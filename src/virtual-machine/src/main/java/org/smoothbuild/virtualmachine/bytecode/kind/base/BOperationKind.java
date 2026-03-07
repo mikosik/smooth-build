@@ -4,18 +4,18 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 
 public abstract sealed class BOperationKind extends BKind
-    permits BCallKind,
-        BChooseKind,
-        BCombineKind,
+    permits BArrayGetKind,
+        BCallKind,
+        BCreateArrayKind,
+        BCreateTupleKind,
+        BCreateVariantKind,
         BFoldKind,
         BIfKind,
         BInvokeKind,
         BMapKind,
-        BOrderKind,
-        BPickKind,
         BRefKind,
-        BSelectKind,
-        BSwitchKind {
+        BSwitchKind,
+        BTupleGetKind {
   private final BType evaluationType;
 
   protected BOperationKind(

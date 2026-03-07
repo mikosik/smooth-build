@@ -13,58 +13,61 @@ public class ComputationHashFactoryTest extends VmTestContext {
   @Test
   void hashes_of_computations_with_same_evaluator_sandbox_and_input_are_equal() throws Exception {
     var input = bTuple(bString("input"));
-    assertThat(create(Hash.of(13), bOrder(), input))
-        .isEqualTo(create(Hash.of(13), bOrder(), input));
+    assertThat(create(Hash.of(13), bCreateArray(), input))
+        .isEqualTo(create(Hash.of(13), bCreateArray(), input));
   }
 
   @Test
   void hashes_of_computations_with_different_evaluator_but_same_sandbox_and_input_are_not_equal()
       throws Exception {
-    var order1 = bOrder(bInt());
-    var order2 = bOrder(bString());
+    var bCreateArray1 = bCreateArray(bInt());
+    var bCreateArray2 = bCreateArray(bString());
     var input = bTuple(bString("input"));
-    assertThat(create(Hash.of(13), order1, input)).isNotEqualTo(create(Hash.of(13), order2, input));
+    assertThat(create(Hash.of(13), bCreateArray1, input))
+        .isNotEqualTo(create(Hash.of(13), bCreateArray2, input));
   }
 
   @Test
   void hashes_of_computations_with_same_evaluator_and_input_but_different_sandbox_are_not_equal()
       throws Exception {
-    var order = bOrder();
+    var bCreateArray = bCreateArray();
     var input = bTuple(bString("input"));
-    assertThat(create(Hash.of(13), order, input)).isNotEqualTo(create(Hash.of(14), order, input));
+    assertThat(create(Hash.of(13), bCreateArray, input))
+        .isNotEqualTo(create(Hash.of(14), bCreateArray, input));
   }
 
   @Test
   void hashes_of_computations_with_same_evaluator_sandbox_but_different_input_are_not_equal()
       throws Exception {
-    var order = bOrder();
+    var bCreateArray = bCreateArray();
     var input1 = bTuple(bString("input"));
     var input2 = bTuple(bString("input2"));
-    assertThat(create(Hash.of(13), order, input1)).isNotEqualTo(create(Hash.of(13), order, input2));
+    assertThat(create(Hash.of(13), bCreateArray, input1))
+        .isNotEqualTo(create(Hash.of(13), bCreateArray, input2));
   }
 
   @Nested
   class _computation_hash_is_stable_for {
     @Test
-    void combine_evaluator_and_empty_input() throws Exception {
+    void createTuple_evaluator_and_empty_input() throws Exception {
       var input = bTuple();
-      assertThat(create(Hash.of(13), bCombine(), input))
+      assertThat(create(Hash.of(13), bCreateTuple(), input))
           .isEqualTo(
               Hash.decode("8a8fedb17e870a96e705c91a01279e12d1c33a3ad21edd556ffe28d36fdccd24"));
     }
 
     @Test
-    void combine_evaluator_and_one_element_input() throws Exception {
+    void createTuple_evaluator_and_one_element_input() throws Exception {
       var input = bTuple(bString("abc"));
-      assertThat(create(Hash.of(13), bCombine(), input))
+      assertThat(create(Hash.of(13), bCreateTuple(), input))
           .isEqualTo(
               Hash.decode("cbb2f392778e59ec728b8d5bcdae9f07dbe690267ef74e9e6de1bd7ee901e987"));
     }
 
     @Test
-    void combine_evaluator_and_two_elements_input() throws Exception {
+    void createTuple_evaluator_and_two_elements_input() throws Exception {
       var input = bTuple(bString("abc"), bString("def"));
-      assertThat(create(Hash.of(13), bCombine(), input))
+      assertThat(create(Hash.of(13), bCreateTuple(), input))
           .isEqualTo(
               Hash.decode("74398af06050d223f2ae209e8c6ec219536a05a5a1bcf1f8ea75d5adccd8db3a"));
     }
@@ -79,33 +82,33 @@ public class ComputationHashFactoryTest extends VmTestContext {
     }
 
     @Test
-    void order_evaluator_and_empty_input() throws Exception {
+    void createArray_evaluator_and_empty_input() throws Exception {
       var input = bTuple();
-      assertThat(create(Hash.of(13), bOrder(bStringType()), input))
+      assertThat(create(Hash.of(13), bCreateArray(bStringType()), input))
           .isEqualTo(
               Hash.decode("9f0f79b4df0e66a3c10bf984f87b60e1e16165f53d6bb5921e035ed19de3ce15"));
     }
 
     @Test
-    void pick_evaluator() throws Exception {
+    void arrayGet_evaluator() throws Exception {
       var input = bTuple();
-      assertThat(create(Hash.of(13), bPick(bArray(bInt(37)), bInt(0)), input))
+      assertThat(create(Hash.of(13), bArrayGet(bArray(bInt(37)), bInt(0)), input))
           .isEqualTo(
               Hash.decode("e0630f6b53ef98d9774a06cf9a63a1b2099110d32e5e77f80f7b8d71bdacaa0b"));
     }
 
     @Test
-    void order_evaluator_and_non_empty_input() throws Exception {
+    void createArray_evaluator_and_non_empty_input() throws Exception {
       var input = bTuple(bString("abc"), bString("def"));
-      assertThat(create(Hash.of(13), bOrder(bStringType()), input))
+      assertThat(create(Hash.of(13), bCreateArray(bStringType()), input))
           .isEqualTo(
               Hash.decode("768225aee789a5af8d61809fe0b216451dd296f3f86b46ca2787d46dc724d662"));
     }
 
     @Test
-    void select_evaluator_and_one_element_input() throws Exception {
+    void tupleGet_evaluator_and_one_element_input() throws Exception {
       var input = bTuple(bString("abc"));
-      assertThat(create(Hash.of(13), bSelect(), input))
+      assertThat(create(Hash.of(13), bTupleGet(), input))
           .isEqualTo(
               Hash.decode("1715db3630a84de769e55c2dd3062df4c29518c31d010bca09a00c5ff7483dac"));
     }

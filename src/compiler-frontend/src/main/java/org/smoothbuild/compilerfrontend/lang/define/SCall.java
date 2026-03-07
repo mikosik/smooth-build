@@ -8,7 +8,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SType;
 /**
  * This class is immutable.
  */
-public record SCall(SExpr callee, SCombine args, Location location) implements SExpr {
+public record SCall(SExpr callee, SCreateTuple args, Location location) implements SExpr {
   public SCall {
     if (callee.evaluationType() instanceof SFuncType sFuncType) {
       validateArgsSize(sFuncType, args);
@@ -17,7 +17,7 @@ public record SCall(SExpr callee, SCombine args, Location location) implements S
     }
   }
 
-  private static void validateArgsSize(SFuncType sFuncType, SCombine args) {
+  private static void validateArgsSize(SFuncType sFuncType, SCreateTuple args) {
     int paramsCount = sFuncType.params().size();
     int argsCount = args.elements().size();
     if (argsCount != paramsCount) {

@@ -10,7 +10,8 @@ import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PCombine;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PCreateArray;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PCreateTuple;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
@@ -20,10 +21,9 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PInt;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedArg;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
-import org.smoothbuild.compilerfrontend.compile.ast.define.POrder;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PStructSelect;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PTupleSelect;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PStructGet;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PTupleGet;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 import org.smoothbuild.compilerfrontend.lang.base.MonoReferenceable;
 import org.smoothbuild.compilerfrontend.lang.base.PolyEvaluable;
@@ -102,13 +102,13 @@ public class ConstraintCollector {
   private SType unifyExpr(PExpr pExpr) throws TypeException {
     return switch (pExpr) {
       case PCall pCall -> unifyAndMemoize(pCall, this::unifyCall);
-      case PCombine pCombine -> unifyAndMemoize(pCombine, this::unifyCombine);
+      case PCreateTuple pCreateTuple -> unifyAndMemoize(pCreateTuple, this::unifyCreateTuple);
       case PInstantiate pInstantiate -> unifyAndMemoize(pInstantiate, this::unifyInstantiate);
       case PLambda pLambda -> unifyLambda(pLambda);
       case PNamedArg pNamedArg -> unifyAndMemoize(pNamedArg, this::unifyNamedArg);
-      case POrder pOrder -> unifyAndMemoize(pOrder, this::unifyOrder);
-      case PStructSelect pStructSelect -> unifyAndMemoize(pStructSelect, this::unifySelect);
-      case PTupleSelect pTupleSelect -> unifyAndMemoize(pTupleSelect, this::unifyTupleSelect);
+      case PCreateArray pCreateArray -> unifyAndMemoize(pCreateArray, this::unifyCreateArray);
+      case PStructGet pStructGet -> unifyAndMemoize(pStructGet, this::unifyStructGet);
+      case PTupleGet pTupleGet -> unifyAndMemoize(pTupleGet, this::unifyTupleGet);
       case PString pString -> setAndMemoize(pString, STypes.STRING);
       case PInt pInt -> setAndMemoize(pInt, STypes.INT);
       case PBlob pBlob -> setAndMemoize(pBlob, STypes.BLOB);
@@ -183,14 +183,14 @@ public class ConstraintCollector {
     return unifyExpr(pNamedArg.expr());
   }
 
-  private SArrayType unifyOrder(POrder pOrder) throws TypeException {
-    var elems = pOrder.elements();
+  private SArrayType unifyCreateArray(PCreateArray pCreateArray) throws TypeException {
+    var elems = pCreateArray.elements();
     var elemTypes = elems.map(this::unifyExpr);
-    return unifyElementsWithArray(elemTypes, pOrder.location());
+    return unifyElementsWithArray(elemTypes, pCreateArray.location());
   }
 
-  private STupleType unifyCombine(PCombine pCombine) throws TypeException {
-    var elems = pCombine.elements();
+  private STupleType unifyCreateTuple(PCreateTuple pCreateTuple) throws TypeException {
+    var elems = pCreateTuple.elements();
     var elemTypes = elems.map(this::unifyExpr);
     return new STupleType(elemTypes);
   }
@@ -217,45 +217,45 @@ public class ConstraintCollector {
     return new SArrayType(elemVar);
   }
 
-  private SType unifySelect(PStructSelect pStructSelect) throws TypeException {
-    var selectableType = unifyExpr(pStructSelect.selectable());
-    var resolvedSelectableType = unifier.resolve(selectableType);
-    if (resolvedSelectableType instanceof SStructType sStructType) {
-      var itemSigS = sStructType.fields().get(pStructSelect.fieldName());
+  private SType unifyStructGet(PStructGet pStructGet) throws TypeException {
+    var structType = unifyExpr(pStructGet.structExpr());
+    var resolvedStructType = unifier.resolve(structType);
+    if (resolvedStructType instanceof SStructType sStructType) {
+      var itemSigS = sStructType.fields().get(pStructGet.fieldName());
       if (itemSigS == null) {
         throw new TypeException(compileError(
-            pStructSelect.location(),
+            pStructGet.location(),
             "Struct " + sStructType.fqn().q() + " has no field "
-                + pStructSelect.fieldName().q() + "."));
+                + pStructGet.fieldName().q() + "."));
       } else {
         return itemSigS.type();
       }
     } else {
       throw new TypeException(compileError(
-          pStructSelect.location(),
-          "Instance of " + resolvedSelectableType.q()
-              + " has no field " + pStructSelect.fieldName().q()
+          pStructGet.location(),
+          "Instance of " + resolvedStructType.q()
+              + " has no field " + pStructGet.fieldName().q()
               + "."));
     }
   }
 
-  private SType unifyTupleSelect(PTupleSelect pTupleSelect) throws TypeException {
-    var selectableType = unifyExpr(pTupleSelect.selectable());
-    var resolvedSelectableType = unifier.resolve(selectableType);
-    var position = pTupleSelect.position().bigInteger().intValueExact();
-    if (resolvedSelectableType instanceof STupleType sTupleType) {
+  private SType unifyTupleGet(PTupleGet pTupleGet) throws TypeException {
+    var tupleType = unifyExpr(pTupleGet.tupleExpr());
+    var resolvedTupleType = unifier.resolve(tupleType);
+    var position = pTupleGet.position().bigInteger().intValueExact();
+    if (resolvedTupleType instanceof STupleType sTupleType) {
       var index = position - 1;
       var elements = sTupleType.elements();
       if (0 <= index && index < elements.size()) {
         return elements.get(index);
       } else {
         throw new TypeException(compileError(
-            pTupleSelect.location(),
+            pTupleGet.location(),
             "Tuple " + sTupleType.specifier() + " has no element at position " + position + "."));
       }
     } else {
       throw new TypeException(compileError(
-          pTupleSelect.location(),
+          pTupleGet.location(),
           "Cannot access element at position " + position
               + " because it is applied to not a tuple type."));
     }

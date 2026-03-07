@@ -26,8 +26,8 @@ SModule(
         type = Int
         fqn = result
         location = {t-project}/module.smooth:4
-        body = STupleSelect(
-          selectable = SCall(
+        body = STupleGet(
+          tupleExpr = SCall(
             callee = SInstantiate(
               typeArgs = <>
               polymorphic = SPolyReference(
@@ -38,7 +38,7 @@ SModule(
               evaluationType = ()->{String,Int}
               location = {t-project}/module.smooth:4
             )
-            args = SCombine(
+            args = SCreateTuple(
               evaluationType = {}
               elements = [
               ]
@@ -104,8 +104,8 @@ SModule(
               type = Int
               fqn = result
               location = {t-project}/module.smooth:4
-              body = STupleSelect(
-                selectable = SCall(
+              body = STupleGet(
+                tupleExpr = SCall(
                   callee = SInstantiate(
                     typeArgs = <>
                     polymorphic = SPolyReference(
@@ -116,7 +116,7 @@ SModule(
                     evaluationType = ()->{String,Int}
                     location = {t-project}/module.smooth:4
                   )
-                  args = SCombine(
+                  args = SCreateTuple(
                     evaluationType = {}
                     elements = [
                     ]

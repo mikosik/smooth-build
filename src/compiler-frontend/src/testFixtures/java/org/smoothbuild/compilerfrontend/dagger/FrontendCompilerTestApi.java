@@ -48,8 +48,9 @@ import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotation;
 import org.smoothbuild.compilerfrontend.lang.define.SBlob;
 import org.smoothbuild.compilerfrontend.lang.define.SCall;
-import org.smoothbuild.compilerfrontend.lang.define.SCombine;
 import org.smoothbuild.compilerfrontend.lang.define.SConstructor;
+import org.smoothbuild.compilerfrontend.lang.define.SCreateArray;
+import org.smoothbuild.compilerfrontend.lang.define.SCreateTuple;
 import org.smoothbuild.compilerfrontend.lang.define.SDefaultValue;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SInstantiate;
@@ -62,12 +63,11 @@ import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedExprFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedExprValue;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
-import org.smoothbuild.compilerfrontend.lang.define.SOrder;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyReference;
 import org.smoothbuild.compilerfrontend.lang.define.SString;
-import org.smoothbuild.compilerfrontend.lang.define.SStructSelect;
-import org.smoothbuild.compilerfrontend.lang.define.STupleSelect;
+import org.smoothbuild.compilerfrontend.lang.define.SStructGet;
+import org.smoothbuild.compilerfrontend.lang.define.STupleGet;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
@@ -337,17 +337,17 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SCall sCall(int line, SExpr callable, SExpr... args) {
-    return new SCall(callable, sCombine(line, args), location(line));
+    return new SCall(callable, sCreateTuple(line, args), location(line));
   }
 
-  public default SCombine sCombine(SExpr... args) {
-    return sCombine(13, args);
+  public default SCreateTuple sCreateTuple(SExpr... args) {
+    return sCreateTuple(13, args);
   }
 
-  public default SCombine sCombine(int line, SExpr... args) {
+  public default SCreateTuple sCreateTuple(int line, SExpr... args) {
     var argsList = list(args);
     var evaluationType = new STupleType(argsList.map(SExpr::evaluationType));
-    return new SCombine(evaluationType, argsList, location(line));
+    return new SCreateTuple(evaluationType, argsList, location(line));
   }
 
   public default SInt sInt(int value) {
@@ -414,24 +414,24 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return new SInstantiate(typeArgs, sPolyReference, location);
   }
 
-  public default SOrder sOrder(SExpr headElement, SExpr... tailElements) {
-    return new SOrder(
+  public default SCreateArray sCreateArray(SExpr headElement, SExpr... tailElements) {
+    return new SCreateArray(
         sArrayType(headElement.evaluationType()), list(headElement).add(tailElements), location(7));
   }
 
-  public default SOrder sOrder(int line, SExpr headElement, SExpr... tailElements) {
-    return new SOrder(
+  public default SCreateArray sCreateArray(int line, SExpr headElement, SExpr... tailElements) {
+    return new SCreateArray(
         sArrayType(headElement.evaluationType()),
         list(headElement).add(tailElements),
         location(line));
   }
 
-  public default SOrder sOrder(SType elementType, SExpr... exprs) {
-    return sOrder(1, elementType, exprs);
+  public default SCreateArray sCreateArray(SType elementType, SExpr... exprs) {
+    return sCreateArray(1, elementType, exprs);
   }
 
-  public default SOrder sOrder(int line, SType elementType, SExpr... exprs) {
-    return new SOrder(sArrayType(elementType), list(exprs), location(line));
+  public default SCreateArray sCreateArray(int line, SType elementType, SExpr... exprs) {
+    return new SCreateArray(sArrayType(elementType), list(exprs), location(line));
   }
 
   public default SMonoReference sParamRef(SType type, String name) {
@@ -470,20 +470,20 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return new SPolyEvaluable(list, evaluable);
   }
 
-  public default STupleSelect sTupleSelect(SExpr selectable, int index) {
-    return sTupleSelect(1, selectable, BigInteger.valueOf(index));
+  public default STupleGet sTupleGet(SExpr tupleExpr, int index) {
+    return sTupleGet(1, tupleExpr, BigInteger.valueOf(index));
   }
 
-  public default STupleSelect sTupleSelect(int line, SExpr selectable, BigInteger index) {
-    return new STupleSelect(selectable, index, location(line));
+  public default STupleGet sTupleGet(int line, SExpr tupleExpr, BigInteger index) {
+    return new STupleGet(tupleExpr, index, location(line));
   }
 
-  public default SStructSelect sStructSelect(SExpr selectable, String field) {
-    return sStructSelect(1, selectable, field);
+  public default SStructGet sStructGet(SExpr structExpr, String field) {
+    return sStructGet(1, structExpr, field);
   }
 
-  public default SStructSelect sStructSelect(int line, SExpr selectable, String field) {
-    return new SStructSelect(selectable, referenceableName(field), location(line));
+  public default SStructGet sStructGet(int line, SExpr structExpr, String field) {
+    return new SStructGet(structExpr, referenceableName(field), location(line));
   }
 
   public default SString sString() {
@@ -608,7 +608,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SNamedValue emptySArrayValue(SType elementType) {
-    return sValue("emptyArray", sOrder(elementType));
+    return sValue("emptyArray", sCreateArray(elementType));
   }
 
   public default SConstructor sConstructor(SStructType structType) {

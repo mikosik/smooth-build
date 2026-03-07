@@ -8,11 +8,11 @@ public abstract sealed class BType extends BKind
     permits BArrayType,
         BBlobType,
         BBoolType,
-        BChoiceType,
         BIntType,
         BLambdaType,
         BStringType,
-        BTupleType {
+        BTupleType,
+        BVariantType {
   protected BType(Hash hash, String name, Class<? extends BExpr> javaType) {
     super(hash, name, javaType);
   }

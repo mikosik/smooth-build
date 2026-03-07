@@ -126,7 +126,7 @@ public class BEvaluateTaskTest extends VmTestContext {
         var nativeMethodLoader = nativeMethodLoaderThatAlwaysLoadsMemoizeString();
         var invoke = bInvoke(bStringType(), bMethodTuple(), bTuple(bString(testName)));
         var type = bStringType();
-        var lambda = bLambda(list(type), bCombine(bRef(type, 1), bRef(type, 1)));
+        var lambda = bLambda(list(type), bCreateTuple(bRef(type, 1), bRef(type, 1)));
         var call = bCall(lambda, invoke);
 
         evaluate(bEvaluate(nativeMethodLoader), call);
@@ -164,8 +164,8 @@ public class BEvaluateTaskTest extends VmTestContext {
         var nativeMethodLoader = nativeMethodLoaderThatAlwaysLoadsMemoizeString();
         var invoke = bInvoke(bStringType(), bMethodTuple(), bTuple(bString(testName)));
         var lambda = bLambda(list(bStringType()), invoke);
-        var choice = bChoice(bChoiceType(), 1, bInt());
-        var switch_ = bSwitch(choice, bCombine(lambda, bi2sLambda()));
+        var variant = bVariant(bVariantType(), 1, bInt());
+        var switch_ = bSwitch(variant, bCreateTuple(lambda, bi2sLambda()));
 
         evaluate(bEvaluate(nativeMethodLoader), switch_);
 
@@ -179,7 +179,7 @@ public class BEvaluateTaskTest extends VmTestContext {
       void learning_test() throws Exception {
         // Learning test verifies that job creation is counted also inside lambda body.
         var bInt = bInt(7);
-        var lambda = bLambda(bOrder(bInt));
+        var lambda = bLambda(bCreateArray(bInt));
         var call = bCall(lambda);
 
         var countingJobContext = provideCountingJobContext();
@@ -195,7 +195,7 @@ public class BEvaluateTaskTest extends VmTestContext {
           throws Exception {
         var lambda = bLambda(list(bBoolArrayType()), bInt(7));
         var bBool = bBool();
-        var call = bCall(lambda, bOrder(bBool));
+        var call = bCall(lambda, bCreateArray(bBool));
 
         var countingJobContext = provideCountingJobContext();
         var countingBEvaluate = new BEvaluateTask(countingJobContext);
@@ -227,9 +227,9 @@ public class BEvaluateTaskTest extends VmTestContext {
 
       @Test
       void choice() throws Exception {
-        var type = bChoiceType(bStringType(), bIntType());
-        var choice = bChoice(type, bInt(0), bString("7"));
-        assertThat(evaluate(choice)).isEqualTo(choice);
+        var type = bVariantType(bStringType(), bIntType());
+        var variant = bVariant(type, bInt(0), bString("7"));
+        assertThat(evaluate(variant)).isEqualTo(variant);
       }
 
       @Test
@@ -260,16 +260,16 @@ public class BEvaluateTaskTest extends VmTestContext {
         }
 
         @Test
-        void lambda_with_single_argument_passed_inside_combine() throws Exception {
+        void lambda_with_single_argument_passed_inside_tuple() throws Exception {
           var lambda = bIntIdLambda();
           var call = bCallWithArguments(lambda, bTuple(bInt(7)));
           assertThat(evaluate(call)).isEqualTo(bInt(7));
         }
 
         @Test
-        void lambda_with_single_argument_passed_inside_tuple() throws Exception {
+        void lambda_with_single_argument_passed_inside_createTuple() throws Exception {
           var lambda = bIntIdLambda();
-          var call = bCallWithArguments(lambda, bCombine(bInt(7)));
+          var call = bCallWithArguments(lambda, bCreateTuple(bInt(7)));
           assertThat(evaluate(call)).isEqualTo(bInt(7));
         }
 
@@ -277,7 +277,7 @@ public class BEvaluateTaskTest extends VmTestContext {
         void lambda_with_single_argument_passed_as_expression_that_evaluates_to_tuple()
             throws Exception {
           var lambda = bIntIdLambda();
-          var call = bCallWithArguments(lambda, bPick(bOrder(bTuple(bInt(7))), 0));
+          var call = bCallWithArguments(lambda, bArrayGet(bCreateArray(bTuple(bInt(7))), 0));
           assertThat(evaluate(call)).isEqualTo(bInt(7));
         }
 
@@ -362,38 +362,38 @@ public class BEvaluateTaskTest extends VmTestContext {
         }
 
         private BLambda addIntsBLambda() throws IOException {
-          var arguments = bCombine(bRef(bIntType(), 1), bRef(bIntType(), 2));
+          var arguments = bCreateTuple(bRef(bIntType(), 1), bRef(bIntType(), 2));
           var body = bInvoke(bIntType(), AddInts.class, true, arguments);
           return bLambda(list(bIntType(), bIntType()), body);
         }
 
         private BLambda equalIntsBLambda() throws IOException {
-          var arguments = bCombine(bRef(bIntType(), 1), bRef(bIntType(), 2));
+          var arguments = bCreateTuple(bRef(bIntType(), 1), bRef(bIntType(), 2));
           var body = bInvoke(bBoolType(), Equals.class, true, arguments);
           return bLambda(list(bIntType(), bIntType()), body);
         }
       }
 
       @Test
-      void combine() throws Exception {
-        var combine = bCombine(bInt(7));
-        assertThat(evaluate(combine)).isEqualTo(bTuple(bInt(7)));
+      void createTuple() throws Exception {
+        var createTuple = bCreateTuple(bInt(7));
+        assertThat(evaluate(createTuple)).isEqualTo(bTuple(bInt(7)));
       }
 
       @Test
-      void choose() throws Exception {
-        var type = bChoiceType(bStringType(), bIntType());
-        var choose = bChoose(type, bInt(0), bSelect(bCombine(bString("7")), 0));
-        assertThat(evaluate(choose)).isEqualTo(bChoice(type, 0, bString("7")));
+      void createVariant() throws Exception {
+        var type = bVariantType(bStringType(), bIntType());
+        var choose = bCreateVariant(type, bInt(0), bTupleGet(bCreateTuple(bString("7")), 0));
+        assertThat(evaluate(choose)).isEqualTo(bVariant(type, 0, bString("7")));
       }
 
       @Test
       void switch_() throws Exception {
-        var type = bChoiceType(bStringType(), bIntType());
-        var choice = bChoice(type, bInt(0), bString("7"));
-        var tupelizeString = bLambda(list(bStringType()), bCombine(bRef(bStringType(), 1)));
+        var type = bVariantType(bStringType(), bIntType());
+        var variant = bVariant(type, bInt(0), bString("7"));
+        var tupelizeString = bLambda(list(bStringType()), bCreateTuple(bRef(bStringType(), 1)));
         var intToTuple = bLambda(list(bIntType()), bTuple(bString("x")));
-        var switch_ = bSwitch(choice, bCombine(tupelizeString, intToTuple));
+        var switch_ = bSwitch(variant, bCreateTuple(tupelizeString, intToTuple));
         assertThat(evaluate(switch_)).isEqualTo(bTuple(bString("7")));
       }
 
@@ -423,7 +423,7 @@ public class BEvaluateTaskTest extends VmTestContext {
       @Test
       void map() throws Exception {
         var array = bArray(bInt(1), bInt(4));
-        var mapper = bLambda(list(bIntType()), bCombine(bRef(bIntType(), 1)));
+        var mapper = bLambda(list(bIntType()), bCreateTuple(bRef(bIntType(), 1)));
         var map = bMap(array, mapper);
         assertThat(evaluate(map)).isEqualTo(bArray(bTuple(bInt(1)), bTuple(bInt(4))));
       }
@@ -436,7 +436,7 @@ public class BEvaluateTaskTest extends VmTestContext {
 
       @Test
       void fold() throws Exception {
-        var arguments = bCombine(bRef(bStringType(), 1), bRef(bStringType(), 2));
+        var arguments = bCreateTuple(bRef(bStringType(), 1), bRef(bStringType(), 2));
         var body = bInvoke(bStringType(), ConcatStrings.class, true, arguments);
         var folder = bLambda(list(bStringType(), bStringType()), body);
 
@@ -449,7 +449,7 @@ public class BEvaluateTaskTest extends VmTestContext {
 
       @Test
       void fold_empty_array() throws Exception {
-        var arguments = bCombine(bRef(1), bRef(2));
+        var arguments = bCreateTuple(bRef(1), bRef(2));
         var body = bInvoke(bStringType(), ConcatStrings.class, true, arguments);
         var folder = bLambda(list(bStringType(), bStringType()), body);
 
@@ -461,24 +461,24 @@ public class BEvaluateTaskTest extends VmTestContext {
       }
 
       @Test
-      void order() throws Exception {
-        var order = bOrder(bInt(7), bInt(8));
-        assertThat(evaluate(order)).isEqualTo(bArray(bInt(7), bInt(8)));
+      void createArray() throws Exception {
+        var bCreateArray = bCreateArray(bInt(7), bInt(8));
+        assertThat(evaluate(bCreateArray)).isEqualTo(bArray(bInt(7), bInt(8)));
       }
 
       @Nested
-      class _pick {
+      class _arrayGet {
         @Test
-        void pick() throws Exception {
-          var tuple = bArray(bInt(10), bInt(11), bInt(12), bInt(13));
-          var pick = bPick(tuple, bInt(2));
-          assertThat(evaluate(pick)).isEqualTo(bInt(12));
+        void arrayGet() throws Exception {
+          var array = bArray(bInt(10), bInt(11), bInt(12), bInt(13));
+          var arrayGet = bArrayGet(array, bInt(2));
+          assertThat(evaluate(arrayGet)).isEqualTo(bInt(12));
         }
 
         @Test
-        void pick_with_index_outside_of_bounds() throws Exception {
-          var pick = bPick(bArray(bInt(10), bInt(11), bInt(12), bInt(13)), bInt(4));
-          evaluate(bEvaluateTask(), pick);
+        void arrayGet_with_index_outside_of_bounds() throws Exception {
+          var arrayGet = bArrayGet(bArray(bInt(10), bInt(11), bInt(12), bInt(13)), bInt(4));
+          evaluate(bEvaluateTask(), arrayGet);
           if (!provide().reporter().reports().anyMatches(this::isResultWithIndexOutOfBoundsError)) {
             fail("Expected report ERROR caused by index out of bounds but got:\n"
                 + provide().reporter());
@@ -490,9 +490,9 @@ public class BEvaluateTaskTest extends VmTestContext {
         }
 
         @Test
-        void pick_with_index_negative() throws Exception {
-          var pick = bPick(bArray(bInt(10), bInt(11), bInt(12), bInt(13)), bInt(-1));
-          evaluate(bEvaluateTask(), pick);
+        void arrayGet_with_index_negative() throws Exception {
+          var arrayGet = bArrayGet(bArray(bInt(10), bInt(11), bInt(12), bInt(13)), bInt(-1));
+          evaluate(bEvaluateTask(), arrayGet);
           var reporter = provide().reporter();
           if (!reporter.reports().anyMatches(this::isResultWithNegativeIndexError)) {
             fail("Expected report with ERROR caused by index out of bounds, but got:\n" + reporter);
@@ -509,8 +509,8 @@ public class BEvaluateTaskTest extends VmTestContext {
         @Test
         void var_referencing_lambda_param() throws Exception {
           var lambda = bLambda(list(bIntType()), bRef(bIntType(), 1));
-          var callB = bCall(lambda, bInt(7));
-          assertThat(evaluate(callB)).isEqualTo(bInt(7));
+          var call = bCall(lambda, bInt(7));
+          assertThat(evaluate(call)).isEqualTo(bInt(7));
         }
 
         @Test
@@ -560,10 +560,10 @@ public class BEvaluateTaskTest extends VmTestContext {
       }
 
       @Test
-      void select() throws Exception {
+      void tupleGet() throws Exception {
         var tuple = bTuple(bInt(7));
-        var select = bSelect(tuple, bInt(0));
-        assertThat(evaluate(select)).isEqualTo(bInt(7));
+        var tupleGet = bTupleGet(tuple, bInt(0));
+        assertThat(evaluate(tupleGet)).isEqualTo(bInt(7));
       }
     }
 
@@ -602,7 +602,7 @@ public class BEvaluateTaskTest extends VmTestContext {
 
       @Test
       void evaluation_scheduler_that_throws_exception_is_detected() throws Exception {
-        var expr = bOrder();
+        var expr = bCreateArray();
         var runtimeException = new RuntimeException();
         var scheduler = provide().scheduler();
         var cachingOperatorEvaluator =
@@ -654,49 +654,49 @@ public class BEvaluateTaskTest extends VmTestContext {
       }
 
       @Test
-      void report_combine_as_combine_task() throws Exception {
-        var combine = bCombine(bInt(17));
-        assertTaskReport(combine, "combine", trace(), EXECUTION);
+      void report_createTuple_as_createTuple_task() throws Exception {
+        var createTuple = bCreateTuple(bInt(17));
+        assertTaskReport(createTuple, "createTuple", trace(), EXECUTION);
       }
 
       @Test
-      void report_order_as_order_task() throws Exception {
-        var order = bOrder(bInt(17));
-        assertTaskReport(order, "order", trace(), EXECUTION);
+      void report_createArray_as_createArray_task() throws Exception {
+        var createArray = bCreateArray(bInt(17));
+        assertTaskReport(createArray, "createArray", trace(), EXECUTION);
       }
 
       @Test
-      void report_pick_as_pick_task() throws Exception {
-        var pick = bPick(bArray(bInt(17)), bInt(0));
-        assertTaskReport(pick, "pick", trace(), EXECUTION);
+      void report_arrayGet_as_arrayGet_task() throws Exception {
+        var arrayGet = bArrayGet(bArray(bInt(17)), bInt(0));
+        assertTaskReport(arrayGet, "arrayGet", trace(), EXECUTION);
       }
 
       @Test
-      void report_select_as_select_task() throws Exception {
-        var select = bSelect(bTuple(bInt(17)), bInt(0));
-        assertTaskReport(select, "select", trace(), EXECUTION);
+      void report_tupleGet_as_tupleGet_task() throws Exception {
+        var tupleGet = bTupleGet(bTuple(bInt(17)), bInt(0));
+        assertTaskReport(tupleGet, "tupleGet", trace(), EXECUTION);
       }
     }
 
     @Nested
     class _with_traces {
       @Test
-      void order_inside_lambda_body() throws Exception {
-        var order = bOrder(bInt(17));
-        var lambda = bLambda(order);
+      void createArray_inside_lambda_body() throws Exception {
+        var createArray = bCreateArray(bInt(17));
+        var lambda = bLambda(createArray);
         var lambdaAsExpr = bCall(bLambda(lambda));
         var call = bCall(lambdaAsExpr);
         var callLocation = location(alias().append("path"), 3);
         var bExprAttributes = new BExprAttributes(
             map(lambda.hash(), "lambda.hash()"), map(call.hash(), callLocation));
         assertTaskReport(
-            call, bExprAttributes, "order", trace("lambda.hash()", callLocation), EXECUTION);
+            call, bExprAttributes, "createArray", trace("lambda.hash()", callLocation), EXECUTION);
       }
 
       @Test
-      void order_inside_lambda_body_that_is_called_from_other_lambda_body() throws Exception {
-        var order = bOrder(bInt(17));
-        var lambda2 = bLambda(order);
+      void createArray_inside_lambda_body_that_is_called_from_other_lambda_body() throws Exception {
+        var createArray = bCreateArray(bInt(17));
+        var lambda2 = bLambda(createArray);
         var call2 = bCall(lambda2);
         var lambda1 = bLambda(call2);
         var call1 = bCall(lambda1);
@@ -710,7 +710,7 @@ public class BEvaluateTaskTest extends VmTestContext {
         assertTaskReport(
             call1,
             bExprAttributes,
-            "order",
+            "createArray",
             trace("lambda2", call2Location, "lambda1", call1Location),
             EXECUTION);
       }
@@ -745,7 +745,7 @@ public class BEvaluateTaskTest extends VmTestContext {
       COUNTERS.put(counterA, new AtomicInteger(10));
       COUNTERS.put(counterB, new AtomicInteger(20));
       COUNTDOWNS.put(countdown, new CountDownLatch(2));
-      var expr = bOrder(
+      var expr = bCreateArray(
           invokeExecuteCommands(testName, "INC2,COUNT1,WAIT1,GET1"),
           invokeExecuteCommands(testName, "INC1,COUNT1,WAIT1,GET2"));
       assertThat(evaluate(expr)).isEqualTo(bArray(bString("11"), bString("21")));
@@ -757,7 +757,7 @@ public class BEvaluateTaskTest extends VmTestContext {
       var testName = detectEnclosingMethodName();
       var counterName = testName + "1";
       COUNTERS.put(counterName, new AtomicInteger());
-      var bExpr = bOrder(
+      var bExpr = bCreateArray(
           invokeExecuteCommands(testName, "INC1"),
           invokeExecuteCommands(testName, "INC1"),
           invokeExecuteCommands(testName, "INC1"),

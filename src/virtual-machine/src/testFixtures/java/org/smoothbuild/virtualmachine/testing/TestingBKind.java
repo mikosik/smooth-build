@@ -6,11 +6,11 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BVariantType;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class TestingBKind {
@@ -60,9 +60,9 @@ public class TestingBKind {
         lambda(CONTEXT.bBlobType(), CONTEXT.bBlobType(), CONTEXT.bBlobType()),
         lambda(CONTEXT.bStringType()),
         CONTEXT.bStringType(),
-        choice(),
-        choice(CONTEXT.bIntType()),
-        choice(CONTEXT.bIntType(), CONTEXT.bStringType()),
+        variant(),
+        variant(CONTEXT.bIntType()),
+        variant(CONTEXT.bIntType(), CONTEXT.bStringType()),
         tuple(),
         tuple(CONTEXT.bBlobType()),
         tuple(CONTEXT.bBlobType(), CONTEXT.bBlobType()),
@@ -72,16 +72,16 @@ public class TestingBKind {
     List<BKind> exprKinds = list(
         CONTEXT.bCallKind(CONTEXT.bBlobType()),
         CONTEXT.bCallKind(CONTEXT.bStringType()),
-        CONTEXT.bCombineKind(CONTEXT.bTupleType(CONTEXT.bBlobType())),
-        CONTEXT.bCombineKind(CONTEXT.bTupleType(CONTEXT.bStringType())),
-        CONTEXT.bOrderKind(array(CONTEXT.bBlobType())),
-        CONTEXT.bOrderKind(array(CONTEXT.bStringType())),
-        CONTEXT.bPickKind(CONTEXT.bBlobType()),
-        CONTEXT.bPickKind(CONTEXT.bStringType()),
+        CONTEXT.bCreateTupleKind(CONTEXT.bTupleType(CONTEXT.bBlobType())),
+        CONTEXT.bCreateTupleKind(CONTEXT.bTupleType(CONTEXT.bStringType())),
+        CONTEXT.bCreateArrayKind(array(CONTEXT.bBlobType())),
+        CONTEXT.bCreateArrayKind(array(CONTEXT.bStringType())),
+        CONTEXT.bArrayGetKind(CONTEXT.bBlobType()),
+        CONTEXT.bArrayGetKind(CONTEXT.bStringType()),
         CONTEXT.bRefKind(CONTEXT.bBlobType()),
         CONTEXT.bRefKind(CONTEXT.bStringType()),
-        CONTEXT.bSelectKind(CONTEXT.bBlobType()),
-        CONTEXT.bSelectKind(CONTEXT.bStringType()),
+        CONTEXT.bTupleGetKind(CONTEXT.bBlobType()),
+        CONTEXT.bTupleGetKind(CONTEXT.bStringType()),
         CONTEXT.bIfKind(CONTEXT.bBlobType()),
         CONTEXT.bIfKind(CONTEXT.bStringType()),
         CONTEXT.bMapKind(CONTEXT.bBlobArrayType()),
@@ -103,8 +103,8 @@ public class TestingBKind {
     return CONTEXT.bLambdaType(list(paramTypes), resultType);
   }
 
-  private static BChoiceType choice(BType... alternativeTypes) throws BytecodeException {
-    return CONTEXT.bChoiceType(alternativeTypes);
+  private static BVariantType variant(BType... alternativeTypes) throws BytecodeException {
+    return CONTEXT.bVariantType(alternativeTypes);
   }
 
   private static BTupleType tuple(BType... itemTypes) throws BytecodeException {

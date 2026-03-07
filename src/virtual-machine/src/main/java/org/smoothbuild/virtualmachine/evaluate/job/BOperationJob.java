@@ -11,7 +11,12 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BOperationEvaluator;
 
 public abstract sealed class BOperationJob extends SchedulingJob
-    permits BChooseJob, BCombineJob, BInvokeJob, BOrderJob, BPickJob, BSelectJob {
+    permits BArrayGetJob,
+        BCreateArrayJob,
+        BCreateVariantJob,
+        BCreateTupleJob,
+        BInvokeJob,
+        BTupleGetJob {
   private final BOperation operation;
 
   public BOperationJob(

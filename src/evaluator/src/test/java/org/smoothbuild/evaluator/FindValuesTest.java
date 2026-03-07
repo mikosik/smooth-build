@@ -14,7 +14,7 @@ import org.smoothbuild.compilerfrontend.lang.define.SScope;
 public class FindValuesTest extends FrontendCompilerTestContext {
   @Test
   void find_evaluable() {
-    var sValue = sPoly(sValue(sIntArrayT(), "myValue", sOrder(sIntType())));
+    var sValue = sPoly(sValue(sIntArrayT(), "myValue", sCreateArray(sIntType())));
     var sScope = new SScope(bindings(), bindings(sValue));
 
     var exprs = new FindValues().execute(sScope, list(sValue.fqn().toString()));
@@ -25,7 +25,7 @@ public class FindValuesTest extends FrontendCompilerTestContext {
 
   @Test
   void find_polymorphic_evaluable_fails() {
-    var value = sPoly(list(varA()), sValue(sVarAArrayT(), "myValue", sOrder(varA())));
+    var value = sPoly(list(varA()), sValue(sVarAArrayT(), "myValue", sCreateArray(varA())));
     var sScope = new SScope(bindings(), bindings(value));
 
     var exprs = new FindValues().execute(sScope, list(value.fqn().toString()));

@@ -61,7 +61,7 @@ chainHead
 
 chainPart
    : argList
-   | select
+   | get
    ;
 
 parens
@@ -76,7 +76,7 @@ arg
    : (NAME '=')? expr
    ;
 
-select
+get
    : '.' NAME
    | '.' INT
    ;

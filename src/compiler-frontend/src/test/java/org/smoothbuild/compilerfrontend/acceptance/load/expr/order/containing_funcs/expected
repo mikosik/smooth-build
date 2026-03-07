@@ -23,7 +23,7 @@ SModule(
         type = [()->Int]
         fqn = result
         location = {t-project}/module.smooth:2
-        body = SOrder(
+        body = SCreateArray(
           evaluationType = [()->Int]
           elements = [
             SInstantiate(
@@ -91,7 +91,7 @@ SModule(
               type = [()->Int]
               fqn = result
               location = {t-project}/module.smooth:2
-              body = SOrder(
+              body = SCreateArray(
                 evaluationType = [()->Int]
                 elements = [
                   SInstantiate(

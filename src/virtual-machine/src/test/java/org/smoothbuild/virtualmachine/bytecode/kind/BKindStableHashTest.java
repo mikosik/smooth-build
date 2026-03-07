@@ -38,7 +38,7 @@ public class BKindStableHashTest extends VmTestContext {
         arguments(
             t.bStringType(), "c942a06c127c2c18022677e888020afb174208d299354f3ecfedb124a1f3fa45"),
         arguments(
-            t.bChoiceType(t.bBlobType()),
+            t.bVariantType(t.bBlobType()),
             "897922f43dd0600cb3af0599fbe1fae6d513be06813bb011b59681496a2b216e"),
         arguments(
             t.bTupleType(t.bBlobType()),
@@ -62,18 +62,19 @@ public class BKindStableHashTest extends VmTestContext {
             t.bCallKind(t.bIntType()),
             "c23f38bb9870794f9873ee82daec1111bf5e6232b564a7b789ae4c75d608fa54"),
         arguments(
-            t.bCombineKind(), "c41cd9d13e32154103a31db858ba533bbcb38fe2c2ddac7c5e4a0be50201083b"),
+            t.bCreateTupleKind(),
+            "c41cd9d13e32154103a31db858ba533bbcb38fe2c2ddac7c5e4a0be50201083b"),
         arguments(
-            t.bCombineKind(t.bIntType()),
+            t.bCreateTupleKind(t.bIntType()),
             "801b0b192a0b269ada637c6433141a798950ee9750bccf45bb6328af2efdc365"),
         arguments(
-            t.bOrderKind(t.bIntType()),
+            t.bCreateArrayKind(t.bIntType()),
             "39ecc95bb839bb4fb1594d9707352a4801883c700003dce9f377cca0b6bfe367"),
         arguments(
-            t.bPickKind(t.bIntType()),
+            t.bArrayGetKind(t.bIntType()),
             "54d87c95031d4493b38e2fc3dc714e47df9995d34cddb5e7a7d2c2ec75c0b433"),
         arguments(
-            t.bSelectKind(t.bIntType()),
+            t.bTupleGetKind(t.bIntType()),
             "7d0bf9c43c4674d53c1bdfa7a8783ab8c9d608c46b90bfd9d99208e101c86677"),
         arguments(
             t.bRefKind(t.bIntType()),

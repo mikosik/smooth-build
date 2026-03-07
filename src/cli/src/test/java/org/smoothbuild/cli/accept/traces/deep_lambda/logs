@@ -44,9 +44,9 @@
   @ {t-project}/module.smooth:2 ???
 :vm:schedule:call:execute
   @ <empty trace>
-:vm:schedule:order
+:vm:schedule:createArray
 :vm:schedule:ref
-:vm:evaluate:order
+:vm:evaluate:createArray
   @ {t-project}/module.smooth:2 ???
 :scheduler:join
 :evaluator:merge

@@ -29,6 +29,7 @@ import org.smoothbuild.antlr.lang.SmoothAntlrParser.ChainPartContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.EvaluableContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ExprContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.FuncTypeContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.GetContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ItemContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ItemListContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.LambdaContext;
@@ -36,7 +37,6 @@ import org.smoothbuild.antlr.lang.SmoothAntlrParser.ModuleContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.NonFuncTypeContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.NotFuncTypeContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.PipeContext;
-import org.smoothbuild.antlr.lang.SmoothAntlrParser.SelectContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.StructContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.TupleTypeContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.TypeContext;
@@ -54,7 +54,8 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PAnnotation;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PArrayType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PCombine;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PCreateArray;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PCreateTuple;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PDefaultValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitTypeParams;
@@ -70,14 +71,13 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedArg;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
-import org.smoothbuild.compilerfrontend.compile.ast.define.POrder;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PPolyEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PPosition;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PStructSelect;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PTupleSelect;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PStructGet;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PTupleGet;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PTupleType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeParam;
@@ -275,7 +275,7 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
           elems = list(pipedArg.get()).addAll(elems);
           pipedArg.set(null);
         }
-        return new POrder(elems, location);
+        return new PCreateArray(elems, location);
       }
       if (chainHead.tuple() != null) {
         var elems = listOfAll(chainHead.tuple().expr()).map(this::createExpr);
@@ -283,7 +283,7 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
           elems = list(pipedArg.get()).addAll(elems);
           pipedArg.set(null);
         }
-        return new PCombine(elems, location);
+        return new PCreateTuple(elems, location);
       }
       if (chainHead.parens() != null) {
         return createPipe(pipedArg, chainHead.parens().pipe());
@@ -312,8 +312,8 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
             pipedArg.set(null);
           }
           result = createCall(result, args, argList);
-        } else if (chainPart.select() != null) {
-          result = createSelect(result, chainPart.select());
+        } else if (chainPart.get() != null) {
+          result = createGet(result, chainPart.get());
         } else {
           throw newRuntimeException(ChainPartContext.class);
         }
@@ -349,18 +349,18 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
       return new PString(unquoted, location);
     }
 
-    private PExpr createSelect(PExpr selectable, SelectContext fieldRead) {
+    private PExpr createGet(PExpr expr, GetContext fieldRead) {
       String name;
       if (fieldRead.NAME() != null) {
         name = fieldRead.NAME().getText();
         var location = fileLocation(fullPath, fieldRead);
-        return new PStructSelect(selectable, name, location);
+        return new PStructGet(expr, name, location);
       } else if (fieldRead.INT() != null) {
         name = fieldRead.INT().getText();
         var position = new PPosition(name, fileLocation(fullPath, fieldRead));
-        return new PTupleSelect(selectable, position, fileLocation(fullPath, fieldRead));
+        return new PTupleGet(expr, position, fileLocation(fullPath, fieldRead));
       } else {
-        throw newRuntimeException(SelectContext.class);
+        throw newRuntimeException(GetContext.class);
       }
     }
 

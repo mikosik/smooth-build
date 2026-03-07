@@ -20,13 +20,14 @@ import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArrayBuilder;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BArrayGet;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlobBuilder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoice;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoose;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateVariant;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BFold;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
@@ -35,24 +36,23 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BRef;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BTupleGet;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BVariant;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BBlobType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BBoolType;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BStringType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BVariantType;
 
 /**
  * This class is thread-safe.
@@ -104,16 +104,17 @@ public class BytecodeFactory {
     return exprDb.newCall(lambda, arguments);
   }
 
-  public BChoice choice(BChoiceType type, BInt index, BValue chosen) throws BytecodeException {
-    return exprDb.newChoice(type, index, chosen);
+  public BVariant variant(BVariantType type, BInt index, BValue choice) throws BytecodeException {
+    return exprDb.newVariant(type, index, choice);
   }
 
-  public BChoose choose(BChoiceType type, BInt index, BExpr chosen) throws BytecodeException {
-    return exprDb.newChoose(type, index, chosen);
+  public BCreateVariant createVariant(BVariantType type, BInt index, BExpr choice)
+      throws BytecodeException {
+    return exprDb.newCreateVariant(type, index, choice);
   }
 
-  public BCombine combine(List<BExpr> items) throws BytecodeException {
-    return exprDb.newCombine(items);
+  public BCreateTuple createTuple(List<BExpr> items) throws BytecodeException {
+    return exprDb.newCreateTuple(items);
   }
 
   public BTuple file(BBlob content, BString path) throws BytecodeException {
@@ -150,32 +151,33 @@ public class BytecodeFactory {
     return new BMethod(tuple(list(jar, classBinaryName, methodName)));
   }
 
-  public BPick pick(BExpr pickable, BExpr index) throws BytecodeException {
-    return exprDb.newPick(pickable, index);
+  public BArrayGet arrayGet(BExpr array, BExpr index) throws BytecodeException {
+    return exprDb.newArrayGet(array, index);
   }
 
   public BRef ref(BType evaluationType, BInt index) throws BytecodeException {
     return exprDb.newRef(evaluationType, index);
   }
 
-  public BSelect select(BExpr selectable, BInt index) throws BytecodeException {
-    return exprDb.newSelect(selectable, index);
+  public BTupleGet tupleGet(BExpr tupleExpr, BInt index) throws BytecodeException {
+    return exprDb.newTupleGet(tupleExpr, index);
   }
 
   public BString string(String string) throws BytecodeException {
     return exprDb.newString(string);
   }
 
-  public BSwitch switch_(BExpr choice, BCombine handlers) throws BytecodeException {
-    return exprDb.newSwitch(choice, handlers);
+  public BSwitch switch_(BExpr variant, BCreateTuple handlers) throws BytecodeException {
+    return exprDb.newSwitch(variant, handlers);
   }
 
   public BTuple tuple(List<BValue> items) throws BytecodeException {
     return exprDb.newTuple(items);
   }
 
-  public BOrder order(BArrayType evaluationType, List<BExpr> elements) throws BytecodeException {
-    return exprDb.newOrder(evaluationType, elements);
+  public BCreateArray createArray(BArrayType evaluationType, List<BExpr> elements)
+      throws BytecodeException {
+    return exprDb.newCreateArray(evaluationType, elements);
   }
 
   // Types

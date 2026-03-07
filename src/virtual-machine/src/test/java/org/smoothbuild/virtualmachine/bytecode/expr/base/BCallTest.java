@@ -53,7 +53,7 @@ public class BCallTest extends VmTestContext {
     var argument = bString();
     var call = bCall(lambda, argument);
     assertThat(call.lambda()).isEqualTo(lambda);
-    assertThat(call.arguments()).isEqualTo(bCombine(argument));
+    assertThat(call.arguments()).isEqualTo(bCreateTuple(argument));
   }
 
   @Test
@@ -99,7 +99,7 @@ public class BCallTest extends VmTestContext {
     var call = bCall(lambda, argument);
     var callRead = (BCall) exprDbOther().get(call.hash());
     assertThat(callRead.lambda()).isEqualTo(lambda);
-    assertThat(callRead.arguments()).isEqualTo(bCombine(argument));
+    assertThat(callRead.arguments()).isEqualTo(bCreateTuple(argument));
   }
 
   @Test
@@ -119,7 +119,7 @@ public class BCallTest extends VmTestContext {
               value = 17
             )
           )
-          arguments = BCombine(
+          arguments = BCreateTuple(
             hash = b761d4282e51919ce2ad4a68c47d5713769c730ff59b991186d93fb838afb46a
             evaluationType = {String}
             items = [

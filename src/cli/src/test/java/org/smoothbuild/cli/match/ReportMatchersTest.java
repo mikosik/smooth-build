@@ -62,8 +62,8 @@ public class ReportMatchersTest {
         arguments(labelMatcher(":vm:evaluate:invoke"), VM_EVALUATE.append(":invoke"), null, true),
         arguments(labelMatcher(":vm:*:invoke"), VM_EVALUATE.append(":invoke"), null, true),
         arguments(labelMatcher("**:invoke"), VM_EVALUATE.append(":invoke"), null, true),
-        arguments(labelMatcher("**:invoke"), VM_EVALUATE.append(":order"), null, false),
-        arguments(labelMatcher("**:combine"), VM_EVALUATE.append(":combine"), null, true),
-        arguments(labelMatcher("**:combine"), VM_EVALUATE.append(":order"), null, false));
+        arguments(labelMatcher("**:invoke"), VM_EVALUATE.append(":call"), null, false),
+        arguments(labelMatcher("**:call"), VM_EVALUATE.append(":call"), null, true),
+        arguments(labelMatcher("**:call"), VM_EVALUATE.append(":invoke"), null, false));
   }
 }

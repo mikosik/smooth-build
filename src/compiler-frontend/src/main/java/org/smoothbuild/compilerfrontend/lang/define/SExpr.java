@@ -8,14 +8,14 @@ import org.smoothbuild.compilerfrontend.lang.type.SType;
  */
 public sealed interface SExpr extends HasLocation
     permits SCall,
-        SCombine,
+        SCreateTuple,
         SConstant,
         SInstantiate,
         SLambda,
         SMonoReference,
-        SOrder,
-        SStructSelect,
-        STupleSelect {
+        SCreateArray,
+        SStructGet,
+        STupleGet {
   public String toSourceCode();
 
   public SType evaluationType();

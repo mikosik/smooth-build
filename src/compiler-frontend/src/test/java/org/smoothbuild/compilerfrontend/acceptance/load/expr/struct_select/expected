@@ -31,8 +31,8 @@ SModule(
         type = String
         fqn = result
         location = {t-project}/module.smooth:8
-        body = SStructSelect(
-          selectable = SCall(
+        body = SStructGet(
+          structExpr = SCall(
             callee = SInstantiate(
               typeArgs = <>
               polymorphic = SPolyReference(
@@ -43,7 +43,7 @@ SModule(
               evaluationType = ()->MyStruct
               location = {t-project}/module.smooth:8
             )
-            args = SCombine(
+            args = SCreateTuple(
               evaluationType = {}
               elements = [
               ]
@@ -129,8 +129,8 @@ SModule(
               type = String
               fqn = result
               location = {t-project}/module.smooth:8
-              body = SStructSelect(
-                selectable = SCall(
+              body = SStructGet(
+                structExpr = SCall(
                   callee = SInstantiate(
                     typeArgs = <>
                     polymorphic = SPolyReference(
@@ -141,7 +141,7 @@ SModule(
                     evaluationType = ()->MyStruct
                     location = {t-project}/module.smooth:8
                   )
-                  args = SCombine(
+                  args = SCreateTuple(
                     evaluationType = {}
                     elements = [
                     ]

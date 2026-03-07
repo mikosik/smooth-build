@@ -11,17 +11,17 @@ import org.smoothbuild.virtualmachine.bytecode.expr.Helpers;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BRef;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BTupleGet;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BBlobType;
@@ -57,8 +57,8 @@ class ChainingBytecodeFactory {
     return invokeTranslatingIOException(() -> bytecodeFactory.call(lambda, arguments));
   }
 
-  public BCombine combine(List<BExpr> elements) throws SbTranslatorException {
-    return invokeTranslatingIOException(() -> bytecodeFactory.combine(elements));
+  public BCreateTuple createTuple(List<BExpr> elements) throws SbTranslatorException {
+    return invokeTranslatingIOException(() -> bytecodeFactory.createTuple(elements));
   }
 
   public BInvoke invoke(BType evaluationType, BExpr method, BExpr isPure, BExpr arguments)
@@ -81,12 +81,13 @@ class ChainingBytecodeFactory {
         () -> bytecodeFactory.method(jar, classBinaryName, methodName));
   }
 
-  public BOrder order(BArrayType arrayType, List<BExpr> elements) throws SbTranslatorException {
-    return invokeTranslatingIOException(() -> bytecodeFactory.order(arrayType, elements));
+  public BCreateArray createArray(BArrayType arrayType, List<BExpr> elements)
+      throws SbTranslatorException {
+    return invokeTranslatingIOException(() -> bytecodeFactory.createArray(arrayType, elements));
   }
 
-  public BSelect select(BExpr selectable, BInt index) throws SbTranslatorException {
-    return invokeTranslatingIOException(() -> bytecodeFactory.select(selectable, index));
+  public BTupleGet tupleGet(BExpr tuple, BInt index) throws SbTranslatorException {
+    return invokeTranslatingIOException(() -> bytecodeFactory.tupleGet(tuple, index));
   }
 
   public BString string(String string) throws SbTranslatorException {

@@ -8,7 +8,7 @@ SModule(
         type = {Int,{String}}
         fqn = result
         location = {t-project}/module.smooth:1
-        body = SCombine(
+        body = SCreateTuple(
           evaluationType = {Int,{String}}
           elements = [
             SInt(
@@ -16,7 +16,7 @@ SModule(
               bigInteger = 7
               location = {t-project}/module.smooth:2
             )
-            SCombine(
+            SCreateTuple(
               evaluationType = {String}
               elements = [
                 SString(
@@ -67,7 +67,7 @@ SModule(
               type = {Int,{String}}
               fqn = result
               location = {t-project}/module.smooth:1
-              body = SCombine(
+              body = SCreateTuple(
                 evaluationType = {Int,{String}}
                 elements = [
                   SInt(
@@ -75,7 +75,7 @@ SModule(
                     bigInteger = 7
                     location = {t-project}/module.smooth:2
                   )
-                  SCombine(
+                  SCreateTuple(
                     evaluationType = {String}
                     elements = [
                       SString(

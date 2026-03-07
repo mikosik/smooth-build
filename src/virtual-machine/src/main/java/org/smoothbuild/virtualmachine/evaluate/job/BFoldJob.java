@@ -40,8 +40,8 @@ public final class BFoldJob extends SchedulingJob {
         var folderArg = fold.folder();
         BExpr result = initialValue;
         for (BValue element : array.elements(BValue.class)) {
-          result =
-              bytecodeFactory().call(folderArg, bytecodeFactory().combine(list(result, element)));
+          result = bytecodeFactory()
+              .call(folderArg, bytecodeFactory().createTuple(list(result, element)));
         }
         return successOutput(evaluate(result), executeLabel(), trace());
       } catch (BytecodeException e) {

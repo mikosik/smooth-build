@@ -14,8 +14,9 @@ import org.smoothbuild.common.schedule.Task2;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PAnnotation;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PCombine;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructor;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PCreateArray;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PCreateTuple;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInt;
@@ -26,13 +27,12 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedArg;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
-import org.smoothbuild.compilerfrontend.compile.ast.define.POrder;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PPolyEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PStructSelect;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PTupleSelect;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PStructGet;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PTupleGet;
 import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
 import org.smoothbuild.compilerfrontend.lang.base.MonoReferenceable;
 import org.smoothbuild.compilerfrontend.lang.base.PolyEvaluable;
@@ -41,8 +41,9 @@ import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotation;
 import org.smoothbuild.compilerfrontend.lang.define.SBlob;
 import org.smoothbuild.compilerfrontend.lang.define.SCall;
-import org.smoothbuild.compilerfrontend.lang.define.SCombine;
 import org.smoothbuild.compilerfrontend.lang.define.SConstructor;
+import org.smoothbuild.compilerfrontend.lang.define.SCreateArray;
+import org.smoothbuild.compilerfrontend.lang.define.SCreateTuple;
 import org.smoothbuild.compilerfrontend.lang.define.SDefaultValue;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SInstantiate;
@@ -54,13 +55,12 @@ import org.smoothbuild.compilerfrontend.lang.define.SMonoReference;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedExprFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedExprValue;
-import org.smoothbuild.compilerfrontend.lang.define.SOrder;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyReference;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.lang.define.SString;
-import org.smoothbuild.compilerfrontend.lang.define.SStructSelect;
-import org.smoothbuild.compilerfrontend.lang.define.STupleSelect;
+import org.smoothbuild.compilerfrontend.lang.define.SStructGet;
+import org.smoothbuild.compilerfrontend.lang.define.STupleGet;
 import org.smoothbuild.compilerfrontend.lang.define.STypeDefinition;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
@@ -176,15 +176,15 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
       return switch (expr) {
         case PBlob pBlob -> convertBlob(pBlob);
         case PCall pCall -> convertCall(pCall);
-        case PCombine pCombine -> convertCombine(pCombine);
+        case PCreateTuple pCreateTuple -> convertCreateTuple(pCreateTuple);
         case PInt pInt -> convertInt(pInt);
         case PInstantiate pInstantiate -> convertInstantiate(pInstantiate);
         case PLambda pLambda -> convertLambda(pLambda);
         case PNamedArg pNamedArg -> convertExpr(pNamedArg.expr());
-        case POrder pOrder -> convertOrder(pOrder);
-        case PStructSelect pStructSelect -> convertStructSelect(pStructSelect);
+        case PCreateArray pCreateArray -> convertCreateArray(pCreateArray);
+        case PStructGet pStructGet -> convertStructGet(pStructGet);
         case PString pString -> convertString(pString);
-        case PTupleSelect pTupleSelect -> convertTupleSelect(pTupleSelect);
+        case PTupleGet pTupleGet -> convertTupleGet(pTupleGet);
       };
     }
 
@@ -205,10 +205,10 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
       return new SCall(callee, args, call.location());
     }
 
-    private SCombine convertArgs(PCall call) {
+    private SCreateTuple convertArgs(PCall call) {
       var args = convertExprs(call.positionedArgs());
       var evaluationType = new STupleType(args.map(SExpr::evaluationType));
-      return new SCombine(evaluationType, args, call.location());
+      return new SCreateTuple(evaluationType, args, call.location());
     }
 
     private SExpr convertFuncBody(PExpr body) {
@@ -240,26 +240,26 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
       };
     }
 
-    private SExpr convertOrder(POrder order) {
-      var elems = convertExprs(order.elements());
-      return new SOrder((SArrayType) order.sType(), elems, order.location());
+    private SExpr convertCreateArray(PCreateArray pCreateArray) {
+      var elems = convertExprs(pCreateArray.elements());
+      return new SCreateArray((SArrayType) pCreateArray.sType(), elems, pCreateArray.location());
     }
 
-    private SExpr convertCombine(PCombine combine) {
-      var elems = convertExprs(combine.elements());
-      return new SCombine((STupleType) combine.sType(), elems, combine.location());
+    private SExpr convertCreateTuple(PCreateTuple pCreateTuple) {
+      var elems = convertExprs(pCreateTuple.elements());
+      return new SCreateTuple((STupleType) pCreateTuple.sType(), elems, pCreateTuple.location());
     }
 
-    private SExpr convertStructSelect(PStructSelect pStructSelect) {
-      var selectable = convertExpr(pStructSelect.selectable());
-      var fieldName = pStructSelect.fieldName();
-      return new SStructSelect(selectable, fieldName, pStructSelect.location());
+    private SExpr convertStructGet(PStructGet pStructGet) {
+      var structExpr = convertExpr(pStructGet.structExpr());
+      var fieldName = pStructGet.fieldName();
+      return new SStructGet(structExpr, fieldName, pStructGet.location());
     }
 
-    private SExpr convertTupleSelect(PTupleSelect pTupleSelect) {
-      var selectable = convertExpr(pTupleSelect.selectable());
-      var position = pTupleSelect.position().bigInteger().subtract(ONE);
-      return new STupleSelect(selectable, position, pTupleSelect.location());
+    private SExpr convertTupleGet(PTupleGet pTupleGet) {
+      var tupleExpr = convertExpr(pTupleGet.tupleExpr());
+      var position = pTupleGet.position().bigInteger().subtract(ONE);
+      return new STupleGet(tupleExpr, position, pTupleGet.location());
     }
 
     private SString convertString(PString string) {

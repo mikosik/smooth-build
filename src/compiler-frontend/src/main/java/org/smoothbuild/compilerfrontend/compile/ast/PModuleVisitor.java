@@ -4,8 +4,9 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PAnnotation;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PCombine;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PContainer;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PCreateArray;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PCreateTuple;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitTypeParams;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
@@ -20,15 +21,14 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedArg;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
-import org.smoothbuild.compilerfrontend.compile.ast.define.POrder;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PPolyEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PPosition;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReferenceable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PStructSelect;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PTupleSelect;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PStructGet;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PTupleGet;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeParam;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeParams;
@@ -153,15 +153,15 @@ public abstract class PModuleVisitor<T extends Throwable> {
     switch (pExpr) {
       case PBlob pBlob -> visitBlob(pBlob);
       case PCall pCall -> visitCall(pCall);
-      case PCombine pCombine -> visitCombine(pCombine);
+      case PCreateTuple pCreateTuple -> visitCreateTuple(pCreateTuple);
       case PInt pInt -> visitInt(pInt);
       case PInstantiate pInstantiate -> visitInstantiate(pInstantiate);
       case PLambda pLambda -> visit(pLambda);
       case PNamedArg pNamedArg -> visitNamedArg(pNamedArg);
-      case POrder pOrder -> visitOrder(pOrder);
-      case PStructSelect pStructSelect -> visitStructSelect(pStructSelect);
+      case PCreateArray pCreateArray -> visitCreateArray(pCreateArray);
+      case PStructGet pStructGet -> visitStructGet(pStructGet);
       case PString pString -> visitString(pString);
-      case PTupleSelect pTupleSelect -> visitTupleSelect(pTupleSelect);
+      case PTupleGet pTupleGet -> visitTupleGet(pTupleGet);
     }
   }
 
@@ -191,8 +191,8 @@ public abstract class PModuleVisitor<T extends Throwable> {
     visitArgs(pCall.args());
   }
 
-  private void visitCombine(PCombine pCombine) throws T {
-    pCombine.elements().foreach(this::visitExpr);
+  public void visitCreateTuple(PCreateTuple pCreateTuple) throws T {
+    pCreateTuple.elements().foreach(this::visitExpr);
   }
 
   public void visitInt(PInt pInt) throws T {}
@@ -205,21 +205,21 @@ public abstract class PModuleVisitor<T extends Throwable> {
     visitExpr(pNamedArg.expr());
   }
 
-  public void visitOrder(POrder pOrder) throws T {
-    pOrder.elements().foreach(this::visitExpr);
+  public void visitCreateArray(PCreateArray pCreateArray) throws T {
+    pCreateArray.elements().foreach(this::visitExpr);
   }
 
   public void visitReference(PReference pReference) throws T {}
 
-  public void visitStructSelect(PStructSelect pStructSelect) throws T {
-    visitExpr(pStructSelect.selectable());
+  public void visitStructGet(PStructGet pStructGet) throws T {
+    visitExpr(pStructGet.structExpr());
   }
 
   public void visitString(PString pString) throws T {}
 
-  public void visitTupleSelect(PTupleSelect pTupleSelect) throws T {
-    visitExpr(pTupleSelect.selectable());
-    visitPosition(pTupleSelect.position());
+  public void visitTupleGet(PTupleGet pTupleGet) throws T {
+    visitExpr(pTupleGet.tupleExpr());
+    visitPosition(pTupleGet.position());
   }
 
   public void visitPosition(PPosition position) throws T {}

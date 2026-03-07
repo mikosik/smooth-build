@@ -12,22 +12,21 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BOperationKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 
 /**
- * Operation.
- * This class is thread-safe.
+ * Operation. This class is thread-safe.
  */
 public abstract sealed class BOperation extends BExpr
-    permits BCall,
-        BChoose,
-        BCombine,
+    permits BArrayGet,
+        BCall,
+        BCreateArray,
+        BCreateTuple,
+        BCreateVariant,
         BFold,
         BIf,
         BInvoke,
         BMap,
-        BOrder,
-        BPick,
         BRef,
-        BSelect,
-        BSwitch {
+        BSwitch,
+        BTupleGet {
   private final String name;
   private final int subExprsCount;
 

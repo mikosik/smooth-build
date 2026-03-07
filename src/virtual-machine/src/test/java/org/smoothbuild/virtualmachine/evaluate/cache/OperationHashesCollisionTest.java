@@ -17,16 +17,16 @@ public class OperationHashesCollisionTest extends VmTestContext {
     List<Hash> list = new ArrayList<>();
     Set<Hash> set = new HashSet<>();
 
-    addHash(list, set, bChoose());
-    addHash(list, set, bCombine());
+    addHash(list, set, bCreateVariant());
+    addHash(list, set, bCreateTuple());
     addHash(
         list,
         set,
         bInvoke(bIntType(), bMethodTuple(bBlob(1), bString("1")), bBool(true), bTuple()));
-    addHash(list, set, bOrder(bIntType()));
-    addHash(list, set, bOrder(bBlobType()));
-    addHash(list, set, bPick());
-    addHash(list, set, bSelect());
+    addHash(list, set, bCreateArray(bIntType()));
+    addHash(list, set, bCreateArray(bBlobType()));
+    addHash(list, set, bArrayGet());
+    addHash(list, set, bTupleGet());
   }
 
   private void addHash(List<Hash> list, Set<Hash> set, BOperation operation) {

@@ -29,18 +29,18 @@ public class BRefInlinerTest extends VmTestContext {
     }
 
     @Test
-    void combine() throws Exception {
-      assertReferenceInliningDoesNotChangeExpression(r -> bCombine(bInt()));
+    void createTuple() throws Exception {
+      assertReferenceInliningDoesNotChangeExpression(r -> bCreateTuple(bInt()));
     }
 
     @Test
-    void choice() throws Exception {
-      assertReferenceInliningDoesNotChangeExpression(r -> bChoice());
+    void variant() throws Exception {
+      assertReferenceInliningDoesNotChangeExpression(r -> bVariant());
     }
 
     @Test
-    void choose() throws Exception {
-      assertReferenceInliningDoesNotChangeExpression(r -> bChoose());
+    void createVariant() throws Exception {
+      assertReferenceInliningDoesNotChangeExpression(r -> bCreateVariant());
     }
 
     @Test
@@ -50,24 +50,25 @@ public class BRefInlinerTest extends VmTestContext {
     }
 
     @Test
-    void order() throws Exception {
-      assertReferenceInliningDoesNotChangeExpression(r -> bOrder(bInt()));
+    void createArray() throws Exception {
+      assertReferenceInliningDoesNotChangeExpression(r -> bCreateArray(bInt()));
     }
 
     @Test
-    void pick() throws Exception {
-      assertReferenceInliningDoesNotChangeExpression(r -> bPick(bOrder(bInt(1), bInt(2)), bInt(0)));
+    void arrayGet() throws Exception {
+      assertReferenceInliningDoesNotChangeExpression(
+          r -> bArrayGet(bCreateArray(bInt(1), bInt(2)), bInt(0)));
     }
 
     @Test
-    void select() throws Exception {
-      assertReferenceInliningDoesNotChangeExpression(r -> bSelect(bCombine(bInt()), bInt(0)));
+    void tupleGet() throws Exception {
+      assertReferenceInliningDoesNotChangeExpression(r -> bTupleGet(bCreateTuple(bInt()), bInt(0)));
     }
 
     @Test
     void switch_() throws Exception {
       assertReferenceInliningDoesNotChangeExpression(
-          r -> bSwitch(bChoice(), bCombine(bs2iLambda(), bi2iLambda())));
+          r -> bSwitch(bVariant(), bCreateTuple(bs2iLambda(), bi2iLambda())));
     }
 
     // values
@@ -167,16 +168,16 @@ public class BRefInlinerTest extends VmTestContext {
     }
 
     @Test
-    void choose() throws Exception {
+    void createVariant() throws Exception {
       assertReferenceInliningReplacesReference(r -> {
-        var choiceType = bChoiceType(bStringType(), bIntType());
-        return bChoose(choiceType, 1, r);
+        var variantType = bVariantType(bStringType(), bIntType());
+        return bCreateVariant(variantType, 1, r);
       });
     }
 
     @Test
-    void combine() throws Exception {
-      assertReferenceInliningReplacesReference(BRefInlinerTest.this::bCombine);
+    void createTuple() throws Exception {
+      assertReferenceInliningReplacesReference(BRefInlinerTest.this::bCreateTuple);
     }
 
     @Test
@@ -224,7 +225,7 @@ public class BRefInlinerTest extends VmTestContext {
 
     @Test
     void map_array() throws Exception {
-      assertReferenceInliningReplacesReference(r -> bMap(bOrder(r), bIntIdLambda()));
+      assertReferenceInliningReplacesReference(r -> bMap(bCreateArray(r), bIntIdLambda()));
     }
 
     @Test
@@ -235,7 +236,8 @@ public class BRefInlinerTest extends VmTestContext {
 
     @Test
     void fold_array() throws Exception {
-      assertReferenceInliningReplacesReference(r -> bFold(bOrder(r), bInt(), bFolderLambda()));
+      assertReferenceInliningReplacesReference(
+          r -> bFold(bCreateArray(r), bInt(), bFolderLambda()));
     }
 
     @Test
@@ -251,31 +253,31 @@ public class BRefInlinerTest extends VmTestContext {
     }
 
     @Test
-    void order() throws Exception {
-      assertReferenceInliningReplacesReference(BRefInlinerTest.this::bOrder);
+    void createArray() throws Exception {
+      assertReferenceInliningReplacesReference(BRefInlinerTest.this::bCreateArray);
     }
 
     @Test
-    void pick_pickable() throws Exception {
-      assertReferenceInliningReplacesReference(r -> bPick(bOrder(r), bInt()));
+    void arrayGet_array() throws Exception {
+      assertReferenceInliningReplacesReference(r -> bArrayGet(bCreateArray(r), bInt()));
     }
 
     @Test
-    void pick_index() throws Exception {
-      assertReferenceInliningReplacesReference(r -> bPick(bOrder(), r));
+    void arrayGet_index() throws Exception {
+      assertReferenceInliningReplacesReference(r -> bArrayGet(bCreateArray(), r));
     }
 
     @Test
-    void select_selectable() throws Exception {
-      assertReferenceInliningReplacesReference(r -> bSelect(bCombine(r), bInt(0)));
+    void tupleGet_tuple() throws Exception {
+      assertReferenceInliningReplacesReference(r -> bTupleGet(bCreateTuple(r), bInt(0)));
     }
 
     @Test
-    void switch_choice() throws Exception {
+    void switch_variant() throws Exception {
       assertReferenceInliningReplacesReference(r -> {
-        var type = bChoiceType(bStringType(), bIntType());
-        var choice = bChoose(type, 1, r);
-        var handlers = bCombine(bs2iLambda(), bi2iLambda());
+        var type = bVariantType(bStringType(), bIntType());
+        var choice = bCreateVariant(type, 1, r);
+        var handlers = bCreateTuple(bs2iLambda(), bi2iLambda());
         return bSwitch(choice, handlers);
       });
     }
@@ -283,8 +285,8 @@ public class BRefInlinerTest extends VmTestContext {
     @Test
     void switch_handlers() throws Exception {
       assertReferenceInliningReplacesReference(2, bInt(0), r -> {
-        var choice = bChoice();
-        var handlers = bCombine(bLambda(list(bStringType()), r), bLambda(list(bIntType()), r));
+        var choice = bVariant();
+        var handlers = bCreateTuple(bLambda(list(bStringType()), r), bLambda(list(bIntType()), r));
         return bSwitch(choice, handlers);
       });
     }

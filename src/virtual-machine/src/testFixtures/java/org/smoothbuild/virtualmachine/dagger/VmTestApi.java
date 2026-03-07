@@ -18,13 +18,14 @@ import org.smoothbuild.common.reflect.Classes;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArrayBuilder;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BArrayGet;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlobBuilder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoice;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoose;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateVariant;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BFold;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
@@ -33,35 +34,34 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BRef;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BTupleGet;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BVariant;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayGetKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BBlobType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BBoolType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BCallKind;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BChooseKind;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BCombineKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BCreateArrayKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BCreateTupleKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BCreateVariantKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BFoldKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIfKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BInvokeKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BMapKind;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BOrderKind;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BPickKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BRefKind;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BSelectKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BStringType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BSwitchKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleGetKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BVariantType;
 import org.smoothbuild.virtualmachine.bytecode.load.BytecodeLoader;
 import org.smoothbuild.virtualmachine.bytecode.load.BytecodeMethodLoader;
 import org.smoothbuild.virtualmachine.bytecode.load.JarClassLoaderFactory;
@@ -181,16 +181,16 @@ public interface VmTestApi extends CommonTestApi {
     return provide().bytecodeFactory().fileType();
   }
 
-  public default BChoiceType bChoiceType() throws BytecodeException {
-    return bChoiceType(bStringType(), bIntType());
+  public default BVariantType bVariantType() throws BytecodeException {
+    return bVariantType(bStringType(), bIntType());
   }
 
-  public default BChoiceType bChoiceType(BType... alternatives) throws BytecodeException {
-    return provide().kindDb().choice(alternatives);
+  public default BVariantType bVariantType(BType... alternatives) throws BytecodeException {
+    return provide().kindDb().variant(alternatives);
   }
 
-  public default BChoiceType bChoiceType(List<BType> alternatives) throws BytecodeException {
-    return provide().kindDb().choice(alternatives);
+  public default BVariantType bVariantType(List<BType> alternatives) throws BytecodeException {
+    return provide().kindDb().variant(alternatives);
   }
 
   public default BLambdaType bLambdaType() throws BytecodeException {
@@ -267,16 +267,17 @@ public interface VmTestApi extends CommonTestApi {
     return provide().kindDb().call(evaluationType);
   }
 
-  public default BChooseKind bChooseKind(BChoiceType evaluationType) throws BytecodeException {
-    return provide().kindDb().choose(evaluationType);
+  public default BCreateVariantKind bCreateVariantKind(BVariantType evaluationType)
+      throws BytecodeException {
+    return provide().kindDb().createVariant(evaluationType);
   }
 
   public default BSwitchKind bSwitchKind(BType evaluationType) throws BytecodeException {
     return provide().kindDb().switch_(evaluationType);
   }
 
-  public default BCombineKind bCombineKind(BType... itemTypes) throws BytecodeException {
-    return provide().kindDb().combine(bTupleType(itemTypes));
+  public default BCreateTupleKind bCreateTupleKind(BType... itemTypes) throws BytecodeException {
+    return provide().kindDb().createTuple(bTupleType(itemTypes));
   }
 
   public default BFoldKind bFoldKind(BType evaluationType) throws BytecodeException {
@@ -299,20 +300,20 @@ public interface VmTestApi extends CommonTestApi {
     return provide().kindDb().map(evaluationType);
   }
 
-  public default BOrderKind bOrderKind() throws BytecodeException {
-    return bOrderKind(bIntType());
+  public default BCreateArrayKind bCreateArrayKind() throws BytecodeException {
+    return bCreateArrayKind(bIntType());
   }
 
-  public default BOrderKind bOrderKind(BType elemT) throws BytecodeException {
-    return provide().kindDb().order(bArrayType(elemT));
+  public default BCreateArrayKind bCreateArrayKind(BType elemT) throws BytecodeException {
+    return provide().kindDb().createArray(bArrayType(elemT));
   }
 
-  public default BPickKind bPickKind() throws BytecodeException {
-    return bPickKind(bIntType());
+  public default BArrayGetKind bArrayGetKind() throws BytecodeException {
+    return bArrayGetKind(bIntType());
   }
 
-  public default BPickKind bPickKind(BType evaluationType) throws BytecodeException {
-    return provide().kindDb().pick(evaluationType);
+  public default BArrayGetKind bArrayGetKind(BType evaluationType) throws BytecodeException {
+    return provide().kindDb().arrayGet(evaluationType);
   }
 
   public default BRefKind bRefKind() throws BytecodeException {
@@ -323,12 +324,12 @@ public interface VmTestApi extends CommonTestApi {
     return provide().kindDb().ref(evaluationType);
   }
 
-  public default BSelectKind bSelectKind() throws BytecodeException {
-    return bSelectKind(bIntType());
+  public default BTupleGetKind bTupleGetKind() throws BytecodeException {
+    return bTupleGetKind(bIntType());
   }
 
-  public default BSelectKind bSelectKind(BType evaluationType) throws BytecodeException {
-    return provide().kindDb().select(evaluationType);
+  public default BTupleGetKind bTupleGetKind(BType evaluationType) throws BytecodeException {
+    return provide().kindDb().tupleGet(evaluationType);
   }
 
   public default BTuple bAnimal() throws BytecodeException {
@@ -410,34 +411,34 @@ public interface VmTestApi extends CommonTestApi {
     return provide().bytecodeFactory().bool(value);
   }
 
-  public default BChoice bChoice() throws BytecodeException {
-    var type = bChoiceType(bStringType(), bIntType());
-    return bChoice(type, bInt(0), bString("7"));
+  public default BVariant bVariant() throws BytecodeException {
+    var type = bVariantType(bStringType(), bIntType());
+    return bVariant(type, bInt(0), bString("7"));
   }
 
-  public default BChoice bChoice(BChoiceType type, int index, BValue chosen)
+  public default BVariant bVariant(BVariantType type, int index, BValue choice)
       throws BytecodeException {
-    return bChoice(type, bInt(index), chosen);
+    return bVariant(type, bInt(index), choice);
   }
 
-  public default BChoice bChoice(BChoiceType type, BInt index, BValue chosen)
+  public default BVariant bVariant(BVariantType type, BInt index, BValue choice)
       throws BytecodeException {
-    return provide().bytecodeFactory().choice(type, index, chosen);
+    return provide().bytecodeFactory().variant(type, index, choice);
   }
 
-  public default BChoose bChoose() throws BytecodeException {
-    var type = bChoiceType(bStringType(), bIntType());
-    return bChoose(type, bInt(0), bString("7"));
+  public default BCreateVariant bCreateVariant() throws BytecodeException {
+    var type = bVariantType(bStringType(), bIntType());
+    return bCreateVariant(type, bInt(0), bString("7"));
   }
 
-  public default BChoose bChoose(BChoiceType type, int index, BExpr chosen)
+  public default BCreateVariant bCreateVariant(BVariantType type, int index, BExpr choice)
       throws BytecodeException {
-    return bChoose(type, bInt(index), chosen);
+    return bCreateVariant(type, bInt(index), choice);
   }
 
-  public default BChoose bChoose(BChoiceType type, BInt index, BExpr chosen)
+  public default BCreateVariant bCreateVariant(BVariantType type, BInt index, BExpr choice)
       throws BytecodeException {
-    return provide().bytecodeFactory().choose(type, index, chosen);
+    return provide().bytecodeFactory().createVariant(type, index, choice);
   }
 
   public default BTuple bFile(Path path) throws IOException {
@@ -710,19 +711,19 @@ public interface VmTestApi extends CommonTestApi {
   }
 
   public default BCall bCall(BExpr lambda, BExpr... arguments) throws BytecodeException {
-    return provide().bytecodeFactory().call(lambda, bCombine(arguments));
+    return provide().bytecodeFactory().call(lambda, bCreateTuple(arguments));
   }
 
   public default BCall bCallWithArguments(BExpr lambda, BExpr arguments) throws BytecodeException {
     return provide().bytecodeFactory().call(lambda, arguments);
   }
 
-  public default BSwitch bSwitch(BExpr choice, BCombine handlers) throws BytecodeException {
+  public default BSwitch bSwitch(BExpr choice, BCreateTuple handlers) throws BytecodeException {
     return provide().bytecodeFactory().switch_(choice, handlers);
   }
 
-  public default BCombine bCombine(BExpr... items) throws BytecodeException {
-    return provide().bytecodeFactory().combine(list(items));
+  public default BCreateTuple bCreateTuple(BExpr... items) throws BytecodeException {
+    return provide().bytecodeFactory().createTuple(list(items));
   }
 
   public default BFold bFold(BExpr array, BExpr initial, BExpr folder) throws BytecodeException {
@@ -737,29 +738,30 @@ public interface VmTestApi extends CommonTestApi {
     return provide().bytecodeFactory().map(array, mapper);
   }
 
-  public default BOrder bOrder() throws BytecodeException {
-    return bOrder(bIntType());
+  public default BCreateArray bCreateArray() throws BytecodeException {
+    return bCreateArray(bIntType());
   }
 
-  public default BOrder bOrder(BExpr... elements) throws BytecodeException {
-    return bOrder(elements[0].evaluationType(), elements);
+  public default BCreateArray bCreateArray(BExpr... elements) throws BytecodeException {
+    return bCreateArray(elements[0].evaluationType(), elements);
   }
 
-  public default BOrder bOrder(BType elementType, BExpr... elements) throws BytecodeException {
+  public default BCreateArray bCreateArray(BType elementType, BExpr... elements)
+      throws BytecodeException {
     var elemList = list(elements);
-    return provide().bytecodeFactory().order(bArrayType(elementType), elemList);
+    return provide().bytecodeFactory().createArray(bArrayType(elementType), elemList);
   }
 
-  public default BPick bPick() throws BytecodeException {
-    return bPick(bArray(bInt()), bInt(0));
+  public default BArrayGet bArrayGet() throws BytecodeException {
+    return bArrayGet(bArray(bInt()), bInt(0));
   }
 
-  public default BPick bPick(BExpr array, int index) throws BytecodeException {
-    return provide().bytecodeFactory().pick(array, bInt(index));
+  public default BArrayGet bArrayGet(BExpr array, int index) throws BytecodeException {
+    return provide().bytecodeFactory().arrayGet(array, bInt(index));
   }
 
-  public default BPick bPick(BExpr array, BExpr index) throws BytecodeException {
-    return provide().bytecodeFactory().pick(array, index);
+  public default BArrayGet bArrayGet(BExpr array, BExpr index) throws BytecodeException {
+    return provide().bytecodeFactory().arrayGet(array, index);
   }
 
   public default BRef bRef(int index) throws BytecodeException {
@@ -770,15 +772,15 @@ public interface VmTestApi extends CommonTestApi {
     return provide().bytecodeFactory().ref(evaluationType, bInt(index));
   }
 
-  public default BSelect bSelect() throws BytecodeException {
-    return bSelect(bTuple(bInt()), 0);
+  public default BTupleGet bTupleGet() throws BytecodeException {
+    return bTupleGet(bTuple(bInt()), 0);
   }
 
-  public default BSelect bSelect(BExpr tuple, int index) throws BytecodeException {
-    return provide().bytecodeFactory().select(tuple, bInt(index));
+  public default BTupleGet bTupleGet(BExpr tuple, int index) throws BytecodeException {
+    return provide().bytecodeFactory().tupleGet(tuple, bInt(index));
   }
 
-  public default BSelect bSelect(BExpr tuple, BInt index) throws BytecodeException {
-    return provide().bytecodeFactory().select(tuple, index);
+  public default BTupleGet bTupleGet(BExpr tuple, BInt index) throws BytecodeException {
+    return provide().bytecodeFactory().tupleGet(tuple, index);
   }
 }

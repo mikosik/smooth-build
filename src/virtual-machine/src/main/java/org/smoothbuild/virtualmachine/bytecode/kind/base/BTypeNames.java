@@ -20,7 +20,7 @@ public class BTypeNames {
     return "{" + commaSeparatedTypeNames(elementTypes) + "}";
   }
 
-  public static String choiceTypeName(List<? extends BType> elementTypes) {
+  public static String variantTypeName(List<? extends BType> elementTypes) {
     return "{" + elementTypes.toString("|") + (elementTypes.size() == 1 ? "|}" : "}");
   }
 

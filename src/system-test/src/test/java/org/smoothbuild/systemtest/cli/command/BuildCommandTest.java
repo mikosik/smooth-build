@@ -107,30 +107,30 @@ public class BuildCommandTest {
       output.assertSystemOutDoesNotContain(NATIVE_CALL_TASK_HEADER);
     }
 
-    private static final String ORDER = """
+    private static final String CREATE_ARRAY = """
         result = [
           123,
           456,
         ];
         """;
-    private static final String ORDER_TASK_HEADER = """
-          :vm:evaluate:order
+    private static final String CREATE_ARRAY_TASK_HEADER = """
+          :vm:evaluate:createArray
           """;
 
     @Test
-    void shows_order_task_when_enabled() throws IOException {
-      createUserModule(ORDER);
-      var output = runSmooth(buildCommand("--filter-tasks=:vm:evaluate:order", "result"));
+    void shows_createArray_task_when_enabled() throws IOException {
+      createUserModule(CREATE_ARRAY);
+      var output = runSmooth(buildCommand("--filter-tasks=:vm:evaluate:createArray", "result"));
       output.assertFinishedWithSuccess();
-      output.assertSystemOutContains(ORDER_TASK_HEADER);
+      output.assertSystemOutContains(CREATE_ARRAY_TASK_HEADER);
     }
 
     @Test
-    void hides_order_task_when_not_enabled() throws IOException {
-      createUserModule(ORDER);
+    void hides_createArray_task_when_not_enabled() throws IOException {
+      createUserModule(CREATE_ARRAY);
       var output = runSmooth(buildCommand("--filter-tasks=none", "result"));
       output.assertFinishedWithSuccess();
-      output.assertSystemOutDoesNotContain(ORDER_TASK_HEADER);
+      output.assertSystemOutDoesNotContain(CREATE_ARRAY_TASK_HEADER);
     }
   }
 
@@ -364,7 +364,7 @@ public class BuildCommandTest {
     }
 
     @Test
-    void select() throws IOException {
+    void structGet() throws IOException {
       createUserModule("""
           MyStruct {
             String myField
@@ -374,7 +374,7 @@ public class BuildCommandTest {
       var output = runSmooth(buildCommand("--filter-tasks=all", "result"));
       output.assertFinishedWithSuccess();
       output.assertSystemOutContains("""
-          :evaluate:select
+          :evaluate:tupleGet
           """);
     }
   }

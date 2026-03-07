@@ -8,7 +8,7 @@ SModule(
         type = {Blob,Blob}
         fqn = result
         location = {t-project}/module.smooth:1
-        body = SCombine(
+        body = SCreateTuple(
           evaluationType = {Blob,Blob}
           elements = [
             SBlob(
@@ -61,7 +61,7 @@ SModule(
               type = {Blob,Blob}
               fqn = result
               location = {t-project}/module.smooth:1
-              body = SCombine(
+              body = SCreateTuple(
                 evaluationType = {Blob,Blob}
                 elements = [
                   SBlob(

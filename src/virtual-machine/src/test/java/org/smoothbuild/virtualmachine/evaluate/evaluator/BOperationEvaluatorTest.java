@@ -13,8 +13,8 @@ public class BOperationEvaluatorTest extends VmTestContext {
   @Nested
   class _purity {
     @Test
-    void combine_evaluation_is_pure() throws BytecodeException {
-      var evaluator = new BCombineEvaluator(bCombine(bInt()), trace());
+    void createTuple_evaluation_is_pure() throws BytecodeException {
+      var evaluator = new BCreateTupleEvaluator(bCreateTuple(bInt()), trace());
       assertThat(evaluator.purity(bTuple())).isEqualTo(PURE);
     }
 
@@ -33,20 +33,20 @@ public class BOperationEvaluatorTest extends VmTestContext {
     }
 
     @Test
-    void order_evaluation_is_pure() throws BytecodeException {
-      var evaluator = new BOrderEvaluator(bOrder(bInt()), trace());
+    void createArray_evaluation_is_pure() throws BytecodeException {
+      var evaluator = new BCreateArrayEvaluator(bCreateArray(bInt()), trace());
       assertThat(evaluator.purity(bTuple())).isEqualTo(PURE);
     }
 
     @Test
-    void pick_evaluation_is_pure() throws BytecodeException {
-      var evaluator = new BPickEvaluator(bPick(bArray(bInt()), 0), trace());
+    void arrayGet_evaluation_is_pure() throws BytecodeException {
+      var evaluator = new BArrayGetEvaluator(bArrayGet(bArray(bInt()), 0), trace());
       assertThat(evaluator.purity(bTuple())).isEqualTo(PURE);
     }
 
     @Test
-    void select_evaluation_is_pure() throws BytecodeException {
-      var evaluator = new BSelectEvaluator(bSelect(bTuple(bInt()), 0), trace());
+    void tupleGet_evaluation_is_pure() throws BytecodeException {
+      var evaluator = new BTupleGetEvaluator(bTupleGet(bTuple(bInt()), 0), trace());
       assertThat(evaluator.purity(bTuple())).isEqualTo(PURE);
     }
   }

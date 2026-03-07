@@ -16,22 +16,22 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BArrayGet;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoice;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BRef;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BTupleGet;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BVariant;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 import org.smoothbuild.virtualmachine.testing.TestingBKind;
@@ -65,8 +65,8 @@ public class BKindTest extends VmTestContext {
         args(f -> f.bool(), "Bool"),
         args(f -> f.int_(), "Int"),
         args(f -> f.string(), "String"),
-        args(f -> f.choice(f.blob(), f.int_()), "{Blob|Int}"),
-        args(f -> f.choose(f.choice(f.blob(), f.int_())), "CHOOSE"),
+        args(f -> f.variant(f.blob(), f.int_()), "{Blob|Int}"),
+        args(f -> f.createVariant(f.variant(f.blob(), f.int_())), "CREATE_VARIANT"),
         args(f -> f.array(f.blob()), "[Blob]"),
         args(f -> f.array(f.bool()), "[Bool]"),
         args(f -> f.array(f.int_()), "[Int]"),
@@ -85,10 +85,10 @@ public class BKindTest extends VmTestContext {
         args(f -> f.tuple(f.string(), f.bool()), "{String,Bool}"),
         args(f -> f.tuple(f.tuple(f.int_())), "{{Int}}"),
         args(f -> f.call(f.int_()), "CALL"),
-        args(f -> f.combine(f.tuple(f.string(), f.int_())), "COMBINE"),
-        args(f -> f.order(f.array(f.string())), "ORDER"),
-        args(f -> f.pick(f.int_()), "PICK"),
-        args(f -> f.select(f.int_()), "SELECT"),
+        args(f -> f.createTuple(f.tuple(f.string(), f.int_())), "CREATE_TUPLE"),
+        args(f -> f.createArray(f.array(f.string())), "CREATE_ARRAY"),
+        args(f -> f.arrayGet(f.int_()), "ARRAY_GET"),
+        args(f -> f.tupleGet(f.int_()), "TUPLE_GET"),
         args(f -> f.switch_(f.int_()), "SWITCH"),
         args(f -> f.ref(f.int_()), "REF"));
   }
@@ -157,26 +157,26 @@ public class BKindTest extends VmTestContext {
   }
 
   @Nested
-  class _choice {
+  class _variant {
     @Test
     void _without_items_can_be_created() throws Exception {
-      bChoiceType();
+      bVariantType();
     }
 
     @ParameterizedTest
-    @MethodSource("choice_alternatives")
-    public void choice_alternatives(
-        Function1<BKindDb, BChoiceType, BytecodeException> factoryCall,
+    @MethodSource("variant_alternatives")
+    public void variant_alternatives(
+        Function1<BKindDb, BVariantType, BytecodeException> factoryCall,
         Function1<BKindDb, List<BType>, BytecodeException> expected)
         throws Exception {
       assertThat(execute(factoryCall).alternatives()).isEqualTo(execute(expected));
     }
 
-    public static java.util.List<Arguments> choice_alternatives() {
+    public static java.util.List<Arguments> variant_alternatives() {
       return asList(
-          args(f -> f.choice(), f -> list()),
-          args(f -> f.choice(f.string()), f -> list(f.string())),
-          args(f -> f.choice(f.string(), f.int_()), f -> list(f.string(), f.int_())));
+          args(f -> f.variant(), f -> list()),
+          args(f -> f.variant(f.string()), f -> list(f.string())),
+          args(f -> f.variant(f.string(), f.int_()), f -> list(f.string(), f.int_())));
     }
   }
 
@@ -215,7 +215,7 @@ public class BKindTest extends VmTestContext {
     return Stream.of(
         arguments(test.bBlobType(), BBlob.class),
         arguments(test.bBoolType(), BBool.class),
-        arguments(test.bChoiceType(), BChoice.class),
+        arguments(test.bVariantType(), BVariant.class),
         arguments(test.bLambdaType(test.bBoolType(), test.bBlobType()), BLambda.class),
         arguments(test.bIfKind(), BIf.class),
         arguments(test.bMapKind(), BMap.class),
@@ -231,11 +231,11 @@ public class BKindTest extends VmTestContext {
         arguments(test.bArrayType(test.bPersonType()), BArray.class),
         arguments(test.bStringArrayType(), BArray.class),
         arguments(test.bCallKind(), BCall.class),
-        arguments(test.bOrderKind(), BOrder.class),
-        arguments(test.bCombineKind(test.bIntType(), test.bStringType()), BCombine.class),
-        arguments(test.bPickKind(), BPick.class),
+        arguments(test.bCreateArrayKind(), BCreateArray.class),
+        arguments(test.bCreateTupleKind(test.bIntType(), test.bStringType()), BCreateTuple.class),
+        arguments(test.bArrayGetKind(), BArrayGet.class),
         arguments(test.bRefKind(test.bIntType()), BRef.class),
-        arguments(test.bSelectKind(test.bIntType()), BSelect.class));
+        arguments(test.bTupleGetKind(test.bIntType()), BTupleGet.class));
   }
 
   @Nested
@@ -256,16 +256,16 @@ public class BKindTest extends VmTestContext {
     }
 
     @ParameterizedTest
-    @MethodSource("combine_cases")
-    public void combine(BCombineKind type, BTupleType expected) {
+    @MethodSource("createTuple_cases")
+    public void createTuple(BCreateTupleKind type, BTupleType expected) {
       assertThat(type.evaluationType()).isEqualTo(expected);
     }
 
-    public static Stream<Arguments> combine_cases() throws BytecodeException {
+    public static Stream<Arguments> createTuple_cases() throws BytecodeException {
       var c = new VmTestContext();
       return Stream.of(
-          arguments(c.bCombineKind(), c.bTupleType()),
-          arguments(c.bCombineKind(c.bStringType()), c.bTupleType(c.bStringType())));
+          arguments(c.bCreateTupleKind(), c.bTupleType()),
+          arguments(c.bCreateTupleKind(c.bStringType()), c.bTupleType(c.bStringType())));
     }
 
     @ParameterizedTest
@@ -288,15 +288,15 @@ public class BKindTest extends VmTestContext {
 
     @ParameterizedTest
     @MethodSource("types")
-    public void order(BType type) throws Exception {
+    public void createArray(BType type) throws Exception {
       var arrayType = bArrayType(type);
-      assertThat(bOrderKind(type).evaluationType()).isEqualTo(arrayType);
+      assertThat(bCreateArrayKind(type).evaluationType()).isEqualTo(arrayType);
     }
 
     @ParameterizedTest
     @MethodSource("types")
-    public void pick(BType type) throws Exception {
-      assertThat(bPickKind(type).evaluationType()).isEqualTo(type);
+    public void arrayGet(BType type) throws Exception {
+      assertThat(bArrayGetKind(type).evaluationType()).isEqualTo(type);
     }
 
     @ParameterizedTest
@@ -307,8 +307,8 @@ public class BKindTest extends VmTestContext {
 
     @ParameterizedTest
     @MethodSource("types")
-    public void select(BType type) throws Exception {
-      assertThat(bSelectKind(type).evaluationType()).isEqualTo(type);
+    public void tupleGet(BType type) throws Exception {
+      assertThat(bTupleGetKind(type).evaluationType()).isEqualTo(type);
     }
 
     @ParameterizedTest
@@ -327,7 +327,7 @@ public class BKindTest extends VmTestContext {
     var tester = new EqualsTester();
     tester.addEqualityGroup(bBlobType(), bBlobType());
     tester.addEqualityGroup(bBoolType(), bBoolType());
-    tester.addEqualityGroup(bChoiceType(), bChoiceType());
+    tester.addEqualityGroup(bVariantType(), bVariantType());
     tester.addEqualityGroup(
         bLambdaType(bBoolType(), bBlobType()), bLambdaType(bBoolType(), bBlobType()));
     tester.addEqualityGroup(bIntType(), bIntType());
@@ -355,14 +355,14 @@ public class BKindTest extends VmTestContext {
 
     tester.addEqualityGroup(bCallKind(), bCallKind());
     tester.addEqualityGroup(
-        bCombineKind(bIntType(), bStringType()), bCombineKind(bIntType(), bStringType()));
+        bCreateTupleKind(bIntType(), bStringType()), bCreateTupleKind(bIntType(), bStringType()));
     tester.addEqualityGroup(bFoldKind(bIntType()), bFoldKind(bIntType()));
     tester.addEqualityGroup(bIfKind(), bIfKind());
     tester.addEqualityGroup(bMapKind(), bMapKind());
-    tester.addEqualityGroup(bOrderKind(), bOrderKind());
-    tester.addEqualityGroup(bPickKind(), bPickKind());
+    tester.addEqualityGroup(bCreateArrayKind(), bCreateArrayKind());
+    tester.addEqualityGroup(bArrayGetKind(), bArrayGetKind());
     tester.addEqualityGroup(bRefKind(bIntType()), bRefKind(bIntType()));
-    tester.addEqualityGroup(bSelectKind(bIntType()), bSelectKind(bIntType()));
+    tester.addEqualityGroup(bTupleGetKind(bIntType()), bTupleGetKind(bIntType()));
 
     tester.testEquals();
   }
