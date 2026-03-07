@@ -133,22 +133,22 @@ public class BRefInlinerTest extends VmTestContext {
     }
 
     @Test
-    void lambda_body_with_var_referencing_param_of_this_lambda() throws Exception {
+    void lambda_body_with_ref_to_param_of_this_lambda() throws Exception {
       assertReferenceInliningDoesNotChangeExpression(1, r -> bLambda(list(bIntType()), r));
     }
 
     @Test
-    void lambda_body_with_var_referencing_this_lambda() throws Exception {
+    void lambda_body_with_recursive_ref_to_this_lambda() throws Exception {
       assertReferenceInliningDoesNotChangeExpression(0, r -> bLambda(list(bIntType()), r));
     }
 
     @Test
-    void lambda_body_with_var_referencing_param_of_enclosing_lambda() throws Exception {
+    void lambda_body_with_ref_to_param_of_enclosing_lambda() throws Exception {
       assertReferenceInliningDoesNotChangeExpression(3, r -> lambdaInsideLambda(r));
     }
 
     @Test
-    void lambda_body_with_var_referencing_unbound_param() throws Exception {
+    void lambda_body_with_ref_to_unbound_param() throws Exception {
       assertReferenceInliningReplacesReference(5, bInt(1), r -> lambdaInsideLambda(r));
     }
 

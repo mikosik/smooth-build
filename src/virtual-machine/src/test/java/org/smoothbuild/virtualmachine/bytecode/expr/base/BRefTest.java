@@ -18,7 +18,7 @@ public class BRefTest extends VmTestContext {
   }
 
   @Test
-  void type_of_var_expr_is_var_type() throws Exception {
+  void type_of_ref_expr_is_ref_type() throws Exception {
     assertThat(bRef(bIntType(), 123).kind()).isEqualTo(bRefKind(bIntType()));
   }
 
