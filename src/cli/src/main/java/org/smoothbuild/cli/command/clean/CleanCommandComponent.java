@@ -5,7 +5,7 @@ import dagger.Component;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.util.function.Predicate;
-import org.smoothbuild.cli.command.base.BaseModule;
+import org.smoothbuild.cli.command.base.CommandModule;
 import org.smoothbuild.cli.command.base.TaskRunner;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.dagger.PerCommand;
@@ -15,7 +15,7 @@ import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.TaskFilter;
 import org.smoothbuild.common.log.report.TraceFilter;
 
-@Component(modules = {BaseModule.class})
+@Component(modules = {CommandModule.class})
 @PerCommand
 public interface CleanCommandComponent {
   TaskRunner<ScheduleClean> cleanRunner();

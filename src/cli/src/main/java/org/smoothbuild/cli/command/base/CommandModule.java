@@ -15,4 +15,4 @@ import org.smoothbuild.common.schedule.SchedulerModule;
       ReportModule.class,
       InitializerModule.class
     })
-public interface BaseModule {}
+public interface CommandModule {}
