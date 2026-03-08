@@ -131,7 +131,7 @@ public final class BCallJob extends SchedulingJob {
   }
 
   private Label executeLabel() {
-    return scheduleLabel2("execute");
+    return scheduleLabel("execute");
   }
 
   private Trace newTrace(BCall call, BExpr called, Trace next) {

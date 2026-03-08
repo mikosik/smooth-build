@@ -40,7 +40,7 @@ public abstract sealed class SchedulingJob extends Job
     return scheduler().submit(task);
   }
 
-  protected Label scheduleLabel2(String name) {
+  protected Label scheduleLabel(String name) {
     return scheduleLabel().append(":" + name);
   }
 

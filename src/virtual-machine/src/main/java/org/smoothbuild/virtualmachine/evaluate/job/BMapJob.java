@@ -48,6 +48,6 @@ public final class BMapJob extends SchedulingJob {
   }
 
   private Label executeLabel() {
-    return scheduleLabel2("execute");
+    return scheduleLabel("execute");
   }
 }

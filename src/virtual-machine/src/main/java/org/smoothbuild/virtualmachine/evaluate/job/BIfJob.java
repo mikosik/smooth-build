@@ -37,6 +37,6 @@ public final class BIfJob extends SchedulingJob {
   }
 
   private Label executeLabel() {
-    return scheduleLabel2("execute");
+    return scheduleLabel("execute");
   }
 }
