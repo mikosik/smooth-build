@@ -10,6 +10,7 @@ import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Scheduler;
+import org.smoothbuild.virtualmachine.VmConfig;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
@@ -87,5 +88,9 @@ public abstract sealed class Job permits BLambdaJob, SchedulingJob, BValueJob {
 
   public Scheduler scheduler() {
     return jobContext.scheduler();
+  }
+
+  public VmConfig vmConfig() {
+    return jobContext.vmConfig();
   }
 }

@@ -3,7 +3,6 @@ package org.smoothbuild.virtualmachine.evaluate.job;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.location.Locations.unknownLocation;
 import static org.smoothbuild.common.schedule.Output.successOutput;
-import static org.smoothbuild.virtualmachine.VmConstants.CALL_DEPTH_LIMIT;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
@@ -31,8 +30,9 @@ public final class BCallJob extends SchedulingJob {
 
   @Override
   public Promise<Maybe<BValue>> schedule() throws JobException, BytecodeException {
-    if (trace().depth() >= CALL_DEPTH_LIMIT) {
-      throw new JobException("Call depth limit (%d) exceeded.".formatted(CALL_DEPTH_LIMIT));
+    var callDepthLimit = vmConfig().callDepthLimit();
+    if (trace().depth() >= callDepthLimit) {
+      throw new JobException("Call depth limit (%d) exceeded.".formatted(callDepthLimit));
     }
     var lambda = call.lambda();
     var lambdaArgs = call.arguments();

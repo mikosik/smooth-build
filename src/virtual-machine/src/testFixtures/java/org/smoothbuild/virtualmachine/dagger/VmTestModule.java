@@ -12,6 +12,7 @@ import org.smoothbuild.common.dagger.PerCommand;
 import org.smoothbuild.common.filesystem.base.Alias;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.filesystem.base.Path;
+import org.smoothbuild.virtualmachine.VmConfig;
 
 @Module(includes = VmModule.class)
 public interface VmTestModule {
@@ -45,5 +46,10 @@ public interface VmTestModule {
   @Sandbox
   static Hash provideSandboxHash() {
     return Hash.of(33);
+  }
+
+  @Provides
+  static VmConfig provideVmConfig() {
+    return new VmConfig(128);
   }
 }

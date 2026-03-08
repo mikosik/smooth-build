@@ -10,6 +10,7 @@ import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.init.InitializerModule;
 import org.smoothbuild.common.schedule.SchedulerModule;
+import org.smoothbuild.virtualmachine.VmConfig;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
@@ -50,6 +51,8 @@ public interface VmTestComponent extends CommonTestComponent {
   BKindDb kindDb();
 
   HashedDb hashedDb();
+
+  VmConfig vmConfig();
 
   @Project
   FileSystem<Path> projectFileSystem();

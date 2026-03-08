@@ -24,7 +24,6 @@ import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.schedule.Scheduler.LABEL;
 import static org.smoothbuild.common.schedule.Tasks.argument;
 import static org.smoothbuild.common.testing.AwaitHelper.await;
-import static org.smoothbuild.virtualmachine.VmConstants.CALL_DEPTH_LIMIT;
 import static org.smoothbuild.virtualmachine.VmConstants.VM_EVALUATE;
 import static org.smoothbuild.virtualmachine.VmConstants.VM_LABEL;
 
@@ -46,6 +45,7 @@ import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Scheduler;
 import org.smoothbuild.common.testing.TestReporter;
+import org.smoothbuild.virtualmachine.VmConfig;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
@@ -353,9 +353,7 @@ public class BEvaluateTaskTest extends VmTestContext {
           evaluate(bEvaluateTask(), call);
 
           assertReportsContains(
-              provide().reporter().reports(),
-              FATAL,
-              "Call depth limit (" + CALL_DEPTH_LIMIT + ") exceeded.");
+              provide().reporter().reports(), FATAL, "Call depth limit (128) exceeded.");
         }
 
         private BLambda addIntsBLambda() throws IOException {
@@ -617,7 +615,8 @@ public class BEvaluateTaskTest extends VmTestContext {
             provide().scheduler(),
             cachingOperatorEvaluator,
             provide().bytecodeFactory(),
-            provide().bRefInliner()));
+            provide().bRefInliner(),
+            provide().vmConfig()));
 
         evaluate(bEvaluate, expr);
         var fatal = fatal("Task execution failed with exception:", runtimeException);
@@ -885,7 +884,13 @@ public class BEvaluateTaskTest extends VmTestContext {
         CachingOperatorEvaluator cachingOperatorEvaluator,
         Scheduler scheduler,
         BExprAttributes exprAttributes) {
-      super(exprAttributes, scheduler, cachingOperatorEvaluator, bytecodeFactory, bRefInliner);
+      super(
+          exprAttributes,
+          scheduler,
+          cachingOperatorEvaluator,
+          bytecodeFactory,
+          bRefInliner,
+          new VmConfig(128));
     }
 
     @Override
@@ -927,7 +932,8 @@ public class BEvaluateTaskTest extends VmTestContext {
         provide().scheduler(),
         cachingOperatorEvaluator,
         provide().bytecodeFactory(),
-        provide().bRefInliner());
+        provide().bRefInliner(),
+        provide().vmConfig());
     return new BEvaluateTask(jobContext);
   }
 

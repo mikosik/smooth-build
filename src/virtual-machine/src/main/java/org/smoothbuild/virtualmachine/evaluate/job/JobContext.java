@@ -4,6 +4,7 @@ import jakarta.inject.Inject;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.schedule.Scheduler;
+import org.smoothbuild.virtualmachine.VmConfig;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArrayGet;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
@@ -32,6 +33,7 @@ public class JobContext {
   private final CachingOperatorEvaluator cachingOperatorEvaluator;
   private final Scheduler scheduler;
   private final BExprAttributes exprAttributes;
+  private final VmConfig vmConfig;
 
   @Inject
   public JobContext(
@@ -39,12 +41,14 @@ public class JobContext {
       Scheduler scheduler,
       CachingOperatorEvaluator cachingOperatorEvaluator,
       BytecodeFactory bytecodeFactory,
-      BRefInliner bRefInliner) {
+      BRefInliner bRefInliner,
+      VmConfig vmConfig) {
     this.bRefInliner = bRefInliner;
     this.bytecodeFactory = bytecodeFactory;
     this.cachingOperatorEvaluator = cachingOperatorEvaluator;
     this.scheduler = scheduler;
     this.exprAttributes = exprAttributes;
+    this.vmConfig = vmConfig;
   }
 
   @SuppressWarnings("NullAway")
@@ -85,5 +89,9 @@ public class JobContext {
 
   public BExprAttributes exprAttributes() {
     return exprAttributes;
+  }
+
+  public VmConfig vmConfig() {
+    return vmConfig;
   }
 }

@@ -6,7 +6,6 @@ import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Predicate;
-import org.smoothbuild.cli.command.base.BaseModule;
 import org.smoothbuild.cli.command.base.TaskRunner;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.dagger.PerCommand;
@@ -15,9 +14,8 @@ import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.TaskFilter;
 import org.smoothbuild.common.log.report.TraceFilter;
-import org.smoothbuild.virtualmachine.dagger.VmModule;
 
-@Component(modules = {BaseModule.class, VmModule.class})
+@Component(modules = {BuildCommandModule.class})
 @PerCommand
 public interface BuildCommandComponent {
   TaskRunner<ScheduleBuild> buildCommandRunner();
