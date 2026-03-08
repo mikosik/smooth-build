@@ -37,3 +37,4 @@ flows: parsing -> frontend -> backend -> VM evaluation.
 
 - Never add Javadocs or comments unless explicitly asked.
   Update existing ones if modifying corresponding code.
+- Always run full build when performing final verification of changed code.
