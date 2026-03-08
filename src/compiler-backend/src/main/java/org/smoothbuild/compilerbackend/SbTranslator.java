@@ -318,12 +318,13 @@ public class SbTranslator {
 
   private BLambda translateConstructor(SConstructor sConstructor) throws SbTranslatorException {
     var bFuncType = typeTranslator.translate(sConstructor.type());
-    var bBody = bytecodeF.createTuple(createReferenceB(bFuncType.params()));
+    var bBody = bytecodeF.createTuple(createRefsToConstructorParams(bFuncType.params()));
     saveLoc(bBody, sConstructor);
     return bytecodeF.lambda(bFuncType, bBody);
   }
 
-  private List<BExpr> createReferenceB(BTupleType sParamTypes) throws SbTranslatorException {
+  private List<BExpr> createRefsToConstructorParams(BTupleType sParamTypes)
+      throws SbTranslatorException {
     return sParamTypes
         .elements()
         .zipWithIndex()
