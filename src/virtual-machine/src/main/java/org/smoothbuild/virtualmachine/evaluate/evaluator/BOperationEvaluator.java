@@ -19,10 +19,10 @@ import org.smoothbuild.virtualmachine.evaluate.plugin.Container;
  * This class is thread-safe.
  */
 public abstract sealed class BOperationEvaluator<T extends BOperation>
-    permits BCreateVariantEvaluator,
-        BCreateTupleEvaluator,
+    permits BConstructVariantEvaluator,
+        BConstructTupleEvaluator,
         BInvokeEvaluator,
-        BCreateArrayEvaluator,
+        BConstructArrayEvaluator,
         BArrayGetEvaluator,
         BTupleGetEvaluator {
   private final T operation;

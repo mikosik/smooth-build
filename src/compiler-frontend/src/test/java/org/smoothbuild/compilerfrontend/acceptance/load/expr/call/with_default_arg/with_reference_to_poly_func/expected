@@ -37,7 +37,7 @@ SModule(
             evaluationType = ()->A
             location = {t-project}/module.smooth:1
           )
-          args = SCreateTuple(
+          args = SConstructTuple(
             evaluationType = {}
             elements = [
             ]
@@ -87,7 +87,7 @@ SModule(
             evaluationType = (Int)->Int
             location = {t-project}/module.smooth:2
           )
-          args = SCreateTuple(
+          args = SConstructTuple(
             evaluationType = {Int}
             elements = [
               SInstantiate(
@@ -171,7 +171,7 @@ SModule(
                   evaluationType = ()->A
                   location = {t-project}/module.smooth:1
                 )
-                args = SCreateTuple(
+                args = SConstructTuple(
                   evaluationType = {}
                   elements = [
                   ]
@@ -221,7 +221,7 @@ SModule(
                   evaluationType = (Int)->Int
                   location = {t-project}/module.smooth:2
                 )
-                args = SCreateTuple(
+                args = SConstructTuple(
                   evaluationType = {Int}
                   elements = [
                     SInstantiate(

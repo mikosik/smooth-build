@@ -10,8 +10,8 @@ import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PCreateArray;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PCreateTuple;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructArray;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructTuple;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
@@ -102,11 +102,13 @@ public class ConstraintCollector {
   private SType unifyExpr(PExpr pExpr) throws TypeException {
     return switch (pExpr) {
       case PCall pCall -> unifyAndMemoize(pCall, this::unifyCall);
-      case PCreateTuple pCreateTuple -> unifyAndMemoize(pCreateTuple, this::unifyCreateTuple);
+      case PConstructTuple pConstructTuple ->
+        unifyAndMemoize(pConstructTuple, this::unifyConstructTuple);
       case PInstantiate pInstantiate -> unifyAndMemoize(pInstantiate, this::unifyInstantiate);
       case PLambda pLambda -> unifyLambda(pLambda);
       case PNamedArg pNamedArg -> unifyAndMemoize(pNamedArg, this::unifyNamedArg);
-      case PCreateArray pCreateArray -> unifyAndMemoize(pCreateArray, this::unifyCreateArray);
+      case PConstructArray pConstructArray ->
+        unifyAndMemoize(pConstructArray, this::unifyConstructArray);
       case PStructGet pStructGet -> unifyAndMemoize(pStructGet, this::unifyStructGet);
       case PTupleGet pTupleGet -> unifyAndMemoize(pTupleGet, this::unifyTupleGet);
       case PString pString -> setAndMemoize(pString, STypes.STRING);
@@ -183,14 +185,14 @@ public class ConstraintCollector {
     return unifyExpr(pNamedArg.expr());
   }
 
-  private SArrayType unifyCreateArray(PCreateArray pCreateArray) throws TypeException {
-    var elems = pCreateArray.elements();
+  private SArrayType unifyConstructArray(PConstructArray pConstructArray) throws TypeException {
+    var elems = pConstructArray.elements();
     var elemTypes = elems.map(this::unifyExpr);
-    return unifyElementsWithArray(elemTypes, pCreateArray.location());
+    return unifyElementsWithArray(elemTypes, pConstructArray.location());
   }
 
-  private STupleType unifyCreateTuple(PCreateTuple pCreateTuple) throws TypeException {
-    var elems = pCreateTuple.elements();
+  private STupleType unifyConstructTuple(PConstructTuple pConstructTuple) throws TypeException {
+    var elems = pConstructTuple.elements();
     var elemTypes = elems.map(this::unifyExpr);
     return new STupleType(elemTypes);
   }

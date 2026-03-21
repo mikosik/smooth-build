@@ -43,7 +43,7 @@ public final class BSwitch extends BOperation {
         .alternatives()
         .map(a -> kindDb().lambda(list(a), evaluationType()))
         .construct(l -> kindDb().tuple(l));
-    var handlers = subExprs.get(HANDLERS_INDEX).asInstanceOf(BCreateTuple.class);
+    var handlers = subExprs.get(HANDLERS_INDEX).asInstanceOf(BConstructTuple.class);
     if (!handlers.evaluationType().equals(expectedHandlersType)) {
       throw new SubExprHasWrongEvaluationTypeException(
           this, "handlers", expectedHandlersType, handlers.evaluationType());
@@ -55,7 +55,7 @@ public final class BSwitch extends BOperation {
     return subExprs().variant();
   }
 
-  public BCreateTuple handlers() throws BytecodeException {
+  public BConstructTuple handlers() throws BytecodeException {
     return subExprs().handlers();
   }
 
@@ -74,5 +74,5 @@ public final class BSwitch extends BOperation {
     return subExprs.apply();
   }
 
-  private record SubExprs(BExpr variant, BCreateTuple handlers) {}
+  private record SubExprs(BExpr variant, BConstructTuple handlers) {}
 }

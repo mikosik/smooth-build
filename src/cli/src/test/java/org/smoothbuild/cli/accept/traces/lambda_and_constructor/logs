@@ -47,11 +47,11 @@
 :vm:schedule:call:execute
   @ {t-project}/module.smooth:5 result:lambda~1
   @ {t-project}/module.smooth:4 apply
-:vm:schedule:createTuple
+:vm:schedule:constructTuple
 :vm:schedule:ref
 :vm:schedule:ref
 :vm:schedule:ref
-:vm:evaluate:createTuple
+:vm:evaluate:constructTuple
   @ {t-project}/module.smooth:4 MyStruct
   @ {t-project}/module.smooth:5 result:lambda~1
   @ {t-project}/module.smooth:4 apply

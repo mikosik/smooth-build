@@ -42,8 +42,8 @@ public class MatcherCreatorTest {
       String expression, Predicate<Report> expectedMatcher) {
 
     var taskLabels = list(
-        label(":vm:evaluate:createTuple"),
-        label(":vm:evaluate:createArray"),
+        label(":vm:evaluate:constructTuple"),
+        label(":vm:evaluate:constructArray"),
         label(":vm:evaluate:invoke"),
         label(":vm:evaluate:tupleGet"),
         label(":vm:different:arrayGet"),
@@ -106,39 +106,39 @@ public class MatcherCreatorTest {
         arguments(":vm:evaluate:invoke", labelMatcher(":vm:evaluate:invoke")),
         arguments(":vm:evaluate:*", labelMatcher(":vm:evaluate:*")),
         arguments(":vm:**", labelMatcher(":vm:**")),
-        arguments(":vm:evaluate:createTuple", labelMatcher(":vm:evaluate:createTuple")),
-        arguments(":vm:evaluate:createArray", labelMatcher(":vm:evaluate:createArray")),
-        arguments("   :vm:evaluate:createArray", labelMatcher(":vm:evaluate:createArray")),
-        arguments(":vm:evaluate:createArray   ", labelMatcher(":vm:evaluate:createArray")),
-        arguments("   :vm:evaluate:createArray   ", labelMatcher(":vm:evaluate:createArray")),
+        arguments(":vm:evaluate:constructTuple", labelMatcher(":vm:evaluate:constructTuple")),
+        arguments(":vm:evaluate:constructArray", labelMatcher(":vm:evaluate:constructArray")),
+        arguments("   :vm:evaluate:constructArray", labelMatcher(":vm:evaluate:constructArray")),
+        arguments(":vm:evaluate:constructArray   ", labelMatcher(":vm:evaluate:constructArray")),
+        arguments("   :vm:evaluate:constructArray   ", labelMatcher(":vm:evaluate:constructArray")),
         arguments(":vm:evaluate:invoke & error", and(labelMatcher(":vm:evaluate:invoke"), ERROR)),
         arguments(":vm:evaluate:invoke | error", or(labelMatcher(":vm:evaluate:invoke"), ERROR)),
         arguments(
-            ":vm:evaluate:invoke | :vm:evaluate:createArray | warning",
+            ":vm:evaluate:invoke | :vm:evaluate:constructArray | warning",
             or(
                 labelMatcher(":vm:evaluate:invoke"),
-                or(labelMatcher(":vm:evaluate:createArray"), WARNING))),
+                or(labelMatcher(":vm:evaluate:constructArray"), WARNING))),
         arguments(
-            ":vm:evaluate:invoke & error | :vm:evaluate:createArray",
+            ":vm:evaluate:invoke & error | :vm:evaluate:constructArray",
             or(
                 and(labelMatcher(":vm:evaluate:invoke"), ERROR),
-                labelMatcher(":vm:evaluate:createArray"))),
+                labelMatcher(":vm:evaluate:constructArray"))),
         arguments(
-            ":vm:evaluate:createArray | :vm:evaluate:invoke & warning",
+            ":vm:evaluate:constructArray | :vm:evaluate:invoke & warning",
             or(
                 and(labelMatcher(":vm:evaluate:invoke"), WARNING),
-                labelMatcher(":vm:evaluate:createArray"))),
+                labelMatcher(":vm:evaluate:constructArray"))),
         arguments("(:vm:evaluate:invoke)", labelMatcher(":vm:evaluate:invoke")),
         arguments(
-            ":vm:evaluate:invoke & (:vm:evaluate:createArray | warning)",
+            ":vm:evaluate:invoke & (:vm:evaluate:constructArray | warning)",
             and(
                 labelMatcher(":vm:evaluate:invoke"),
-                or(labelMatcher(":vm:evaluate:createArray"), WARNING))),
+                or(labelMatcher(":vm:evaluate:constructArray"), WARNING))),
         arguments(
-            "(:vm:evaluate:createArray | warning) & :vm:evaluate:invoke",
+            "(:vm:evaluate:constructArray | warning) & :vm:evaluate:invoke",
             and(
                 labelMatcher(":vm:evaluate:invoke"),
-                or(labelMatcher(":vm:evaluate:ordcreateArrayer"), WARNING))));
+                or(labelMatcher(":vm:evaluate:ordconstructArrayer"), WARNING))));
   }
 
   @Nested

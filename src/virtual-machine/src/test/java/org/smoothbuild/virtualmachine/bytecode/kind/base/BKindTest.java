@@ -20,8 +20,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BArrayGet;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateArray;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BConstructArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BConstructTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
@@ -66,7 +66,7 @@ public class BKindTest extends VmTestContext {
         args(f -> f.int_(), "Int"),
         args(f -> f.string(), "String"),
         args(f -> f.variant(f.blob(), f.int_()), "{Blob|Int}"),
-        args(f -> f.createVariant(f.variant(f.blob(), f.int_())), "CREATE_VARIANT"),
+        args(f -> f.constructVariant(f.variant(f.blob(), f.int_())), "CONSTRUCT_VARIANT"),
         args(f -> f.array(f.blob()), "[Blob]"),
         args(f -> f.array(f.bool()), "[Bool]"),
         args(f -> f.array(f.int_()), "[Int]"),
@@ -85,8 +85,8 @@ public class BKindTest extends VmTestContext {
         args(f -> f.tuple(f.string(), f.bool()), "{String,Bool}"),
         args(f -> f.tuple(f.tuple(f.int_())), "{{Int}}"),
         args(f -> f.call(f.int_()), "CALL"),
-        args(f -> f.createTuple(f.tuple(f.string(), f.int_())), "CREATE_TUPLE"),
-        args(f -> f.createArray(f.array(f.string())), "CREATE_ARRAY"),
+        args(f -> f.constructTuple(f.tuple(f.string(), f.int_())), "CONSTRUCT_TUPLE"),
+        args(f -> f.constructArray(f.array(f.string())), "CONSTRUCT_ARRAY"),
         args(f -> f.arrayGet(f.int_()), "ARRAY_GET"),
         args(f -> f.tupleGet(f.int_()), "TUPLE_GET"),
         args(f -> f.switch_(f.int_()), "SWITCH"),
@@ -231,8 +231,9 @@ public class BKindTest extends VmTestContext {
         arguments(test.bArrayType(test.bPersonType()), BArray.class),
         arguments(test.bStringArrayType(), BArray.class),
         arguments(test.bCallKind(), BCall.class),
-        arguments(test.bCreateArrayKind(), BCreateArray.class),
-        arguments(test.bCreateTupleKind(test.bIntType(), test.bStringType()), BCreateTuple.class),
+        arguments(test.bConstructArrayKind(), BConstructArray.class),
+        arguments(
+            test.bConstructTupleKind(test.bIntType(), test.bStringType()), BConstructTuple.class),
         arguments(test.bArrayGetKind(), BArrayGet.class),
         arguments(test.bRefKind(test.bIntType()), BRef.class),
         arguments(test.bTupleGetKind(test.bIntType()), BTupleGet.class));
@@ -256,16 +257,16 @@ public class BKindTest extends VmTestContext {
     }
 
     @ParameterizedTest
-    @MethodSource("createTuple_cases")
-    public void createTuple(BCreateTupleKind type, BTupleType expected) {
+    @MethodSource("constructTuple_cases")
+    public void constructTuple(BConstructTupleKind type, BTupleType expected) {
       assertThat(type.evaluationType()).isEqualTo(expected);
     }
 
-    public static Stream<Arguments> createTuple_cases() throws BytecodeException {
+    public static Stream<Arguments> constructTuple_cases() throws BytecodeException {
       var c = new VmTestContext();
       return Stream.of(
-          arguments(c.bCreateTupleKind(), c.bTupleType()),
-          arguments(c.bCreateTupleKind(c.bStringType()), c.bTupleType(c.bStringType())));
+          arguments(c.bConstructTupleKind(), c.bTupleType()),
+          arguments(c.bConstructTupleKind(c.bStringType()), c.bTupleType(c.bStringType())));
     }
 
     @ParameterizedTest
@@ -288,9 +289,9 @@ public class BKindTest extends VmTestContext {
 
     @ParameterizedTest
     @MethodSource("types")
-    public void createArray(BType type) throws Exception {
+    public void constructArray(BType type) throws Exception {
       var arrayType = bArrayType(type);
-      assertThat(bCreateArrayKind(type).evaluationType()).isEqualTo(arrayType);
+      assertThat(bConstructArrayKind(type).evaluationType()).isEqualTo(arrayType);
     }
 
     @ParameterizedTest
@@ -355,11 +356,12 @@ public class BKindTest extends VmTestContext {
 
     tester.addEqualityGroup(bCallKind(), bCallKind());
     tester.addEqualityGroup(
-        bCreateTupleKind(bIntType(), bStringType()), bCreateTupleKind(bIntType(), bStringType()));
+        bConstructTupleKind(bIntType(), bStringType()),
+        bConstructTupleKind(bIntType(), bStringType()));
     tester.addEqualityGroup(bFoldKind(bIntType()), bFoldKind(bIntType()));
     tester.addEqualityGroup(bIfKind(), bIfKind());
     tester.addEqualityGroup(bMapKind(), bMapKind());
-    tester.addEqualityGroup(bCreateArrayKind(), bCreateArrayKind());
+    tester.addEqualityGroup(bConstructArrayKind(), bConstructArrayKind());
     tester.addEqualityGroup(bArrayGetKind(), bArrayGetKind());
     tester.addEqualityGroup(bRefKind(bIntType()), bRefKind(bIntType()));
     tester.addEqualityGroup(bTupleGetKind(bIntType()), bTupleGetKind(bIntType()));

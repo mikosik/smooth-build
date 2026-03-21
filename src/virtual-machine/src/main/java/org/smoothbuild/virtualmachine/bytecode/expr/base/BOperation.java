@@ -17,9 +17,9 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 public abstract sealed class BOperation extends BExpr
     permits BArrayGet,
         BCall,
-        BCreateArray,
-        BCreateTuple,
-        BCreateVariant,
+        BConstructArray,
+        BConstructTuple,
+        BConstructVariant,
         BFold,
         BIf,
         BInvoke,

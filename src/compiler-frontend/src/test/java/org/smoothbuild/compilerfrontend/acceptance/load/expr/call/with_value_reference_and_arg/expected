@@ -58,7 +58,7 @@ SModule(
             evaluationType = (Int)->Int
             location = {t-project}/module.smooth:3
           )
-          args = SCreateTuple(
+          args = SConstructTuple(
             evaluationType = {Int}
             elements = [
               SInt(
@@ -158,7 +158,7 @@ SModule(
                   evaluationType = (Int)->Int
                   location = {t-project}/module.smooth:3
                 )
-                args = SCreateTuple(
+                args = SConstructTuple(
                   evaluationType = {Int}
                   elements = [
                     SInt(

@@ -54,8 +54,8 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PAnnotation;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PArrayType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PCreateArray;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PCreateTuple;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructArray;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructTuple;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PDefaultValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitTypeParams;
@@ -275,7 +275,7 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
           elems = list(pipedArg.get()).addAll(elems);
           pipedArg.set(null);
         }
-        return new PCreateArray(elems, location);
+        return new PConstructArray(elems, location);
       }
       if (chainHead.tuple() != null) {
         var elems = listOfAll(chainHead.tuple().expr()).map(this::createExpr);
@@ -283,7 +283,7 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
           elems = list(pipedArg.get()).addAll(elems);
           pipedArg.set(null);
         }
-        return new PCreateTuple(elems, location);
+        return new PConstructTuple(elems, location);
       }
       if (chainHead.parens() != null) {
         return createPipe(pipedArg, chainHead.parens().pipe());
@@ -398,8 +398,8 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
     private PExplicitType createNotFuncType(NonFuncTypeContext notFuncType) {
       return switch (notFuncType) {
         case TypeNameContext name -> createTypeReference(name);
-        case ArrayTypeContext arrayType -> createArrayType(arrayType);
-        case TupleTypeContext tupleType -> createTupleType(tupleType);
+        case ArrayTypeContext arrayType -> constructArrayType(arrayType);
+        case TupleTypeContext tupleType -> constructTupleType(tupleType);
         default -> throw unexpectedCaseException(notFuncType);
       };
     }
@@ -408,12 +408,12 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
       return new PTypeReference(type.getText(), fileLocation(fullPath, type.NAME()));
     }
 
-    private PExplicitType createArrayType(ArrayTypeContext arrayType) {
+    private PExplicitType constructArrayType(ArrayTypeContext arrayType) {
       var elemType = createType(arrayType.type());
       return new PArrayType(elemType, fileLocation(fullPath, arrayType));
     }
 
-    private PExplicitType createTupleType(TupleTypeContext tupleType) {
+    private PExplicitType constructTupleType(TupleTypeContext tupleType) {
       var elementTypes = listOfAll(tupleType.type()).map(this::createType);
       return new PTupleType(elementTypes, fileLocation(fullPath, tupleType));
     }

@@ -83,8 +83,9 @@ public class EvaluatorTest extends EvaluatorTestContext {
         @Test
         void call_poly_expression_function() throws BytecodeException {
           var a = varA();
-          var sCreateArray = sCreateArray(a, sParamRef(a, "e"));
-          var sFunc = sPoly(list(a), sFunc(sArrayType(a), "n", nlist(sItem(a, "e")), sCreateArray));
+          var sConstructArray = sConstructArray(a, sParamRef(a, "e"));
+          var sFunc =
+              sPoly(list(a), sFunc(sArrayType(a), "n", nlist(sItem(a, "e")), sConstructArray));
           var sCall = sCall(sInstantiate(sFunc, list(sIntType())), sInt(7));
           assertEvaluation(bindings(sFunc), sCall, bArray(bIntType(), bInt(7)));
         }
@@ -127,10 +128,11 @@ public class EvaluatorTest extends EvaluatorTestContext {
       }
 
       @Nested
-      class _createTuple {
+      class _constructTuple {
         @Test
-        void createTuple() throws BytecodeException {
-          assertEvaluation(sCreateTuple(sInt(7), sString("abc")), bTuple(bInt(7), bString("abc")));
+        void constructTuple() throws BytecodeException {
+          assertEvaluation(
+              sConstructTuple(sInt(7), sString("abc")), bTuple(bInt(7), bString("abc")));
         }
       }
 
@@ -143,11 +145,11 @@ public class EvaluatorTest extends EvaluatorTestContext {
       }
 
       @Nested
-      class _order {
+      class _constructArray {
         @Test
-        void order() throws BytecodeException {
+        void constructArray() throws BytecodeException {
           assertEvaluation(
-              sCreateArray(sIntType(), sInt(7), sInt(8)), bArray(bIntType(), bInt(7), bInt(8)));
+              sConstructArray(sIntType(), sInt(7), sInt(8)), bArray(bIntType(), bInt(7), bInt(8)));
         }
       }
 
@@ -209,7 +211,7 @@ public class EvaluatorTest extends EvaluatorTestContext {
           var constructorS =
               sPoly(sConstructor(sStructType("MyStruct", nlist(sSig(sIntType(), "myField")))));
           assertEvaluation(
-              constructorS, bLambda(list(bIntType()), bCreateTuple(bRef(bIntType(), 1))));
+              constructorS, bLambda(list(bIntType()), bConstructTuple(bRef(bIntType(), 1))));
         }
       }
 
@@ -224,7 +226,7 @@ public class EvaluatorTest extends EvaluatorTestContext {
         @Test
         void poly_value() throws BytecodeException {
           var a = varA();
-          var polyValue = sPoly(list(a), sValue(1, sArrayType(a), "name", sCreateArray(a)));
+          var polyValue = sPoly(list(a), sValue(1, sArrayType(a), "name", sConstructArray(a)));
           var instantiatedValue = sInstantiate(polyValue, list(sIntType()));
           assertEvaluation(bindings(polyValue), instantiatedValue, bArray(bIntType()));
         }
@@ -238,7 +240,7 @@ public class EvaluatorTest extends EvaluatorTestContext {
               sPoly(sConstructor(sStructType("MyStruct", nlist(sSig(sIntType(), "field"))))),
               bLambda(
                   bLambdaType(bIntType(), bTupleType(bIntType())),
-                  bCreateTuple(bRef(bIntType(), 1))));
+                  bConstructTuple(bRef(bIntType(), 1))));
         }
       }
     }

@@ -41,7 +41,7 @@ public final class BFoldJob extends SchedulingJob {
         BExpr result = initialValue;
         for (BValue element : array.elements(BValue.class)) {
           result = bytecodeFactory()
-              .call(folderArg, bytecodeFactory().createTuple(list(result, element)));
+              .call(folderArg, bytecodeFactory().constructTuple(list(result, element)));
         }
         return successOutput(evaluate(result), executeLabel(), trace());
       } catch (BytecodeException e) {

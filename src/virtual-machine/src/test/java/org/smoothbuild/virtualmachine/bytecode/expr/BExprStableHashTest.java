@@ -131,17 +131,17 @@ public class BExprStableHashTest extends VmTestContext {
   }
 
   @Nested
-  class _createVariant {
+  class _constructVariant {
     @Test
     void first_alternative() throws Exception {
-      assertThat(bCreateVariant(bVariantType(), bInt(0), bString("7")).hash())
+      assertThat(bConstructVariant(bVariantType(), bInt(0), bString("7")).hash())
           .isEqualTo(
               Hash.decode("caec4416a98ec12639f2b26ee748efcb87b40207d1061ad0487eee1a1398b3f5"));
     }
 
     @Test
     void second_alternative() throws Exception {
-      assertThat(bCreateVariant(bVariantType(), bInt(1), bInt(7)).hash())
+      assertThat(bConstructVariant(bVariantType(), bInt(1), bInt(7)).hash())
           .isEqualTo(
               Hash.decode("fdc44a7228f7276d2f8a2c45b8e9c89cb79f4384082bcd541dc8e559bbe3ba02"));
     }
@@ -149,7 +149,7 @@ public class BExprStableHashTest extends VmTestContext {
     @Test
     void reversed_alternatives() throws Exception {
       var type = bVariantType(bIntType(), bStringType());
-      assertThat(bCreateVariant(type, bInt(1), bString("7")).hash())
+      assertThat(bConstructVariant(type, bInt(1), bString("7")).hash())
           .isEqualTo(
               Hash.decode("a53c5ac6929698e9f9ab27b1d82d5ba6a04f86bd0f57cc0e01dabed5e873042b"));
     }
@@ -159,14 +159,16 @@ public class BExprStableHashTest extends VmTestContext {
   class _switch {
     @Test
     void first_alternative() throws Exception {
-      assertThat(bSwitch(bVariant(), bCreateTuple(bs2iLambda(), bi2iLambda(1))).hash())
+      assertThat(
+              bSwitch(bVariant(), bConstructTuple(bs2iLambda(), bi2iLambda(1))).hash())
           .isEqualTo(
               Hash.decode("760328d6f9b15735b0cc96955ddd970eb59652abdba390ab697efb5f6fa76c23"));
     }
 
     @Test
     void second_alternative() throws Exception {
-      assertThat(bSwitch(bVariant(), bCreateTuple(bs2iLambda(), bi2iLambda(2))).hash())
+      assertThat(
+              bSwitch(bVariant(), bConstructTuple(bs2iLambda(), bi2iLambda(2))).hash())
           .isEqualTo(
               Hash.decode("06945eb66514e8af9048f49967f09e91ce909f660bc363596f0a8349f85c8a72"));
     }
@@ -291,17 +293,17 @@ public class BExprStableHashTest extends VmTestContext {
   }
 
   @Nested
-  class _createTuple {
+  class _constructTuple {
     @Test
-    void createTuple_with_one_arg() throws Exception {
-      assertThat(bCreateTuple(bInt(1)).hash())
+    void constructTuple_with_one_arg() throws Exception {
+      assertThat(bConstructTuple(bInt(1)).hash())
           .isEqualTo(
               Hash.decode("06a264a951d27e6953fa12a624922cea7cbfd03ff7af071c9b7464990b20dc3b"));
     }
 
     @Test
-    void createTuple_without_args() throws Exception {
-      assertThat(bCreateTuple().hash())
+    void constructTuple_without_args() throws Exception {
+      assertThat(bConstructTuple().hash())
           .isEqualTo(
               Hash.decode("1493f172bdb322c5b42eadc79333661a72295286e56f7107a1435e2e651e2a57"));
     }
@@ -338,17 +340,17 @@ public class BExprStableHashTest extends VmTestContext {
   }
 
   @Nested
-  class _createArray {
+  class _constructArray {
     @Test
-    void empty_createArray() throws Exception {
-      assertThat(bCreateArray(bStringType()).hash())
+    void empty_constructArray() throws Exception {
+      assertThat(bConstructArray(bStringType()).hash())
           .isEqualTo(
               Hash.decode("e1f4fed2bf56965e2f8f965835f8a01685736939c5b154f114e63c2f1fcf522f"));
     }
 
     @Test
-    void createArray() throws Exception {
-      assertThat(bCreateArray(bInt(1)).hash())
+    void constructArray() throws Exception {
+      assertThat(bConstructArray(bInt(1)).hash())
           .isEqualTo(
               Hash.decode("32525892ab4d75f2b1f23293d34118c444fa06fe837ee9efaa2072032c879054"));
     }

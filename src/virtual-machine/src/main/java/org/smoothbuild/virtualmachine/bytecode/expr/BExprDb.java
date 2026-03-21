@@ -21,9 +21,9 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlobBuilder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateArray;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateTuple;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateVariant;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BConstructArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BConstructTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BConstructVariant;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BFold;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
@@ -98,14 +98,14 @@ public class BExprDb {
     return type.newExpr(root, this);
   }
 
-  public BCreateVariant newCreateVariant(BVariantType variantType, BInt index, BExpr choice)
+  public BConstructVariant newConstructVariant(BVariantType variantType, BInt index, BExpr choice)
       throws BytecodeException {
     var dataHash = writeChain(list(index, choice));
     var intIndex = index.toJavaBigInteger().intValue();
     var alternatives = variantType.alternatives();
     checkElementIndex(intIndex, alternatives.size());
     validateMemberEvaluationType("choice", choice, alternatives.get(intIndex));
-    var chooseKind = kindDb.createVariant(variantType);
+    var chooseKind = kindDb.constructVariant(variantType);
     var root = newRoot(chooseKind, dataHash);
     return chooseKind.newExpr(root, this);
   }
@@ -160,9 +160,9 @@ public class BExprDb {
     return kind.newExpr(root, this);
   }
 
-  public BCreateTuple newCreateTuple(List<? extends BExpr> items) throws BytecodeException {
+  public BConstructTuple newConstructTuple(List<? extends BExpr> items) throws BytecodeException {
     var evaluationType = kindDb.tuple(items.map(BExpr::evaluationType));
-    var kind = kindDb.createTuple(evaluationType);
+    var kind = kindDb.constructTuple(evaluationType);
     var dataHash = writeChain(items);
     var root = newRoot(kind, dataHash);
     return kind.newExpr(root, this);
@@ -219,10 +219,10 @@ public class BExprDb {
     return mapperType.result();
   }
 
-  public BCreateArray newCreateArray(BArrayType evaluationType, List<? extends BExpr> elements)
-      throws BytecodeException {
-    validateCreateArrayElements(evaluationType.element(), elements);
-    var kind = kindDb.createArray(evaluationType);
+  public BConstructArray newConstructArray(
+      BArrayType evaluationType, List<? extends BExpr> elements) throws BytecodeException {
+    validateConstructArrayElements(evaluationType.element(), elements);
+    var kind = kindDb.constructArray(evaluationType);
     var dataHash = writeChain(elements);
     var root = newRoot(kind, dataHash);
     return kind.newExpr(root, this);
@@ -250,7 +250,7 @@ public class BExprDb {
     return kind.newExpr(root, this);
   }
 
-  public BSwitch newSwitch(BExpr variant, BCreateTuple handlers) throws BytecodeException {
+  public BSwitch newSwitch(BExpr variant, BConstructTuple handlers) throws BytecodeException {
     var variantType = validateMemberEvaluationTypeClass("variant", variant, BVariantType.class);
     var handlersType = validateMemberEvaluationTypeClass("handlers", handlers, BTupleType.class);
     var evaluationType = inferSwitchEvaluationType(variantType, handlersType);
@@ -302,7 +302,7 @@ public class BExprDb {
 
   // validators
 
-  private void validateCreateArrayElements(BType elementType, List<? extends BExpr> elems) {
+  private void validateConstructArrayElements(BType elementType, List<? extends BExpr> elems) {
     for (int i = 0; i < elems.size(); i++) {
       var iElementType = elems.get(i).evaluationType();
       if (!elementType.equals(iElementType)) {

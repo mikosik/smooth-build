@@ -22,7 +22,7 @@ SModule(
             referencedName = f
             location = {t-project}/module.smooth:3
           )
-          args = SCreateTuple(
+          args = SConstructTuple(
             evaluationType = {}
             elements = [
             ]
@@ -81,7 +81,7 @@ SModule(
                   referencedName = f
                   location = {t-project}/module.smooth:3
                 )
-                args = SCreateTuple(
+                args = SConstructTuple(
                   evaluationType = {}
                   elements = [
                   ]

@@ -40,7 +40,7 @@ SModule(
             evaluationType = (String)->MyStruct
             location = {t-project}/module.smooth:4
           )
-          args = SCreateTuple(
+          args = SConstructTuple(
             evaluationType = {String}
             elements = [
               SString(
@@ -121,7 +121,7 @@ SModule(
                   evaluationType = (String)->MyStruct
                   location = {t-project}/module.smooth:4
                 )
-                args = SCreateTuple(
+                args = SConstructTuple(
                   evaluationType = {String}
                   elements = [
                     SString(

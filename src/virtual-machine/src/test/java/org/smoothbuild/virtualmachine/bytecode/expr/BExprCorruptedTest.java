@@ -34,9 +34,9 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BArrayGet;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateArray;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateTuple;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateVariant;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BConstructArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BConstructTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BConstructVariant;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BFold;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
@@ -300,7 +300,7 @@ public class BExprCorruptedTest extends VmTestContext {
        */
       var lambdaType = bLambdaType(bStringType(), bIntType(), bIntType());
       var lambda = bLambda(lambdaType, bInt());
-      var args = bCreateTuple(bString(), bInt());
+      var args = bConstructTuple(bString(), bInt());
       var hash = hash(hash(bCallKind(bIntType())), hash(hash(lambda), hash(args)));
 
       var bCall = (BCall) dbGet(hash);
@@ -317,7 +317,7 @@ public class BExprCorruptedTest extends VmTestContext {
     void root_with_two_data_hashes() throws Exception {
       var lambdaType = bLambdaType(bStringType(), bIntType(), bIntType());
       var lambda = bLambda(lambdaType, bInt());
-      var args = bCreateTuple(bString(), bInt());
+      var args = bConstructTuple(bString(), bInt());
       var dataHash = hash(hash(lambda), hash(args));
       obj_root_with_two_data_hashes(
           bCallKind(bIntType()), dataHash, (Hash hash) -> ((BCall) dbGet(hash)).lambda());
@@ -344,7 +344,7 @@ public class BExprCorruptedTest extends VmTestContext {
     void data_is_chain_with_three_elements() throws Exception {
       var lambdaType = bLambdaType(bStringType(), bIntType(), bIntType());
       var lambda = bLambda(lambdaType, bInt());
-      var args = bCreateTuple(bString(), bInt());
+      var args = bConstructTuple(bString(), bInt());
       var dataHash = hash(hash(lambda), hash(args), hash(args));
       var kind = bCallKind(bIntType());
       var hash = hash(hash(kind), dataHash);
@@ -355,7 +355,7 @@ public class BExprCorruptedTest extends VmTestContext {
     @Test
     void lambda_component_evaluation_type_is_not_lambda() throws Exception {
       var notLambda = bInt(3);
-      var args = bCreateTuple(bInt());
+      var args = bConstructTuple(bInt());
       var type = bCallKind(bStringType());
       var hash = hash(hash(type), hash(hash(notLambda), hash(args)));
       assertCall(() -> ((BCall) dbGet(hash)).lambda())
@@ -380,7 +380,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var lambdaType = bLambdaType(argumentTypes, bIntType());
       var lambda = bLambda(lambdaType, bInt());
       var type = bCallKind(bIntType());
-      var notTuple = bCreateArray();
+      var notTuple = bConstructArray();
       var hash = hash(hash(type), hash(hash(lambda), hash(notTuple)));
       assertCall(() -> ((BCall) dbGet(hash)).arguments())
           .throwsException(new SubExprHasWrongEvaluationTypeException(
@@ -391,7 +391,7 @@ public class BExprCorruptedTest extends VmTestContext {
     void evaluation_type_is_different_than_lambda_evaluation_type_result() throws Exception {
       var lambdaType = bLambdaType(bStringType(), bIntType());
       var lambda = bLambda(lambdaType, bInt());
-      var args = bCreateTuple(bString());
+      var args = bConstructTuple(bString());
       var type = bCallKind(bStringType());
       var hash = hash(hash(type), hash(hash(lambda), hash(args)));
       assertCall(() -> ((BCall) dbGet(hash)).lambda())
@@ -403,7 +403,7 @@ public class BExprCorruptedTest extends VmTestContext {
     void lambda_evaluation_type_params_does_not_match_args_evaluation_types() throws Exception {
       var lambdaType = bLambdaType(bStringType(), bBoolType(), bIntType());
       var lambda = bLambda(lambdaType, bInt());
-      var args = bCreateTuple(bString(), bInt());
+      var args = bConstructTuple(bString(), bInt());
       var kind = bCallKind(bIntType());
       var hash = hash(hash(kind), hash(hash(lambda), hash(args)));
       assertCall(() -> ((BCall) dbGet(hash)).arguments())
@@ -528,111 +528,111 @@ public class BExprCorruptedTest extends VmTestContext {
   }
 
   @Nested
-  class _createVariant {
+  class _constructVariant {
     @Test
     void learning_test() throws Exception {
       /*
-       * This test makes sure that other tests in this class use proper scheme to save CreateVariant
+       * This test makes sure that other tests in this class use proper scheme to save ConstructVariant
        * in HashedDb.
        */
       var variantType = bVariantType(bStringType(), bIntType());
-      var createVariantKind = bCreateVariantKind(variantType);
+      var constructVariantKind = bConstructVariantKind(variantType);
       var index = bInt(0);
-      var choice = bTupleGet(bCreateTuple(bString("abc")), 0);
+      var choice = bTupleGet(bConstructTuple(bString("abc")), 0);
       var dataHash = hash(hash(index), hash(choice));
-      var hash = hash(hash(createVariantKind), dataHash);
+      var hash = hash(hash(constructVariantKind), dataHash);
 
-      var createVariant = (BCreateVariant) dbGet(hash);
-      assertThat(createVariant.index()).isEqualTo(index);
-      assertThat(createVariant.choice()).isEqualTo(choice);
+      var constructVariant = (BConstructVariant) dbGet(hash);
+      assertThat(constructVariant.index()).isEqualTo(index);
+      assertThat(constructVariant.choice()).isEqualTo(choice);
     }
 
     @Test
     void root_without_data_hash() throws Exception {
       var variantType = bVariantType(bStringType(), bIntType());
-      var createVariantKind = bCreateVariantKind(variantType);
-      obj_root_without_data_hash(createVariantKind);
+      var constructVariantKind = bConstructVariantKind(variantType);
+      obj_root_without_data_hash(constructVariantKind);
     }
 
     @Test
     void root_with_two_data_hashes() throws Exception {
       var variantType = bVariantType(bStringType(), bIntType());
-      var createVariantKind = bCreateVariantKind(variantType);
+      var constructVariantKind = bConstructVariantKind(variantType);
       var index = bInt(0);
-      var choice = bTupleGet(bCreateTuple(bString("abc")), 0);
+      var choice = bTupleGet(bConstructTuple(bString("abc")), 0);
       var dataHash = hash(hash(index), hash(choice));
       obj_root_with_two_data_hashes(
-          createVariantKind, dataHash, (Hash hash) -> ((BCreateVariant) dbGet(hash)).index());
+          constructVariantKind, dataHash, (Hash hash) -> ((BConstructVariant) dbGet(hash)).index());
     }
 
     @Test
     void root_with_data_hash_pointing_nowhere() throws Exception {
       var variantType = bVariantType(bStringType(), bIntType());
-      var createVariantKind = bCreateVariantKind(variantType);
+      var constructVariantKind = bConstructVariantKind(variantType);
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          createVariantKind, (Hash hash) -> ((BCreateVariant) dbGet(hash)).index());
+          constructVariantKind, (Hash hash) -> ((BConstructVariant) dbGet(hash)).index());
     }
 
     @Test
     void data_is_chain_with_one_element() throws Exception {
       var variantType = bVariantType(bStringType(), bIntType());
-      var createVariantKind = bCreateVariantKind(variantType);
+      var constructVariantKind = bConstructVariantKind(variantType);
       var index = bInt(0);
       var dataHash = hash(hash(index));
-      var hash = hash(hash(createVariantKind), dataHash);
-      assertCall(() -> ((BCreateVariant) dbGet(hash)).index())
+      var hash = hash(hash(constructVariantKind), dataHash);
+      assertCall(() -> ((BConstructVariant) dbGet(hash)).index())
           .throwsException(
-              new SubExprsCountIsWrongException(hash, createVariantKind, DATA_PATH, 2, 1));
+              new SubExprsCountIsWrongException(hash, constructVariantKind, DATA_PATH, 2, 1));
     }
 
     @Test
     void data_is_chain_with_three_elements() throws Exception {
       var variantType = bVariantType(bStringType(), bIntType());
-      var createVariantKind = bCreateVariantKind(variantType);
+      var constructVariantKind = bConstructVariantKind(variantType);
       var index = bInt(0);
-      var choice = bTupleGet(bCreateTuple(bString("abc")), 0);
+      var choice = bTupleGet(bConstructTuple(bString("abc")), 0);
       var dataHash = hash(hash(index), hash(choice), hash(choice));
-      var hash = hash(hash(createVariantKind), dataHash);
-      assertCall(() -> ((BCreateVariant) dbGet(hash)).index())
+      var hash = hash(hash(constructVariantKind), dataHash);
+      assertCall(() -> ((BConstructVariant) dbGet(hash)).index())
           .throwsException(
-              new SubExprsCountIsWrongException(hash, createVariantKind, DATA_PATH, 2, 3));
+              new SubExprsCountIsWrongException(hash, constructVariantKind, DATA_PATH, 2, 3));
     }
 
     @Test
     void index_is_lower_than_zero() throws Exception {
       var variantType = bVariantType(bStringType(), bIntType());
-      var createVariantKind = bCreateVariantKind(variantType);
+      var constructVariantKind = bConstructVariantKind(variantType);
       var index = bInt(-1);
-      var choice = bTupleGet(bCreateTuple(bString("abc")), 0);
+      var choice = bTupleGet(bConstructTuple(bString("abc")), 0);
       var dataHash = hash(hash(index), hash(choice));
-      var hash = hash(hash(createVariantKind), dataHash);
-      assertCall(() -> ((BCreateVariant) dbGet(hash)).index())
+      var hash = hash(hash(constructVariantKind), dataHash);
+      assertCall(() -> ((BConstructVariant) dbGet(hash)).index())
           .throwsException(new ChooseHasIndexOutOfBoundException(hash, variantType, -1, 2));
     }
 
     @Test
     void index_is_equal_to_choice_size() throws Exception {
       var variantType = bVariantType(bStringType(), bIntType());
-      var createVariantKind = bCreateVariantKind(variantType);
+      var constructVariantKind = bConstructVariantKind(variantType);
       var index = bInt(variantType.size());
-      var choice = bTupleGet(bCreateTuple(bString("abc")), 0);
+      var choice = bTupleGet(bConstructTuple(bString("abc")), 0);
       var dataHash = hash(hash(index), hash(choice));
-      var hash = hash(hash(createVariantKind), dataHash);
-      assertCall(() -> ((BCreateVariant) dbGet(hash)).index())
+      var hash = hash(hash(constructVariantKind), dataHash);
+      assertCall(() -> ((BConstructVariant) dbGet(hash)).index())
           .throwsException(new ChooseHasIndexOutOfBoundException(hash, variantType, 2, 2));
     }
 
     @Test
     void choice_has_wrong_evaluation_type() throws Exception {
       var variantType = bVariantType(bStringType(), bIntType());
-      var createVariantKind = bCreateVariantKind(variantType);
+      var constructVariantKind = bConstructVariantKind(variantType);
       var index = bInt(0);
-      var choice = bTupleGet(bCreateTuple(bInt()), 0);
+      var choice = bTupleGet(bConstructTuple(bInt()), 0);
       var dataHash = hash(hash(index), hash(choice));
-      var hash = hash(hash(createVariantKind), dataHash);
-      assertCall(() -> ((BCreateVariant) dbGet(hash)).choice())
+      var hash = hash(hash(constructVariantKind), dataHash);
+      assertCall(() -> ((BConstructVariant) dbGet(hash)).choice())
           .throwsException(new SubExprHasWrongEvaluationTypeException(
-              hash, createVariantKind, "choice", bStringType(), bIntType()));
+              hash, constructVariantKind, "choice", bStringType(), bIntType()));
     }
   }
 
@@ -647,7 +647,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var switchKind = bSwitchKind(bIntType());
       var variantType = bVariantType(bStringType(), bIntType());
       var variant = bVariant(variantType, 0, bString("abc"));
-      var handlers = bCreateTuple(bs2iLambda(), bi2iLambda());
+      var handlers = bConstructTuple(bs2iLambda(), bi2iLambda());
       var dataHash = hash(hash(variant), hash(handlers));
       var hash = hash(hash(switchKind), dataHash);
       var switch_ = (BSwitch) dbGet(hash);
@@ -665,7 +665,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var switchKind = bSwitchKind(bIntType());
       var variantType = bVariantType(bStringType(), bIntType());
       var variant = bVariant(variantType, 0, bString("abc"));
-      var handlers = bCreateTuple(bs2iLambda(), bi2iLambda());
+      var handlers = bConstructTuple(bs2iLambda(), bi2iLambda());
       var dataHash = hash(hash(variant), hash(handlers));
       obj_root_with_two_data_hashes(
           switchKind, dataHash, (Hash hash) -> ((BSwitch) dbGet(hash)).variant());
@@ -694,7 +694,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var switchKind = bSwitchKind(bIntType());
       var variantType = bVariantType(bStringType(), bIntType());
       var variant = bVariant(variantType, 0, bString("abc"));
-      var handlers = bCreateTuple(bs2iLambda(), bi2iLambda());
+      var handlers = bConstructTuple(bs2iLambda(), bi2iLambda());
       var dataHash = hash(hash(variant), hash(handlers), hash(handlers));
       var hash = hash(hash(switchKind), dataHash);
 
@@ -706,7 +706,7 @@ public class BExprCorruptedTest extends VmTestContext {
     void choice_evaluation_type_is_not_choice_type() throws Exception {
       var switchKind = bSwitchKind(bIntType());
       var variant = bInt();
-      var handlers = bCreateTuple(bs2iLambda(), bi2iLambda(), bi2iLambda());
+      var handlers = bConstructTuple(bs2iLambda(), bi2iLambda(), bi2iLambda());
       var dataHash = hash(hash(variant), hash(handlers));
       var hash = hash(hash(switchKind), dataHash);
 
@@ -720,7 +720,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var switchKind = bSwitchKind(bIntType());
       var variantType = bVariantType(bStringType(), bIntType());
       var variant = bVariant(variantType, 0, bString("abc"));
-      var handlers = bCreateTuple(bs2iLambda(), bi2iLambda(), bi2iLambda());
+      var handlers = bConstructTuple(bs2iLambda(), bi2iLambda(), bi2iLambda());
       var dataHash = hash(hash(variant), hash(handlers));
       var hash = hash(hash(switchKind), dataHash);
 
@@ -737,7 +737,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var switchKind = bSwitchKind(bIntType());
       var variantType = bVariantType(bStringType(), bIntType());
       var variant = bVariant(variantType, 0, bString("abc"));
-      var handlers = bCreateTuple(bs2iLambda(), bs2iLambda());
+      var handlers = bConstructTuple(bs2iLambda(), bs2iLambda());
       var dataHash = hash(hash(variant), hash(handlers));
       var hash = hash(hash(switchKind), dataHash);
 
@@ -753,7 +753,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var switchKind = bSwitchKind(bIntType());
       var variantType = bVariantType(bStringType(), bIntType());
       var variant = bVariant(variantType, 0, bString("abc"));
-      var handlers = bCreateTuple(bs2iLambda(), bi2sLambda());
+      var handlers = bConstructTuple(bs2iLambda(), bi2sLambda());
       var dataHash = hash(hash(variant), hash(handlers));
       var hash = hash(hash(switchKind), dataHash);
 
@@ -766,24 +766,24 @@ public class BExprCorruptedTest extends VmTestContext {
   }
 
   @Nested
-  class _createTuple {
+  class _constructTuple {
     @Test
     void learning_test() throws Exception {
       /*
-       * This test makes sure that other tests in this class use proper scheme to save CreateTuple
+       * This test makes sure that other tests in this class use proper scheme to save ConstructTuple
        * in HashedDb.
        */
       var expr1 = bInt(1);
       var expr2 = bString("abc");
-      var hash =
-          hash(hash(bCreateTupleKind(bIntType(), bStringType())), hash(hash(expr1), hash(expr2)));
-      var createTuple = ((BCreateTuple) dbGet(hash)).items();
-      assertThat(createTuple).containsExactly(expr1, expr2).inOrder();
+      var hash = hash(
+          hash(bConstructTupleKind(bIntType(), bStringType())), hash(hash(expr1), hash(expr2)));
+      var constructTuple = ((BConstructTuple) dbGet(hash)).items();
+      assertThat(constructTuple).containsExactly(expr1, expr2).inOrder();
     }
 
     @Test
     void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(bCreateTupleKind());
+      obj_root_without_data_hash(bConstructTupleKind());
     }
 
     @Test
@@ -792,13 +792,13 @@ public class BExprCorruptedTest extends VmTestContext {
       var item2 = bString("abc");
       var dataHash = hash(hash(item1), hash(item2));
       obj_root_with_two_data_hashes(
-          bCreateArrayKind(), dataHash, (Hash hash) -> ((BCreateTuple) dbGet(hash)).items());
+          bConstructArrayKind(), dataHash, (Hash hash) -> ((BConstructTuple) dbGet(hash)).items());
     }
 
     @Test
     void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          bCreateTupleKind(), (Hash hash) -> ((BCreateTuple) dbGet(hash)).items());
+          bConstructTupleKind(), (Hash hash) -> ((BConstructTuple) dbGet(hash)).items());
     }
 
     @ParameterizedTest
@@ -806,9 +806,9 @@ public class BExprCorruptedTest extends VmTestContext {
     public void with_chain_size_different_than_multiple_of_hash_size(int byteCount)
         throws Exception {
       var notHashOfChain = hash(ByteString.of(new byte[byteCount]));
-      var hash = hash(hash(bCreateTupleKind()), notHashOfChain);
-      assertCall(() -> ((BCreateTuple) dbGet(hash)).items())
-          .throwsException(new DecodeExprNodeException(hash, bCreateTupleKind(), DATA_PATH))
+      var hash = hash(hash(bConstructTupleKind()), notHashOfChain);
+      assertCall(() -> ((BConstructTuple) dbGet(hash)).items())
+          .throwsException(new DecodeExprNodeException(hash, bConstructTupleKind(), DATA_PATH))
           .withCause(
               new DecodeHashChainException(notHashOfChain, byteCount % Hash.lengthInBytes()));
     }
@@ -816,21 +816,21 @@ public class BExprCorruptedTest extends VmTestContext {
     @Test
     void with_chain_element_pointing_nowhere() throws Exception {
       var nowhere = Hash.of(33);
-      var hash = hash(hash(bCreateTupleKind()), hash(nowhere));
-      assertCall(() -> ((BCreateTuple) dbGet(hash)).items())
-          .throwsException(new DecodeExprNodeException(hash, bCreateTupleKind(), "items[0]"))
+      var hash = hash(hash(bConstructTupleKind()), hash(nowhere));
+      assertCall(() -> ((BConstructTuple) dbGet(hash)).items())
+          .throwsException(new DecodeExprNodeException(hash, bConstructTupleKind(), "items[0]"))
           .withCause(new NoSuchExprException(nowhere));
     }
 
     @Test
     void evaluation_type_items_size_is_different_than_actual_items_size() throws Exception {
       var item1 = bInt();
-      var type = bCreateTupleKind(bIntType(), bStringType());
+      var type = bConstructTupleKind(bIntType(), bStringType());
       var hash = hash(hash(type), hash(hash(item1)));
 
       var expectedType = bTupleType(bIntType(), bStringType());
       var actualType = bTupleType(bIntType());
-      assertCall(() -> ((BCreateTuple) dbGet(hash)).items())
+      assertCall(() -> ((BConstructTuple) dbGet(hash)).items())
           .throwsException(
               new SubExprHasWrongTypeException(hash, type, "items", expectedType, actualType));
     }
@@ -839,12 +839,12 @@ public class BExprCorruptedTest extends VmTestContext {
     void evaluation_type_item_is_different_than_evaluation_type_of_one_of_items() throws Exception {
       var item1 = bInt(1);
       var item2 = bString("abc");
-      var type = bCreateTupleKind(bIntType(), bBoolType());
+      var type = bConstructTupleKind(bIntType(), bBoolType());
       var hash = hash(hash(type), hash(hash(item1), hash(item2)));
 
       var expectedType = bTupleType(bIntType(), bBoolType());
       var actualType = bTupleType(bIntType(), bStringType());
-      assertCall(() -> ((BCreateTuple) dbGet(hash)).items())
+      assertCall(() -> ((BConstructTuple) dbGet(hash)).items())
           .throwsException(
               new SubExprHasWrongTypeException(hash, type, "items", expectedType, actualType));
     }
@@ -1347,7 +1347,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var kind = bInvokeKind(bIntType());
       var method = bMethodTuple();
       var isPure = bBool(true);
-      var arguments = bCreateTuple(bInt());
+      var arguments = bConstructTuple(bInt());
       var hash = hash(hash(kind), hash(hash(method), hash(isPure), hash(arguments)));
 
       var invoke = (BInvoke) dbGet(hash);
@@ -1366,7 +1366,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var kind = bInvokeKind(bIntType());
       var method = bMethodTuple();
       var isPure = bBool(true);
-      var arguments = bCreateTuple(bInt());
+      var arguments = bConstructTuple(bInt());
       var dataHash = hash(hash(method), hash(isPure), hash(arguments));
       obj_root_with_two_data_hashes(
           kind, dataHash, (Hash hash) -> ((BInvoke) dbGet(hash)).method());
@@ -1407,7 +1407,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var type = bInvokeKind(bIntType());
       var method = bMethodTuple();
       var isPure = bBool(true);
-      var arguments = bCreateTuple(bInt());
+      var arguments = bConstructTuple(bInt());
       var dataHash = hash(hash(method), hash(isPure), hash(arguments), hash(arguments));
       var hash = hash(hash(type), dataHash);
 
@@ -1418,9 +1418,9 @@ public class BExprCorruptedTest extends VmTestContext {
     @Test
     void method_evaluation_type_is_not_method_tuple() throws Exception {
       var kind = bInvokeKind(bIntType());
-      var method = bCreateTuple(bBlob(), bInt());
+      var method = bConstructTuple(bBlob(), bInt());
       var isPure = bBool(true);
-      var arguments = bCreateTuple(bInt());
+      var arguments = bConstructTuple(bInt());
       var hash = hash(hash(kind), hash(hash(method), hash(isPure), hash(arguments)));
       assertCall(() -> ((BInvoke) dbGet(hash)).method())
           .throwsException(new SubExprHasWrongEvaluationTypeException(
@@ -1432,7 +1432,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var kind = bInvokeKind(bIntType());
       var method = bMethodTuple();
       var isPure = bString();
-      var arguments = bCreateTuple(bInt());
+      var arguments = bConstructTuple(bInt());
       var hash = hash(hash(kind), hash(hash(method), hash(isPure), hash(arguments)));
 
       assertCall(() -> ((BInvoke) dbGet(hash)).isPure())
@@ -1455,7 +1455,7 @@ public class BExprCorruptedTest extends VmTestContext {
   }
 
   @Nested
-  class _createArray {
+  class _constructArray {
     @Test
     void learning_test() throws Exception {
       /*
@@ -1464,15 +1464,15 @@ public class BExprCorruptedTest extends VmTestContext {
        */
       var expr1 = bInt(1);
       var expr2 = bInt(2);
-      var hash = hash(hash(bCreateArrayKind(bIntType())), hash(hash(expr1), hash(expr2)));
+      var hash = hash(hash(bConstructArrayKind(bIntType())), hash(hash(expr1), hash(expr2)));
 
-      var createArray = (BCreateArray) dbGet(hash);
-      assertThat(createArray.elements()).containsExactly(expr1, expr2).inOrder();
+      var constructArray = (BConstructArray) dbGet(hash);
+      assertThat(constructArray.elements()).containsExactly(expr1, expr2).inOrder();
     }
 
     @Test
     void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(bCreateArrayKind());
+      obj_root_without_data_hash(bConstructArrayKind());
     }
 
     @Test
@@ -1481,13 +1481,14 @@ public class BExprCorruptedTest extends VmTestContext {
       var expr2 = bInt(2);
       var dataHash = hash(hash(expr1), hash(expr2));
       obj_root_with_two_data_hashes(
-          bCreateArrayKind(), dataHash, (Hash hash) -> ((BCreateArray) dbGet(hash)).elements());
+          bConstructArrayKind(), dataHash, (Hash hash) -> ((BConstructArray) dbGet(hash))
+              .elements());
     }
 
     @Test
     void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          bCreateArrayKind(), (Hash hash) -> ((BCreateArray) dbGet(hash)).elements());
+          bConstructArrayKind(), (Hash hash) -> ((BConstructArray) dbGet(hash)).elements());
     }
 
     @ParameterizedTest
@@ -1495,9 +1496,9 @@ public class BExprCorruptedTest extends VmTestContext {
     public void with_chain_size_different_than_multiple_of_hash_size(int byteCount)
         throws Exception {
       var notHashOfChain = hash(ByteString.of(new byte[byteCount]));
-      var hash = hash(hash(bCreateArrayKind()), notHashOfChain);
-      assertCall(() -> ((BCreateArray) dbGet(hash)).elements())
-          .throwsException(new DecodeExprNodeException(hash, bCreateArrayKind(), DATA_PATH))
+      var hash = hash(hash(bConstructArrayKind()), notHashOfChain);
+      assertCall(() -> ((BConstructArray) dbGet(hash)).elements())
+          .throwsException(new DecodeExprNodeException(hash, bConstructArrayKind(), DATA_PATH))
           .withCause(
               new DecodeHashChainException(notHashOfChain, byteCount % Hash.lengthInBytes()));
     }
@@ -1505,9 +1506,9 @@ public class BExprCorruptedTest extends VmTestContext {
     @Test
     void with_chain_elem_pointing_nowhere() throws Exception {
       var nowhereHash = Hash.of(33);
-      var hash = hash(hash(bCreateArrayKind()), hash(nowhereHash));
-      assertCall(() -> ((BCreateArray) dbGet(hash)).elements())
-          .throwsException(new DecodeExprNodeException(hash, bCreateArrayKind(), "elements[0]"))
+      var hash = hash(hash(bConstructArrayKind()), hash(nowhereHash));
+      assertCall(() -> ((BConstructArray) dbGet(hash)).elements())
+          .throwsException(new DecodeExprNodeException(hash, bConstructArrayKind(), "elements[0]"))
           .withCause(new NoSuchExprException(nowhereHash));
     }
 
@@ -1515,9 +1516,9 @@ public class BExprCorruptedTest extends VmTestContext {
     void evaluation_type_elem_is_different_than_evaluation_type_of_one_of_elems() throws Exception {
       var expr1 = bInt();
       var expr2 = bString();
-      var type = bCreateArrayKind(bIntType());
+      var type = bConstructArrayKind(bIntType());
       var hash = hash(hash(type), hash(hash(expr1), hash(expr2)));
-      assertCall(() -> ((BCreateArray) dbGet(hash)).elements())
+      assertCall(() -> ((BConstructArray) dbGet(hash)).elements())
           .throwsException(new SubExprHasWrongEvaluationTypeException(
               hash, type, "elements[1]", bIntType(), bStringType()));
     }
@@ -1531,12 +1532,12 @@ public class BExprCorruptedTest extends VmTestContext {
        * This test makes sure that other tests in this class use the proper scheme to save smooth
        * ArrayGet in HashedDb.
        */
-      var createArray = bCreateArray(bString("abc"));
+      var constructArray = bConstructArray(bString("abc"));
       var index = bRef(bIntType(), 7);
-      var hash = hash(hash(bArrayGetKind(bStringType())), hash(hash(createArray), hash(index)));
+      var hash = hash(hash(bArrayGetKind(bStringType())), hash(hash(constructArray), hash(index)));
 
       var arrayGet = (BArrayGet) dbGet(hash);
-      assertThat(arrayGet.array()).isEqualTo(createArray);
+      assertThat(arrayGet.array()).isEqualTo(constructArray);
       assertThat(arrayGet.index()).isEqualTo(index);
     }
 

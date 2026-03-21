@@ -3,8 +3,8 @@ package org.smoothbuild.compilerfrontend.compile.infer;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PCreateArray;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PCreateTuple;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructArray;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructTuple;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
@@ -64,11 +64,11 @@ public class TypeAssigner {
   private void assignExpr(PExpr expr) throws TypeException {
     switch (expr) {
       case PCall pCall -> assignCall(pCall);
-      case PCreateTuple pCreateTuple -> assignCreateTuple(pCreateTuple);
+      case PConstructTuple pConstructTuple -> assignConstructTuple(pConstructTuple);
       case PInstantiate pInstantiate -> assignInstantiate(pInstantiate);
       case PLambda pLambda -> assignFunc(pLambda);
       case PNamedArg pNamedArg -> assignNamedArg(pNamedArg);
-      case PCreateArray pCreateArray -> assignCreateArray(pCreateArray);
+      case PConstructArray pConstructArray -> assignConstructArray(pConstructArray);
       case PStructGet pStructGet -> assignStructGet(pStructGet);
       case PTupleGet pTupleGet -> assignTupleGet(pTupleGet);
       case PString pString -> assignExprType(pString);
@@ -92,14 +92,14 @@ public class TypeAssigner {
     assignExprType(pNamedArg);
   }
 
-  private void assignCreateArray(PCreateArray pCreateArray) throws TypeException {
-    pCreateArray.elements().foreach(this::assignExpr);
-    assignExprType(pCreateArray);
+  private void assignConstructArray(PConstructArray pConstructArray) throws TypeException {
+    pConstructArray.elements().foreach(this::assignExpr);
+    assignExprType(pConstructArray);
   }
 
-  private void assignCreateTuple(PCreateTuple pCreateTuple) throws TypeException {
-    pCreateTuple.elements().foreach(this::assignExpr);
-    assignExprType(pCreateTuple);
+  private void assignConstructTuple(PConstructTuple pConstructTuple) throws TypeException {
+    pConstructTuple.elements().foreach(this::assignExpr);
+    assignExprType(pConstructTuple);
   }
 
   private void assignStructGet(PStructGet pStructGet) throws TypeException {

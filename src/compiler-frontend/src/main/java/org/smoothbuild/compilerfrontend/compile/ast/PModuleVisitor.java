@@ -4,9 +4,9 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PAnnotation;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructArray;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructTuple;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PContainer;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PCreateArray;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PCreateTuple;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitTypeParams;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
@@ -153,12 +153,12 @@ public abstract class PModuleVisitor<T extends Throwable> {
     switch (pExpr) {
       case PBlob pBlob -> visitBlob(pBlob);
       case PCall pCall -> visitCall(pCall);
-      case PCreateTuple pCreateTuple -> visitCreateTuple(pCreateTuple);
+      case PConstructTuple pConstructTuple -> visitConstructTuple(pConstructTuple);
       case PInt pInt -> visitInt(pInt);
       case PInstantiate pInstantiate -> visitInstantiate(pInstantiate);
       case PLambda pLambda -> visit(pLambda);
       case PNamedArg pNamedArg -> visitNamedArg(pNamedArg);
-      case PCreateArray pCreateArray -> visitCreateArray(pCreateArray);
+      case PConstructArray pConstructArray -> visitConstructArray(pConstructArray);
       case PStructGet pStructGet -> visitStructGet(pStructGet);
       case PString pString -> visitString(pString);
       case PTupleGet pTupleGet -> visitTupleGet(pTupleGet);
@@ -191,8 +191,8 @@ public abstract class PModuleVisitor<T extends Throwable> {
     visitArgs(pCall.args());
   }
 
-  public void visitCreateTuple(PCreateTuple pCreateTuple) throws T {
-    pCreateTuple.elements().foreach(this::visitExpr);
+  public void visitConstructTuple(PConstructTuple pConstructTuple) throws T {
+    pConstructTuple.elements().foreach(this::visitExpr);
   }
 
   public void visitInt(PInt pInt) throws T {}
@@ -205,8 +205,8 @@ public abstract class PModuleVisitor<T extends Throwable> {
     visitExpr(pNamedArg.expr());
   }
 
-  public void visitCreateArray(PCreateArray pCreateArray) throws T {
-    pCreateArray.elements().foreach(this::visitExpr);
+  public void visitConstructArray(PConstructArray pConstructArray) throws T {
+    pConstructArray.elements().foreach(this::visitExpr);
   }
 
   public void visitReference(PReference pReference) throws T {}

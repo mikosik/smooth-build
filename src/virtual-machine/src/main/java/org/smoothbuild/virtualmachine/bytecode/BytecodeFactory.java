@@ -25,9 +25,9 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlobBuilder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateArray;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateTuple;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateVariant;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BConstructArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BConstructTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BConstructVariant;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BFold;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
@@ -108,13 +108,13 @@ public class BytecodeFactory {
     return exprDb.newVariant(type, index, choice);
   }
 
-  public BCreateVariant createVariant(BVariantType type, BInt index, BExpr choice)
+  public BConstructVariant constructVariant(BVariantType type, BInt index, BExpr choice)
       throws BytecodeException {
-    return exprDb.newCreateVariant(type, index, choice);
+    return exprDb.newConstructVariant(type, index, choice);
   }
 
-  public BCreateTuple createTuple(List<BExpr> items) throws BytecodeException {
-    return exprDb.newCreateTuple(items);
+  public BConstructTuple constructTuple(List<BExpr> items) throws BytecodeException {
+    return exprDb.newConstructTuple(items);
   }
 
   public BTuple file(BBlob content, BString path) throws BytecodeException {
@@ -167,7 +167,7 @@ public class BytecodeFactory {
     return exprDb.newString(string);
   }
 
-  public BSwitch switch_(BExpr variant, BCreateTuple handlers) throws BytecodeException {
+  public BSwitch switch_(BExpr variant, BConstructTuple handlers) throws BytecodeException {
     return exprDb.newSwitch(variant, handlers);
   }
 
@@ -175,9 +175,9 @@ public class BytecodeFactory {
     return exprDb.newTuple(items);
   }
 
-  public BCreateArray createArray(BArrayType evaluationType, List<BExpr> elements)
+  public BConstructArray constructArray(BArrayType evaluationType, List<BExpr> elements)
       throws BytecodeException {
-    return exprDb.newCreateArray(evaluationType, elements);
+    return exprDb.newConstructArray(evaluationType, elements);
   }
 
   // Types

@@ -22,7 +22,7 @@ SModule(
             referencedName = f
             location = {t-project}/module.smooth:3
           )
-          args = SCreateTuple(
+          args = SConstructTuple(
             evaluationType = {Blob}
             elements = [
               SBlob(
@@ -86,7 +86,7 @@ SModule(
                   referencedName = f
                   location = {t-project}/module.smooth:3
                 )
-                args = SCreateTuple(
+                args = SConstructTuple(
                   evaluationType = {Blob}
                   elements = [
                     SBlob(

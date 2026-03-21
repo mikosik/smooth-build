@@ -17,14 +17,14 @@ public class OperationHashesCollisionTest extends VmTestContext {
     List<Hash> list = new ArrayList<>();
     Set<Hash> set = new HashSet<>();
 
-    addHash(list, set, bCreateVariant());
-    addHash(list, set, bCreateTuple());
+    addHash(list, set, bConstructVariant());
+    addHash(list, set, bConstructTuple());
     addHash(
         list,
         set,
         bInvoke(bIntType(), bMethodTuple(bBlob(1), bString("1")), bBool(true), bTuple()));
-    addHash(list, set, bCreateArray(bIntType()));
-    addHash(list, set, bCreateArray(bBlobType()));
+    addHash(list, set, bConstructArray(bIntType()));
+    addHash(list, set, bConstructArray(bBlobType()));
     addHash(list, set, bArrayGet());
     addHash(list, set, bTupleGet());
   }

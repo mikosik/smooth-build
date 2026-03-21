@@ -9,9 +9,9 @@ import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.ARRAY_GET
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.BLOB;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.BOOL;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CALL;
-import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CREATE_ARRAY;
-import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CREATE_TUPLE;
-import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CREATE_VARIANT;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CONSTRUCT_ARRAY;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CONSTRUCT_TUPLE;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CONSTRUCT_VARIANT;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.FOLD;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.IF;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.INT;
@@ -508,59 +508,60 @@ public class BKindCorruptedTest extends VmTestContext {
     }
 
     @Nested
-    class _createVariant {
+    class _constructVariant {
       @Test
       void learning_test() throws Exception {
         /*
          * This test makes sure that other tests in this class use proper scheme
-         * to save CREATE_VARIANT kind in HashedDb.
+         * to save CONSTRUCT_VARIANT kind in HashedDb.
          */
-        var hash = hash(hash(CREATE_VARIANT.byteMarker()), hash(bVariantType()));
-        assertThat(hash).isEqualTo(bCreateVariantKind(bVariantType()).hash());
+        var hash = hash(hash(CONSTRUCT_VARIANT.byteMarker()), hash(bVariantType()));
+        assertThat(hash).isEqualTo(bConstructVariantKind(bVariantType()).hash());
       }
 
       @Nested
       class _operation_kind_tests extends AbstractOperationKindTestSuite {
         protected _operation_kind_tests() {
-          super(CREATE_VARIANT, BVariantType.class);
+          super(CONSTRUCT_VARIANT, BVariantType.class);
         }
       }
 
       @Test
       void with_evaluation_type_not_being_choice_type() throws Exception {
-        var hash = hash(hash(CREATE_VARIANT.byteMarker()), hash(bIntType()));
+        var hash = hash(hash(CONSTRUCT_VARIANT.byteMarker()), hash(bIntType()));
         assertThatGet(hash)
             .throwsException(new DecodeKindWrongNodeKindException(
-                hash, CREATE_VARIANT, DATA_PATH, BVariantType.class, BIntType.class));
+                hash, CONSTRUCT_VARIANT, DATA_PATH, BVariantType.class, BIntType.class));
       }
     }
 
     @Nested
-    class _createTuple {
+    class _constructTuple {
       @Test
       void learning_test() throws Exception {
         /*
          * This test makes sure that other tests in this class use proper scheme
-         * to save CREATE_TUPLE kind in HashedDb.
+         * to save CONSTRUCT_TUPLE kind in HashedDb.
          */
         var hash =
-            hash(hash(CREATE_TUPLE.byteMarker()), hash(bTupleType(bIntType(), bStringType())));
-        assertThat(hash).isEqualTo(bCreateTupleKind(bIntType(), bStringType()).hash());
+            hash(hash(CONSTRUCT_TUPLE.byteMarker()), hash(bTupleType(bIntType(), bStringType())));
+        assertThat(hash)
+            .isEqualTo(bConstructTupleKind(bIntType(), bStringType()).hash());
       }
 
       @Nested
       class _operation_kind_tests extends AbstractOperationKindTestSuite {
         protected _operation_kind_tests() {
-          super(CREATE_TUPLE, BTupleType.class);
+          super(CONSTRUCT_TUPLE, BTupleType.class);
         }
       }
 
       @Test
       void with_evaluation_type_not_being_tuple_type() throws Exception {
-        var hash = hash(hash(CREATE_TUPLE.byteMarker()), hash(bIntType()));
+        var hash = hash(hash(CONSTRUCT_TUPLE.byteMarker()), hash(bIntType()));
         assertThatGet(hash)
             .throwsException(new DecodeKindWrongNodeKindException(
-                hash, CREATE_TUPLE, DATA_PATH, BTupleType.class, BIntType.class));
+                hash, CONSTRUCT_TUPLE, DATA_PATH, BTupleType.class, BIntType.class));
       }
     }
 
@@ -653,30 +654,30 @@ public class BKindCorruptedTest extends VmTestContext {
     }
 
     @Nested
-    class _createArray {
+    class _constructArray {
       @Test
       void learning_test() throws Exception {
         /*
          * This test makes sure that other tests in this class use proper scheme
-         * to save CREATE_ARRAY kind in HashedDb.
+         * to save CONSTRUCT_ARRAY kind in HashedDb.
          */
-        var hash = hash(hash(CREATE_ARRAY.byteMarker()), hash(bIntArrayType()));
-        assertThat(hash).isEqualTo(bCreateArrayKind(bIntType()).hash());
+        var hash = hash(hash(CONSTRUCT_ARRAY.byteMarker()), hash(bIntArrayType()));
+        assertThat(hash).isEqualTo(bConstructArrayKind(bIntType()).hash());
       }
 
       @Nested
       class _operation_kind_tests extends AbstractOperationKindTestSuite {
         protected _operation_kind_tests() {
-          super(CREATE_ARRAY, BArrayType.class);
+          super(CONSTRUCT_ARRAY, BArrayType.class);
         }
       }
 
       @Test
       void with_evaluation_type_not_being_array_type() throws Exception {
-        var hash = hash(hash(CREATE_ARRAY.byteMarker()), hash(bIntType()));
+        var hash = hash(hash(CONSTRUCT_ARRAY.byteMarker()), hash(bIntType()));
         assertThatGet(hash)
             .throwsException(new DecodeKindWrongNodeKindException(
-                hash, CREATE_ARRAY, DATA_PATH, BArrayType.class, BIntType.class));
+                hash, CONSTRUCT_ARRAY, DATA_PATH, BArrayType.class, BIntType.class));
       }
     }
 

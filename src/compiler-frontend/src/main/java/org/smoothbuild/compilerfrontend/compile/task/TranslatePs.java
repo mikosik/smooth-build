@@ -14,9 +14,9 @@ import org.smoothbuild.common.schedule.Task2;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PAnnotation;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructArray;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructTuple;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructor;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PCreateArray;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PCreateTuple;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInt;
@@ -41,9 +41,9 @@ import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotation;
 import org.smoothbuild.compilerfrontend.lang.define.SBlob;
 import org.smoothbuild.compilerfrontend.lang.define.SCall;
+import org.smoothbuild.compilerfrontend.lang.define.SConstructArray;
+import org.smoothbuild.compilerfrontend.lang.define.SConstructTuple;
 import org.smoothbuild.compilerfrontend.lang.define.SConstructor;
-import org.smoothbuild.compilerfrontend.lang.define.SCreateArray;
-import org.smoothbuild.compilerfrontend.lang.define.SCreateTuple;
 import org.smoothbuild.compilerfrontend.lang.define.SDefaultValue;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SInstantiate;
@@ -176,12 +176,12 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
       return switch (expr) {
         case PBlob pBlob -> convertBlob(pBlob);
         case PCall pCall -> convertCall(pCall);
-        case PCreateTuple pCreateTuple -> convertCreateTuple(pCreateTuple);
+        case PConstructTuple pConstructTuple -> convertConstructTuple(pConstructTuple);
         case PInt pInt -> convertInt(pInt);
         case PInstantiate pInstantiate -> convertInstantiate(pInstantiate);
         case PLambda pLambda -> convertLambda(pLambda);
         case PNamedArg pNamedArg -> convertExpr(pNamedArg.expr());
-        case PCreateArray pCreateArray -> convertCreateArray(pCreateArray);
+        case PConstructArray pConstructArray -> convertConstructArray(pConstructArray);
         case PStructGet pStructGet -> convertStructGet(pStructGet);
         case PString pString -> convertString(pString);
         case PTupleGet pTupleGet -> convertTupleGet(pTupleGet);
@@ -205,10 +205,10 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
       return new SCall(callee, args, call.location());
     }
 
-    private SCreateTuple convertArgs(PCall call) {
+    private SConstructTuple convertArgs(PCall call) {
       var args = convertExprs(call.positionedArgs());
       var evaluationType = new STupleType(args.map(SExpr::evaluationType));
-      return new SCreateTuple(evaluationType, args, call.location());
+      return new SConstructTuple(evaluationType, args, call.location());
     }
 
     private SExpr convertFuncBody(PExpr body) {
@@ -240,14 +240,16 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
       };
     }
 
-    private SExpr convertCreateArray(PCreateArray pCreateArray) {
-      var elems = convertExprs(pCreateArray.elements());
-      return new SCreateArray((SArrayType) pCreateArray.sType(), elems, pCreateArray.location());
+    private SExpr convertConstructArray(PConstructArray pConstructArray) {
+      var elems = convertExprs(pConstructArray.elements());
+      return new SConstructArray(
+          (SArrayType) pConstructArray.sType(), elems, pConstructArray.location());
     }
 
-    private SExpr convertCreateTuple(PCreateTuple pCreateTuple) {
-      var elems = convertExprs(pCreateTuple.elements());
-      return new SCreateTuple((STupleType) pCreateTuple.sType(), elems, pCreateTuple.location());
+    private SExpr convertConstructTuple(PConstructTuple pConstructTuple) {
+      var elems = convertExprs(pConstructTuple.elements());
+      return new SConstructTuple(
+          (STupleType) pConstructTuple.sType(), elems, pConstructTuple.location());
     }
 
     private SExpr convertStructGet(PStructGet pStructGet) {

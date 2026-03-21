@@ -8,7 +8,7 @@ SModule(
         type = [A]
         fqn = empty
         location = {t-project}/module.smooth:5
-        body = SCreateArray(
+        body = SConstructArray(
           evaluationType = [A]
           elements = [
           ]
@@ -92,7 +92,7 @@ SModule(
               type = [A]
               fqn = empty
               location = {t-project}/module.smooth:5
-              body = SCreateArray(
+              body = SConstructArray(
                 evaluationType = [A]
                 elements = [
                 ]

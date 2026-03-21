@@ -13,7 +13,7 @@ import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 public class BSwitchTest extends VmTestContext {
   @Test
   void name() throws BytecodeException {
-    var handlers = bCreateTuple(bs2iLambda(), bi2iLambda());
+    var handlers = bConstructTuple(bs2iLambda(), bi2iLambda());
     var switch_ = bSwitch(bVariant(), handlers);
     assertThat(switch_.name()).isEqualTo("switch");
   }
@@ -23,7 +23,7 @@ public class BSwitchTest extends VmTestContext {
       throws BytecodeException {
     var type = bVariantType(bStringType(), bIntType());
     var variant = bVariant(type, 0, bString("a"));
-    assertCall(() -> bSwitch(variant, bCreateTuple(bs2iLambda())))
+    assertCall(() -> bSwitch(variant, bConstructTuple(bs2iLambda())))
         .throwsException(
             new IllegalArgumentException("`handlers.evaluationType().elements().size()` == 1 "
                 + "must be equal `variant.evaluationType().alternatives().size()` == 2."));
@@ -34,7 +34,7 @@ public class BSwitchTest extends VmTestContext {
       throws BytecodeException {
     var type = bVariantType(bStringType(), bIntType());
     var variant = bVariant(type, 0, bString("a"));
-    assertCall(() -> bSwitch(variant, bCreateTuple(bs2iLambda(), bInt(7))))
+    assertCall(() -> bSwitch(variant, bConstructTuple(bs2iLambda(), bInt(7))))
         .throwsException(
             new IllegalArgumentException(
                 "`alternatives.evaluationType()` is tuple with element at index 1 not equal to lambda type"));
@@ -46,7 +46,7 @@ public class BSwitchTest extends VmTestContext {
           throws BytecodeException {
     var type = bVariantType(bStringType(), bIntType());
     var variant = bVariant(type, 0, bString("a"));
-    assertCall(() -> bSwitch(variant, bCreateTuple(bs2iLambda(), bs2iLambda())))
+    assertCall(() -> bSwitch(variant, bConstructTuple(bs2iLambda(), bs2iLambda())))
         .throwsException(new IllegalArgumentException("`handlers.evaluationType()` is tuple "
             + "with element at index 1 being lambda with parameters `(String)` "
             + "but expected `(Int)`."));
@@ -58,7 +58,7 @@ public class BSwitchTest extends VmTestContext {
           throws BytecodeException {
     var type = bVariantType(bStringType(), bIntType());
     var variant = bVariant(type, 0, bString("a"));
-    assertCall(() -> bSwitch(variant, bCreateTuple(bs2iLambda(), bi2sLambda())))
+    assertCall(() -> bSwitch(variant, bConstructTuple(bs2iLambda(), bi2sLambda())))
         .throwsException(new IllegalArgumentException(
             "`handlers.evaluationType()` have lambdas at index 0 and 1 "
                 + "that have different result types: `Int` and `String`."));
@@ -66,7 +66,7 @@ public class BSwitchTest extends VmTestContext {
 
   @Test
   void sub_expressions_contains_variant_and_handlers() throws Exception {
-    var handlers = bCreateTuple(bs2iLambda(), bi2iLambda());
+    var handlers = bConstructTuple(bs2iLambda(), bi2iLambda());
     var switch_ = bSwitch(bVariant(), handlers);
     assertThat(switch_.variant()).isEqualTo(bVariant());
     assertThat(switch_.handlers()).isEqualTo(handlers);
@@ -74,13 +74,13 @@ public class BSwitchTest extends VmTestContext {
 
   @Test
   void variant_is_cached() throws BytecodeException {
-    var switch_ = bSwitch(bVariant(), bCreateTuple(bs2iLambda(), bi2iLambda()));
+    var switch_ = bSwitch(bVariant(), bConstructTuple(bs2iLambda(), bi2iLambda()));
     assertThat(switch_.variant()).isSameInstanceAs(switch_.variant());
   }
 
   @Test
   void handlers_is_cached() throws BytecodeException {
-    var switch_ = bSwitch(bVariant(), bCreateTuple(bs2iLambda(), bi2iLambda()));
+    var switch_ = bSwitch(bVariant(), bConstructTuple(bs2iLambda(), bi2iLambda()));
     assertThat(switch_.handlers()).isSameInstanceAs(switch_.handlers());
   }
 
@@ -89,8 +89,8 @@ public class BSwitchTest extends VmTestContext {
     @Override
     protected List<BSwitch> equalExprs() throws BytecodeException {
       return list(
-          bSwitch(bVariant(), bCreateTuple(bs2iLambda(), bi2iLambda())),
-          bSwitch(bVariant(), bCreateTuple(bs2iLambda(), bi2iLambda())));
+          bSwitch(bVariant(), bConstructTuple(bs2iLambda(), bi2iLambda())),
+          bSwitch(bVariant(), bConstructTuple(bs2iLambda(), bi2iLambda())));
     }
 
     @Override
@@ -99,22 +99,22 @@ public class BSwitchTest extends VmTestContext {
       var variant1 = bVariant(type, bInt(0), bString("7"));
       var variant2 = bVariant(type, bInt(1), bInt(8));
       return list(
-          bSwitch(variant1, bCreateTuple(bs2iLambda(), bi2iLambda(11))),
-          bSwitch(variant1, bCreateTuple(bs2iLambda(), bi2iLambda(12))),
-          bSwitch(variant2, bCreateTuple(bs2iLambda(), bi2iLambda(11))));
+          bSwitch(variant1, bConstructTuple(bs2iLambda(), bi2iLambda(11))),
+          bSwitch(variant1, bConstructTuple(bs2iLambda(), bi2iLambda(12))),
+          bSwitch(variant2, bConstructTuple(bs2iLambda(), bi2iLambda(11))));
     }
   }
 
   @Test
   void switch_can_be_read_back_by_hash() throws Exception {
-    var switch_ = bSwitch(bVariant(), bCreateTuple(bs2iLambda(), bi2iLambda()));
+    var switch_ = bSwitch(bVariant(), bConstructTuple(bs2iLambda(), bi2iLambda()));
     assertThat(exprDbOther().get(switch_.hash())).isEqualTo(switch_);
   }
 
   @Test
   void switch_read_back_by_hash_has_same_sub_expressions() throws Exception {
     var variant = bVariant();
-    var handlers = bCreateTuple(bs2iLambda(), bi2iLambda());
+    var handlers = bConstructTuple(bs2iLambda(), bi2iLambda());
     var switch_ = bSwitch(variant, handlers);
     var switchRead = (BSwitch) exprDbOther().get(switch_.hash());
     assertThat(switchRead.variant()).isEqualTo(variant);
@@ -123,7 +123,7 @@ public class BSwitchTest extends VmTestContext {
 
   @Test
   void to_string() throws Exception {
-    var switch_ = bSwitch(bVariant(), bCreateTuple(bs2iLambda(), bi2iLambda()));
+    var switch_ = bSwitch(bVariant(), bConstructTuple(bs2iLambda(), bi2iLambda()));
     assertThat(switch_.toString()).isEqualTo("""
         BSwitch(
           hash = f614d35874aeaf5899d6fe657b35e5845e530ee0cda1d35a6c33ba0416e2bf64
@@ -142,7 +142,7 @@ public class BSwitchTest extends VmTestContext {
               value = "7"
             )
           )
-          handlers = BCreateTuple(
+          handlers = BConstructTuple(
             hash = 2a737302c93c91e983667dfe73b2f73f278d17ea8a8c954ff18b8001a68fc595
             evaluationType = {(String)->Int,(Int)->Int}
             items = [

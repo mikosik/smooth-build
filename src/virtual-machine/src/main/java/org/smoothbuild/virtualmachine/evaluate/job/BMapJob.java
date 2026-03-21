@@ -39,7 +39,7 @@ public final class BMapJob extends SchedulingJob {
         var calls = array.elements(BValue.class).map(e -> call(mapperArg, list(e)));
         var mappingLambdaResultType = ((BLambdaType) mapperArg.evaluationType()).result();
         var arrayType = bytecodeFactory().arrayType(mappingLambdaResultType);
-        var mappedArray = bytecodeFactory().createArray(arrayType, calls);
+        var mappedArray = bytecodeFactory().constructArray(arrayType, calls);
         return successOutput(evaluate(mappedArray), executeLabel(), trace());
       } catch (BytecodeException e) {
         return failedSchedulingOutput(executeLabel(), trace(), e);

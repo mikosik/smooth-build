@@ -107,30 +107,30 @@ public class BuildCommandTest {
       output.assertSystemOutDoesNotContain(NATIVE_CALL_TASK_HEADER);
     }
 
-    private static final String CREATE_ARRAY = """
+    private static final String CONSTRUCT_ARRAY = """
         result = [
           123,
           456,
         ];
         """;
-    private static final String CREATE_ARRAY_TASK_HEADER = """
-          :vm:evaluate:createArray
+    private static final String CONSTRUCT_ARRAY_TASK_HEADER = """
+          :vm:evaluate:constructArray
           """;
 
     @Test
-    void shows_createArray_task_when_enabled() throws IOException {
-      createUserModule(CREATE_ARRAY);
-      var output = runSmooth(buildCommand("--filter-tasks=:vm:evaluate:createArray", "result"));
+    void shows_constructArray_task_when_enabled() throws IOException {
+      createUserModule(CONSTRUCT_ARRAY);
+      var output = runSmooth(buildCommand("--filter-tasks=:vm:evaluate:constructArray", "result"));
       output.assertFinishedWithSuccess();
-      output.assertSystemOutContains(CREATE_ARRAY_TASK_HEADER);
+      output.assertSystemOutContains(CONSTRUCT_ARRAY_TASK_HEADER);
     }
 
     @Test
-    void hides_createArray_task_when_not_enabled() throws IOException {
-      createUserModule(CREATE_ARRAY);
+    void hides_constructArray_task_when_not_enabled() throws IOException {
+      createUserModule(CONSTRUCT_ARRAY);
       var output = runSmooth(buildCommand("--filter-tasks=none", "result"));
       output.assertFinishedWithSuccess();
-      output.assertSystemOutDoesNotContain(CREATE_ARRAY_TASK_HEADER);
+      output.assertSystemOutDoesNotContain(CONSTRUCT_ARRAY_TASK_HEADER);
     }
   }
 

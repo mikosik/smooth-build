@@ -48,9 +48,9 @@ import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotation;
 import org.smoothbuild.compilerfrontend.lang.define.SBlob;
 import org.smoothbuild.compilerfrontend.lang.define.SCall;
+import org.smoothbuild.compilerfrontend.lang.define.SConstructArray;
+import org.smoothbuild.compilerfrontend.lang.define.SConstructTuple;
 import org.smoothbuild.compilerfrontend.lang.define.SConstructor;
-import org.smoothbuild.compilerfrontend.lang.define.SCreateArray;
-import org.smoothbuild.compilerfrontend.lang.define.SCreateTuple;
 import org.smoothbuild.compilerfrontend.lang.define.SDefaultValue;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SInstantiate;
@@ -337,17 +337,17 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SCall sCall(int line, SExpr callable, SExpr... args) {
-    return new SCall(callable, sCreateTuple(line, args), location(line));
+    return new SCall(callable, sConstructTuple(line, args), location(line));
   }
 
-  public default SCreateTuple sCreateTuple(SExpr... args) {
-    return sCreateTuple(13, args);
+  public default SConstructTuple sConstructTuple(SExpr... args) {
+    return sConstructTuple(13, args);
   }
 
-  public default SCreateTuple sCreateTuple(int line, SExpr... args) {
+  public default SConstructTuple sConstructTuple(int line, SExpr... args) {
     var argsList = list(args);
     var evaluationType = new STupleType(argsList.map(SExpr::evaluationType));
-    return new SCreateTuple(evaluationType, argsList, location(line));
+    return new SConstructTuple(evaluationType, argsList, location(line));
   }
 
   public default SInt sInt(int value) {
@@ -414,24 +414,25 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return new SInstantiate(typeArgs, sPolyReference, location);
   }
 
-  public default SCreateArray sCreateArray(SExpr headElement, SExpr... tailElements) {
-    return new SCreateArray(
+  public default SConstructArray sConstructArray(SExpr headElement, SExpr... tailElements) {
+    return new SConstructArray(
         sArrayType(headElement.evaluationType()), list(headElement).add(tailElements), location(7));
   }
 
-  public default SCreateArray sCreateArray(int line, SExpr headElement, SExpr... tailElements) {
-    return new SCreateArray(
+  public default SConstructArray sConstructArray(
+      int line, SExpr headElement, SExpr... tailElements) {
+    return new SConstructArray(
         sArrayType(headElement.evaluationType()),
         list(headElement).add(tailElements),
         location(line));
   }
 
-  public default SCreateArray sCreateArray(SType elementType, SExpr... exprs) {
-    return sCreateArray(1, elementType, exprs);
+  public default SConstructArray sConstructArray(SType elementType, SExpr... exprs) {
+    return sConstructArray(1, elementType, exprs);
   }
 
-  public default SCreateArray sCreateArray(int line, SType elementType, SExpr... exprs) {
-    return new SCreateArray(sArrayType(elementType), list(exprs), location(line));
+  public default SConstructArray sConstructArray(int line, SType elementType, SExpr... exprs) {
+    return new SConstructArray(sArrayType(elementType), list(exprs), location(line));
   }
 
   public default SMonoReference sParamRef(SType type, String name) {
@@ -608,7 +609,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SNamedValue emptySArrayValue(SType elementType) {
-    return sValue("emptyArray", sCreateArray(elementType));
+    return sValue("emptyArray", sConstructArray(elementType));
   }
 
   public default SConstructor sConstructor(SStructType structType) {

@@ -12,12 +12,12 @@ import org.smoothbuild.compilerfrontend.lang.type.SType;
  */
 public abstract sealed class PExpr implements HasLocation
     permits PCall,
-        PCreateTuple,
+        PConstructTuple,
         PInstantiate,
         PLambda,
         PLiteral,
         PNamedArg,
-        PCreateArray,
+        PConstructArray,
         PStructGet,
         PTupleGet {
   private final Location location;

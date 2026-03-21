@@ -14,7 +14,7 @@ import org.smoothbuild.common.schedule.Task1;
 import org.smoothbuild.common.schedule.Task2;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BConstructTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
@@ -36,8 +36,8 @@ public final class BCallJob extends SchedulingJob {
     }
     var lambda = call.lambda();
     var lambdaArgs = call.arguments();
-    if (lambdaArgs instanceof BCreateTuple createTuple) {
-      return scheduleCallWithCreateTupleArgs(call, lambda, createTuple);
+    if (lambdaArgs instanceof BConstructTuple constructTuple) {
+      return scheduleCallWithConstructTupleArgs(call, lambda, constructTuple);
     } else if (lambdaArgs instanceof BTuple tuple) {
       return scheduleCallWithTupleArgs(call, lambda, tuple);
     } else { // BExpr that evaluates to BTuple
@@ -45,19 +45,19 @@ public final class BCallJob extends SchedulingJob {
     }
   }
 
-  private Promise<Maybe<BValue>> scheduleCallWithCreateTupleArgs(
-      BCall call, BExpr lambdaExpr, BCreateTuple createTuple) throws BytecodeException {
-    var schedulingTask = newCallWithCreateTupleAsArgsSchedulingTask(call, createTuple);
+  private Promise<Maybe<BValue>> scheduleCallWithConstructTupleArgs(
+      BCall call, BExpr lambdaExpr, BConstructTuple constructTuple) throws BytecodeException {
+    var schedulingTask = newCallWithConstructTupleAsArgsSchedulingTask(call, constructTuple);
     var lambdaPromise = evaluate(lambdaExpr);
     return scheduler().submit(schedulingTask, lambdaPromise);
   }
 
-  private Task1<BValue, BValue> newCallWithCreateTupleAsArgsSchedulingTask(
-      BCall call, BCreateTuple createTuple) {
+  private Task1<BValue, BValue> newCallWithConstructTupleAsArgsSchedulingTask(
+      BCall call, BConstructTuple constructTuple) {
     return (lambdaValue) -> {
       var bLambda = (BLambda) lambdaValue;
       try {
-        var argJobs = createTuple.items().map(this::job);
+        var argJobs = constructTuple.items().map(this::job);
         var bodyEnvironmentJobs = bodyEnvironmentJobs(bLambda, argJobs);
         var bodyTrace = newTrace(call, bLambda, trace());
         var schedule = job(bLambda.body(), bodyEnvironmentJobs, bodyTrace).evaluate();

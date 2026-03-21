@@ -10,7 +10,7 @@ SModule(
         params = [
         ]
         location = {t-project}/module.smooth:1
-        body = SCreateArray(
+        body = SConstructArray(
           evaluationType = [A]
           elements = [
           ]
@@ -55,7 +55,7 @@ SModule(
               params = [
               ]
               location = {t-project}/module.smooth:1
-              body = SCreateArray(
+              body = SConstructArray(
                 evaluationType = [A]
                 elements = [
                 ]

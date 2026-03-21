@@ -11,8 +11,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.Helpers;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateArray;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BConstructArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BConstructTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
@@ -57,8 +57,8 @@ class ChainingBytecodeFactory {
     return invokeTranslatingIOException(() -> bytecodeFactory.call(lambda, arguments));
   }
 
-  public BCreateTuple createTuple(List<BExpr> elements) throws SbTranslatorException {
-    return invokeTranslatingIOException(() -> bytecodeFactory.createTuple(elements));
+  public BConstructTuple constructTuple(List<BExpr> elements) throws SbTranslatorException {
+    return invokeTranslatingIOException(() -> bytecodeFactory.constructTuple(elements));
   }
 
   public BInvoke invoke(BType evaluationType, BExpr method, BExpr isPure, BExpr arguments)
@@ -81,9 +81,9 @@ class ChainingBytecodeFactory {
         () -> bytecodeFactory.method(jar, classBinaryName, methodName));
   }
 
-  public BCreateArray createArray(BArrayType arrayType, List<BExpr> elements)
+  public BConstructArray constructArray(BArrayType arrayType, List<BExpr> elements)
       throws SbTranslatorException {
-    return invokeTranslatingIOException(() -> bytecodeFactory.createArray(arrayType, elements));
+    return invokeTranslatingIOException(() -> bytecodeFactory.constructArray(arrayType, elements));
   }
 
   public BTupleGet tupleGet(BExpr tuple, BInt index) throws SbTranslatorException {

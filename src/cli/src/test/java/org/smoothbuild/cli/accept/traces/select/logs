@@ -35,9 +35,9 @@
   @ <empty trace>
 :vm:schedule:call:execute
   @ <empty trace>
-:vm:schedule:createTuple
+:vm:schedule:constructTuple
 :vm:schedule:ref
-:vm:evaluate:createTuple
+:vm:evaluate:constructTuple
   @ {t-project}/module.smooth:4 MyStruct
 :vm:evaluate:tupleGet
   @ <empty trace>

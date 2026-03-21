@@ -8,9 +8,9 @@ import org.smoothbuild.virtualmachine.VmConfig;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArrayGet;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateArray;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateTuple;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateVariant;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BConstructArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BConstructTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BConstructVariant;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BFold;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
@@ -54,12 +54,14 @@ public class JobContext {
   @SuppressWarnings("NullAway")
   public Job newJob(BExpr expr, List<Job> environment, Trace trace) {
     return switch (expr) {
-      case BCreateVariant choose -> new BCreateVariantJob(this, choose, environment, trace);
-      case BCreateArray createArray -> new BCreateArrayJob(this, createArray, environment, trace);
+      case BConstructVariant choose -> new BConstructVariantJob(this, choose, environment, trace);
+      case BConstructArray constructArray ->
+        new BConstructArrayJob(this, constructArray, environment, trace);
       case BTupleGet tupleGet -> new BTupleGetJob(this, tupleGet, environment, trace);
       case BArrayGet arrayGet -> new BArrayGetJob(this, arrayGet, environment, trace);
       case BInvoke invoke -> new BInvokeJob(this, invoke, environment, trace);
-      case BCreateTuple createTuple -> new BCreateTupleJob(this, createTuple, environment, trace);
+      case BConstructTuple constructTuple ->
+        new BConstructTupleJob(this, constructTuple, environment, trace);
       case BSwitch switch_ -> new BSwitchJob(this, switch_, environment, trace);
       case BCall call -> new BCallJob(this, call, environment, trace);
       case BIf if_ -> new BIfJob(this, if_, environment, trace);

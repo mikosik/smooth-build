@@ -25,8 +25,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BArrayGetEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.BCreateArrayEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.evaluator.BCreateTupleEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BConstructArrayEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.evaluator.BConstructTupleEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BInvokeEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BOperationEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BTupleGetEvaluator;
@@ -34,11 +34,11 @@ import org.smoothbuild.virtualmachine.evaluate.plugin.BOutput;
 
 public class CachingOperatorEvaluatorTest extends VmTestContext {
   @Nested
-  class _createTuple_evaluator {
+  class _constructTuple_evaluator {
     @Test
     void when_cached_in_memory_and_disk() throws Exception {
       var value = bInt(17);
-      var evaluator = new BCreateTupleEvaluator(bCreateTuple(bInt()), trace());
+      var evaluator = new BConstructTupleEvaluator(bConstructTuple(bInt()), trace());
       var input = bTuple(value);
       var memory = bTuple(bInt(1));
       var disk = bTuple(bInt(2));
@@ -49,7 +49,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
     @Test
     void when_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var evaluator = new BCreateTupleEvaluator(bCreateTuple(bInt()), trace());
+      var evaluator = new BConstructTupleEvaluator(bConstructTuple(bInt()), trace());
       var input = bTuple(value);
       var disk = bTuple(bInt(2));
 
@@ -59,7 +59,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
     @Test
     void when_not_cached() throws Exception {
       var value = bInt(17);
-      var evaluator = new BCreateTupleEvaluator(bCreateTuple(bInt()), trace());
+      var evaluator = new BConstructTupleEvaluator(bConstructTuple(bInt()), trace());
       var input = bTuple(value);
 
       assertComputationResult(evaluator, input, null, null, bOutput(bTuple(value)), EXECUTION);
@@ -68,7 +68,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
     @Test
     void executed_computation_is_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var evaluator = new BCreateTupleEvaluator(bCreateTuple(bInt()), trace());
+      var evaluator = new BConstructTupleEvaluator(bConstructTuple(bInt()), trace());
       var input = bTuple(value);
 
       assertCachesState(evaluator, input, null, bTuple(value));
@@ -168,11 +168,11 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
   }
 
   @Nested
-  class _createArray_evaluator {
+  class _constructArray_evaluator {
     @Test
     void when_cached_in_memory_and_disk() throws Exception {
       var value = bInt(17);
-      var evaluator = new BCreateArrayEvaluator(bCreateArray(bIntType()), trace());
+      var evaluator = new BConstructArrayEvaluator(bConstructArray(bIntType()), trace());
       var input = bTuple(value);
       var memory = bArray(bInt(1));
       var disk = bArray(bInt(2));
@@ -183,7 +183,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
     @Test
     void when_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var evaluator = new BCreateArrayEvaluator(bCreateArray(bIntType()), trace());
+      var evaluator = new BConstructArrayEvaluator(bConstructArray(bIntType()), trace());
       var input = bTuple(value);
       var disk = bArray(bInt(2));
 
@@ -193,7 +193,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
     @Test
     void when_not_cached() throws Exception {
       var value = bInt(17);
-      var evaluator = new BCreateArrayEvaluator(bCreateArray(bIntType()), trace());
+      var evaluator = new BConstructArrayEvaluator(bConstructArray(bIntType()), trace());
       var input = bTuple(value);
 
       assertComputationResult(evaluator, input, null, null, bOutput(bArray(value)), EXECUTION);
@@ -202,7 +202,7 @@ public class CachingOperatorEvaluatorTest extends VmTestContext {
     @Test
     void executed_computation_is_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var evaluator = new BCreateArrayEvaluator(bCreateArray(bIntType()), trace());
+      var evaluator = new BConstructArrayEvaluator(bConstructArray(bIntType()), trace());
       var input = bTuple(value);
 
       assertCachesState(evaluator, input, null, bArray(value));

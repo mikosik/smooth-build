@@ -13,8 +13,8 @@ public class BOperationEvaluatorTest extends VmTestContext {
   @Nested
   class _purity {
     @Test
-    void createTuple_evaluation_is_pure() throws BytecodeException {
-      var evaluator = new BCreateTupleEvaluator(bCreateTuple(bInt()), trace());
+    void constructTuple_evaluation_is_pure() throws BytecodeException {
+      var evaluator = new BConstructTupleEvaluator(bConstructTuple(bInt()), trace());
       assertThat(evaluator.purity(bTuple())).isEqualTo(PURE);
     }
 
@@ -33,8 +33,8 @@ public class BOperationEvaluatorTest extends VmTestContext {
     }
 
     @Test
-    void createArray_evaluation_is_pure() throws BytecodeException {
-      var evaluator = new BCreateArrayEvaluator(bCreateArray(bInt()), trace());
+    void constructArray_evaluation_is_pure() throws BytecodeException {
+      var evaluator = new BConstructArrayEvaluator(bConstructArray(bInt()), trace());
       assertThat(evaluator.purity(bTuple())).isEqualTo(PURE);
     }
 

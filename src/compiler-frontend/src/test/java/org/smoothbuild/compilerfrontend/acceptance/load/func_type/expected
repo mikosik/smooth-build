@@ -8,7 +8,7 @@ SModule(
         type = [(String)->(Blob)->Int]
         fqn = funcReturningFuncCase
         location = {t-project}/module.smooth:1
-        body = SCreateArray(
+        body = SConstructArray(
           evaluationType = [(String)->(Blob)->Int]
           elements = [
           ]
@@ -22,7 +22,7 @@ SModule(
         type = [(String)->(Blob)->Int]
         fqn = funcReturningFuncCaseWithUnnecessaryParentheses
         location = {t-project}/module.smooth:2
-        body = SCreateArray(
+        body = SConstructArray(
           evaluationType = [(String)->(Blob)->Int]
           elements = [
           ]
@@ -36,7 +36,7 @@ SModule(
         type = [((String)->Blob)->Int]
         fqn = funcTakingFuncTypeParamCase
         location = {t-project}/module.smooth:4
-        body = SCreateArray(
+        body = SConstructArray(
           evaluationType = [((String)->Blob)->Int]
           elements = [
           ]
@@ -50,7 +50,7 @@ SModule(
         type = [((String)->Blob)->Int]
         fqn = funcTakingFuncTypeParamCaseWithUnnecessaryParentheses
         location = {t-project}/module.smooth:5
-        body = SCreateArray(
+        body = SConstructArray(
           evaluationType = [((String)->Blob)->Int]
           elements = [
           ]
@@ -93,7 +93,7 @@ SModule(
               type = [(String)->(Blob)->Int]
               fqn = funcReturningFuncCase
               location = {t-project}/module.smooth:1
-              body = SCreateArray(
+              body = SConstructArray(
                 evaluationType = [(String)->(Blob)->Int]
                 elements = [
                 ]
@@ -107,7 +107,7 @@ SModule(
               type = [(String)->(Blob)->Int]
               fqn = funcReturningFuncCaseWithUnnecessaryParentheses
               location = {t-project}/module.smooth:2
-              body = SCreateArray(
+              body = SConstructArray(
                 evaluationType = [(String)->(Blob)->Int]
                 elements = [
                 ]
@@ -121,7 +121,7 @@ SModule(
               type = [((String)->Blob)->Int]
               fqn = funcTakingFuncTypeParamCase
               location = {t-project}/module.smooth:4
-              body = SCreateArray(
+              body = SConstructArray(
                 evaluationType = [((String)->Blob)->Int]
                 elements = [
                 ]
@@ -135,7 +135,7 @@ SModule(
               type = [((String)->Blob)->Int]
               fqn = funcTakingFuncTypeParamCaseWithUnnecessaryParentheses
               location = {t-project}/module.smooth:5
-              body = SCreateArray(
+              body = SConstructArray(
                 evaluationType = [((String)->Blob)->Int]
                 elements = [
                 ]

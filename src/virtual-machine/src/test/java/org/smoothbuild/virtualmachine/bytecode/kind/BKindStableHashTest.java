@@ -62,13 +62,13 @@ public class BKindStableHashTest extends VmTestContext {
             t.bCallKind(t.bIntType()),
             "c23f38bb9870794f9873ee82daec1111bf5e6232b564a7b789ae4c75d608fa54"),
         arguments(
-            t.bCreateTupleKind(),
+            t.bConstructTupleKind(),
             "c41cd9d13e32154103a31db858ba533bbcb38fe2c2ddac7c5e4a0be50201083b"),
         arguments(
-            t.bCreateTupleKind(t.bIntType()),
+            t.bConstructTupleKind(t.bIntType()),
             "801b0b192a0b269ada637c6433141a798950ee9750bccf45bb6328af2efdc365"),
         arguments(
-            t.bCreateArrayKind(t.bIntType()),
+            t.bConstructArrayKind(t.bIntType()),
             "39ecc95bb839bb4fb1594d9707352a4801883c700003dce9f377cca0b6bfe367"),
         arguments(
             t.bArrayGetKind(t.bIntType()),

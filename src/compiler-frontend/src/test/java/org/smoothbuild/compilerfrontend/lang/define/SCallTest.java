@@ -32,7 +32,7 @@ public class SCallTest extends FrontendCompilerTestContext {
                 evaluationType = (Int)->Int
                 location = {t-project}/module.smooth:4
               )
-              args = SCreateTuple(
+              args = SConstructTuple(
                 evaluationType = {Int}
                 elements = [
                   SInt(

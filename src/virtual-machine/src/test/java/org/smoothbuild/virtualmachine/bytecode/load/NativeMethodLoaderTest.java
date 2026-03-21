@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Result;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BConstructArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
@@ -65,7 +65,7 @@ public class NativeMethodLoaderTest extends VmTestContext {
 
   private String wrongReturnTypeErrorMessage() {
     return "Providing method should declare return type as " + BValue.class.getCanonicalName()
-        + " but is " + BCreateArray.class.getCanonicalName() + ".";
+        + " but is " + BConstructArray.class.getCanonicalName() + ".";
   }
 
   private String wrongParametersErrorMessage() {

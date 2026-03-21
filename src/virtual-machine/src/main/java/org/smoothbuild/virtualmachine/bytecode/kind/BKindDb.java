@@ -12,9 +12,9 @@ import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.ARRAY_GET
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.BLOB;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.BOOL;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CALL;
-import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CREATE_ARRAY;
-import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CREATE_TUPLE;
-import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CREATE_VARIANT;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CONSTRUCT_ARRAY;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CONSTRUCT_TUPLE;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CONSTRUCT_VARIANT;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.FOLD;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.IF;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.INT;
@@ -44,9 +44,9 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BBlobType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BBoolType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BCallKind;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BCreateArrayKind;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BCreateTupleKind;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BCreateVariantKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BConstructArrayKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BConstructTupleKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BConstructVariantKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BFoldKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIfKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
@@ -179,20 +179,21 @@ public class BKindDb {
     return newOperation(CALL, evaluationType, BCallKind::new);
   }
 
-  public BCreateVariantKind createVariant(BVariantType evaluationType) throws BKindDbException {
-    return newOperation(CREATE_VARIANT, evaluationType, BCreateVariantKind::new);
+  public BConstructVariantKind constructVariant(BVariantType evaluationType)
+      throws BKindDbException {
+    return newOperation(CONSTRUCT_VARIANT, evaluationType, BConstructVariantKind::new);
   }
 
   public BSwitchKind switch_(BType evaluationType) throws BKindDbException {
     return newOperation(SWITCH, evaluationType, BSwitchKind::new);
   }
 
-  public BCreateTupleKind createTuple(BTupleType evaluationType) throws BKindDbException {
-    return newOperation(CREATE_TUPLE, evaluationType, BCreateTupleKind::new);
+  public BConstructTupleKind constructTuple(BTupleType evaluationType) throws BKindDbException {
+    return newOperation(CONSTRUCT_TUPLE, evaluationType, BConstructTupleKind::new);
   }
 
-  public BCreateArrayKind createArray(BArrayType evaluationType) throws BKindDbException {
-    return newOperation(CREATE_ARRAY, evaluationType, BCreateArrayKind::new);
+  public BConstructArrayKind constructArray(BArrayType evaluationType) throws BKindDbException {
+    return newOperation(CONSTRUCT_ARRAY, evaluationType, BConstructArrayKind::new);
   }
 
   public BArrayGetKind arrayGet(BType evaluationType) throws BKindDbException {
@@ -228,13 +229,13 @@ public class BKindDb {
       case MAP -> readOperationKind(hash, children, id, BArrayType.class, BMapKind::new);
       case INVOKE -> readOperationKind(hash, children, id, BType.class, BInvokeKind::new);
       case CALL -> readOperationKind(hash, children, id, BType.class, BCallKind::new);
-      case CREATE_VARIANT ->
-        readOperationKind(hash, children, id, BVariantType.class, BCreateVariantKind::new);
-      case CREATE_TUPLE ->
-        readOperationKind(hash, children, id, BTupleType.class, BCreateTupleKind::new);
+      case CONSTRUCT_VARIANT ->
+        readOperationKind(hash, children, id, BVariantType.class, BConstructVariantKind::new);
+      case CONSTRUCT_TUPLE ->
+        readOperationKind(hash, children, id, BTupleType.class, BConstructTupleKind::new);
       case FOLD -> readOperationKind(hash, children, id, BType.class, BFoldKind::new);
-      case CREATE_ARRAY ->
-        readOperationKind(hash, children, id, BArrayType.class, BCreateArrayKind::new);
+      case CONSTRUCT_ARRAY ->
+        readOperationKind(hash, children, id, BArrayType.class, BConstructArrayKind::new);
       case ARRAY_GET -> readOperationKind(hash, children, id, BType.class, BArrayGetKind::new);
       case REF -> readOperationKind(hash, children, id, BType.class, BRefKind::new);
       case TUPLE_GET -> readOperationKind(hash, children, id, BType.class, BTupleGetKind::new);

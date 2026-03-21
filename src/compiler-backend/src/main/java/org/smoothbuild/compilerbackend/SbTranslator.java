@@ -31,9 +31,9 @@ import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotation;
 import org.smoothbuild.compilerfrontend.lang.define.SBlob;
 import org.smoothbuild.compilerfrontend.lang.define.SCall;
+import org.smoothbuild.compilerfrontend.lang.define.SConstructArray;
+import org.smoothbuild.compilerfrontend.lang.define.SConstructTuple;
 import org.smoothbuild.compilerfrontend.lang.define.SConstructor;
-import org.smoothbuild.compilerfrontend.lang.define.SCreateArray;
-import org.smoothbuild.compilerfrontend.lang.define.SCreateTuple;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SExprFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SFunc;
@@ -59,8 +59,8 @@ import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateArray;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCreateTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BConstructArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BConstructTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
@@ -140,11 +140,11 @@ public class SbTranslator {
     return switch (sExpr) {
       case SBlob sBlob -> saveLocAndReturn(sBlob, translateBlob(sBlob));
       case SCall sCall -> saveLocAndReturn(sCall, translateCall(sCall));
-      case SCreateTuple sCreateTuple ->
-        saveLocAndReturn(sCreateTuple, translateCreateTuple(sCreateTuple));
+      case SConstructTuple sConstructTuple ->
+        saveLocAndReturn(sConstructTuple, translateConstructTuple(sConstructTuple));
       case SInt sInt -> saveLocAndReturn(sInt, translateInt(sInt));
-      case SCreateArray sCreateArray ->
-        saveLocAndReturn(sCreateArray, translateCreateArray(sCreateArray));
+      case SConstructArray sConstructArray ->
+        saveLocAndReturn(sConstructArray, translateConstructArray(sConstructArray));
       case SStructGet sStructGet -> saveLocAndReturn(sStructGet, translateStructGet(sStructGet));
       case STupleGet sTupleGet -> saveLocAndReturn(sTupleGet, translateTupleGet(sTupleGet));
       case SString sString -> saveLocAndReturn(sString, translateString(sString));
@@ -164,10 +164,10 @@ public class SbTranslator {
     return bytecodeF.call(bFunction, bArguments);
   }
 
-  private BCreateTuple translateCreateTuple(SCreateTuple sCreateTuple)
+  private BConstructTuple translateConstructTuple(SConstructTuple sConstructTuple)
       throws SbTranslatorException {
-    var bElements = translateExprs(sCreateTuple.elements());
-    return bytecodeF.createTuple(bElements);
+    var bElements = translateExprs(sConstructTuple.elements());
+    return bytecodeF.constructTuple(bElements);
   }
 
   private BInt translateInt(SInt sInt) throws SbTranslatorException {
@@ -306,19 +306,19 @@ public class SbTranslator {
     return bLambda;
   }
 
-  private BCreateTuple referencesToAllArguments(BLambdaType lambdaType)
+  private BConstructTuple referencesToAllArguments(BLambdaType lambdaType)
       throws SbTranslatorException {
     List<BExpr> argumentReferences = lambdaType
         .params()
         .elements()
         .zipWithIndex()
         .map(t -> bytecodeF.ref(t.element1(), BigInteger.valueOf(t.element2() + 1)));
-    return bytecodeF.createTuple(argumentReferences);
+    return bytecodeF.constructTuple(argumentReferences);
   }
 
   private BLambda translateConstructor(SConstructor sConstructor) throws SbTranslatorException {
     var bFuncType = typeTranslator.translate(sConstructor.type());
-    var bBody = bytecodeF.createTuple(createRefsToConstructorParams(bFuncType.params()));
+    var bBody = bytecodeF.constructTuple(createRefsToConstructorParams(bFuncType.params()));
     saveLoc(bBody, sConstructor);
     return bytecodeF.lambda(bFuncType, bBody);
   }
@@ -331,11 +331,11 @@ public class SbTranslator {
         .map(tuple -> bytecodeF.ref(tuple.element1(), BigInteger.valueOf(tuple.element2() + 1)));
   }
 
-  private BCreateArray translateCreateArray(SCreateArray sCreateArray)
+  private BConstructArray translateConstructArray(SConstructArray sConstructArray)
       throws SbTranslatorException {
-    var bArrayType = typeTranslator.translate(sCreateArray.evaluationType());
-    var bElements = translateExprs(sCreateArray.elements());
-    return bytecodeF.createArray(bArrayType, bElements);
+    var bArrayType = typeTranslator.translate(sConstructArray.evaluationType());
+    var bElements = translateExprs(sConstructArray.elements());
+    return bytecodeF.constructArray(bArrayType, bElements);
   }
 
   private BTupleGet translateStructGet(SStructGet sStructGet) throws SbTranslatorException {

@@ -47,8 +47,8 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
         void poly_expression_value() throws Exception {
           var emptyArrayValue = sPoly(list(varA()), emptySArrayValue(varA()));
           var sInstantiate = sInstantiate(emptyArrayValue, list(sIntType()));
-          var bCreateArray = bCreateArray(bIntType());
-          assertTranslation(bindings(emptyArrayValue), sInstantiate, bCreateArray);
+          var bConstructArray = bConstructArray(bIntType());
+          assertTranslation(bindings(emptyArrayValue), sInstantiate, bConstructArray);
         }
 
         @Test
@@ -72,11 +72,11 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
 
           var sInstantiatedReferencingValue = sInstantiate(sReferencingValue, list(sIntType()));
 
-          var bCreateArray = bCreateArray(bIntType());
+          var bConstructArray = bConstructArray(bIntType());
           assertTranslation(
               bindings(sEmptyArrayValue, sReferencingValue),
               sInstantiatedReferencingValue,
-              bCreateArray);
+              bConstructArray);
         }
 
         @Test
@@ -177,7 +177,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
               bIntType(),
               bMethodTuple(jar, bString(classBinaryName)),
               bBool(true),
-              bCreateTuple(bRef(bBlobType(), 1)));
+              bConstructTuple(bRef(bBlobType(), 1)));
           var bLambda = bLambda(list(bBlobType()), bInvoke);
 
           var fileContentReader = fileContentReaderMock(path.withExtension("jar"), jar);
@@ -199,7 +199,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
               bIntType(),
               bMethodTuple(jar, bString(classBinaryName)),
               bBool(true),
-              bCreateTuple(bRef(bIntType(), 1)));
+              bConstructTuple(bRef(bIntType(), 1)));
           var bLambda = bLambda(list(bIntType()), bInvoke);
 
           var fileContentReader = fileContentReaderMock(path.withExtension("jar"), jar);
@@ -302,15 +302,15 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
       }
 
       @Test
-      void createTuple() throws Exception {
-        var createTuple = sCreateTuple(sInt(3), sString("abc"));
-        assertTranslation(createTuple, bCreateTuple(bInt(3), bString("abc")));
+      void constructTuple() throws Exception {
+        var constructTuple = sConstructTuple(sInt(3), sString("abc"));
+        assertTranslation(constructTuple, bConstructTuple(bInt(3), bString("abc")));
       }
 
       @Test
-      void createArray() throws Exception {
-        var sCreateArray = sCreateArray(sIntType(), sInt(3), sInt(7));
-        assertTranslation(sCreateArray, bCreateArray(bInt(3), bInt(7)));
+      void constructArray() throws Exception {
+        var sConstructArray = sConstructArray(sIntType(), sInt(3), sInt(7));
+        assertTranslation(sConstructArray, bConstructArray(bInt(3), bInt(7)));
       }
 
       @Test
@@ -334,7 +334,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
         var sCall = sCall(sInstantiate(sConstructor), sString("abc"));
         var sStructGet = sStructGet(sCall, "field");
 
-        var bConstructor = bLambda(list(bStringType()), bCreateTuple(bRef(bStringType(), 1)));
+        var bConstructor = bLambda(list(bStringType()), bConstructTuple(bRef(bStringType(), 1)));
         var bCall = bCall(bConstructor, bString("abc"));
         assertTranslation(bindings(sConstructor), sStructGet, bTupleGet(bCall, bInt(0)));
       }
@@ -481,9 +481,9 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
       }
 
       @Test
-      void createArray() throws Exception {
-        var sCreateArray = sCreateArray(3, sIntType(), sInt(6), sInt(7));
-        assertNalMapping(sCreateArray, null, location(3));
+      void constructArray() throws Exception {
+        var sConstructArray = sConstructArray(3, sIntType(), sInt(6), sInt(7));
+        assertNalMapping(sConstructArray, null, location(3));
       }
 
       @Test
@@ -509,7 +509,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
         @Test
         void expression_value() throws Exception {
           var a = varA();
-          var sValue = sPoly(list(a), sValue(7, "emptyArray", sCreateArray(8, a)));
+          var sValue = sPoly(list(a), sValue(7, "emptyArray", sConstructArray(8, a)));
           var sInstantiate = sInstantiate(4, sValue, list(sIntType()));
           assertNalMapping(bindings(sValue), sInstantiate, null, location(8));
         }
