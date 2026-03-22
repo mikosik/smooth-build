@@ -1,11 +1,25 @@
 package org.smoothbuild.common.log.location;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 /**
- * Location.
  * This class is immutable.
  */
-public sealed interface Location permits InternalLocation, SourceLocation, UnknownLocation {
-  public default String description() {
-    return toString();
+public record Location(CodeSource codeSource, int line) {
+  public Location {
+    checkArgument(0 <= line);
+  }
+
+  public String description() {
+    if (codeSource instanceof UnknownSource) {
+      return codeSource.description();
+    } else {
+      return codeSource.description() + ":" + line;
+    }
+  }
+
+  @Override
+  public String toString() {
+    return description();
   }
 }

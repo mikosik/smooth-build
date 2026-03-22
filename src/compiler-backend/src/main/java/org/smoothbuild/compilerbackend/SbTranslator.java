@@ -23,7 +23,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Result;
 import org.smoothbuild.common.filesystem.base.FullPath;
-import org.smoothbuild.common.log.location.FileLocation;
+import org.smoothbuild.common.log.location.FileSource;
 import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedFunc;
@@ -441,8 +441,8 @@ public class SbTranslator {
   }
 
   private static FullPath fullPathOf(Location location) throws SbTranslatorException {
-    if (location instanceof FileLocation sourceLocation) {
-      return sourceLocation.path();
+    if (location.codeSource() instanceof FileSource(FullPath path)) {
+      return path;
     } else {
       throw new SbTranslatorException(location
           + ": Error loading native jar: Impossible to infer native file name for location "

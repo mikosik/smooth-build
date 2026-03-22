@@ -7,8 +7,8 @@ import org.jspecify.annotations.Nullable;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.filesystem.base.FullPath;
-import org.smoothbuild.common.log.location.FileLocation;
 import org.smoothbuild.common.log.location.Location;
+import org.smoothbuild.common.log.location.Locations;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 
 public final class PModule implements PContainer {
@@ -49,7 +49,7 @@ public final class PModule implements PContainer {
 
   @Override
   public Location location() {
-    return new FileLocation(fullPath, 0);
+    return Locations.fileLocation(fullPath, 0);
   }
 
   public List<PPolyEvaluable> evaluables() {

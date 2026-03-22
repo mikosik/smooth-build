@@ -12,8 +12,9 @@ import static org.smoothbuild.common.tuple.Tuples.tuple;
 
 import jakarta.inject.Inject;
 import org.smoothbuild.cli.layout.Layout;
-import org.smoothbuild.common.log.location.CommandLineLocation;
-import org.smoothbuild.common.log.location.FileLocation;
+import org.smoothbuild.common.filesystem.base.FullPath;
+import org.smoothbuild.common.log.location.CliArgumentSource;
+import org.smoothbuild.common.log.location.FileSource;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Scheduler;
@@ -67,10 +68,11 @@ public class ScheduleList implements Task0<Tuple0> {
   }
 
   private static boolean isInProjectDir(Location location) {
-    return location instanceof FileLocation source && source.path().startsWith(PROJECT_PATH);
+    return location.codeSource() instanceof FileSource(FullPath path)
+        && path.startsWith(PROJECT_PATH);
   }
 
   private static boolean isInCommandLine(Location location) {
-    return location instanceof CommandLineLocation;
+    return location.codeSource() instanceof CliArgumentSource;
   }
 }

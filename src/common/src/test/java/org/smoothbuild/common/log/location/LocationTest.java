@@ -57,7 +57,7 @@ public class LocationTest extends CommonTestContext {
   class command_line {
     @Test
     void to_string() {
-      assertThat(commandLineLocation().toString()).isEqualTo("command line");
+      assertThat(commandLineLocation().toString()).isEqualTo("command line:1");
     }
   }
 
@@ -66,7 +66,7 @@ public class LocationTest extends CommonTestContext {
     @Test
     void to_string() {
       var location = internalLocation();
-      assertThat(location.toString()).isEqualTo("internal");
+      assertThat(location.toString()).isEqualTo("internal:0");
     }
   }
 

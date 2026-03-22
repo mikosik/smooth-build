@@ -68,22 +68,22 @@ SModule(
       Blob -> STypeDefinition(
         type = Blob
         fqn = Blob
-        location = internal
+        location = internal:0
       )
       Bool -> STypeDefinition(
         type = Bool
         fqn = Bool
-        location = internal
+        location = internal:0
       )
       Int -> STypeDefinition(
         type = Int
         fqn = Int
-        location = internal
+        location = internal:0
       )
       String -> STypeDefinition(
         type = String
         fqn = String
-        location = internal
+        location = internal:0
       )
         <empty bindings>
           <empty bindings>
