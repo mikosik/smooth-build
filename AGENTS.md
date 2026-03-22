@@ -20,18 +20,18 @@ execution.
 Multi-module Gradle project under `src/`. The compilation pipeline
 flows: parsing -> frontend -> backend -> VM evaluation.
 
-| Module | Purpose |
-|---|---|
-| `common` | Shared utilities: custom collections, filesystem, hashing, scheduling |
-| `antlr-smooth` | ANTLR4 grammar and generated parser |
+| Module              | Purpose                                                                |
+|---------------------|------------------------------------------------------------------------|
+| `common`            | Shared utilities: custom collections, filesystem, hashing, scheduling  |
+| `antlr-smooth`      | ANTLR4 grammar and generated parser                                    |
 | `compiler-frontend` | Semantic analysis, type checking/inference, produces **S**-prefixed IR |
-| `compiler-backend` | Compiles S-prefixed IR to **B**-prefixed bytecode |
-| `virtual-machine` | Bytecode VM with parallel evaluation and hash-based caching |
-| `evaluator` | Top-level orchestrator combining compiler + VM |
-| `cli` | PicoCLI-based command-line interface |
-| `standard-library` | standard library for smooth language |
-| `testing` | Shared test fixtures |
-| `system-test` | Integration tests run against smooth binary |
+| `compiler-backend`  | Compiles S-prefixed IR to **B**-prefixed bytecode                      |
+| `virtual-machine`   | Bytecode VM with parallel evaluation and hash-based caching            |
+| `evaluator`         | Top-level orchestrator combining compiler + VM                         |
+| `cli`               | PicoCLI-based command-line interface                                   |
+| `standard-library`  | standard library for smooth language                                   |
+| `testing`           | Shared test fixtures                                                   |
+| `system-test`       | Integration tests run against smooth binary                            |
 
 ## Code Style Rules
 
