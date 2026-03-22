@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.Map.Entry;
+import org.junit.jupiter.api.Assertions;
 import org.smoothbuild.common.collect.Maybe;
 
 public class GoldenFilesTestCase {
@@ -73,5 +74,6 @@ public class GoldenFilesTestCase {
       var content = entry.getValue();
       Files.writeString(testRootDir.resolve(fileName), content);
     }
+    Assertions.fail("Updated golden files. Do not commit test that calls `overwriteGoldenFiles()`");
   }
 }
