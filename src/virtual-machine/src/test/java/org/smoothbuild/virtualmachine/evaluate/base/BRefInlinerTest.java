@@ -13,6 +13,7 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BVariantType;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 import org.smoothbuild.virtualmachine.evaluate.job.RefIndexOutOfBoundsException;
 
@@ -271,6 +272,23 @@ public class BRefInlinerTest extends VmTestContext {
     @Test
     void tupleGet_tuple() throws Exception {
       assertReferenceInliningReplacesReference(r -> bTupleGet(bConstructTuple(r), bInt(0)));
+    }
+
+    @Test
+    void tuple_element() throws Exception {
+      assertReferenceInliningReplacesReference(2, bInt(1), r -> bTuple(bLambda(list(), r)));
+    }
+
+    @Test
+    void array_element() throws Exception {
+      assertReferenceInliningReplacesReference(2, bInt(1), r -> bArray(bLambda(list(), r)));
+    }
+
+    @Test
+    void variant_choice() throws Exception {
+      BVariantType variantType = bVariantType(bLambdaType(bIntType()));
+      assertReferenceInliningReplacesReference(
+          2, bInt(1), r -> bVariant(variantType, 0, bLambda(list(), r)));
     }
 
     @Test

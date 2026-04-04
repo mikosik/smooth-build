@@ -71,6 +71,7 @@ import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.testing.func.nativ.AddInts;
 import org.smoothbuild.virtualmachine.testing.func.nativ.ConcatStrings;
 import org.smoothbuild.virtualmachine.testing.func.nativ.Equals;
+import org.smoothbuild.virtualmachine.testing.func.nativ.ReturnOnlyArgument;
 
 public class BEvaluateTaskTest extends VmTestContext {
   public static final ConcurrentHashMap<String, AtomicInteger> COUNTERS = new ConcurrentHashMap<>();
@@ -551,6 +552,23 @@ public class BEvaluateTaskTest extends VmTestContext {
             var three = f.int_(BigInteger.valueOf(1));
             return f.lambda(lambdaType, f.ref(f.intType(), three));
           }
+        }
+
+        @Test
+        void regression_lambda_wrapped_inside_composite_value_passed_to_invoke_is_inlined()
+            throws Exception {
+          var innerLambda = bLambda(list(), bRef(bIntType(), 2));
+          var outerLambda = bLambda(list(bIntType()), bTuple(innerLambda));
+          var call = bCall(outerLambda, bInt(17));
+          var invoke = bInvoke(
+              outerLambda.evaluationType().result(),
+              ReturnOnlyArgument.class,
+              true,
+              bConstructTuple(call));
+
+          var returnedTuple = (BTuple) evaluate(invoke);
+          var expectedTuple = bTuple(bLambda(list(), bInt(17)));
+          assertThat(returnedTuple).isEqualTo(expectedTuple);
         }
 
         @Test
