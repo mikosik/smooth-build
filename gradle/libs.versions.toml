@@ -23,7 +23,7 @@ jakarta-inject = "jakarta.inject:jakarta.inject-api:2.0.1"
 junit-jupiter-engine = "org.junit.jupiter:junit-jupiter-engine:6.0.3"
 junit-jupiter-api = "org.junit.jupiter:junit-jupiter-api:6.0.3"
 junit-jupiter-params = "org.junit.jupiter:junit-jupiter-params:6.0.3"
-mockito = "org.mockito:mockito-core:5.21.0"
+mockito = "org.mockito:mockito-core:5.23.0"
 truth = "com.google.truth:truth:1.4.5"
 junit4 = "junit:junit:4.13.2"
 
