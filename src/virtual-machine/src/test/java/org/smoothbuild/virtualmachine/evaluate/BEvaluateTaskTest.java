@@ -542,7 +542,7 @@ public class BEvaluateTaskTest extends VmTestContext {
           assertReportsContains(
               provide().reporter().reports(),
               FATAL,
-              "BRef index (1) is outside of allowed bounds. Bound values count is 1.");
+              "BRef index (1) is out of bounds. Bound values count is 1.");
         }
 
         public static class ReturnLambdaWithRefOutsideOfBoundValuesSize {
@@ -582,7 +582,7 @@ public class BEvaluateTaskTest extends VmTestContext {
               FATAL,
               "Vm inline Task failed with exception:\n"
                   + "org.smoothbuild.virtualmachine.evaluate.job.RefIndexOutOfBoundsException:"
-                  + " Ref index = 2 is out of bounds. Bound variables size = 2.");
+                  + " BRef index (2) is out of bounds. Bound values count is 2.");
         }
 
         @Test
@@ -593,7 +593,7 @@ public class BEvaluateTaskTest extends VmTestContext {
           var call = bCall(lambda, bBlob());
           evaluate(bEvaluateTask(), call);
           var trace = trace("???", unknownLocation());
-          var fatal = fatal("environment(1) evaluationType is `Blob` but expected `Int`.");
+          var fatal = fatal("Bound value at index 1 evaluationType is `Blob` but expected `Int`.");
           var expected = report(VM_LABEL.append(":schedule:ref"), trace, list(fatal));
           assertThat(provide().reporter().reports()).contains(expected);
         }

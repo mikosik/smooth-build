@@ -6,7 +6,7 @@ public class RefIndexOutOfBoundsException extends Exception {
   }
 
   private static String createMessage(int index, int boundVarsSize) {
-    return "Ref index = %d is out of bounds. Bound variables size = %d."
+    return "BRef index (%d) is out of bounds. Bound values count is %d."
         .formatted(index, boundVarsSize);
   }
 }
