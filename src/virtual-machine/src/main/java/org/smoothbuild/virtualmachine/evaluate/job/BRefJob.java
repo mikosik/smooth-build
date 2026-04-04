@@ -19,6 +19,11 @@ public final class BRefJob extends SchedulingJob {
   @Override
   public Promise<Maybe<BValue>> schedule() throws BytecodeException, JobException {
     int index = ref.index().toJavaBigInteger().intValue();
+    if (index < 0 || environment().size() <= index) {
+      throw new JobException(
+          "BRef index (%d) is outside of allowed bounds. Bound values count is %d."
+              .formatted(index, environment().size()));
+    }
     var referencedJob = environment().get(index);
     var jobEvaluationType = referencedJob.expr().evaluationType();
     if (jobEvaluationType.equals(ref.evaluationType())) {

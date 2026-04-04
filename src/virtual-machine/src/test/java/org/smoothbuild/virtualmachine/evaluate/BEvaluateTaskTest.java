@@ -29,6 +29,7 @@ import static org.smoothbuild.virtualmachine.VmConstants.VM_LABEL;
 
 import com.google.common.base.Splitter;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
@@ -502,14 +503,14 @@ public class BEvaluateTaskTest extends VmTestContext {
       @Nested
       class _reference {
         @Test
-        void var_referencing_lambda_param() throws Exception {
+        void reference_referencing_lambda_param() throws Exception {
           var lambda = bLambda(list(bIntType()), bRef(bIntType(), 1));
           var call = bCall(lambda, bInt(7));
           assertThat(evaluate(call)).isEqualTo(bInt(7));
         }
 
         @Test
-        void var_inside_call_to_inner_lambda_referencing_param_of_enclosing_lambda()
+        void reference_inside_call_to_inner_lambda_referencing_param_of_enclosing_lambda()
             throws Exception {
           var innerLambda = bLambda(list(), bRef(bIntType(), 2));
           var outerLambda = bLambda(list(bIntType()), bCall(innerLambda));
@@ -517,7 +518,8 @@ public class BEvaluateTaskTest extends VmTestContext {
         }
 
         @Test
-        void var_inside_inner_lambda_referencing_param_of_enclosing_lambda() throws Exception {
+        void reference_inside_inner_lambda_referencing_param_of_enclosing_lambda()
+            throws Exception {
           var innerLambda = bLambda(list(bIntType()), bRef(bIntType(), 3));
           var outerLambda = bLambda(list(bIntType()), innerLambda);
           var callOuter = bCall(outerLambda, bInt(7));
@@ -527,7 +529,32 @@ public class BEvaluateTaskTest extends VmTestContext {
         }
 
         @Test
-        void var_referencing_with_index_out_of_bounds_causes_fatal() throws Exception {
+        void lambda_referencing_bound_value_from_caller_scope_is_reported() throws Exception {
+          var evaluationType = bLambdaType(list(), bIntType());
+          var invoke = bInvoke(
+              evaluationType, ReturnLambdaWithRefOutsideOfBoundValuesSize.class, true, bTuple());
+          var lambdaCallingMalformedLambda = bLambda(list(bIntType()), bCall(invoke));
+          var call = bCall(lambdaCallingMalformedLambda, bInt(7));
+
+          evaluate(bEvaluateTask(), call);
+
+          assertReportsContains(
+              provide().reporter().reports(),
+              FATAL,
+              "BRef index (1) is outside of allowed bounds. Bound values count is 1.");
+        }
+
+        public static class ReturnLambdaWithRefOutsideOfBoundValuesSize {
+          public static BValue func(NativeApi nativeApi, BTuple args) throws Exception {
+            var f = nativeApi.factory();
+            var lambdaType = f.lambdaType(list(), f.intType());
+            var three = f.int_(BigInteger.valueOf(1));
+            return f.lambda(lambdaType, f.ref(f.intType(), three));
+          }
+        }
+
+        @Test
+        void reference_with_index_out_of_bounds_causes_fatal() throws Exception {
           var lambda = bLambda(list(bIntType()), bRef(bIntType(), 2));
           var call = bCall(lambda, bInt(7));
           evaluate(bEvaluateTask(), call);

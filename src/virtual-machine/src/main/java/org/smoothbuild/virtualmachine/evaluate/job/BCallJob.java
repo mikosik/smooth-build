@@ -127,7 +127,7 @@ public final class BCallJob extends SchedulingJob {
   private List<Job> bodyEnvironmentJobs(BLambda bLambda, List<Job> argumentJobs)
       throws BytecodeException {
     var lambdaJob = job(bLambda, list(), new Trace());
-    return list(lambdaJob).addAll(argumentJobs).addAll(environment());
+    return list(lambdaJob).addAll(argumentJobs);
   }
 
   private Label executeLabel() {
