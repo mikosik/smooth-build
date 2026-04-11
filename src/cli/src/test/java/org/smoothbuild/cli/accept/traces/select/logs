@@ -32,18 +32,26 @@
 :vm:schedule:tupleGet
 :vm:schedule:call
 :vm:inline
-  @ <empty trace>
+  @ {t-project}/module.smooth:4 0
+  @ {t-project}/module.smooth:4 {...}.name
 :vm:inline
-  @ <empty trace>
+  @ {t-project}/module.smooth:1 MyStruct
+  @ {t-project}/module.smooth:4 MyStruct(...)
+  @ {t-project}/module.smooth:4 {...}.name
 :vm:schedule:call:execute
-  @ <empty trace>
+  @ {t-project}/module.smooth:4 MyStruct(...)
+  @ {t-project}/module.smooth:4 {...}.name
 :vm:schedule:constructTuple
 :vm:schedule:ref
 :vm:inline
-  @ <empty trace>
+  @ {t-project}/module.smooth:4 "John"
+  @ {t-project}/module.smooth:4 MyStruct(...)
+  @ {t-project}/module.smooth:4 {...}.name
 :vm:evaluate:constructTuple
-  @ {t-project}/module.smooth:4 MyStruct
+  @ ??? ???
+  @ {t-project}/module.smooth:4 MyStruct(...)
+  @ {t-project}/module.smooth:4 {...}.name
 :vm:evaluate:tupleGet
-  @ <empty trace>
+  @ {t-project}/module.smooth:4 {...}.name
 :scheduler:join
 :evaluator:merge

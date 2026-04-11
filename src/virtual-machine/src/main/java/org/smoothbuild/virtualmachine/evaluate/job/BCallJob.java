@@ -1,7 +1,6 @@
 package org.smoothbuild.virtualmachine.evaluate.job;
 
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.log.location.Locations.unknownLocation;
 import static org.smoothbuild.common.schedule.Output.successOutput;
 
 import org.smoothbuild.common.collect.List;
@@ -9,7 +8,6 @@ import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.report.Trace;
-import org.smoothbuild.common.log.report.TraceLine;
 import org.smoothbuild.common.schedule.Task1;
 import org.smoothbuild.common.schedule.Task2;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
@@ -30,37 +28,32 @@ public final class BCallJob extends SchedulingJob {
 
   @Override
   public Promise<Maybe<BValue>> schedule() throws JobException, BytecodeException {
-    var callDepthLimit = vmConfig().callDepthLimit();
-    if (trace().depth() >= callDepthLimit) {
-      throw new JobException("Call depth limit (%d) exceeded.".formatted(callDepthLimit));
-    }
     var lambda = call.lambda();
     var lambdaArgs = call.arguments();
     if (lambdaArgs instanceof BConstructTuple constructTuple) {
-      return scheduleCallWithConstructTupleArgs(call, lambda, constructTuple);
+      return scheduleCallWithConstructTupleArgs(lambda, constructTuple);
     } else if (lambdaArgs instanceof BTuple tuple) {
-      return scheduleCallWithTupleArgs(call, lambda, tuple);
+      return scheduleCallWithTupleArgs(lambda, tuple);
     } else { // BExpr that evaluates to BTuple
-      return scheduleCallWithExprArgs(call, lambda, lambdaArgs);
+      return scheduleCallWithExprArgs(lambda, lambdaArgs);
     }
   }
 
   private Promise<Maybe<BValue>> scheduleCallWithConstructTupleArgs(
-      BCall call, BExpr lambdaExpr, BConstructTuple constructTuple) throws BytecodeException {
-    var schedulingTask = newCallWithConstructTupleAsArgsSchedulingTask(call, constructTuple);
+      BExpr lambdaExpr, BConstructTuple constructTuple) throws BytecodeException {
+    var schedulingTask = newCallWithConstructTupleAsArgsSchedulingTask(constructTuple);
     var lambdaPromise = evaluate(lambdaExpr);
     return scheduler().submit(schedulingTask, lambdaPromise);
   }
 
   private Task1<BValue, BValue> newCallWithConstructTupleAsArgsSchedulingTask(
-      BCall call, BConstructTuple constructTuple) {
+      BConstructTuple constructTuple) {
     return (lambdaValue) -> {
       var bLambda = (BLambda) lambdaValue;
       try {
         var argJobs = constructTuple.items().map(this::job);
         var bodyEnvironmentJobs = bodyEnvironmentJobs(bLambda, argJobs);
-        var bodyTrace = newTrace(call, bLambda, trace());
-        var schedule = job(bLambda.body(), bodyEnvironmentJobs, bodyTrace).evaluate();
+        var schedule = job(bLambda.body(), bodyEnvironmentJobs, trace()).evaluate();
         return successOutput(schedule, executeLabel(), trace());
       } catch (BytecodeException e) {
         return failedSchedulingOutput(executeLabel(), trace(), e);
@@ -68,20 +61,18 @@ public final class BCallJob extends SchedulingJob {
     };
   }
 
-  private Promise<Maybe<BValue>> scheduleCallWithTupleArgs(
-      BCall bCall, BExpr lambdaExpr, BTuple tuple) throws BytecodeException {
-    var schedulingTask = newCallWithTupleArgsSchedulingTask(bCall, lambdaExpr, tuple);
+  private Promise<Maybe<BValue>> scheduleCallWithTupleArgs(BExpr lambdaExpr, BTuple tuple)
+      throws BytecodeException {
+    var schedulingTask = newCallWithTupleArgsSchedulingTask(tuple);
     var lambdaPromise = evaluate(lambdaExpr);
     return scheduler().submit(schedulingTask, lambdaPromise);
   }
 
-  private Task1<BValue, BValue> newCallWithTupleArgsSchedulingTask(
-      BCall bCall, BExpr lambdaExpr, BTuple tuple) {
+  private Task1<BValue, BValue> newCallWithTupleArgsSchedulingTask(BTuple tuple) {
     return (lambdaValue) -> {
       var bLambda = (BLambda) lambdaValue;
       try {
-        var result = scheduleCallBodyWithTupleArguments(
-            tuple, bLambda, newTrace(bCall, lambdaExpr, trace()));
+        var result = scheduleCallBodyWithTupleArguments(tuple, bLambda, trace());
         return successOutput(result, executeLabel(), trace());
       } catch (BytecodeException e) {
         return failedSchedulingOutput(executeLabel(), trace(), e);
@@ -89,9 +80,9 @@ public final class BCallJob extends SchedulingJob {
     };
   }
 
-  private Promise<Maybe<BValue>> scheduleCallWithExprArgs(
-      BCall bCall, BExpr lambdaExpr, BExpr lambdaArgs) throws BytecodeException {
-    var schedulingTask = newCallWithExprArgsSchedulingTask(bCall, lambdaExpr);
+  private Promise<Maybe<BValue>> scheduleCallWithExprArgs(BExpr lambdaExpr, BExpr lambdaArgs)
+      throws BytecodeException {
+    var schedulingTask = newCallWithExprArgsSchedulingTask();
     /*
      * Performance can be improved. It just evaluates whole arguments expression
      * without taking into account whether lambda's body actually uses any argument at all.
@@ -101,15 +92,15 @@ public final class BCallJob extends SchedulingJob {
     return scheduler().submit(schedulingTask, lambdaPromise, argsPromise);
   }
 
-  private Task2<BValue, BValue, BValue> newCallWithExprArgsSchedulingTask(
-      BCall bCall, BExpr lambdaExpr) {
+  private Task2<BValue, BValue, BValue> newCallWithExprArgsSchedulingTask() {
     return (lambdaValue, argsValue) -> {
       try {
         var bLambda = (BLambda) lambdaValue;
         var argsTuple = (BTuple) argsValue;
-        var trace = newTrace(bCall, lambdaExpr, trace());
         return successOutput(
-            scheduleCallBodyWithTupleArguments(argsTuple, bLambda, trace), executeLabel(), trace());
+            scheduleCallBodyWithTupleArguments(argsTuple, bLambda, trace()),
+            executeLabel(),
+            trace());
       } catch (BytecodeException e) {
         return failedSchedulingOutput(executeLabel(), trace(), e);
       }
@@ -132,13 +123,5 @@ public final class BCallJob extends SchedulingJob {
 
   private Label executeLabel() {
     return scheduleLabel("execute");
-  }
-
-  private Trace newTrace(BCall call, BExpr called, Trace next) {
-    var calledDebugSymbol = debugSymbols().get(called.hash());
-    var callDebugSymbol = debugSymbols().get(call.hash());
-    var name = calledDebugSymbol != null ? calledDebugSymbol.name() : "???";
-    var location = callDebugSymbol != null ? callDebugSymbol.location() : unknownLocation();
-    return new Trace(new TraceLine(name, location, next.topLine()));
   }
 }

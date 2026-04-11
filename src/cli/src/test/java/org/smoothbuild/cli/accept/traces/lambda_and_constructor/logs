@@ -31,31 +31,39 @@
 :vm:schedule
 :vm:schedule:call
 :vm:inline
-  @ <empty trace>
+  @ {t-project}/module.smooth:5 apply
+  @ {t-project}/module.smooth:4 apply(...)
 :vm:schedule:call:execute
-  @ <empty trace>
+  @ {t-project}/module.smooth:4 apply(...)
 :vm:schedule:call
 :vm:schedule:ref
 :vm:inline
-  @ <empty trace>
+  @ {t-project}/module.smooth:4 (...) -> ...
+  @ {t-project}/module.smooth:4 apply(...)
 :vm:schedule:call:execute
-  @ {t-project}/module.smooth:4 apply
+  @ {t-project}/module.smooth:5 f(...)
+  @ {t-project}/module.smooth:4 apply(...)
 :vm:schedule:call
 :vm:inline
-  @ {t-project}/module.smooth:5 (...) -> ...
-  @ {t-project}/module.smooth:4 apply
+  @ {t-project}/module.smooth:1 MyStruct
+  @ {t-project}/module.smooth:4 MyStruct(...)
+  @ {t-project}/module.smooth:5 f(...)
+  @ {t-project}/module.smooth:4 apply(...)
 :vm:schedule:call:execute
-  @ {t-project}/module.smooth:5 (...) -> ...
-  @ {t-project}/module.smooth:4 apply
+  @ {t-project}/module.smooth:4 MyStruct(...)
+  @ {t-project}/module.smooth:5 f(...)
+  @ {t-project}/module.smooth:4 apply(...)
 :vm:schedule:constructTuple
 :vm:schedule:ref
 :vm:schedule:ref
 :vm:schedule:ref
 :vm:inline
-  @ <empty trace>
+  @ {t-project}/module.smooth:4 "John"
+  @ {t-project}/module.smooth:4 apply(...)
 :vm:evaluate:constructTuple
-  @ {t-project}/module.smooth:4 MyStruct
-  @ {t-project}/module.smooth:5 (...) -> ...
-  @ {t-project}/module.smooth:4 apply
+  @ {t-project}/module.smooth:4 {...}
+  @ {t-project}/module.smooth:4 MyStruct(...)
+  @ {t-project}/module.smooth:5 f(...)
+  @ {t-project}/module.smooth:4 apply(...)
 :scheduler:join
 :evaluator:merge

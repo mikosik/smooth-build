@@ -31,19 +31,28 @@
 :vm:schedule
 :vm:schedule:call
 :vm:inline
-  @ <empty trace>
+  @ {t-project}/module.smooth:2 myfunc
+  @ {t-project}/module.smooth:1 myfunc(...)
 :vm:schedule:call:execute
-  @ <empty trace>
+  @ {t-project}/module.smooth:1 myfunc(...)
 :vm:schedule:ref
 :vm:schedule:call
 :vm:inline
-  @ <empty trace>
+  @ {t-project}/module.smooth:4 returnArray
+  @ {t-project}/module.smooth:3 returnArray(...)
+  @ {t-project}/module.smooth:1 myfunc(...)
 :vm:schedule:call:execute
-  @ <empty trace>
+  @ {t-project}/module.smooth:3 returnArray(...)
+  @ {t-project}/module.smooth:1 myfunc(...)
 :vm:schedule:constructArray
 :vm:inline
-  @ {t-project}/module.smooth:3 returnArray
+  @ {t-project}/module.smooth:4 7
+  @ {t-project}/module.smooth:4 [...]
+  @ {t-project}/module.smooth:3 returnArray(...)
+  @ {t-project}/module.smooth:1 myfunc(...)
 :vm:evaluate:constructArray
-  @ {t-project}/module.smooth:3 returnArray
+  @ {t-project}/module.smooth:4 [...]
+  @ {t-project}/module.smooth:3 returnArray(...)
+  @ {t-project}/module.smooth:1 myfunc(...)
 :scheduler:join
 :evaluator:merge

@@ -1,3 +1,3 @@
 package org.smoothbuild.virtualmachine;
 
-public record VmConfig(int callDepthLimit) {}
+public record VmConfig(int expressionDepthLimit) {}

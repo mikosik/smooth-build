@@ -1,10 +1,13 @@
 package org.smoothbuild.virtualmachine.evaluate.job;
 
+import static org.smoothbuild.common.log.location.Locations.unknownLocation;
+
 import jakarta.inject.Inject;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.log.report.Trace;
+import org.smoothbuild.common.log.report.TraceLine;
 import org.smoothbuild.common.schedule.Scheduler;
 import org.smoothbuild.virtualmachine.VmConfig;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
@@ -53,7 +56,8 @@ public class JobContext {
   }
 
   @SuppressWarnings("NullAway")
-  public Job newJob(BExpr expr, List<Job> environment, Trace trace) {
+  public Job newJob(BExpr expr, List<Job> environment, Trace parentTrace) {
+    var trace = newTrace(expr, parentTrace);
     return switch (expr) {
       case BConstructVariant choose -> new BConstructVariantJob(this, choose, environment, trace);
       case BConstructArray constructArray ->
@@ -71,6 +75,13 @@ public class JobContext {
       case BRef ref -> new BRefJob(this, ref, environment, trace);
       case BValue value -> new BInlineJob(this, value, environment, trace);
     };
+  }
+
+  private Trace newTrace(BExpr expr, Trace next) {
+    var debugSymbol = debugSymbols.get(expr.hash());
+    var name = debugSymbol != null ? debugSymbol.name() : "???";
+    var location = debugSymbol != null ? debugSymbol.location() : unknownLocation();
+    return new Trace(new TraceLine(name, location, next.topLine()));
   }
 
   public BRefInliner refInliner() {

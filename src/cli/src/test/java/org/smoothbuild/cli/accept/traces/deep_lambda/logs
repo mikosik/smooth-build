@@ -33,26 +33,43 @@
 :vm:schedule:call
 :vm:schedule:call
 :vm:inline
-  @ <empty trace>
+  @ {t-project}/module.smooth:1 (...) -> ...
+  @ {t-project}/module.smooth:2 mylambda(...)
+  @ {t-project}/module.smooth:2 ...(...)
+  @ {t-project}/module.smooth:2 ...(...)
 :vm:schedule:call:execute
-  @ <empty trace>
+  @ {t-project}/module.smooth:2 mylambda(...)
+  @ {t-project}/module.smooth:2 ...(...)
+  @ {t-project}/module.smooth:2 ...(...)
 :vm:inline
-  @ {t-project}/module.smooth:2 (...) -> ...
+  @ {t-project}/module.smooth:1 (...) -> ...
+  @ {t-project}/module.smooth:2 mylambda(...)
+  @ {t-project}/module.smooth:2 ...(...)
+  @ {t-project}/module.smooth:2 ...(...)
 :vm:schedule:call:execute
-  @ <empty trace>
+  @ {t-project}/module.smooth:2 ...(...)
+  @ {t-project}/module.smooth:2 ...(...)
 :vm:inline
-  @ {t-project}/module.smooth:2 ???
+  @ ??? ???
+  @ {t-project}/module.smooth:2 ...(...)
+  @ {t-project}/module.smooth:2 ...(...)
 :vm:schedule:call:execute
-  @ <empty trace>
+  @ {t-project}/module.smooth:2 ...(...)
 :vm:schedule:constructArray
 :vm:inline
-  @ {t-project}/module.smooth:2 ???
+  @ {t-project}/module.smooth:2 1
+  @ ??? ???
+  @ {t-project}/module.smooth:2 ...(...)
 :vm:inline
-  @ {t-project}/module.smooth:2 ???
+  @ {t-project}/module.smooth:2 2
+  @ ??? ???
+  @ {t-project}/module.smooth:2 ...(...)
 :vm:schedule:ref
 :vm:inline
-  @ <empty trace>
+  @ {t-project}/module.smooth:2 3
+  @ {t-project}/module.smooth:2 ...(...)
 :vm:evaluate:constructArray
-  @ {t-project}/module.smooth:2 ???
+  @ ??? ???
+  @ {t-project}/module.smooth:2 ...(...)
 :scheduler:join
 :evaluator:merge

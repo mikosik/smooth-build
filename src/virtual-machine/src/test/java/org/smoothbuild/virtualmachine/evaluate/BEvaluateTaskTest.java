@@ -45,6 +45,7 @@ import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.base.Origin;
 import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.Trace;
+import org.smoothbuild.common.log.report.TraceLine;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Scheduler;
 import org.smoothbuild.common.testing.TestReporter;
@@ -348,7 +349,7 @@ public class BEvaluateTaskTest extends VmTestContext {
         }
 
         @Test
-        void recursive_call_that_is_infinite_causes_fatal_error() throws Exception {
+        void recursive_call_that_is_infinite_causes_error() throws Exception {
           var lambdaType = bLambdaType(list(bIntType()), bIntType());
           var recursiveCall = bCall(bRef(lambdaType, 0), bRef(bIntType(), 1));
           var lambda = bLambda(list(bIntType()), recursiveCall);
@@ -357,7 +358,7 @@ public class BEvaluateTaskTest extends VmTestContext {
           evaluate(bEvaluateTask(), call);
 
           assertReportsContains(
-              provide().reporter().reports(), FATAL, "Call depth limit (128) exceeded.");
+              provide().reporter().reports(), ERROR, "Expression depth limit (128) exceeded.");
         }
 
         private BLambda addIntsBLambda() throws IOException {
@@ -380,10 +381,31 @@ public class BEvaluateTaskTest extends VmTestContext {
       }
 
       @Test
+      void expression_at_depth_limit_evaluates() throws Exception {
+        assertThat(evaluate(nestedConstructTuples(127))).isNotNull();
+      }
+
+      @Test
+      void expression_exceeding_depth_limit_causes_fatal_error() throws Exception {
+        evaluate(bEvaluateTask(), nestedConstructTuples(128));
+
+        assertReportsContains(
+            provide().reporter().reports(), ERROR, "Expression depth limit (128) exceeded.");
+      }
+
+      @Test
       void constructVariant() throws Exception {
         var type = bVariantType(bStringType(), bIntType());
         var choose = bConstructVariant(type, bInt(0), bTupleGet(bConstructTuple(bString("7")), 0));
         assertThat(evaluate(choose)).isEqualTo(bVariant(type, 0, bString("7")));
+      }
+
+      private BExpr nestedConstructTuples(int nestingDepth) throws Exception {
+        BExpr expr = bInt(7);
+        for (int i = 1; i < nestingDepth; i++) {
+          expr = bConstructTuple(expr);
+        }
+        return expr;
       }
 
       @Test
@@ -594,7 +616,7 @@ public class BEvaluateTaskTest extends VmTestContext {
           var lambda = bLambda(list(bBlobType()), bRef(bIntType(), 1));
           var call = bCall(lambda, bBlob());
           evaluate(bEvaluateTask(), call);
-          var trace = trace("???", unknownLocation());
+          var trace = trace("???", unknownLocation(), "???", unknownLocation());
           var fatal = fatal("Bound value at index 1 evaluationType is `Blob` but expected `Int`.");
           var expected = report(VM_LABEL.append(":schedule:ref"), trace, list(fatal));
           assertThat(provide().reporter().reports()).contains(expected);
@@ -693,31 +715,33 @@ public class BEvaluateTaskTest extends VmTestContext {
       @Test
       void report_invoke_as_invoke_task() throws Exception {
         var invoke = bReturnAbcInvoke();
-        assertTaskReport(invoke, "invoke", trace(), EXECUTION);
+        assertTaskReport(invoke, "invoke", trace("???", unknownLocation()), EXECUTION);
       }
 
       @Test
       void report_constructTuple_as_constructTuple_task() throws Exception {
         var constructTuple = bConstructTuple(bInt(17));
-        assertTaskReport(constructTuple, "constructTuple", trace(), EXECUTION);
+        assertTaskReport(
+            constructTuple, "constructTuple", trace("???", unknownLocation()), EXECUTION);
       }
 
       @Test
       void report_constructArray_as_constructArray_task() throws Exception {
         var constructArray = bConstructArray(bInt(17));
-        assertTaskReport(constructArray, "constructArray", trace(), EXECUTION);
+        assertTaskReport(
+            constructArray, "constructArray", trace("???", unknownLocation()), EXECUTION);
       }
 
       @Test
       void report_arrayGet_as_arrayGet_task() throws Exception {
         var arrayGet = bArrayGet(bArray(bInt(17)), bInt(0));
-        assertTaskReport(arrayGet, "arrayGet", trace(), EXECUTION);
+        assertTaskReport(arrayGet, "arrayGet", trace("???", unknownLocation()), EXECUTION);
       }
 
       @Test
       void report_tupleGet_as_tupleGet_task() throws Exception {
         var tupleGet = bTupleGet(bTuple(bInt(17)), bInt(0));
-        assertTaskReport(tupleGet, "tupleGet", trace(), EXECUTION);
+        assertTaskReport(tupleGet, "tupleGet", trace("???", unknownLocation()), EXECUTION);
       }
     }
 
@@ -736,7 +760,11 @@ public class BEvaluateTaskTest extends VmTestContext {
             call.hash(),
             new DebugSymbols("???", callLocation));
         assertTaskReport(
-            call, debugSymbols, "constructArray", trace("lambda.hash()", callLocation), EXECUTION);
+            call,
+            debugSymbols,
+            "constructArray",
+            trace("???", unknownLocation(), "???", callLocation),
+            EXECUTION);
       }
 
       @Test
@@ -764,7 +792,10 @@ public class BEvaluateTaskTest extends VmTestContext {
             call1,
             debugSymbols,
             "constructArray",
-            trace("lambda2", call2Location, "lambda1", call1Location),
+            new Trace(new TraceLine(
+                "???",
+                unknownLocation(),
+                new TraceLine("???", call2Location, new TraceLine("???", call1Location, null)))),
             EXECUTION);
       }
     }
@@ -875,7 +906,7 @@ public class BEvaluateTaskTest extends VmTestContext {
   }
 
   private BValue evaluate(BExpr expr) {
-    return evaluate(bEvaluateTask(map()), expr).get().get();
+    return evaluate(bEvaluateTask(), expr).get().get();
   }
 
   private Promise<Maybe<BValue>> evaluate(BEvaluateTask bEvaluateTask, BExpr expr) {

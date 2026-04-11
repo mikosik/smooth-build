@@ -64,8 +64,8 @@ public abstract sealed class Job permits BInlineJob, SchedulingJob {
     return job(expr, parentJob.environment(), parentJob.trace());
   }
 
-  protected Job job(BExpr expr, List<Job> environment, Trace trace) {
-    return jobContext.newJob(expr, environment, trace);
+  protected Job job(BExpr expr, List<Job> environment, Trace parentTrace) {
+    return jobContext.newJob(expr, environment, parentTrace);
   }
 
   public BExpr call(BExpr lambdaExpr, List<BValue> arguments) throws BytecodeException {

@@ -2,6 +2,7 @@ package org.smoothbuild.virtualmachine.evaluate.job;
 
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.some;
+import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.schedule.Output.failedOutput;
 import static org.smoothbuild.common.schedule.Output.output;
@@ -25,6 +26,13 @@ public final class BInlineJob extends Job {
   public Promise<Maybe<BValue>> evaluate() {
     var inlineTask = (Task0<BValue>) () -> {
       var label = VM_LABEL.append(":inline");
+
+      var callDepthLimit = vmConfig().expressionDepthLimit();
+      if (trace().depth() >= callDepthLimit) {
+        var error = error("Expression depth limit (%d) exceeded.".formatted(callDepthLimit));
+        return output(report(label, trace(), list(error)));
+      }
+
       try {
         var inlined = (BValue) refInliner().inline(this);
         return output(inlined, report(label, trace(), list()));

@@ -2,6 +2,7 @@ package org.smoothbuild.virtualmachine.evaluate.job;
 
 import static org.smoothbuild.common.base.Throwables.messageFrom;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.schedule.Output.output;
@@ -29,6 +30,11 @@ public abstract sealed class SchedulingJob extends Job
   public Promise<Maybe<BValue>> evaluate() {
     Task0<BValue> task = () -> {
       try {
+        var callDepthLimit = vmConfig().expressionDepthLimit();
+        if (trace().depth() >= callDepthLimit) {
+          var error = error("Expression depth limit (%d) exceeded.".formatted(callDepthLimit));
+          return output(report(scheduleLabel(), trace(), list(error)));
+        }
         var result = schedule();
         return successOutput(result, scheduleLabel());
       } catch (BytecodeException e) {
