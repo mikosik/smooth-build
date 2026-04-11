@@ -2,8 +2,10 @@ package org.smoothbuild.virtualmachine.dagger;
 
 import dagger.BindsInstance;
 import dagger.Subcomponent;
+import org.smoothbuild.common.base.Hash;
+import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask;
-import org.smoothbuild.virtualmachine.evaluate.base.BExprAttributes;
+import org.smoothbuild.virtualmachine.evaluate.base.DebugSymbols;
 import org.smoothbuild.virtualmachine.evaluate.job.JobContext;
 
 @Subcomponent
@@ -16,7 +18,7 @@ public interface VmComponent {
   @Subcomponent.Builder
   interface Builder {
     @BindsInstance
-    Builder bExprAttributes(BExprAttributes bExprAttributes);
+    Builder debugSymbols(Map<Hash, DebugSymbols> debugSymbols);
 
     VmComponent build();
   }

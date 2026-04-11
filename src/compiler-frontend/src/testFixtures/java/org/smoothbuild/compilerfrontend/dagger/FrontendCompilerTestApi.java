@@ -443,6 +443,10 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return sMonoReference(line, type, fqn(name));
   }
 
+  public default SMonoReference sMonoReference(SType type, Fqn fqn) {
+    return new SMonoReference(type, fqn, location());
+  }
+
   public default SMonoReference sMonoReference(int line, SType type, Fqn fqn) {
     return new SMonoReference(type, fqn, location(line));
   }

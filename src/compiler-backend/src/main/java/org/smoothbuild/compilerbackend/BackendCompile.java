@@ -28,8 +28,8 @@ public class BackendCompile implements Task2<List<SExpr>, Bindings<SPolyEvaluabl
     var sbTranslator = sbTranslatorFactory.create(evaluables);
     try {
       var bExprs = sExprs.map(sbTranslator::translateExpr);
-      var bExprAttributes = sbTranslator.bExprAttributes();
-      var result = new CompiledExprs(sExprs, bExprs, bExprAttributes);
+      var debugSymbols = sbTranslator.debugSymbols();
+      var result = new CompiledExprs(sExprs, bExprs, debugSymbols);
       return output(result, report(label));
     } catch (SbTranslatorException e) {
       return output(report(label, fatal(concatenateExceptionMessages(e))));

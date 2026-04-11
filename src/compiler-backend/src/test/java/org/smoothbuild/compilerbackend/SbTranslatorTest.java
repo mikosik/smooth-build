@@ -2,6 +2,7 @@ package org.smoothbuild.compilerbackend;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.lang.ClassLoader.getSystemClassLoader;
+import static java.util.Objects.requireNonNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -11,21 +12,25 @@ import static org.smoothbuild.compilerfrontend.lang.name.Bindings.bindings;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
 
-import org.jspecify.annotations.Nullable;
+import java.math.BigInteger;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.filesystem.base.FullPath;
+import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.dagger.FrontendCompilerTestContext;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.name.Bindings;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BTupleGet;
 import org.smoothbuild.virtualmachine.bytecode.load.BytecodeLoader;
 import org.smoothbuild.virtualmachine.bytecode.load.FileContentReader;
+import org.smoothbuild.virtualmachine.evaluate.base.DebugSymbols;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnAbc;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnReturnAbcFunc;
@@ -366,7 +371,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
           var valueS = sPoly(sValue(3, "myValue", sInt(7, 37)));
           var evaluables = bindings(valueS);
           SExpr sExpr = sInstantiate(9, valueS);
-          assertNalMapping(evaluables, sExpr, null, location(7));
+          assertNalMapping(evaluables, sExpr, "37", location(7));
         }
 
         @Test
@@ -375,7 +380,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
           var valueS = sPoly(sValue(5, "myValue", sInstantiate(otherValueS)));
           var evaluables = bindings(otherValueS, valueS);
           SExpr sExpr = sInstantiate(9, valueS);
-          assertNalMapping(evaluables, sExpr, null, location(7));
+          assertNalMapping(evaluables, sExpr, "37", location(7));
         }
 
         @Test
@@ -409,7 +414,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
           var sbTranslator = newTranslator(bindings(funcS));
           var funcB = (BLambda) sbTranslator.translateExpr(sInstantiate(funcS));
           var body = funcB.body();
-          assertNalMapping(sbTranslator, body, null, location(8));
+          assertNalMapping(sbTranslator, body, "37", location(8));
         }
 
         @Test
@@ -447,19 +452,19 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
       @Test
       void blob() throws Exception {
         var blobS = sBlob(7, 0x37);
-        assertNalMapping(blobS, null, location(7));
+        assertNalMapping(blobS, "0x37", location(7));
       }
 
       @Test
       void int_() throws Exception {
         var intS = sInt(7, 37);
-        assertNalMapping(intS, null, location(7));
+        assertNalMapping(intS, "37", location(7));
       }
 
       @Test
       void string() throws Exception {
         var stringS = sString(7, "abc");
-        assertNalMapping(stringS, null, location(7));
+        assertNalMapping(stringS, "\"abc\"", location(7));
       }
 
       @Test
@@ -467,23 +472,45 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
         var sLambda = sLambda(7, fqn("my_lambda"), nlist(), sString("abc"));
         var sbTranslator = newTranslator();
         var bLambda = (BLambda) sbTranslator.translateExpr(sLambda);
-        var names = sbTranslator.bExprAttributes().names();
-        var locations = sbTranslator.bExprAttributes().locations();
-        assertThat(names.get(bLambda.hash())).isEqualTo("my_lambda");
-        assertThat(locations.get(bLambda.hash())).isEqualTo(location(7));
+        var debugSymbols = sbTranslator.debugSymbols().get(bLambda.hash());
+        assertThat(debugSymbols).isEqualTo(new DebugSymbols("(...) -> ...", location(7)));
       }
 
       @Test
-      void call() throws Exception {
+      void call_to_poly_func() throws Exception {
         var funcS = sPoly(sFunc(7, "myFunc", nlist(), sString("abc")));
         var call = sCall(8, sInstantiate(funcS));
-        assertNalMapping(bindings(funcS), call, null, location(8));
+        assertNalMapping(bindings(funcS), call, "myFunc(...)", location(8));
+      }
+
+      @Test
+      void call_to_mono_func() throws Exception {
+        var calleeType = sFuncType(sIntType());
+        var callable = sMonoReference(calleeType, fqn("param1"));
+        var call = sCall(8, callable);
+        var sLambda = sLambda(nlist(sItem(calleeType, "param1")), call);
+        assertNalMapping(
+            sLambda, (BExpr bExpr) -> ((BLambda) bExpr).body(), "param1(...)", location(8));
+      }
+
+      @Test
+      void call_to_unknown_func() throws Exception {
+        var functionSupplier = sPoly(sFunc("myFunc", nlist(), sLambda(sString("abc"))));
+        var supplierCall = sCall(8, sInstantiate(functionSupplier));
+        var call = sCall(8, supplierCall);
+        assertNalMapping(bindings(functionSupplier), call, "...(...)", location(8));
       }
 
       @Test
       void constructArray() throws Exception {
         var sConstructArray = sConstructArray(3, sIntType(), sInt(6), sInt(7));
-        assertNalMapping(sConstructArray, null, location(3));
+        assertNalMapping(sConstructArray, "[...]", location(3));
+      }
+
+      @Test
+      void constructTuple() throws Exception {
+        var sConstructTuple = sConstructTuple(4, sInt(6), sString(7, "abc"));
+        assertNalMapping(sConstructTuple, "{...}", location(4));
       }
 
       @Test
@@ -501,7 +528,35 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
         var sConstructor = sPoly(sConstructor(sStructType));
         var sCall = sCall(sInstantiate(sConstructor), sString("abc"));
         var sStructGet = sStructGet(4, sCall, "field");
-        assertNalMapping(bindings(sConstructor), sStructGet, null, location(4));
+        assertNalMapping(bindings(sConstructor), sStructGet, "{...}.field", location(4));
+      }
+
+      @Test
+      void structGet_index_expr() throws Exception {
+        var sStructType = sStructType("MyStruct", nlist(sSig(sStringType(), "field")));
+        var sConstructor = sPoly(sConstructor(sStructType));
+        var sCall = sCall(sInstantiate(sConstructor), sString("abc"));
+        var sStructGet = sStructGet(4, sCall, "field");
+        assertNalMapping(
+            newTranslator(bindings(sConstructor)),
+            sStructGet,
+            (BExpr bExpr) -> ((BTupleGet) bExpr).index(),
+            "0",
+            location(4));
+      }
+
+      @Test
+      void tupleGet() throws Exception {
+        var sTuple = sConstructTuple(3, sInt(6), sInt(7), sInt(8));
+        var sTupleGet = sTupleGet(4, sTuple, BigInteger.valueOf(2));
+        assertNalMapping(sTupleGet, "{...}.3", location(4));
+      }
+
+      @Test
+      void tupleGet_index_expr() throws Exception {
+        var sTuple = sConstructTuple(3, sInt(6), sInt(7), sInt(8));
+        var sTupleGet = sTupleGet(4, sTuple, BigInteger.valueOf(2));
+        assertNalMapping(sTupleGet, (BExpr bExpr) -> ((BTupleGet) bExpr).index(), "2", location(4));
       }
 
       @Nested
@@ -511,7 +566,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
           var a = varA();
           var sValue = sPoly(list(a), sValue(7, "emptyArray", sConstructArray(8, a)));
           var sInstantiate = sInstantiate(4, sValue, list(sIntType()));
-          assertNalMapping(bindings(sValue), sInstantiate, null, location(8));
+          assertNalMapping(bindings(sValue), sInstantiate, "[...]", location(8));
         }
 
         @Test
@@ -641,36 +696,49 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
   private void assertNalMapping(
       Bindings<SPolyEvaluable> evaluables,
       SExpr sExpr,
-      @Nullable String expectedName,
+      String expectedName,
       Location expectedLocation)
       throws Exception {
     var sbTranslator = newTranslator(evaluables);
     assertNalMapping(sbTranslator, sExpr, expectedName, expectedLocation);
   }
 
-  private void assertNalMapping(
-      SExpr sExpr, @Nullable String expectedName, Location expectedLocation) throws Exception {
+  private void assertNalMapping(SExpr sExpr, String expectedName, Location expectedLocation)
+      throws Exception {
     assertNalMapping(newTranslator(), sExpr, expectedName, expectedLocation);
+  }
+
+  private void assertNalMapping(
+      SExpr sExpr,
+      Function1<BExpr, BExpr, BytecodeException> exprToCheck,
+      String expectedName,
+      Location expectedLocation)
+      throws Exception {
+    assertNalMapping(newTranslator(), sExpr, exprToCheck, expectedName, expectedLocation);
+  }
+
+  private static void assertNalMapping(
+      SbTranslator sbTranslator, SExpr sExpr, String expectedName, Location expectedLocation)
+      throws SbTranslatorException, BytecodeException {
+    assertNalMapping(sbTranslator, sExpr, (BExpr bExpr) -> bExpr, expectedName, expectedLocation);
   }
 
   private static void assertNalMapping(
       SbTranslator sbTranslator,
       SExpr sExpr,
-      @Nullable String expectedName,
+      Function1<BExpr, BExpr, BytecodeException> exprToCheck,
+      String expectedName,
       Location expectedLocation)
-      throws SbTranslatorException {
-    var exprB = sbTranslator.translateExpr(sExpr);
-    assertNalMapping(sbTranslator, exprB, expectedName, expectedLocation);
+      throws SbTranslatorException, BytecodeException {
+    var bExpr = sbTranslator.translateExpr(sExpr);
+    var toCheck = exprToCheck.apply(bExpr);
+    assertNalMapping(sbTranslator, toCheck, expectedName, expectedLocation);
   }
 
   private static void assertNalMapping(
-      SbTranslator sbTranslator,
-      BExpr expr,
-      @Nullable String expectedName,
-      Location expectedLocation) {
-    var bExprAttributes = sbTranslator.bExprAttributes();
-    assertThat(bExprAttributes.names().get(expr.hash())).isEqualTo(expectedName);
-    assertThat(bExprAttributes.locations().get(expr.hash())).isEqualTo(expectedLocation);
+      SbTranslator sbTranslator, BExpr expr, String expectedName, Location expectedLocation) {
+    var debugSymbols = requireNonNull(sbTranslator.debugSymbols().get(expr.hash()));
+    assertThat(debugSymbols).isEqualTo(new DebugSymbols(expectedName, expectedLocation));
   }
 
   private SbTranslator newTranslator() throws Exception {

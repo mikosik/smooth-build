@@ -37,7 +37,7 @@
 :vm:schedule:call:execute
   @ <empty trace>
 :vm:inline
-  @ {t-project}/module.smooth:2 mylambda:lambda~1
+  @ {t-project}/module.smooth:2 (...) -> ...
 :vm:schedule:call:execute
   @ <empty trace>
 :vm:inline

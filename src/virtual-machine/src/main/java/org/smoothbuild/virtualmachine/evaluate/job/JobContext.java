@@ -1,7 +1,9 @@
 package org.smoothbuild.virtualmachine.evaluate.job;
 
 import jakarta.inject.Inject;
+import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.schedule.Scheduler;
 import org.smoothbuild.virtualmachine.VmConfig;
@@ -22,8 +24,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTupleGet;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.dagger.PerVm;
-import org.smoothbuild.virtualmachine.evaluate.base.BExprAttributes;
 import org.smoothbuild.virtualmachine.evaluate.base.BRefInliner;
+import org.smoothbuild.virtualmachine.evaluate.base.DebugSymbols;
 import org.smoothbuild.virtualmachine.evaluate.cache.CachingOperatorEvaluator;
 
 @PerVm
@@ -32,12 +34,12 @@ public class JobContext {
   private final BytecodeFactory bytecodeFactory;
   private final CachingOperatorEvaluator cachingOperatorEvaluator;
   private final Scheduler scheduler;
-  private final BExprAttributes exprAttributes;
+  private final Map<Hash, DebugSymbols> debugSymbols;
   private final VmConfig vmConfig;
 
   @Inject
   public JobContext(
-      BExprAttributes exprAttributes,
+      Map<Hash, DebugSymbols> debugSymbols,
       Scheduler scheduler,
       CachingOperatorEvaluator cachingOperatorEvaluator,
       BytecodeFactory bytecodeFactory,
@@ -47,7 +49,7 @@ public class JobContext {
     this.bytecodeFactory = bytecodeFactory;
     this.cachingOperatorEvaluator = cachingOperatorEvaluator;
     this.scheduler = scheduler;
-    this.exprAttributes = exprAttributes;
+    this.debugSymbols = debugSymbols;
     this.vmConfig = vmConfig;
   }
 
@@ -89,8 +91,8 @@ public class JobContext {
     return scheduler;
   }
 
-  public BExprAttributes exprAttributes() {
-    return exprAttributes;
+  public Map<Hash, DebugSymbols> debugSymbols() {
+    return debugSymbols;
   }
 
   public VmConfig vmConfig() {

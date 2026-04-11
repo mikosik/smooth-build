@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.HashMap;
 import org.smoothbuild.common.base.Hash;
+import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Result;
@@ -49,6 +50,7 @@ import org.smoothbuild.compilerfrontend.lang.define.SNamedFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyReference;
+import org.smoothbuild.compilerfrontend.lang.define.SReference;
 import org.smoothbuild.compilerfrontend.lang.define.SString;
 import org.smoothbuild.compilerfrontend.lang.define.SStructGet;
 import org.smoothbuild.compilerfrontend.lang.define.STupleGet;
@@ -71,7 +73,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 import org.smoothbuild.virtualmachine.bytecode.load.BytecodeLoader;
 import org.smoothbuild.virtualmachine.bytecode.load.FileContentReader;
-import org.smoothbuild.virtualmachine.evaluate.base.BExprAttributes;
+import org.smoothbuild.virtualmachine.evaluate.base.DebugSymbols;
 
 public class SbTranslator {
   private final ChainingBytecodeFactory bytecodeF;
@@ -83,8 +85,7 @@ public class SbTranslator {
   private final int environmentSize;
 
   private final java.util.Map<CacheKey, BExpr> cache;
-  private final java.util.Map<Hash, String> names;
-  private final java.util.Map<Hash, Location> locations;
+  private final java.util.Map<Hash, DebugSymbols> debugSymbols;
 
   @AssistedInject
   public SbTranslator(
@@ -101,7 +102,6 @@ public class SbTranslator {
         bindings(),
         0,
         new HashMap<>(),
-        new HashMap<>(),
         new HashMap<>());
   }
 
@@ -114,8 +114,7 @@ public class SbTranslator {
       Bindings<BoundElement> bindings,
       int environmentSize,
       java.util.Map<CacheKey, BExpr> cache,
-      java.util.Map<Hash, String> names,
-      java.util.Map<Hash, Location> locations) {
+      java.util.Map<Hash, DebugSymbols> debugSymbols) {
     this.bytecodeF = bytecodeF;
     this.typeTranslator = typeTranslator;
     this.fileContentReader = fileContentReader;
@@ -124,12 +123,11 @@ public class SbTranslator {
     this.bindings = bindings;
     this.environmentSize = environmentSize;
     this.cache = cache;
-    this.names = names;
-    this.locations = locations;
+    this.debugSymbols = debugSymbols;
   }
 
-  public BExprAttributes bExprAttributes() {
-    return new BExprAttributes(mapOfAll(names), mapOfAll(locations));
+  public Map<Hash, DebugSymbols> debugSymbols() {
+    return mapOfAll(debugSymbols);
   }
 
   private List<BExpr> translateExprs(List<SExpr> exprs) throws SbTranslatorException {
@@ -138,16 +136,14 @@ public class SbTranslator {
 
   public BExpr translateExpr(SExpr sExpr) throws SbTranslatorException {
     return switch (sExpr) {
-      case SBlob sBlob -> saveLocAndReturn(sBlob, translateBlob(sBlob));
-      case SCall sCall -> saveLocAndReturn(sCall, translateCall(sCall));
-      case SConstructTuple sConstructTuple ->
-        saveLocAndReturn(sConstructTuple, translateConstructTuple(sConstructTuple));
-      case SInt sInt -> saveLocAndReturn(sInt, translateInt(sInt));
-      case SConstructArray sConstructArray ->
-        saveLocAndReturn(sConstructArray, translateConstructArray(sConstructArray));
-      case SStructGet sStructGet -> saveLocAndReturn(sStructGet, translateStructGet(sStructGet));
-      case STupleGet sTupleGet -> saveLocAndReturn(sTupleGet, translateTupleGet(sTupleGet));
-      case SString sString -> saveLocAndReturn(sString, translateString(sString));
+      case SBlob sBlob -> translateBlob(sBlob);
+      case SCall sCall -> translateCall(sCall);
+      case SConstructTuple sConstructTuple -> translateConstructTuple(sConstructTuple);
+      case SInt sInt -> translateInt(sInt);
+      case SConstructArray sConstructArray -> translateConstructArray(sConstructArray);
+      case SStructGet sStructGet -> translateStructGet(sStructGet);
+      case STupleGet sTupleGet -> translateTupleGet(sTupleGet);
+      case SString sString -> translateString(sString);
       case SInstantiate sInstantiate -> translateInstantiate(sInstantiate);
       case SMonoReference sMonoReference -> translateMonoReference(sMonoReference);
       case SLambda sLambda -> translateLambda(sLambda);
@@ -155,23 +151,41 @@ public class SbTranslator {
   }
 
   private BBlob translateBlob(SBlob sBlob) throws SbTranslatorException {
-    return bytecodeF.blob(sink -> sink.write(sBlob.byteString()));
+    var name = Strings.limitedWithEllipsis(sBlob.toSourceCode(), 13);
+    var bBlob = bytecodeF.blob(sink -> sink.write(sBlob.byteString()));
+    return saveDebugsAndReturn(name, sBlob, bBlob);
   }
 
   private BCall translateCall(SCall sCall) throws SbTranslatorException {
     var bFunction = translateExpr(sCall.callee());
     var bArguments = translateExpr(sCall.args());
-    return bytecodeF.call(bFunction, bArguments);
+    var bCall = bytecodeF.call(bFunction, bArguments);
+    var name = findCalleeName(sCall.callee()) + "(...)";
+    return saveDebugsAndReturn(name, sCall, bCall);
+  }
+
+  private static String findCalleeName(SExpr callee) {
+    return switch (callee) {
+      case SMonoReference sMonoReference -> referencedShortName(sMonoReference);
+      case SInstantiate sInstantiate -> referencedShortName(sInstantiate.sPolyReference());
+      default -> "...";
+    };
+  }
+
+  private static String referencedShortName(SReference sReference) {
+    return sReference.referencedId().parts().last().toString();
   }
 
   private BConstructTuple translateConstructTuple(SConstructTuple sConstructTuple)
       throws SbTranslatorException {
     var bElements = translateExprs(sConstructTuple.elements());
-    return bytecodeF.constructTuple(bElements);
+    var bConstructTuple = bytecodeF.constructTuple(bElements);
+    return saveDebugsAndReturn("{...}", sConstructTuple, bConstructTuple);
   }
 
   private BInt translateInt(SInt sInt) throws SbTranslatorException {
-    return bytecodeF.int_(sInt.bigInteger());
+    var bInt = bytecodeF.int_(sInt.bigInteger());
+    return saveDebugsAndReturn(sInt.toSourceCode(), sInt, bInt);
   }
 
   private BExpr translateInstantiate(SInstantiate sInstantiate) throws SbTranslatorException {
@@ -189,14 +203,13 @@ public class SbTranslator {
         bindings,
         environmentSize,
         cache,
-        names,
-        locations);
+        debugSymbols);
     return sbTranslator.translatePolyReference(sInstantiate.sPolyReference());
   }
 
   private BExpr translateLambda(SLambda sLambda) throws SbTranslatorException {
     var bLambda = funcBodySbTranslator(sLambda).translateExprFunc(sLambda);
-    return saveNalAndReturn(sLambda.fqn().toString(), sLambda, bLambda);
+    return saveDebugsAndReturn("(...) -> ...", sLambda, bLambda);
   }
 
   private BExpr translateMonoReference(SMonoReference sMonoReference) throws SbTranslatorException {
@@ -211,7 +224,7 @@ public class SbTranslator {
         var index =
             BigInteger.valueOf(boundElement.index + environmentSize - boundElement.environmentSize);
         var bRef = bytecodeF.ref(evaluationType, index);
-        return saveNalAndReturn(name.toString(), sMonoReference, bRef);
+        return saveDebugsAndReturn(name.toString(), sMonoReference, bRef);
       }
     }
     throw new SbTranslatorException(compileErrorMessage(
@@ -241,7 +254,7 @@ public class SbTranslator {
 
   private BExpr translateNamedFunc(SNamedFunc sNamedFunc) throws SbTranslatorException {
     var bFunc = funcBodySbTranslator(sNamedFunc).translateNamedFuncImpl(sNamedFunc);
-    return saveNalAndReturn(sNamedFunc, bFunc);
+    return saveDebugsAndReturn(sNamedFunc, bFunc);
   }
 
   private SbTranslator funcBodySbTranslator(SFunc sFunc) {
@@ -262,8 +275,7 @@ public class SbTranslator {
         newBindings,
         newEnvironmentSize,
         cache,
-        names,
-        locations);
+        debugSymbols);
   }
 
   private BExpr translateNamedFuncImpl(SNamedFunc sNamedFunc) throws SbTranslatorException {
@@ -300,9 +312,9 @@ public class SbTranslator {
     var bLambdaType = typeTranslator.translate(sNativeFunc.type());
     var bArguments = referencesToAllArguments(bLambdaType);
     var bInvoke = bytecodeF.invoke(bLambdaType.result(), bMethodTuple, bIsPure, bArguments);
-    saveNal(bInvoke, sNativeFunc);
+    saveDebugs(bInvoke, sNativeFunc);
     var bLambda = bytecodeF.lambda(bLambdaType, bInvoke);
-    saveNal(bLambda, sNativeFunc);
+    saveDebugs(bLambda, sNativeFunc);
     return bLambda;
   }
 
@@ -319,7 +331,6 @@ public class SbTranslator {
   private BLambda translateConstructor(SConstructor sConstructor) throws SbTranslatorException {
     var bFuncType = typeTranslator.translate(sConstructor.type());
     var bBody = bytecodeF.constructTuple(createRefsToConstructorParams(bFuncType.params()));
-    saveLoc(bBody, sConstructor);
     return bytecodeF.lambda(bFuncType, bBody);
   }
 
@@ -335,7 +346,8 @@ public class SbTranslator {
       throws SbTranslatorException {
     var bArrayType = typeTranslator.translate(sConstructArray.evaluationType());
     var bElements = translateExprs(sConstructArray.elements());
-    return bytecodeF.constructArray(bArrayType, bElements);
+    var bConstructArray = bytecodeF.constructArray(bArrayType, bElements);
+    return saveDebugsAndReturn("[...]", sConstructArray, bConstructArray);
   }
 
   private BTupleGet translateStructGet(SStructGet sStructGet) throws SbTranslatorException {
@@ -344,20 +356,25 @@ public class SbTranslator {
     var indexJ = sStructType.fields().indexOf(sStructGet.field());
     var bigInteger = BigInteger.valueOf(indexJ);
     var bIndex = bytecodeF.int_(bigInteger);
-    saveLoc(bIndex, sStructGet);
-    return bytecodeF.tupleGet(bTupleExpr, bIndex);
+    saveDebugs(bIndex, bigInteger.toString(), sStructGet);
+    var bTupleGet = bytecodeF.tupleGet(bTupleExpr, bIndex);
+    return saveDebugsAndReturn("{...}." + sStructGet.field(), sStructGet, bTupleGet);
   }
 
   private BTupleGet translateTupleGet(STupleGet sTupleGet) throws SbTranslatorException {
     var bTupleExpr = translateExpr(sTupleGet.tupleExpr());
     var bigInteger = sTupleGet.index();
     var bIndex = bytecodeF.int_(bigInteger);
-    saveLoc(bIndex, sTupleGet);
-    return bytecodeF.tupleGet(bTupleExpr, bIndex);
+    saveDebugs(bIndex, bigInteger.toString(), sTupleGet);
+    var bTupleGet = bytecodeF.tupleGet(bTupleExpr, bIndex);
+    var sourceIndex = sTupleGet.index().add(BigInteger.ONE);
+    return saveDebugsAndReturn("{...}." + sourceIndex, sTupleGet, bTupleGet);
   }
 
   private BString translateString(SString sString) throws SbTranslatorException {
-    return bytecodeF.string(sString.string());
+    var bString = bytecodeF.string(sString.string());
+    var name = Strings.limitedWithEllipsis(sString.toSourceCode(), 13);
+    return saveDebugsAndReturn(name, sString, bString);
   }
 
   private BExpr translateNamedValueWithCache(SNamedValue sNamedValue) throws SbTranslatorException {
@@ -376,7 +393,7 @@ public class SbTranslator {
       throws SbTranslatorException {
     var annName = sAnnotatedValue.annotation().name();
     if (annName.equals(BYTECODE)) {
-      return saveNalAndReturn(sAnnotatedValue, fetchValBytecode(sAnnotatedValue));
+      return saveDebugsAndReturn(sAnnotatedValue, fetchValBytecode(sAnnotatedValue));
     } else {
       throw new SbTranslatorException("Illegal value annotation: " + q("@" + annName) + ".");
     }
@@ -396,7 +413,9 @@ public class SbTranslator {
 
   private BExpr fetchFuncBytecode(SAnnotatedFunc sAnnotatedFunc) throws SbTranslatorException {
     var bType = typeTranslator.translate(sAnnotatedFunc.type());
-    return fetchBytecode(sAnnotatedFunc.annotation(), bType, sAnnotatedFunc.fqn());
+    var bExpr = fetchBytecode(sAnnotatedFunc.annotation(), bType, sAnnotatedFunc.fqn());
+    saveDebugs(bExpr, sAnnotatedFunc);
+    return bExpr;
   }
 
   private BExpr fetchBytecode(SAnnotation annotation, BType bType, Id id)
@@ -450,38 +469,24 @@ public class SbTranslator {
     }
   }
 
-  // helpers for saving names and locations
+  // helpers for saving debug symbols
 
-  private BExpr saveNalAndReturn(SNamedEvaluable sNamedEvaluable, BExpr bExpr) {
-    saveNal(bExpr, sNamedEvaluable);
+  private BExpr saveDebugsAndReturn(SNamedEvaluable sNamedEvaluable, BExpr bExpr) {
+    saveDebugs(bExpr, sNamedEvaluable);
     return bExpr;
   }
 
-  private BExpr saveNalAndReturn(String name, HasLocation hasLocation, BExpr bExpr) {
-    saveNal(bExpr, name, hasLocation);
+  private <T extends BExpr> T saveDebugsAndReturn(String name, HasLocation hasLocation, T bExpr) {
+    saveDebugs(bExpr, name, hasLocation);
     return bExpr;
   }
 
-  private BExpr saveLocAndReturn(HasLocation hasLocation, BExpr bExpr) {
-    saveLoc(bExpr, hasLocation);
-    return bExpr;
+  private void saveDebugs(BExpr bExpr, SNamedEvaluable sNamedEvaluable) {
+    saveDebugs(bExpr, sNamedEvaluable.fqn().toString(), sNamedEvaluable);
   }
 
-  private void saveNal(BExpr bExpr, SNamedEvaluable sNamedEvaluable) {
-    saveNal(bExpr, sNamedEvaluable.fqn().toString(), sNamedEvaluable);
-  }
-
-  private void saveNal(BExpr bExpr, String name, HasLocation hasLocation) {
-    names.put(bExpr.hash(), name);
-    saveLoc(bExpr, hasLocation);
-  }
-
-  private void saveLoc(BExpr bExpr, HasLocation hasLocation) {
-    saveLoc(bExpr, hasLocation.location());
-  }
-
-  private void saveLoc(BExpr bExpr, Location location) {
-    locations.put(bExpr.hash(), location);
+  private void saveDebugs(BExpr bExpr, String name, HasLocation hasLocation) {
+    debugSymbols.put(bExpr.hash(), new DebugSymbols(name, hasLocation.location()));
   }
 
   private static record CacheKey(Id id, Map<STypeVar, BType> varMap) {}

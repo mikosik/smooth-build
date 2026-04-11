@@ -42,10 +42,10 @@
   @ {t-project}/module.smooth:4 apply
 :vm:schedule:call
 :vm:inline
-  @ {t-project}/module.smooth:5 result:lambda~1
+  @ {t-project}/module.smooth:5 (...) -> ...
   @ {t-project}/module.smooth:4 apply
 :vm:schedule:call:execute
-  @ {t-project}/module.smooth:5 result:lambda~1
+  @ {t-project}/module.smooth:5 (...) -> ...
   @ {t-project}/module.smooth:4 apply
 :vm:schedule:constructTuple
 :vm:schedule:ref
@@ -53,7 +53,7 @@
 :vm:schedule:ref
 :vm:evaluate:constructTuple
   @ {t-project}/module.smooth:4 MyStruct
-  @ {t-project}/module.smooth:5 result:lambda~1
+  @ {t-project}/module.smooth:5 (...) -> ...
   @ {t-project}/module.smooth:4 apply
 :scheduler:join
 :evaluator:merge

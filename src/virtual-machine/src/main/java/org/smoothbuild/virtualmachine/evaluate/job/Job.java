@@ -3,7 +3,9 @@ package org.smoothbuild.virtualmachine.evaluate.job;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.schedule.Output.failedOutput;
 
+import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.base.Label;
@@ -15,8 +17,8 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.evaluate.base.BExprAttributes;
 import org.smoothbuild.virtualmachine.evaluate.base.BRefInliner;
+import org.smoothbuild.virtualmachine.evaluate.base.DebugSymbols;
 import org.smoothbuild.virtualmachine.evaluate.cache.CachingOperatorEvaluator;
 
 public abstract sealed class Job permits BLambdaJob, SchedulingJob, BValueJob {
@@ -82,8 +84,8 @@ public abstract sealed class Job permits BLambdaJob, SchedulingJob, BValueJob {
     return jobContext.cachingOperatorEvaluator();
   }
 
-  public BExprAttributes exprAttributes() {
-    return jobContext.exprAttributes();
+  public Map<Hash, DebugSymbols> debugSymbols() {
+    return jobContext.debugSymbols();
   }
 
   public Scheduler scheduler() {

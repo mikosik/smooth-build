@@ -118,7 +118,7 @@ public final class BCallJob extends SchedulingJob {
 
   private Promise<Maybe<BValue>> scheduleCallBodyWithTupleArguments(
       BTuple tuple, BLambda bLambda, Trace trace) throws BytecodeException {
-    var argumentJobs = tuple.elements().map(j -> job(j, list(), new Trace()));
+    var argumentJobs = tuple.elements().map(j -> job(j, list(), trace()));
     var bodyEnvironmentJobs = bodyEnvironmentJobs(bLambda, argumentJobs);
     var bodyJob = job(bLambda.body(), bodyEnvironmentJobs, trace);
     return bodyJob.evaluate();
@@ -126,7 +126,7 @@ public final class BCallJob extends SchedulingJob {
 
   private List<Job> bodyEnvironmentJobs(BLambda bLambda, List<Job> argumentJobs)
       throws BytecodeException {
-    var lambdaJob = job(bLambda, list(), new Trace());
+    var lambdaJob = job(bLambda, list(), trace());
     return list(lambdaJob).addAll(argumentJobs);
   }
 
@@ -135,8 +135,10 @@ public final class BCallJob extends SchedulingJob {
   }
 
   private Trace newTrace(BCall call, BExpr called, Trace next) {
-    var name = exprAttributes().names().getOrDefault(called.hash(), "???");
-    var location = exprAttributes().locations().getOrDefault(call.hash(), unknownLocation());
+    var calledDebugSymbol = debugSymbols().get(called.hash());
+    var callDebugSymbol = debugSymbols().get(call.hash());
+    var name = calledDebugSymbol != null ? calledDebugSymbol.name() : "???";
+    var location = callDebugSymbol != null ? callDebugSymbol.location() : unknownLocation();
     return new Trace(new TraceLine(name, location, next.topLine()));
   }
 }

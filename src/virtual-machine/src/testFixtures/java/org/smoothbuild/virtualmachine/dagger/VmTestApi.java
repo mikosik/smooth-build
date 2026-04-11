@@ -1,6 +1,7 @@
 package org.smoothbuild.virtualmachine.dagger;
 
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.testing.TestingByteString.byteString;
 import static org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader.NATIVE_METHOD_NAME;
 
@@ -8,7 +9,9 @@ import java.io.IOException;
 import java.math.BigInteger;
 import okio.ByteString;
 import org.smoothbuild.common.Constants;
+import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.dagger.CommonTestApi;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.filesystem.base.Path;
@@ -67,7 +70,7 @@ import org.smoothbuild.virtualmachine.bytecode.load.BytecodeMethodLoader;
 import org.smoothbuild.virtualmachine.bytecode.load.JarClassLoaderFactory;
 import org.smoothbuild.virtualmachine.bytecode.load.MethodLoader;
 import org.smoothbuild.virtualmachine.evaluate.BEvaluateTask;
-import org.smoothbuild.virtualmachine.evaluate.base.BExprAttributes;
+import org.smoothbuild.virtualmachine.evaluate.base.DebugSymbols;
 import org.smoothbuild.virtualmachine.evaluate.job.Job;
 import org.smoothbuild.virtualmachine.evaluate.job.JobContext;
 import org.smoothbuild.virtualmachine.evaluate.plugin.BOutput;
@@ -77,15 +80,11 @@ public interface VmTestApi extends CommonTestApi {
   public VmTestComponent provide();
 
   public default BEvaluateTask bEvaluateTask() {
-    return bEvaluateTask(new BExprAttributes());
+    return bEvaluateTask(map());
   }
 
-  public default BEvaluateTask bEvaluateTask(BExprAttributes bExprAttributes) {
-    return provide()
-        .vmComponentBuilder()
-        .bExprAttributes(bExprAttributes)
-        .build()
-        .bEvaluateTask();
+  public default BEvaluateTask bEvaluateTask(Map<Hash, DebugSymbols> debugSymbols) {
+    return provide().vmComponentBuilder().debugSymbols(debugSymbols).build().bEvaluateTask();
   }
 
   public default Job job(BExpr expr, BExpr... environment) {
@@ -103,15 +102,11 @@ public interface VmTestApi extends CommonTestApi {
   }
 
   public default JobContext jobContext() {
-    return jobContext(new BExprAttributes());
+    return jobContext(map());
   }
 
-  private JobContext jobContext(BExprAttributes bExprAttributes) {
-    return provide()
-        .vmComponentBuilder()
-        .bExprAttributes(bExprAttributes)
-        .build()
-        .jobContext();
+  private JobContext jobContext(Map<Hash, DebugSymbols> debugSymbols) {
+    return provide().vmComponentBuilder().debugSymbols(debugSymbols).build().jobContext();
   }
 
   public default FullPath moduleFullPath() {

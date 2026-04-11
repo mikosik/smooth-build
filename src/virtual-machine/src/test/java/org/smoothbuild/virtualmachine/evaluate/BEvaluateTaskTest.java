@@ -36,7 +36,9 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.base.Level;
@@ -60,8 +62,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.virtualmachine.dagger.VmTestContext;
-import org.smoothbuild.virtualmachine.evaluate.base.BExprAttributes;
 import org.smoothbuild.virtualmachine.evaluate.base.BRefInliner;
+import org.smoothbuild.virtualmachine.evaluate.base.DebugSymbols;
 import org.smoothbuild.virtualmachine.evaluate.cache.CachingOperatorEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.evaluator.BOperationEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.job.Job;
@@ -656,7 +658,7 @@ public class BEvaluateTaskTest extends VmTestContext {
             };
 
         var bEvaluate = new BEvaluateTask(new JobContext(
-            new BExprAttributes(),
+            map(),
             provide().scheduler(),
             cachingOperatorEvaluator,
             provide().bytecodeFactory(),
@@ -728,14 +730,13 @@ public class BEvaluateTaskTest extends VmTestContext {
         var lambdaAsExpr = bCall(bLambda(lambda));
         var call = bCall(lambdaAsExpr);
         var callLocation = location(alias().append("path"), 3);
-        var bExprAttributes = new BExprAttributes(
-            map(lambda.hash(), "lambda.hash()"), map(call.hash(), callLocation));
+        var debugSymbols = map(
+            lambda.hash(),
+            new DebugSymbols("lambda.hash()", unknownLocation()),
+            call.hash(),
+            new DebugSymbols("???", callLocation));
         assertTaskReport(
-            call,
-            bExprAttributes,
-            "constructArray",
-            trace("lambda.hash()", callLocation),
-            EXECUTION);
+            call, debugSymbols, "constructArray", trace("lambda.hash()", callLocation), EXECUTION);
       }
 
       @Test
@@ -749,13 +750,19 @@ public class BEvaluateTaskTest extends VmTestContext {
         var call1Location = location(alias().append("path"), 1);
         var call2Location = location(alias().append("path"), 2);
 
-        var bExprAttributes = new BExprAttributes(
-            map(lambda1.hash(), "lambda1", lambda2.hash(), "lambda2"),
-            map(call1.hash(), call1Location, call2.hash(), call2Location));
+        var debugSymbols = map(
+            lambda1.hash(),
+            new DebugSymbols("lambda1", unknownLocation()),
+            lambda2.hash(),
+            new DebugSymbols("lambda2", unknownLocation()),
+            call1.hash(),
+            new DebugSymbols("???", call1Location),
+            call2.hash(),
+            new DebugSymbols("???", call2Location));
 
         assertTaskReport(
             call1,
-            bExprAttributes,
+            debugSymbols,
             "constructArray",
             trace("lambda2", call2Location, "lambda1", call1Location),
             EXECUTION);
@@ -770,11 +777,11 @@ public class BEvaluateTaskTest extends VmTestContext {
 
     private void assertTaskReport(
         BExpr expr,
-        BExprAttributes bExprAttributes,
+        Map<Hash, DebugSymbols> debugSymbols,
         String operationName,
         Trace trace,
         Origin origin) {
-      evaluate(bEvaluateTask(bExprAttributes), expr);
+      evaluate(bEvaluateTask(debugSymbols), expr);
       var taskReport = report(VM_EVALUATE.append(":" + operationName), trace, origin, list());
       assertThat(provide().reporter().reports()).contains(taskReport);
     }
@@ -868,7 +875,7 @@ public class BEvaluateTaskTest extends VmTestContext {
   }
 
   private BValue evaluate(BExpr expr) {
-    return evaluate(bEvaluateTask(new BExprAttributes()), expr).get().get();
+    return evaluate(bEvaluateTask(map()), expr).get().get();
   }
 
   private Promise<Maybe<BValue>> evaluate(BEvaluateTask bEvaluateTask, BExpr expr) {
@@ -913,16 +920,16 @@ public class BEvaluateTaskTest extends VmTestContext {
   }
 
   private CountingJobContext provideCountingJobContext() {
-    return provideCountingJobContext(new BExprAttributes());
+    return provideCountingJobContext(map());
   }
 
-  private CountingJobContext provideCountingJobContext(BExprAttributes bExprAttributes) {
+  private CountingJobContext provideCountingJobContext(Map<Hash, DebugSymbols> debugSymbols) {
     return new CountingJobContext(
         provide().bRefInliner(),
         provide().bytecodeFactory(),
         provide().cachingOperatorEvaluator(),
         provide().scheduler(),
-        bExprAttributes);
+        debugSymbols);
   }
 
   private static class CountingJobContext extends JobContext {
@@ -933,9 +940,9 @@ public class BEvaluateTaskTest extends VmTestContext {
         BytecodeFactory bytecodeFactory,
         CachingOperatorEvaluator cachingOperatorEvaluator,
         Scheduler scheduler,
-        BExprAttributes exprAttributes) {
+        Map<Hash, DebugSymbols> debugSymbols) {
       super(
-          exprAttributes,
+          debugSymbols,
           scheduler,
           cachingOperatorEvaluator,
           bytecodeFactory,
@@ -978,7 +985,7 @@ public class BEvaluateTaskTest extends VmTestContext {
         provide().scheduler(),
         provide().bytecodeFactory());
     var jobContext = new JobContext(
-        new BExprAttributes(),
+        map(),
         provide().scheduler(),
         cachingOperatorEvaluator,
         provide().bytecodeFactory(),

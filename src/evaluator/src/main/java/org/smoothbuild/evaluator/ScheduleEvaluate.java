@@ -99,8 +99,9 @@ public class ScheduleEvaluate implements Task2<List<FullPath>, List<String>, Eva
     }
 
     private BEvaluateTask bEvaluateTask(CompiledExprs compiledExprs) {
+      var debugSymbols = compiledExprs.debugSymbols();
       var virtualMachineComponent =
-          vmComponentBuilder.bExprAttributes(compiledExprs.bExprAttributes()).build();
+          vmComponentBuilder.debugSymbols(debugSymbols).build();
       return virtualMachineComponent.bEvaluateTask();
     }
 
