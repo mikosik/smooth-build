@@ -41,6 +41,8 @@
 :vm:schedule:call:execute
   @ <empty trace>
 :vm:schedule:constructArray
+:vm:inline
+  @ {t-project}/module.smooth:3 returnArray
 :vm:evaluate:constructArray
   @ {t-project}/module.smooth:3 returnArray
 :scheduler:join

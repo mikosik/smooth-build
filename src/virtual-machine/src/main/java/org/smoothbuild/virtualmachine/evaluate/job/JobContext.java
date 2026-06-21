@@ -17,7 +17,6 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BFold;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BRef;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch;
@@ -69,9 +68,8 @@ public class JobContext {
       case BIf if_ -> new BIfJob(this, if_, environment, trace);
       case BMap map -> new BMapJob(this, map, environment, trace);
       case BFold fold -> new BFoldJob(this, fold, environment, trace);
-      case BLambda lambda -> new BLambdaJob(this, lambda, environment, trace);
       case BRef ref -> new BRefJob(this, ref, environment, trace);
-      case BValue value -> new BValueJob(this, value, environment, trace);
+      case BValue value -> new BInlineJob(this, value, environment, trace);
     };
   }
 

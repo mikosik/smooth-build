@@ -51,6 +51,8 @@
 :vm:schedule:ref
 :vm:schedule:ref
 :vm:schedule:ref
+:vm:inline
+  @ <empty trace>
 :vm:evaluate:constructTuple
   @ {t-project}/module.smooth:4 MyStruct
   @ {t-project}/module.smooth:5 (...) -> ...

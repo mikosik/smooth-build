@@ -33,10 +33,14 @@
 :vm:schedule:call
 :vm:inline
   @ <empty trace>
+:vm:inline
+  @ <empty trace>
 :vm:schedule:call:execute
   @ <empty trace>
 :vm:schedule:constructTuple
 :vm:schedule:ref
+:vm:inline
+  @ <empty trace>
 :vm:evaluate:constructTuple
   @ {t-project}/module.smooth:4 MyStruct
 :vm:evaluate:tupleGet

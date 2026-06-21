@@ -21,7 +21,7 @@ import org.smoothbuild.virtualmachine.evaluate.base.BRefInliner;
 import org.smoothbuild.virtualmachine.evaluate.base.DebugSymbols;
 import org.smoothbuild.virtualmachine.evaluate.cache.CachingOperatorEvaluator;
 
-public abstract sealed class Job permits BLambdaJob, SchedulingJob, BValueJob {
+public abstract sealed class Job permits BInlineJob, SchedulingJob {
   private final JobContext jobContext;
   private final BExpr expr;
   private final List<Job> environment;
